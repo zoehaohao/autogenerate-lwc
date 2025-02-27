@@ -1,0 +1,57 @@
+name: Salesforce Deployment
+
+on:
+  push:
+    branches:
+      - main  # Trigger deployment when changes are pushed to the 'main' branch
+
+jobs:
+  deploy-lwc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          
+      - name: Install Salesforce CLI
+        run: |
+          npm install @salesforce/cli --global
+          sf --version
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Authenticate with Salesforce
+        run: |
+          echo "${{ secrets.SALESFORCE_AUTH_URL }}" > ./SALESFORCE_AUTH_URL.txt
+          sf org login sfdx-url -f ./SALESFORCE_AUTH_URL.txt -a targetOrg
+        
+      - name: Deploy LWC to Salesforce
+        run: sf project deploy start -o targetOrg -l NoTestRun -d force-app/main/default/lwc --json > deployment_result.json
+        
+      - name: Check Deployment Status
+        run: |
+          DEPLOY_ID=$(cat deployment_result.json | jq -r '.result.id')
+          echo "Deployment ID: $DEPLOY_ID"
+          
+          # Wait and check deployment status until complete
+          while true; do
+            STATUS=$(sf project deploy report -i $DEPLOY_ID -o targetOrg --json | jq -r '.result.status')
+            echo "Current deployment status: $STATUS"
+            
+            if [ "$STATUS" == "Succeeded" ]; then
+              echo "Deployment completed successfully!"
+              break
+            elif [ "$STATUS" == "Failed" ] || [ "$STATUS" == "Error" ]; then
+              echo "Deployment failed!"
+              sf project deploy report -i $DEPLOY_ID -o targetOrg
+              exit 1
+            fi
+            
+            echo "Waiting for deployment to complete..."
+            sleep 30
+          done
