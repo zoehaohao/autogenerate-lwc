@@ -1,0 +1,41 @@
+:host {
+ --acme-blue-color: #0057B8;
+ --acme-gray-color: #424A54;
+ --acme-light-gray: #F5F7FA;
+}
+
+.slds-form-element__label {
+ color: var(--acme-gray-color);
+ font-weight: 600;
+}
+
+.slds-input,
+.slds-select {
+ border-color: var(--acme-gray-color);
+}
+
+.slds-text-heading_medium {
+ color: var(--acme-blue-color);
+ font-weight: 700;
+}
+
+.slds-button_brand {
+ background-color: var(--acme-blue-color);
+ border-color: var(--acme-blue-color);
+}
+
+.slds-button_brand:hover,
+.slds-button_brand:focus {
+ background-color: #004A9E;
+ border-color: #004A9E;
+}
+
+.slds-required {
+ color: #FF6B6B;
+}
+
+@media screen and (max-width: 48em) {
+ .slds-form-element_compound .slds-form-element__row {
+ margin-bottom: 0.75rem;
+ }
+}
