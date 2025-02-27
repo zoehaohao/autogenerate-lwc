@@ -1,0 +1,19 @@
+<template>
+    <div class="acme-personal-details-form">
+        <h1 class="acme-heading acme-heading_large">Personal Details Form</h1>
+        <form onsubmit={handleSubmit}>
+            <lightning-input label="First Name" name="firstName" required placeholder="Enter First Name" class="acme-input"></lightning-input>
+            <lightning-input label="Last Name" name="lastName" required placeholder="Enter Last Name" class="acme-input"></lightning-input>
+            <lightning-input type="email" label="Email" name="email" required placeholder="Enter Email" class="acme-input"></lightning-input>
+            <lightning-input type="tel" label="Phone" name="phone" placeholder="Enter Phone Number" class="acme-input"></lightning-input>
+            <lightning-input type="date" label="Date of Birth" name="dob" required class="acme-input"></lightning-input>
+            <lightning-combobox label="Gender" name="gender" required options={genderOptions} placeholder="Select Gender" class="acme-input"></lightning-combobox>
+            <lightning-textarea label="Address" name="address" placeholder="Enter Address" class="acme-input"></lightning-textarea>
+            <lightning-combobox label="Country" name="country" required options={countryOptions} placeholder="Select Country" class="acme-input"></lightning-combobox>
+            <lightning-combobox label="State" name="state" required options={stateOptions} placeholder="Select State" class="acme-input"></lightning-combobox>
+            <lightning-input label="Zip Code" name="zipCode" required placeholder="Enter Zip Code" class="acme-input"></lightning-input>
+            <lightning-input type="file" label="Profile Picture" name="profilePicture" accept="image/*" class="acme-input"></lightning-input>
+            <lightning-button label="Submit" type="submit" variant="brand" class="acme-button acme-button_primary"></lightning-button>
+        </form>
+    </div>
+</template>
