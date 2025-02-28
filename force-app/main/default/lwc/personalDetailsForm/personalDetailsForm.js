@@ -3,26 +3,17 @@ import { LightningElement } from 'lwc';
 export default class PersonalDetailsForm extends LightningElement {
     handleSubmit(event) {
         event.preventDefault();
-        const isValid = this.validateForm();
+        const isValid = [...this.template.querySelectorAll('lightning-input')]
+            .reduce((validSoFar, inputField) => {
+                inputField.reportValidity();
+                return validSoFar && inputField.checkValidity();
+            }, true);
+        
         if (isValid) {
-            // Form submission logic here
+            // Form is valid, proceed with submission
             console.log('Form submitted successfully');
         } else {
-            console.error('Form validation failed');
+            console.log('Form has validation errors');
         }
-    }
-
-    validateForm() {
-        const inputFields = this.template.querySelectorAll('input[required], select[required]');
-        let isValid = true;
-        inputFields.forEach(field => {
-            if (!field.value) {
-                field.classList.add('error');
-                isValid = false;
-            } else {
-                field.classList.remove('error');
-            }
-        });
-        return isValid;
     }
 }

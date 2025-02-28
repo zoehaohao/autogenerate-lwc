@@ -1,95 +1,53 @@
 :host {
     --acme-blue-color: #0057B8;
     --acme-gray-color: #424A54;
-    --acme-coral-color: #FF6B6B;
-    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --acme-red-color: #FF6B6B;
 }
 
 .acme-personal-details-form {
-    max-width: 600px;
-    margin: 0 auto;
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 .acme-form-section {
-    margin-bottom: var(--slds-c-card-spacing-block, 24px);
+    margin-bottom: var(--acme-space-md, 1rem);
 }
 
-.acme-form-section h2 {
+.acme-heading {
     color: var(--acme-blue-color);
-    font-size: 1.5rem;
     font-weight: 700;
-    margin-bottom: var(--slds-c-card-spacing-block, 16px);
+    margin-bottom: var(--acme-space-sm, 0.5rem);
 }
 
-.acme-form-field {
-    display: flex;
-    align-items: center;
-    margin-bottom: var(--slds-c-card-spacing-block, 16px);
+.acme-heading_medium {
+    font-size: 1.25rem;
 }
 
-.acme-form-field label {
-    flex: 0 0 30%;
-    text-align: right;
-    padding-right: 1rem;
+.acme-input {
+    --slds-c-input-color-border: var(--acme-gray-color);
+    --slds-c-input-text-color: var(--acme-gray-color);
+    margin-bottom: var(--acme-space-xs, 0.25rem);
+}
+
+.acme-input lightning-input,
+.acme-input lightning-combobox {
+    --slds-c-input-spacing-horizontal-start: 0;
+    --slds-c-input-spacing-horizontal-end: 0;
+}
+
+.acme-input label {
     color: var(--acme-gray-color);
+    font-weight: 600;
 }
 
-.acme-form-field input,
-.acme-form-field select {
-    flex: 1;
-    height: 40px;
-    padding: 8px 12px;
-    border: 1px solid #E4E7EB;
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-.acme-form-field input:focus,
-.acme-form-field select:focus {
-    outline: 2px solid var(--acme-blue-color);
-    border-color: var(--acme-blue-color);
-}
-
-.acme-form-field .required {
-    color: var(--acme-coral-color);
-    margin-right: 4px;
-}
-
-.select-wrapper {
-    position: relative;
-    flex: 1;
-}
-
-.select-wrapper::after {
-    content: '▼';
-    font-size: 0.7rem;
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    pointer-events: none;
-    color: var(--acme-gray-color);
-}
-
-.error {
-    border-color: var(--acme-coral-color) !important;
+.acme-input lightning-input[required] label::before,
+.acme-input lightning-combobox[required] label::before {
+    content: '*';
+    color: var(--acme-red-color);
+    margin-right: 0.25rem;
 }
 
 @media screen and (max-width: 768px) {
-    .acme-form-field {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .acme-form-field label {
-        flex: 0 0 100%;
-        text-align: left;
-        margin-bottom: 4px;
-    }
-
-    .acme-form-field input,
-    .acme-form-field select,
-    .select-wrapper {
-        width: 100%;
+    .acme-form-section {
+        margin-bottom: var(--acme-space-sm, 0.5rem);
     }
 }
