@@ -1,53 +1,28 @@
 :host {
     --acme-blue-color: #0057B8;
     --acme-gray-color: #424A54;
-    --acme-red-color: #FF6B6B;
 }
 
-.acme-personal-details-form {
+.root-container {
     font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-.acme-form-section {
-    margin-bottom: var(--acme-space-md, 1rem);
+lightning-card {
+    --sds-c-card-color-background: var(--acme-white-color, #FFFFFF);
 }
 
-.acme-heading {
-    color: var(--acme-blue-color);
-    font-weight: 700;
-    margin-bottom: var(--acme-space-sm, 0.5rem);
-}
-
-.acme-heading_medium {
-    font-size: 1.25rem;
-}
-
-.acme-input {
-    --slds-c-input-color-border: var(--acme-gray-color);
+lightning-input, lightning-textarea, lightning-combobox {
     --slds-c-input-text-color: var(--acme-gray-color);
-    margin-bottom: var(--acme-space-xs, 0.25rem);
+    --slds-c-input-color-border: var(--acme-gray-color);
 }
 
-.acme-input lightning-input,
-.acme-input lightning-combobox {
-    --slds-c-input-spacing-horizontal-start: 0;
-    --slds-c-input-spacing-horizontal-end: 0;
-}
-
-.acme-input label {
-    color: var(--acme-gray-color);
-    font-weight: 600;
-}
-
-.acme-input lightning-input[required] label::before,
-.acme-input lightning-combobox[required] label::before {
-    content: '*';
-    color: var(--acme-red-color);
-    margin-right: 0.25rem;
+lightning-button.slds-button_brand {
+    --sds-c-button-brand-color-background: var(--acme-blue-color);
+    --sds-c-button-text-color: var(--acme-white-color, #FFFFFF);
 }
 
 @media screen and (max-width: 768px) {
-    .acme-form-section {
-        margin-bottom: var(--acme-space-sm, 0.5rem);
+    .slds-p-around_medium {
+        padding: var(--slds-c-card-spacing-block-small, 0.75rem);
     }
 }

@@ -1,17 +1,32 @@
 <template>
-    <div class="acme-personal-details-form">
-        <div class="acme-form-section">
-            <h2 class="acme-heading acme-heading_medium">Personal information</h2>
-            <lightning-input label="First name" required class="acme-input"></lightning-input>
-            <lightning-input label="Middle name" class="acme-input"></lightning-input>
-            <lightning-input label="Last name" required class="acme-input"></lightning-input>
-        </div>
-        <div class="acme-form-section">
-            <h2 class="acme-heading acme-heading_medium">Address</h2>
-            <lightning-input label="Address" class="acme-input"></lightning-input>
-            <lightning-input label="City or Town" class="acme-input"></lightning-input>
-            <lightning-combobox label="State" placeholder="Choose a State" class="acme-input"></lightning-combobox>
-            <lightning-input label="Zip code" required class="acme-input"></lightning-input>
-        </div>
+    <div class="root-container slds-p-around_medium">
+        <lightning-card title="Personal Details Form">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-horizontal_small">
+                    <lightning-input label="First Name" required></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-horizontal_small">
+                    <lightning-input label="Last Name" required></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-horizontal_small">
+                    <lightning-input type="email" label="Email" required></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-horizontal_small">
+                    <lightning-input type="tel" label="Phone" required></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-p-horizontal_small">
+                    <lightning-textarea label="Address" required></lightning-textarea>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-horizontal_small">
+                    <lightning-input type="date" label="Date of Birth" required></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-horizontal_small">
+                    <lightning-combobox label="Gender" options={genderOptions} required></lightning-combobox>
+                </div>
+            </div>
+            <div class="slds-m-top_medium slds-text-align_center">
+                <lightning-button label="Submit" variant="brand" onclick={handleSubmit}></lightning-button>
+            </div>
+        </lightning-card>
     </div>
 </template>
