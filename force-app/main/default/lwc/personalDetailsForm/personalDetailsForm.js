@@ -1,1 +1,1 @@
-[Insert JavaScript code]
+[Insert JavaScript code from the previous response]
