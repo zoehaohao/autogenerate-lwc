@@ -1,1 +1,25 @@
-[Insert CSS code]
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-space-md: 1rem;
+}
+
+.acme-personal-details-form {
+    font-family: var(--acme-font-family, 'Arial', sans-serif);
+}
+
+.acme-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--acme-space-md);
+}
+
+.acme-button_primary {
+    --sds-c-button-brand-color-background: var(--acme-blue-color);
+    --sds-c-button-text-color: var(--acme-white-color);
+}
+
+.acme-button_primary:hover, .acme-button_primary:focus {
+    --sds-c-button-brand-color-background-hover: var(--acme-blue-dark-color, #004A9E);
+}

@@ -1,1 +1,15 @@
-[Insert HTML code]
+<template>
+    <div class="acme-personal-details-form">
+        <lightning-card title="Personal Details">
+            <div class="acme-form-container">
+                <lightning-input label="First Name" required></lightning-input>
+                <lightning-input label="Last Name" required></lightning-input>
+                <lightning-input type="email" label="Email" required></lightning-input>
+                <lightning-input type="tel" label="Phone"></lightning-input>
+                <lightning-textarea label="Address" required></lightning-textarea>
+                <lightning-combobox label="Country" options={countryOptions} required></lightning-combobox>
+                <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="acme-button_primary"></lightning-button>
+            </div>
+        </lightning-card>
+    </div>
+</template>
