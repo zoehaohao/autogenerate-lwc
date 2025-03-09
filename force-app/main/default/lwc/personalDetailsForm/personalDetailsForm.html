@@ -1,1 +1,25 @@
-[HTML code]
+<template>
+    <lightning-card title="Personal Details Form">
+        <div class="slds-grid slds-gutters slds-wrap">
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input label="First Name" name="firstName" type="text" required max-length="50"></lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input label="Last Name" name="lastName" type="text" required max-length="50"></lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input label="Email" name="email" type="email" required></lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input label="Phone Number" name="phoneNumber" type="tel"></lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input label="Date of Birth" name="dateOfBirth" type="date" required></lightning-input>
+            </div>
+        </div>
+        <div class="slds-m-top_medium slds-align_absolute-center">
+            <lightning-button label="Submit" variant="brand" type="submit" onclick={handleSubmit} class="slds-m-right_x-small"></lightning-button>
+            <lightning-button label="Reset" variant="neutral" type="reset" onclick={handleReset}></lightning-button>
+        </div>
+    </lightning-card>
+</template>

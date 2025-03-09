@@ -1,1 +1,8 @@
-[CSS code]
+.slds-align_absolute-center {
+    display: flex;
+    justify-content: center;
+}
+
+lightning-input {
+    margin-bottom: 0.5rem;
+}
