@@ -1,15 +1,30 @@
 <template>
-    <div class="acme-personal-details-form">
-        <lightning-card title="Personal Details">
-            <div class="acme-form-container">
-                <lightning-input label="First Name" required></lightning-input>
-                <lightning-input label="Last Name" required></lightning-input>
-                <lightning-input type="email" label="Email" required></lightning-input>
-                <lightning-input type="tel" label="Phone"></lightning-input>
-                <lightning-textarea label="Address" required></lightning-textarea>
-                <lightning-combobox label="Country" options={countryOptions} required></lightning-combobox>
-                <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="acme-button_primary"></lightning-button>
+    <div class="slds-card slds-p-around_medium">
+        <h2 class="slds-text-heading_medium slds-m-bottom_medium">Personal Details Form</h2>
+        <form onsubmit={handleSubmit}>
+            <lightning-input label="First Name" name="firstName" required></lightning-input>
+            <lightning-input label="Last Name" name="lastName" required></lightning-input>
+            <lightning-input type="email" label="Email" name="email" required></lightning-input>
+            <lightning-input type="tel" label="Phone" name="phone" required pattern="\(\d{3}\)\s\d{3}-\d{4}" message-when-pattern-mismatch="Please enter a valid phone number in the format (XXX) XXX-XXXX"></lightning-input>
+            <lightning-input type="date" label="Date of Birth" name="dob" required onchange={validateAge}></lightning-input>
+            <fieldset class="slds-form-element slds-m-top_small">
+                <legend class="slds-form-element__legend slds-form-element__label">Gender</legend>
+                <div class="slds-form-element__control">
+                    <div class="slds-radio_button-group">
+                        <lightning-radio-group name="gender" options={genderOptions} value={gender} onchange={handleGenderChange} type="button"></lightning-radio-group>
+                    </div>
+                </div>
+            </fieldset>
+            <lightning-textarea label="Address" name="address" required></lightning-textarea>
+            <div class="slds-m-top_medium">
+                <lightning-button variant="brand" type="submit" label="Submit" class="slds-m-right_x-small"></lightning-button>
+                <lightning-button variant="neutral" onclick={handleReset} label="Reset"></lightning-button>
             </div>
-        </lightning-card>
+        </form>
+        <template if:true={showSuccessMessage}>
+            <div class="slds-m-top_medium slds-text-color_success">
+                Form submitted successfully!
+            </div>
+        </template>
     </div>
 </template>
