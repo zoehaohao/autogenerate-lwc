@@ -1,8 +1,28 @@
-.slds-align_absolute-center {
-    display: flex;
-    justify-content: center;
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-space-medium: 1rem;
+    --acme-border-radius: 4px;
 }
 
-lightning-input {
-    margin-bottom: 0.5rem;
+.acme-personal-details-form {
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.acme-input {
+    --slds-c-input-color-border: var(--acme-gray-color);
+    --slds-c-input-radius-border: var(--acme-border-radius);
+    --slds-c-input-text-color: var(--acme-gray-color);
+}
+
+.acme-button_primary {
+    --slds-c-button-brand-color-background: var(--acme-blue-color);
+    --slds-c-button-radius-border: var(--acme-border-radius);
+}
+
+@media screen and (max-width: 768px) {
+    .slds-gutters {
+        margin-left: calc(-1 * var(--acme-space-medium));
+        margin-right: calc(-1 * var(--acme-space-medium));
+    }
 }

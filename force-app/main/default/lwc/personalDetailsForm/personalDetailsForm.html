@@ -1,25 +1,25 @@
 <template>
-    <lightning-card title="Personal Details Form">
+    <div class="acme-personal-details-form slds-p-around_medium">
+        <h2 class="slds-text-heading_medium slds-m-bottom_medium">Personal Details</h2>
         <div class="slds-grid slds-gutters slds-wrap">
             <div class="slds-col slds-size_1-of-2">
-                <lightning-input label="First Name" name="firstName" type="text" required max-length="50"></lightning-input>
+                <lightning-input label="First Name" required class="acme-input"></lightning-input>
             </div>
             <div class="slds-col slds-size_1-of-2">
-                <lightning-input label="Last Name" name="lastName" type="text" required max-length="50"></lightning-input>
+                <lightning-input label="Last Name" required class="acme-input"></lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-1">
+                <lightning-input type="email" label="Email" required class="acme-input"></lightning-input>
             </div>
             <div class="slds-col slds-size_1-of-2">
-                <lightning-input label="Email" name="email" type="email" required></lightning-input>
+                <lightning-input type="tel" label="Phone" class="acme-input"></lightning-input>
             </div>
             <div class="slds-col slds-size_1-of-2">
-                <lightning-input label="Phone Number" name="phoneNumber" type="tel"></lightning-input>
-            </div>
-            <div class="slds-col slds-size_1-of-2">
-                <lightning-input label="Date of Birth" name="dateOfBirth" type="date" required></lightning-input>
+                <lightning-input type="date" label="Date of Birth" required class="acme-input"></lightning-input>
             </div>
         </div>
-        <div class="slds-m-top_medium slds-align_absolute-center">
-            <lightning-button label="Submit" variant="brand" type="submit" onclick={handleSubmit} class="slds-m-right_x-small"></lightning-button>
-            <lightning-button label="Reset" variant="neutral" type="reset" onclick={handleReset}></lightning-button>
+        <div class="slds-m-top_medium">
+            <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="acme-button_primary"></lightning-button>
         </div>
-    </lightning-card>
+    </div>
 </template>
