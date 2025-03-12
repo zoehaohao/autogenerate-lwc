@@ -1,136 +1,78 @@
 <!-- personalDetailsForm.html -->
 <template>
-    <div class="acme-personal-details-form slds-p-around_medium">
-        <h2 class="acme-heading acme-heading_large slds-m-bottom_medium">Personal Details Form</h2>
-        
-        <form class="acme-form">
-            <div class="slds-grid slds-wrap slds-gutters">
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_small">
-                    <lightning-input 
-                        label="First Name" 
-                        name="firstName" 
-                        type="text" 
-                        required 
-                        placeholder="Enter your first name"
-                        pattern="[A-Za-z]+"
-                        message-when-pattern-mismatch="Please enter alphabets only"
-                        onchange={handleInputChange}>
-                    </lightning-input>
+    <div class="root-container slds-p-around_medium">
+        <div class="slds-form" role="form">
+            <div class="slds-form-element slds-form-element_stacked">
+                <h2 class="slds-text-heading_medium slds-m-bottom_medium acme-heading acme-heading_medium">Personal Information</h2>
+                
+                <div class="slds-form-element slds-form-element_horizontal">
+                    <label class="slds-form-element__label" for="firstName">
+                        <abbr class="slds-required" title="required">*</abbr> First name
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="firstName" required class="slds-input" onchange={handleInputChange} />
+                    </div>
                 </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_small">
-                    <lightning-input 
-                        label="Last Name" 
-                        name="lastName" 
-                        type="text" 
-                        required 
-                        placeholder="Enter your last name"
-                        pattern="[A-Za-z]+"
-                        message-when-pattern-mismatch="Please enter alphabets only"
-                        onchange={handleInputChange}>
-                    </lightning-input>
+
+                <div class="slds-form-element slds-form-element_horizontal">
+                    <label class="slds-form-element__label" for="middleName">Middle name</label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="middleName" class="slds-input" onchange={handleInputChange} />
+                    </div>
                 </div>
-                <div class="slds-col slds-size_1-of-1 slds-m-bottom_small">
-                    <lightning-input 
-                        label="Email" 
-                        name="email" 
-                        type="email" 
-                        required 
-                        placeholder="Enter your email address"
-                        onchange={handleInputChange}>
-                    </lightning-input>
-                </div>
-                <div class="slds-col slds-size_1-of-1 slds-m-bottom_small">
-                    <lightning-input 
-                        label="Phone" 
-                        name="phone" 
-                        type="tel" 
-                        placeholder="Enter your phone number"
-                        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                        message-when-pattern-mismatch="Please enter a valid phone number (e.g., 123-456-7890)"
-                        onchange={handleInputChange}>
-                    </lightning-input>
-                </div>
-                <div class="slds-col slds-size_1-of-1 slds-m-bottom_small">
-                    <lightning-input 
-                        label="Date of Birth" 
-                        name="dateOfBirth" 
-                        type="date" 
-                        required 
-                        onchange={handleInputChange}>
-                    </lightning-input>
-                </div>
-                <div class="slds-col slds-size_1-of-1 slds-m-bottom_small">
-                    <lightning-textarea 
-                        label="Address" 
-                        name="address" 
-                        placeholder="Enter your full address"
-                        onchange={handleInputChange}>
-                    </lightning-textarea>
-                </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_small">
-                    <lightning-input 
-                        label="City" 
-                        name="city" 
-                        type="text" 
-                        placeholder="Enter your city"
-                        pattern="[A-Za-z\s]+"
-                        message-when-pattern-mismatch="Please enter alphabets and spaces only"
-                        onchange={handleInputChange}>
-                    </lightning-input>
-                </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_small">
-                    <lightning-combobox
-                        label="State/Province"
-                        name="state"
-                        placeholder="Select your state/province"
-                        options={stateOptions}
-                        onchange={handleInputChange}>
-                    </lightning-combobox>
-                </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_small">
-                    <lightning-combobox
-                        label="Country"
-                        name="country"
-                        placeholder="Select your country"
-                        value="United States"
-                        required
-                        options={countryOptions}
-                        onchange={handleInputChange}>
-                    </lightning-combobox>
-                </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_small">
-                    <lightning-input 
-                        label="Zip/Postal Code" 
-                        name="zipCode" 
-                        type="text" 
-                        placeholder="Enter your zip/postal code"
-                        pattern="[A-Za-z0-9]+"
-                        message-when-pattern-mismatch="Please enter alphanumeric characters only"
-                        onchange={handleInputChange}>
-                    </lightning-input>
+
+                <div class="slds-form-element slds-form-element_horizontal">
+                    <label class="slds-form-element__label" for="lastName">
+                        <abbr class="slds-required" title="required">*</abbr> Last name
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="lastName" required class="slds-input" onchange={handleInputChange} />
+                    </div>
                 </div>
             </div>
 
-            <div class="slds-m-top_medium slds-text-align_right">
-                <lightning-button 
-                    label="Cancel" 
-                    variant="neutral" 
-                    class="slds-m-right_x-small" 
-                    onclick={handleCancel}>
-                </lightning-button>
-                <lightning-button 
-                    label="Submit" 
-                    variant="brand" 
-                    class="acme-button_primary"
-                    onclick={handleSubmit}
-                    disabled={isSubmitDisabled}>
-                </lightning-button>
-            </div>
-        </form>
+            <div class="slds-form-element slds-form-element_stacked slds-m-top_medium">
+                <h2 class="slds-text-heading_medium slds-m-bottom_medium acme-heading acme-heading_medium">Address</h2>
 
-        <div class="slds-m-top_medium">
-            <a href="/home" class="acme-link">Back to Home</a>
-            <a href="/privacy-policy" class="acme-link slds-m-left_medium" target="_blank">Privacy Policy</a>
+                <div class="slds-form-element slds-form-element_horizontal">
+                    <label class="slds-form-element__label" for="address">Address</label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="address" class="slds-input" onchange={handleInputChange} />
+                    </div>
+                </div>
+
+                <div class="slds-form-element slds-form-element_horizontal">
+                    <label class="slds-form-element__label" for="cityTown">City or Town</label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="cityTown" class="slds-input" onchange={handleInputChange} />
+                    </div>
+                </div>
+
+                <div class="slds-form-element slds-form-element_horizontal">
+                    <label class="slds-form-element__label" for="state">State</label>
+                    <div class="slds-form-element__control">
+                        <div class="slds-select_container">
+                            <select id="state" class="slds-select" onchange={handleInputChange}>
+                                <option value="">Choose a State</option>
+                                <!-- Add state options here -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-form-element slds-form-element_horizontal">
+                    <label class="slds-form-element__label" for="zipCode">
+                        <abbr class="slds-required" title="required">*</abbr> Zip code
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="zipCode" required class="slds-input" onchange={handleInputChange} />
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-m-top_medium">
+                <button class="slds-button slds-button_brand acme-button_primary" onclick={handleSubmit}>Submit</button>
+            </div>
         </div>
     </div>
 </template>

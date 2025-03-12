@@ -1,140 +1,71 @@
 // personalDetailsForm.js
 import { LightningElement, track } from 'lwc';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class PersonalDetailsForm extends LightningElement {
     @track formData = {
         firstName: '',
+        middleName: '',
         lastName: '',
-        email: '',
-        phone: '',
-        dateOfBirth: '',
         address: '',
-        city: '',
+        cityTown: '',
         state: '',
-        country: 'United States',
         zipCode: ''
     };
 
-    stateOptions = [
-        { label: 'California', value: 'CA' },
-        { label: 'New York', value: 'NY' },
-        // Add more states as needed
-    ];
-
-    countryOptions = [
-        { label: 'United States', value: 'United States' },
-        { label: 'Canada', value: 'Canada' },
-        // Add more countries as needed
-    ];
-
-    get isSubmitDisabled() {
-        return !(this.formData.firstName && this.formData.lastName && this.formData.email && 
-                 this.formData.dateOfBirth && this.formData.country);
-    }
-
     handleInputChange(event) {
-        const { name, value } = event.target;
-        this.formData = { ...this.formData, [name]: value };
-        this.validateField(name, value);
-    }
-
-    validateField(fieldName, value) {
-        let isValid = true;
-        const inputField = this.template.querySelector(`[name="${fieldName}"]`);
-
-        switch(fieldName) {
-            case 'firstName':
-            case 'lastName':
-                isValid = /^[A-Za-z]+$/.test(value);
-                break;
-            case 'email':
-                isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-                break;
-            case 'phone':
-                isValid = /^\d{3}-\d{3}-\d{4}$/.test(value);
-                break;
-            case 'dateOfBirth':
-                isValid = this.validateAge(value);
-                break;
-            case 'city':
-                isValid = /^[A-Za-z\s]+$/.test(value);
-                break;
-            case 'zipCode':
-                isValid = /^[A-Za-z0-9]+$/.test(value);
-                break;
-        }
-
-        if (inputField) {
-            inputField.setCustomValidity(isValid ? '' : 'Invalid input');
-            inputField.reportValidity();
-        }
-    }
-
-    validateAge(birthDate) {
-        const today = new Date();
-        const dob = new Date(birthDate);
-        let age = today.getFullYear() - dob.getFullYear();
-        const monthDiff = today.getMonth() - dob.getMonth();
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
-            age--;
-        }
-        return age >= 18;
+        const field = event.target.id;
+        this.formData[field] = event.target.value;
     }
 
     handleSubmit() {
         if (this.validateForm()) {
-            // Here you would typically call an Apex method to save the data
+            // Form submission logic here
             console.log('Form submitted:', this.formData);
-            this.showToast('Success', 'Personal details submitted successfully', 'success');
-            this.resetForm();
         } else {
-            this.showToast('Error', 'Please correct the errors in the form', 'error');
+            // Show error message
+            this.showToast('Error', 'Please fill all required fields and correct any errors.', 'error');
         }
     }
 
     validateForm() {
-        const allValid = [
-            ...this.template.querySelectorAll('lightning-input'),
-            ...this.template.querySelectorAll('lightning-combobox'),
-            ...this.template.querySelectorAll('lightning-textarea')
-        ].reduce((validSoFar, inputField) => {
-            inputField.reportValidity();
-            return validSoFar && inputField.checkValidity();
-        }, true);
-
-        return allValid;
-    }
-
-    handleCancel() {
-        this.resetForm();
-        this.showToast('Info', 'Form has been reset', 'info');
-    }
-
-    resetForm() {
-        this.formData = {
-            firstName: '',
-            lastName: '',
-            email: '',
-            phone: '',
-            dateOfBirth: '',
-            address: '',
-            city: '',
-            state: '',
-            country: 'United States',
-            zipCode: ''
-        };
-        this.template.querySelectorAll('lightning-input, lightning-combobox, lightning-textarea').forEach(field => {
-            field.value = '';
+        let isValid = true;
+        let inputFields = this.template.querySelectorAll('.slds-input');
+        
+        inputFields.forEach(inputField => {
+            if (inputField.required && !inputField.value) {
+                isValid = false;
+                this.showFieldError(inputField, 'This field is required');
+            } else if (inputField.id === 'zipCode' && !this.isValidZipCode(inputField.value)) {
+                isValid = false;
+                this.showFieldError(inputField, 'Invalid Zip Code format');
+            } else {
+                this.clearFieldError(inputField);
+            }
         });
+
+        return isValid;
+    }
+
+    isValidZipCode(zipCode) {
+        return /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(zipCode);
+    }
+
+    showFieldError(field, message) {
+        field.setCustomValidity(message);
+        field.reportValidity();
+    }
+
+    clearFieldError(field) {
+        field.setCustomValidity('');
+        field.reportValidity();
     }
 
     showToast(title, message, variant) {
-        const evt = new ShowToastEvent({
+        const event = new ShowToastEvent({
             title: title,
             message: message,
             variant: variant,
         });
-        this.dispatchEvent(evt);
+        this.dispatchEvent(event);
     }
 }
