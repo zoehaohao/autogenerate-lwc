@@ -1,53 +1,20 @@
 // personalDetailsForm.js
-import { LightningElement, track } from 'lwc';
+import { LightningElement } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class PersonalDetailsForm extends LightningElement {
-    @track formData = {
-        firstName: '',
-        middleName: '',
-        lastName: '',
-        address: '',
-        cityTown: '',
-        state: '',
-        zipCode: ''
-    };
+    validateField(event) {
+        const field = event.target;
+        const fieldName = field.name;
+        const fieldValue = field.value;
 
-    handleInputChange(event) {
-        const field = event.target.id;
-        this.formData[field] = event.target.value;
-    }
-
-    handleSubmit() {
-        if (this.validateForm()) {
-            // Form submission logic here
-            console.log('Form submitted:', this.formData);
+        if (field.required && !fieldValue) {
+            this.showFieldError(field, `${fieldName} is required`);
+        } else if (fieldName === 'zipCode' && !/^\d{5}(-\d{4})?$/.test(fieldValue)) {
+            this.showFieldError(field, 'Please enter a valid ZIP code');
         } else {
-            // Show error message
-            this.showToast('Error', 'Please fill all required fields and correct any errors.', 'error');
+            this.clearFieldError(field);
         }
-    }
-
-    validateForm() {
-        let isValid = true;
-        let inputFields = this.template.querySelectorAll('.slds-input');
-        
-        inputFields.forEach(inputField => {
-            if (inputField.required && !inputField.value) {
-                isValid = false;
-                this.showFieldError(inputField, 'This field is required');
-            } else if (inputField.id === 'zipCode' && !this.isValidZipCode(inputField.value)) {
-                isValid = false;
-                this.showFieldError(inputField, 'Invalid Zip Code format');
-            } else {
-                this.clearFieldError(inputField);
-            }
-        });
-
-        return isValid;
-    }
-
-    isValidZipCode(zipCode) {
-        return /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(zipCode);
     }
 
     showFieldError(field, message) {
@@ -60,12 +27,27 @@ export default class PersonalDetailsForm extends LightningElement {
         field.reportValidity();
     }
 
+    handleSubmit() {
+        const isValid = [...this.template.querySelectorAll('input')].reduce((valid, field) => {
+            this.validateField({ target: field });
+            return valid && field.checkValidity();
+        }, true);
+
+        if (isValid) {
+            // Implement form submission logic here
+            this.showToast('Success', 'Form submitted successfully', 'success');
+        } else {
+            this.showToast('Error', 'Please fill out all required fields correctly', 'error');
+        }
+    }
+
     showToast(title, message, variant) {
-        const event = new ShowToastEvent({
-            title: title,
-            message: message,
-            variant: variant,
-        });
-        this.dispatchEvent(event);
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: title,
+                message: message,
+                variant: variant,
+            }),
+        );
     }
 }
