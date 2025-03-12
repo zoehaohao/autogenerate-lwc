@@ -11,23 +11,18 @@
     font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     color: var(--acme-gray-color);
     background-color: var(--acme-white-color);
-    padding: var(--lwc-spacingMedium, 1rem);
-}
-
-.acme-heading {
-    font-weight: 700;
-    color: var(--acme-blue-color);
-    margin-bottom: var(--lwc-spacingMedium, 1rem);
-}
-
-.acme-heading_large {
-    font-size: 32px;
-    line-height: 1.25;
+    padding: var(--slds-c-card-spacing-block, 1rem);
 }
 
 .acme-input,
 .acme-textarea {
-    margin-bottom: var(--lwc-spacingSmall, 0.75rem);
+    margin-bottom: var(--slds-c-card-spacing-block, 0.75rem);
+}
+
+.acme-input .slds-form-element__label,
+.acme-textarea .slds-form-element__label {
+    font-size: 14px;
+    font-weight: 600;
 }
 
 .acme-button_primary {
@@ -42,24 +37,8 @@
     --sds-c-button-brand-color-border-hover: #004A9E;
 }
 
-.acme-signature {
-    border: 1px solid var(--acme-medium-gray-color);
-    border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
-    padding: var(--lwc-spacingXxSmall, 0.25rem);
-}
-
 @media screen and (max-width: 768px) {
     .acme-personal-details-form {
-        padding: var(--lwc-spacingSmall, 0.75rem);
-    }
-
-    .slds-p-right_medium,
-    .slds-p-left_medium {
-        padding-right: 0;
-        padding-left: 0;
-    }
-
-    .slds-col {
-        padding: 0;
+        padding: var(--slds-c-card-spacing-block, 0.5rem);
     }
 }

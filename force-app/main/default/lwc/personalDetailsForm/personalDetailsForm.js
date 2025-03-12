@@ -6,99 +6,107 @@ export default class PersonalDetailsForm extends LightningElement {
     @track formData = {};
     @track errors = {};
 
-    connectedCallback() {
-        this.currentDate = new Date().toISOString().split('T')[0];
+    handleInputChange(event) {
+        const field = event.target.dataset.field;
+        const value = event.target.value;
+        this.formData[field] = value;
+        this.validateField(field, value);
     }
 
-    validateField(event) {
-        const fieldName = event.target.label;
-        const fieldValue = event.target.value;
-        
-        // Clear previous error for this field
-        this.errors[fieldName] = '';
+    validateField(field, value) {
+        this.errors[field] = '';
 
-        // Perform field-specific validations
-        switch(fieldName) {
-            case 'Full Name':
-            case 'Position Applied For':
-            case 'School/Institution':
-            case 'Degree/Certification':
-            case 'Most Recent Employer':
-            case 'Job Title':
-            case 'Employment Dates':
-            case 'Cover Letter':
-                if (!fieldValue.trim()) {
-                    this.errors[fieldName] = `${fieldName} is required`;
+        switch (field) {
+            case 'fullName':
+            case 'positionAppliedFor':
+            case 'schoolInstitution':
+            case 'degreeCertification':
+            case 'mostRecentEmployer':
+            case 'jobTitle':
+            case 'signature':
+                if (!value || value.trim() === '') {
+                    this.errors[field] = `${field.charAt(0).toUpperCase() + field.slice(1)} is required`;
                 }
                 break;
-            case 'Phone Number':
-                if (!/^\+?[\d\s-]{10,}$/.test(fieldValue)) {
-                    this.errors[fieldName] = 'Please enter a valid phone number';
+            case 'phoneNumber':
+                if (!/^\(\d{3}\)\s\d{3}-\d{4}$/.test(value)) {
+                    this.errors[field] = 'Please enter a valid phone number in the format (###) ###-####';
                 }
                 break;
-            case 'Email Address':
-                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fieldValue)) {
-                    this.errors[fieldName] = 'Please enter a valid email address';
+            case 'emailAddress':
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                    this.errors[field] = 'Please enter a valid email address';
                 }
                 break;
-            case 'Resume Link':
-                if (fieldValue && !/^https?:\/\/.*/.test(fieldValue)) {
-                    this.errors[fieldName] = 'Please enter a valid URL';
+            case 'resumeLink':
+                if (!/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/.test(value)) {
+                    this.errors[field] = 'Please enter a valid URL';
                 }
                 break;
-            case 'Desired Salary (USD)':
-                if (isNaN(fieldValue) || Number(fieldValue) <= 0) {
-                    this.errors[fieldName] = 'Please enter a positive number';
+            case 'desiredSalary':
+                if (isNaN(value) || value <= 0) {
+                    this.errors[field] = 'Please enter a valid salary amount';
                 }
                 break;
-            case 'Year Graduated':
-                const currentYear = new Date().getFullYear();
-                if (isNaN(fieldValue) || Number(fieldValue) > currentYear || Number(fieldValue) < 1900) {
-                    this.errors[fieldName] = 'Please enter a valid year';
+            case 'yearGraduated':
+                if (!/^\d{4}$/.test(value) || parseInt(value) < 1900 || parseInt(value) > new Date().getFullYear()) {
+                    this.errors[field] = 'Please enter a valid 4-digit year';
                 }
                 break;
-            case 'Signature':
-                if (!fieldValue.trim()) {
-                    this.errors[fieldName] = 'Signature is required';
+            case 'employmentDates':
+                if (!/^[a-zA-Z0-9\s\-\/]+$/.test(value)) {
+                    this.errors[field] = 'Please enter valid employment dates';
                 }
                 break;
-            case 'Date':
-                if (!fieldValue) {
-                    this.errors[fieldName] = 'Date is required';
+            case 'coverLetter':
+                if (!value || value.trim() === '') {
+                    this.errors[field] = 'Cover letter is required';
+                }
+                break;
+            case 'date':
+                if (!value) {
+                    this.errors[field] = 'Date is required';
                 }
                 break;
         }
+    }
 
-        // Update formData
-        this.formData[fieldName] = fieldValue;
+    validateForm() {
+        let isValid = true;
+        Object.keys(this.formData).forEach(field => {
+            this.validateField(field, this.formData[field]);
+            if (this.errors[field]) {
+                isValid = false;
+            }
+        });
+        return isValid;
     }
 
     handleSubmit() {
-        // Validate all fields
-        this.template.querySelectorAll('lightning-input, lightning-textarea, lightning-input-rich-text').forEach(input => {
-            this.validateField({ target: input });
-        });
-
-        // Check if there are any errors
-        const hasErrors = Object.values(this.errors).some(error => error !== '');
-
-        if (hasErrors) {
-            // Display error toast
-            this.showToast('Error', 'Please correct the errors in the form', 'error');
-        } else {
-            // Form is valid, proceed with submission
+        if (this.validateForm()) {
+            // Here you would typically send the form data to a server
             console.log('Form submitted:', this.formData);
-            this.showToast('Success', 'Form submitted successfully', 'success');
-            // Here you would typically send the data to a server
+            this.showToast('Success', 'Application submitted successfully', 'success');
+            this.resetForm();
+        } else {
+            this.showToast('Error', 'Please correct the errors in the form', 'error');
         }
     }
 
+    resetForm() {
+        this.formData = {};
+        this.errors = {};
+        this.template.querySelectorAll('lightning-input, lightning-textarea').forEach(element => {
+            element.value = '';
+        });
+    }
+
     showToast(title, message, variant) {
-        const evt = new ShowToastEvent({
+        const event = new ShowToastEvent({
             title: title,
             message: message,
             variant: variant,
         });
-        this.dispatchEvent(evt);
+        this.dispatchEvent(event);
     }
 }
