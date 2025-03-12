@@ -1,1 +1,63 @@
-[Insert the CSS content here]
+/* personalDetailsForm.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-light-gray-color: #F5F7FA;
+    --acme-medium-gray-color: #E4E7EB;
+    --acme-dark-gray-color: #7B8794;
+    --acme-error-color: #FF6B6B;
+}
+
+.acme-personal-details-form {
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: var(--acme-gray-color);
+    background-color: var(--acme-white-color);
+    padding: var(--lwc-spacingMedium, 1rem);
+}
+
+.acme-heading {
+    font-weight: 700;
+    color: var(--acme-blue-color);
+    margin-bottom: var(--lwc-spacingSmall, 0.75rem);
+}
+
+.acme-heading_large {
+    font-size: 32px;
+    line-height: 1.25;
+}
+
+.acme-input,
+.acme-textarea {
+    --slds-c-input-color-border: var(--acme-medium-gray-color);
+    --slds-c-input-color-background: var(--acme-white-color);
+    --slds-c-input-text-color: var(--acme-gray-color);
+    margin-bottom: var(--lwc-spacingSmall, 0.75rem);
+}
+
+.acme-input:focus,
+.acme-textarea:focus {
+    --slds-c-input-shadow: 0 0 3px var(--acme-blue-color);
+}
+
+.acme-button_primary {
+    --slds-c-button-brand-color-background: var(--acme-blue-color);
+    --slds-c-button-brand-color-border: var(--acme-blue-color);
+    --slds-c-button-text-color: var(--acme-white-color);
+}
+
+.acme-button_primary:hover,
+.acme-button_primary:focus {
+    --slds-c-button-brand-color-background-hover: #004A9E;
+    --slds-c-button-brand-color-border-hover: #004A9E;
+}
+
+@media screen and (max-width: 768px) {
+    .acme-personal-details-form {
+        padding: var(--lwc-spacingSmall, 0.75rem);
+    }
+
+    .slds-col {
+        padding-right: 0 !important;
+    }
+}

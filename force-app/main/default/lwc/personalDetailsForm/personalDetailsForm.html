@@ -1,1 +1,150 @@
-[Insert the HTML content here]
+<!-- personalDetailsForm.html -->
+<template>
+    <div class="acme-personal-details-form slds-grid slds-wrap">
+        <div class="slds-col slds-size_1-of-1">
+            <h1 class="acme-heading acme-heading_large">Employment Application Form</h1>
+        </div>
+        
+        <div class="slds-col slds-size_1-of-2 slds-p-right_medium">
+            <lightning-input 
+                label="Full Name" 
+                type="text" 
+                required
+                onblur={validateField}
+                class="acme-input">
+            </lightning-input>
+            
+            <lightning-input 
+                label="Phone Number" 
+                type="tel" 
+                required
+                onblur={validateField}
+                class="acme-input">
+            </lightning-input>
+            
+            <lightning-input 
+                label="Email Address" 
+                type="email" 
+                required
+                onblur={validateField}
+                class="acme-input">
+            </lightning-input>
+            
+            <lightning-input 
+                label="Resume Link" 
+                type="url"
+                onblur={validateField}
+                class="acme-input">
+            </lightning-input>
+        </div>
+        
+        <div class="slds-col slds-size_1-of-2">
+            <lightning-input 
+                label="Position Applied For" 
+                type="text" 
+                required
+                onblur={validateField}
+                class="acme-input">
+            </lightning-input>
+            
+            <lightning-input 
+                label="Desired Salary (USD)" 
+                type="number" 
+                required
+                onblur={validateField}
+                class="acme-input">
+            </lightning-input>
+            
+            <lightning-input 
+                label="School/Institution" 
+                type="text" 
+                required
+                onblur={validateField}
+                class="acme-input">
+            </lightning-input>
+            
+            <lightning-input 
+                label="Degree/Certification" 
+                type="text" 
+                required
+                onblur={validateField}
+                class="acme-input">
+            </lightning-input>
+        </div>
+        
+        <div class="slds-col slds-size_1-of-2 slds-p-right_medium">
+            <lightning-input 
+                label="Year Graduated" 
+                type="number" 
+                required
+                onblur={validateField}
+                class="acme-input">
+            </lightning-input>
+            
+            <lightning-input 
+                label="Most Recent Employer" 
+                type="text" 
+                required
+                onblur={validateField}
+                class="acme-input">
+            </lightning-input>
+        </div>
+        
+        <div class="slds-col slds-size_1-of-2">
+            <lightning-input 
+                label="Job Title" 
+                type="text" 
+                required
+                onblur={validateField}
+                class="acme-input">
+            </lightning-input>
+            
+            <lightning-input 
+                label="Employment Dates" 
+                type="text" 
+                required
+                onblur={validateField}
+                class="acme-input">
+            </lightning-input>
+        </div>
+        
+        <div class="slds-col slds-size_1-of-1">
+            <lightning-textarea 
+                label="Cover Letter" 
+                required
+                placeholder="Please provide a brief cover letter in the space below:"
+                onblur={validateField}
+                class="acme-textarea">
+            </lightning-textarea>
+        </div>
+        
+        <div class="slds-col slds-size_1-of-2 slds-p-right_medium">
+            <lightning-input-field 
+                field-name="Signature" 
+                required
+                onblur={validateField}
+                class="acme-signature">
+            </lightning-input-field>
+        </div>
+        
+        <div class="slds-col slds-size_1-of-2">
+            <lightning-input 
+                label="Date" 
+                type="date" 
+                required
+                placeholder="mm/dd/yyyy"
+                onblur={validateField}
+                class="acme-input">
+            </lightning-input>
+        </div>
+        
+        <div class="slds-col slds-size_1-of-1 slds-m-top_medium">
+            <lightning-button 
+                label="Submit" 
+                variant="brand" 
+                onclick={handleSubmit}
+                class="acme-button acme-button_primary">
+            </lightning-button>
+        </div>
+    </div>
+</template>
