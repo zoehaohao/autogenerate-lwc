@@ -5,8 +5,6 @@
     --acme-white-color: #FFFFFF;
     --acme-light-gray-color: #F5F7FA;
     --acme-medium-gray-color: #E4E7EB;
-    --acme-dark-gray-color: #7B8794;
-    --acme-error-color: #FF6B6B;
 }
 
 .acme-personal-details-form {
@@ -19,7 +17,7 @@
 .acme-heading {
     font-weight: 700;
     color: var(--acme-blue-color);
-    margin-bottom: var(--lwc-spacingSmall, 0.75rem);
+    margin-bottom: var(--lwc-spacingMedium, 1rem);
 }
 
 .acme-heading_large {
@@ -29,27 +27,25 @@
 
 .acme-input,
 .acme-textarea {
-    --slds-c-input-color-border: var(--acme-medium-gray-color);
-    --slds-c-input-color-background: var(--acme-white-color);
-    --slds-c-input-text-color: var(--acme-gray-color);
     margin-bottom: var(--lwc-spacingSmall, 0.75rem);
 }
 
-.acme-input:focus,
-.acme-textarea:focus {
-    --slds-c-input-shadow: 0 0 3px var(--acme-blue-color);
-}
-
 .acme-button_primary {
-    --slds-c-button-brand-color-background: var(--acme-blue-color);
-    --slds-c-button-brand-color-border: var(--acme-blue-color);
-    --slds-c-button-text-color: var(--acme-white-color);
+    --sds-c-button-brand-color-background: var(--acme-blue-color);
+    --sds-c-button-brand-color-border: var(--acme-blue-color);
+    --sds-c-button-text-color: var(--acme-white-color);
 }
 
 .acme-button_primary:hover,
 .acme-button_primary:focus {
-    --slds-c-button-brand-color-background-hover: #004A9E;
-    --slds-c-button-brand-color-border-hover: #004A9E;
+    --sds-c-button-brand-color-background-hover: #004A9E;
+    --sds-c-button-brand-color-border-hover: #004A9E;
+}
+
+.acme-signature {
+    border: 1px solid var(--acme-medium-gray-color);
+    border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
+    padding: var(--lwc-spacingXxSmall, 0.25rem);
 }
 
 @media screen and (max-width: 768px) {
@@ -57,7 +53,13 @@
         padding: var(--lwc-spacingSmall, 0.75rem);
     }
 
+    .slds-p-right_medium,
+    .slds-p-left_medium {
+        padding-right: 0;
+        padding-left: 0;
+    }
+
     .slds-col {
-        padding-right: 0 !important;
+        padding: 0;
     }
 }

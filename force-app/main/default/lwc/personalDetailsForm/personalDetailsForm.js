@@ -6,14 +6,18 @@ export default class PersonalDetailsForm extends LightningElement {
     @track formData = {};
     @track errors = {};
 
+    connectedCallback() {
+        this.currentDate = new Date().toISOString().split('T')[0];
+    }
+
     validateField(event) {
         const fieldName = event.target.label;
         const fieldValue = event.target.value;
         
         // Clear previous error for this field
-        delete this.errors[fieldName];
+        this.errors[fieldName] = '';
 
-        // Perform validation based on field type
+        // Perform field-specific validations
         switch(fieldName) {
             case 'Full Name':
             case 'Position Applied For':
@@ -21,6 +25,7 @@ export default class PersonalDetailsForm extends LightningElement {
             case 'Degree/Certification':
             case 'Most Recent Employer':
             case 'Job Title':
+            case 'Employment Dates':
             case 'Cover Letter':
                 if (!fieldValue.trim()) {
                     this.errors[fieldName] = `${fieldName} is required`;
@@ -42,50 +47,49 @@ export default class PersonalDetailsForm extends LightningElement {
                 }
                 break;
             case 'Desired Salary (USD)':
-                if (isNaN(fieldValue) || fieldValue <= 0) {
-                    this.errors[fieldName] = 'Please enter a valid salary amount';
+                if (isNaN(fieldValue) || Number(fieldValue) <= 0) {
+                    this.errors[fieldName] = 'Please enter a positive number';
                 }
                 break;
             case 'Year Graduated':
-                const year = parseInt(fieldValue);
-                if (isNaN(year) || year < 1900 || year > new Date().getFullYear()) {
+                const currentYear = new Date().getFullYear();
+                if (isNaN(fieldValue) || Number(fieldValue) > currentYear || Number(fieldValue) < 1900) {
                     this.errors[fieldName] = 'Please enter a valid year';
                 }
                 break;
-            case 'Employment Dates':
-                if (!/^\d{2}\/\d{2}\/\d{4}\s-\s\d{2}\/\d{2}\/\d{4}$/.test(fieldValue)) {
-                    this.errors[fieldName] = 'Please enter dates in the format MM/DD/YYYY - MM/DD/YYYY';
+            case 'Signature':
+                if (!fieldValue.trim()) {
+                    this.errors[fieldName] = 'Signature is required';
                 }
                 break;
             case 'Date':
                 if (!fieldValue) {
-                    this.errors[fieldName] = 'Please select a date';
+                    this.errors[fieldName] = 'Date is required';
                 }
                 break;
         }
 
         // Update formData
         this.formData[fieldName] = fieldValue;
-
-        // Force re-render to show/hide error messages
-        this.template.querySelector(`[label="${fieldName}"]`).reportValidity();
     }
 
     handleSubmit() {
         // Validate all fields
-        this.template.querySelectorAll('lightning-input, lightning-textarea, lightning-input-field').forEach(input => {
+        this.template.querySelectorAll('lightning-input, lightning-textarea, lightning-input-rich-text').forEach(input => {
             this.validateField({ target: input });
         });
 
         // Check if there are any errors
-        if (Object.keys(this.errors).length === 0) {
+        const hasErrors = Object.values(this.errors).some(error => error !== '');
+
+        if (hasErrors) {
+            // Display error toast
+            this.showToast('Error', 'Please correct the errors in the form', 'error');
+        } else {
             // Form is valid, proceed with submission
-            console.log('Form data:', this.formData);
+            console.log('Form submitted:', this.formData);
             this.showToast('Success', 'Form submitted successfully', 'success');
             // Here you would typically send the data to a server
-        } else {
-            // Form has errors
-            this.showToast('Error', 'Please correct the errors in the form', 'error');
         }
     }
 
