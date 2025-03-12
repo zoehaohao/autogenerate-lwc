@@ -3,110 +3,138 @@ import { LightningElement, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class PersonalDetailsForm extends LightningElement {
-    @track formData = {};
-    @track errors = {};
+    @track formData = {
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        dateOfBirth: '',
+        address: '',
+        city: '',
+        state: '',
+        country: 'United States',
+        zipCode: ''
+    };
 
-    handleInputChange(event) {
-        const field = event.target.dataset.field;
-        const value = event.target.value;
-        this.formData[field] = value;
-        this.validateField(field, value);
+    stateOptions = [
+        { label: 'California', value: 'CA' },
+        { label: 'New York', value: 'NY' },
+        // Add more states as needed
+    ];
+
+    countryOptions = [
+        { label: 'United States', value: 'United States' },
+        { label: 'Canada', value: 'Canada' },
+        // Add more countries as needed
+    ];
+
+    get isSubmitDisabled() {
+        return !(this.formData.firstName && this.formData.lastName && this.formData.email && 
+                 this.formData.dateOfBirth && this.formData.country);
     }
 
-    validateField(field, value) {
-        this.errors[field] = '';
+    handleInputChange(event) {
+        const { name, value } = event.target;
+        this.formData = { ...this.formData, [name]: value };
+        this.validateField(name, value);
+    }
 
-        switch (field) {
-            case 'fullName':
-            case 'positionAppliedFor':
-            case 'schoolInstitution':
-            case 'degreeCertification':
-            case 'mostRecentEmployer':
-            case 'jobTitle':
-            case 'signature':
-                if (!value || value.trim() === '') {
-                    this.errors[field] = `${field.charAt(0).toUpperCase() + field.slice(1)} is required`;
-                }
+    validateField(fieldName, value) {
+        let isValid = true;
+        const inputField = this.template.querySelector(`[name="${fieldName}"]`);
+
+        switch(fieldName) {
+            case 'firstName':
+            case 'lastName':
+                isValid = /^[A-Za-z]+$/.test(value);
                 break;
-            case 'phoneNumber':
-                if (!/^\(\d{3}\)\s\d{3}-\d{4}$/.test(value)) {
-                    this.errors[field] = 'Please enter a valid phone number in the format (###) ###-####';
-                }
+            case 'email':
+                isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
                 break;
-            case 'emailAddress':
-                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                    this.errors[field] = 'Please enter a valid email address';
-                }
+            case 'phone':
+                isValid = /^\d{3}-\d{3}-\d{4}$/.test(value);
                 break;
-            case 'resumeLink':
-                if (!/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/.test(value)) {
-                    this.errors[field] = 'Please enter a valid URL';
-                }
+            case 'dateOfBirth':
+                isValid = this.validateAge(value);
                 break;
-            case 'desiredSalary':
-                if (isNaN(value) || value <= 0) {
-                    this.errors[field] = 'Please enter a valid salary amount';
-                }
+            case 'city':
+                isValid = /^[A-Za-z\s]+$/.test(value);
                 break;
-            case 'yearGraduated':
-                if (!/^\d{4}$/.test(value) || parseInt(value) < 1900 || parseInt(value) > new Date().getFullYear()) {
-                    this.errors[field] = 'Please enter a valid 4-digit year';
-                }
+            case 'zipCode':
+                isValid = /^[A-Za-z0-9]+$/.test(value);
                 break;
-            case 'employmentDates':
-                if (!/^[a-zA-Z0-9\s\-\/]+$/.test(value)) {
-                    this.errors[field] = 'Please enter valid employment dates';
-                }
-                break;
-            case 'coverLetter':
-                if (!value || value.trim() === '') {
-                    this.errors[field] = 'Cover letter is required';
-                }
-                break;
-            case 'date':
-                if (!value) {
-                    this.errors[field] = 'Date is required';
-                }
-                break;
+        }
+
+        if (inputField) {
+            inputField.setCustomValidity(isValid ? '' : 'Invalid input');
+            inputField.reportValidity();
         }
     }
 
-    validateForm() {
-        let isValid = true;
-        Object.keys(this.formData).forEach(field => {
-            this.validateField(field, this.formData[field]);
-            if (this.errors[field]) {
-                isValid = false;
-            }
-        });
-        return isValid;
+    validateAge(birthDate) {
+        const today = new Date();
+        const dob = new Date(birthDate);
+        let age = today.getFullYear() - dob.getFullYear();
+        const monthDiff = today.getMonth() - dob.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+            age--;
+        }
+        return age >= 18;
     }
 
     handleSubmit() {
         if (this.validateForm()) {
-            // Here you would typically send the form data to a server
+            // Here you would typically call an Apex method to save the data
             console.log('Form submitted:', this.formData);
-            this.showToast('Success', 'Application submitted successfully', 'success');
+            this.showToast('Success', 'Personal details submitted successfully', 'success');
             this.resetForm();
         } else {
             this.showToast('Error', 'Please correct the errors in the form', 'error');
         }
     }
 
+    validateForm() {
+        const allValid = [
+            ...this.template.querySelectorAll('lightning-input'),
+            ...this.template.querySelectorAll('lightning-combobox'),
+            ...this.template.querySelectorAll('lightning-textarea')
+        ].reduce((validSoFar, inputField) => {
+            inputField.reportValidity();
+            return validSoFar && inputField.checkValidity();
+        }, true);
+
+        return allValid;
+    }
+
+    handleCancel() {
+        this.resetForm();
+        this.showToast('Info', 'Form has been reset', 'info');
+    }
+
     resetForm() {
-        this.formData = {};
-        this.errors = {};
-        this.template.querySelectorAll('lightning-input, lightning-textarea').forEach(element => {
-            element.value = '';
+        this.formData = {
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: '',
+            dateOfBirth: '',
+            address: '',
+            city: '',
+            state: '',
+            country: 'United States',
+            zipCode: ''
+        };
+        this.template.querySelectorAll('lightning-input, lightning-combobox, lightning-textarea').forEach(field => {
+            field.value = '';
         });
     }
 
     showToast(title, message, variant) {
-        const event = new ShowToastEvent({
+        const evt = new ShowToastEvent({
             title: title,
             message: message,
             variant: variant,
         });
-        this.dispatchEvent(event);
+        this.dispatchEvent(evt);
     }
 }

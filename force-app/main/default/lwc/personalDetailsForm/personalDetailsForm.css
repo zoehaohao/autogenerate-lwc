@@ -1,44 +1,52 @@
 /* personalDetailsForm.css */
 :host {
     --acme-blue-color: #0057B8;
+    --acme-blue-dark-color: #004A9E;
     --acme-gray-color: #424A54;
     --acme-white-color: #FFFFFF;
     --acme-light-gray-color: #F5F7FA;
-    --acme-medium-gray-color: #E4E7EB;
 }
 
 .acme-personal-details-form {
-    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
     color: var(--acme-gray-color);
-    background-color: var(--acme-white-color);
-    padding: var(--slds-c-card-spacing-block, 1rem);
 }
 
-.acme-input,
-.acme-textarea {
-    margin-bottom: var(--slds-c-card-spacing-block, 0.75rem);
+.acme-heading {
+    color: var(--acme-blue-color);
 }
 
-.acme-input .slds-form-element__label,
-.acme-textarea .slds-form-element__label {
-    font-size: 14px;
-    font-weight: 600;
+.acme-heading_large {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.acme-form lightning-input,
+.acme-form lightning-textarea,
+.acme-form lightning-combobox {
+    --slds-c-input-color-border: var(--acme-gray-color);
+    --slds-c-input-shadow-focus: 0 0 3px var(--acme-blue-color);
 }
 
 .acme-button_primary {
-    --sds-c-button-brand-color-background: var(--acme-blue-color);
-    --sds-c-button-brand-color-border: var(--acme-blue-color);
-    --sds-c-button-text-color: var(--acme-white-color);
+    --slds-c-button-brand-color-background: var(--acme-blue-color);
+    --slds-c-button-brand-color-background-hover: var(--acme-blue-dark-color);
+    --slds-c-button-brand-color-border: var(--acme-blue-color);
+    --slds-c-button-brand-color-border-hover: var(--acme-blue-dark-color);
 }
 
-.acme-button_primary:hover,
-.acme-button_primary:focus {
-    --sds-c-button-brand-color-background-hover: #004A9E;
-    --sds-c-button-brand-color-border-hover: #004A9E;
+.acme-link {
+    color: var(--acme-blue-color);
+    text-decoration: none;
+}
+
+.acme-link:hover {
+    text-decoration: underline;
 }
 
 @media screen and (max-width: 768px) {
     .acme-personal-details-form {
-        padding: var(--slds-c-card-spacing-block, 0.5rem);
+        padding: var(--lwc-spacingSmall);
     }
 }
