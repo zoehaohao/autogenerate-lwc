@@ -1,0 +1,77 @@
+<!-- sampleUIForm.html -->
+<template>
+    <div class="root-container slds-p-around_medium">
+        <h1 class="slds-text-heading_large slds-m-bottom_medium">Sample UI Form</h1>
+        
+        <form class="slds-form" onsubmit={handleSubmit}>
+            <div class="slds-form-element slds-m-bottom_small">
+                <label class="slds-form-element__label" for="fullName">
+                    <abbr class="slds-required" title="required">*</abbr> Full Name
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="text" id="fullName" class="slds-input" placeholder="Enter your full name" required
+                           pattern="[A-Za-z\s]+" onblur={validateField} data-field="fullName" />
+                </div>
+                <div class="slds-form-element__help slds-hide" id="error-fullName"></div>
+            </div>
+
+            <div class="slds-form-element slds-m-bottom_small">
+                <label class="slds-form-element__label" for="email">
+                    <abbr class="slds-required" title="required">*</abbr> Email
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="email" id="email" class="slds-input" placeholder="Enter your email" required
+                           onblur={validateField} data-field="email" />
+                </div>
+                <div class="slds-form-element__help slds-hide" id="error-email"></div>
+            </div>
+
+            <div class="slds-form-element slds-m-bottom_small">
+                <label class="slds-form-element__label" for="age">
+                    <abbr class="slds-required" title="required">*</abbr> Age
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="number" id="age" class="slds-input" placeholder="Enter your age" required
+                           min="18" max="100" onblur={validateField} data-field="age" />
+                </div>
+                <div class="slds-form-element__help slds-hide" id="error-age"></div>
+            </div>
+
+            <div class="slds-form-element slds-m-bottom_small">
+                <label class="slds-form-element__label" for="gender">
+                    <abbr class="slds-required" title="required">*</abbr> Gender
+                </label>
+                <div class="slds-form-element__control">
+                    <div class="slds-select_container">
+                        <select id="gender" class="slds-select" required onblur={validateField} data-field="gender">
+                            <option value="">Select your gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="slds-form-element__help slds-hide" id="error-gender"></div>
+            </div>
+
+            <div class="slds-form-element slds-m-bottom_small">
+                <label class="slds-form-element__label" for="comments">Comments</label>
+                <div class="slds-form-element__control">
+                    <textarea id="comments" class="slds-textarea" placeholder="Enter your comments" 
+                              maxlength="500" onblur={validateField} data-field="comments"></textarea>
+                </div>
+                <div class="slds-form-element__help slds-hide" id="error-comments"></div>
+            </div>
+
+            <div class="slds-grid slds-grid_align-center slds-m-top_medium">
+                <button class="slds-button slds-button_neutral slds-m-right_x-small" onclick={handleReset} type="button">Reset</button>
+                <button class="slds-button slds-button_brand" type="submit">Submit</button>
+            </div>
+        </form>
+
+        <div class="slds-m-top_large">
+            <a href="/home" class="slds-m-right_small">Home</a>
+            <a href="/privacy-policy" target="_blank">Privacy Policy</a>
+        </div>
+    </div>
+</template>
