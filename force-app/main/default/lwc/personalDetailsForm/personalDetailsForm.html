@@ -1,0 +1,165 @@
+<!-- personalDetailsForm.html -->
+<template>
+    <div class="acme-personal-details-form slds-p-around_medium">
+        <h1 class="acme-heading acme-heading_large slds-text-heading_large slds-m-bottom_medium">Employment Application Form</h1>
+        
+        <form class="slds-grid slds-wrap slds-gutters">
+            <!-- Applicant Information -->
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-bottom_medium">
+                <h2 class="acme-heading acme-heading_medium slds-text-heading_medium slds-m-bottom_small">Applicant Information</h2>
+                
+                <lightning-input 
+                    label="Full Name" 
+                    type="text" 
+                    required 
+                    class="slds-m-bottom_small"
+                    onblur={handleInputValidation}
+                ></lightning-input>
+                
+                <lightning-input 
+                    label="Phone Number" 
+                    type="tel" 
+                    required 
+                    class="slds-m-bottom_small"
+                    onblur={handleInputValidation}
+                ></lightning-input>
+                
+                <lightning-input 
+                    label="Email Address" 
+                    type="email" 
+                    required 
+                    class="slds-m-bottom_small"
+                    onblur={handleInputValidation}
+                ></lightning-input>
+                
+                <lightning-input 
+                    label="Resume Link" 
+                    type="url" 
+                    class="slds-m-bottom_small"
+                    onblur={handleInputValidation}
+                ></lightning-input>
+                
+                <lightning-input 
+                    label="Position Applied For" 
+                    type="text" 
+                    required 
+                    class="slds-m-bottom_small"
+                    onblur={handleInputValidation}
+                ></lightning-input>
+                
+                <lightning-input 
+                    label="Desired Salary (USD)" 
+                    type="number" 
+                    step="0.01" 
+                    min="0" 
+                    class="slds-m-bottom_small"
+                    onblur={handleInputValidation}
+                ></lightning-input>
+            </div>
+            
+            <!-- Education -->
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-bottom_medium">
+                <h2 class="acme-heading acme-heading_medium slds-text-heading_medium slds-m-bottom_small">Education</h2>
+                
+                <lightning-input 
+                    label="School/Institution" 
+                    type="text" 
+                    required 
+                    class="slds-m-bottom_small"
+                    onblur={handleInputValidation}
+                ></lightning-input>
+                
+                <lightning-input 
+                    label="Degree/Certification" 
+                    type="text" 
+                    required 
+                    class="slds-m-bottom_small"
+                    onblur={handleInputValidation}
+                ></lightning-input>
+                
+                <lightning-input 
+                    label="Year Graduated" 
+                    type="number" 
+                    required 
+                    min="1900" 
+                    max={currentYear}
+                    class="slds-m-bottom_small"
+                    onblur={handleInputValidation}
+                ></lightning-input>
+            </div>
+            
+            <!-- Employment History -->
+            <div class="slds-col slds-size_1-of-1 slds-p-bottom_medium">
+                <h2 class="acme-heading acme-heading_medium slds-text-heading_medium slds-m-bottom_small">Employment History</h2>
+                
+                <lightning-input 
+                    label="Most Recent Employer" 
+                    type="text" 
+                    required 
+                    class="slds-m-bottom_small"
+                    onblur={handleInputValidation}
+                ></lightning-input>
+                
+                <lightning-input 
+                    label="Job Title" 
+                    type="text" 
+                    required 
+                    class="slds-m-bottom_small"
+                    onblur={handleInputValidation}
+                ></lightning-input>
+                
+                <lightning-input 
+                    label="Employment Dates" 
+                    type="text" 
+                    required 
+                    class="slds-m-bottom_small"
+                    onblur={handleInputValidation}
+                ></lightning-input>
+            </div>
+            
+            <!-- Cover Letter -->
+            <div class="slds-col slds-size_1-of-1 slds-p-bottom_medium">
+                <h2 class="acme-heading acme-heading_medium slds-text-heading_medium slds-m-bottom_small">Cover Letter</h2>
+                
+                <lightning-textarea 
+                    label="Cover Letter" 
+                    required 
+                    placeholder="Please provide a brief cover letter in the space below:"
+                    class="slds-m-bottom_small"
+                    onblur={handleInputValidation}
+                ></lightning-textarea>
+            </div>
+            
+            <!-- Signature and Date -->
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-bottom_medium">
+                <lightning-input 
+                    label="Signature" 
+                    type="text" 
+                    required 
+                    class="slds-m-bottom_small"
+                    onblur={handleInputValidation}
+                ></lightning-input>
+            </div>
+            
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-bottom_medium">
+                <lightning-input 
+                    label="Date" 
+                    type="date" 
+                    required 
+                    class="slds-m-bottom_small"
+                    onblur={handleInputValidation}
+                ></lightning-input>
+            </div>
+            
+            <!-- Submit Button -->
+            <div class="slds-col slds-size_1-of-1 slds-text-align_center">
+                <lightning-button 
+                    label="Submit" 
+                    variant="brand" 
+                    class="acme-button_primary" 
+                    onclick={handleSubmit}
+                ></lightning-button>
+            </div>
+        </form>
+    </div>
+</template>
