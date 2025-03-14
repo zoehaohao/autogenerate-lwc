@@ -1,0 +1,73 @@
+/* userInformationForm.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-teal-color: #00A0B0;
+    --acme-gold-color: #F2C94C;
+    --acme-coral-color: #FF6B6B;
+    --acme-light-gray-color: #F5F7FA;
+}
+
+.acme-user-information-form {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: var(--acme-space-md, 1rem);
+}
+
+.acme-user-information-form__section {
+    margin-bottom: var(--acme-space-lg, 2rem);
+}
+
+.acme-heading {
+    color: var(--acme-blue-color);
+    margin-bottom: var(--acme-space-md, 1rem);
+}
+
+.acme-heading_medium {
+    font-size: var(--acme-font-size-4, 1.25rem);
+}
+
+.acme-user-information-form__field {
+    margin-bottom: var(--acme-space-sm, 0.5rem);
+}
+
+.acme-label {
+    display: block;
+    color: var(--acme-gray-color);
+    font-size: var(--acme-font-size-2, 0.875rem);
+    margin-bottom: var(--acme-space-xs, 0.25rem);
+}
+
+.acme-required-indicator {
+    color: var(--acme-coral-color);
+    margin-left: var(--acme-space-xxs, 0.125rem);
+}
+
+.acme-button {
+    font-size: var(--acme-font-size-2, 0.875rem);
+    padding: var(--acme-space-xs, 0.25rem) var(--acme-space-sm, 0.5rem);
+    border-radius: var(--acme-radius-medium, 0.25rem);
+}
+
+.acme-button_primary {
+    background-color: var(--acme-blue-color);
+    border-color: var(--acme-blue-color);
+    color: var(--acme-white-color);
+}
+
+.acme-button_primary:hover, .acme-button_primary:focus {
+    background-color: var(--acme-blue-dark-color, #004A9E);
+    border-color: var(--acme-blue-dark-color, #004A9E);
+}
+
+@media screen and (max-width: 768px) {
+    .acme-user-information-form {
+        padding: var(--acme-space-sm, 0.5rem);
+    }
+
+    .acme-user-information-form__section {
+        margin-bottom: var(--acme-space-md, 1rem);
+    }
+}

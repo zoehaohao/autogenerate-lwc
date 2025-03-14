@@ -1,0 +1,53 @@
+<!-- userInformationForm.html -->
+<template>
+    <div class="acme-user-information-form">
+        <div class="acme-user-information-form__section">
+            <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
+            <div class="acme-user-information-form__field">
+                <label for="firstName" class="acme-label">First Name<span class="acme-required-indicator">*</span></label>
+                <lightning-input type="text" id="firstName" name="firstName" required onchange={handleInputChange}></lightning-input>
+            </div>
+            <div class="acme-user-information-form__field">
+                <label for="middleName" class="acme-label">Middle Name</label>
+                <lightning-input type="text" id="middleName" name="middleName" onchange={handleInputChange}></lightning-input>
+            </div>
+            <div class="acme-user-information-form__field">
+                <label for="lastName" class="acme-label">Last Name<span class="acme-required-indicator">*</span></label>
+                <lightning-input type="text" id="lastName" name="lastName" required onchange={handleInputChange}></lightning-input>
+            </div>
+        </div>
+        <div class="acme-user-information-form__section">
+            <h2 class="acme-heading acme-heading_medium">Address</h2>
+            <div class="acme-user-information-form__field">
+                <label for="address" class="acme-label">Address</label>
+                <lightning-input type="text" id="address" name="address" onchange={handleInputChange}></lightning-input>
+            </div>
+            <div class="acme-user-information-form__field">
+                <label for="cityOrTown" class="acme-label">City or Town</label>
+                <lightning-input type="text" id="cityOrTown" name="cityOrTown" onchange={handleInputChange}></lightning-input>
+            </div>
+            <div class="acme-user-information-form__field">
+                <label for="state" class="acme-label">State</label>
+                <lightning-combobox
+                    name="state"
+                    label="State"
+                    placeholder="Choose a State"
+                    options={stateOptions}
+                    onchange={handleStateChange}
+                ></lightning-combobox>
+            </div>
+            <div class="acme-user-information-form__field">
+                <label for="zipCode" class="acme-label">Zip Code<span class="acme-required-indicator">*</span></label>
+                <lightning-input type="text" id="zipCode" name="zipCode" required onchange={handleInputChange}></lightning-input>
+            </div>
+        </div>
+        <div class="acme-user-information-form__actions">
+            <lightning-button
+                label="Submit"
+                variant="brand"
+                onclick={handleSubmit}
+                class="acme-button acme-button_primary"
+            ></lightning-button>
+        </div>
+    </div>
+</template>
