@@ -7,41 +7,60 @@
     --acme-gold-color: #F2C94C;
     --acme-coral-color: #FF6B6B;
     --acme-light-gray-color: #F5F7FA;
-    --acme-medium-gray-color: #E4E7EB;
-    --acme-dark-gray-color: #7B8794;
 }
 
 .acme-personal-details-form {
-    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: var(--lwc-fontFamily);
     color: var(--acme-gray-color);
     background-color: var(--acme-white-color);
+    padding: var(--lwc-spacingMedium);
 }
 
-.acme-heading_large {
-    font-size: 32px;
+.acme-personal-details-form__section {
+    margin-bottom: var(--lwc-spacingLarge);
+}
+
+.acme-heading {
     color: var(--acme-blue-color);
-    font-weight: 700;
+    font-weight: var(--lwc-fontWeightBold);
 }
 
 .acme-heading_medium {
-    font-size: 24px;
-    color: var(--acme-gray-color);
-    font-weight: 700;
+    font-size: var(--lwc-fontSize5);
+    margin-bottom: var(--lwc-spacingMedium);
+}
+
+.acme-personal-details-form__field {
+    margin-bottom: var(--lwc-spacingSmall);
+}
+
+.acme-personal-details-form__label {
+    display: block;
+    margin-bottom: var(--lwc-spacingXxSmall);
+    text-align: right;
+}
+
+.acme-personal-details-form__input {
+    width: 100%;
+}
+
+.acme-personal-details-form__required {
+    color: var(--acme-coral-color);
+    margin-left: var(--lwc-spacingXxSmall);
 }
 
 .acme-button_primary {
-    --sds-c-button-brand-color-background: var(--acme-blue-color);
-    --sds-c-button-brand-color-border: var(--acme-blue-color);
-    --sds-c-button-text-color: var(--acme-white-color);
+    background-color: var(--acme-blue-color);
+    border-color: var(--acme-blue-color);
 }
 
 .acme-button_primary:hover, .acme-button_primary:focus {
-    --sds-c-button-brand-color-background-hover: #004A9E;
-    --sds-c-button-brand-color-border-hover: #004A9E;
+    background-color: var(--acme-teal-color);
+    border-color: var(--acme-teal-color);
 }
 
 @media screen and (max-width: 768px) {
-    .acme-personal-details-form {
-        padding: var(--lwc-spacingSmall);
+    .acme-personal-details-form__label {
+        text-align: left;
     }
 }
