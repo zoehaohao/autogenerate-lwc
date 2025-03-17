@@ -1,54 +1,127 @@
-<!-- personalDetailsForm.html -->
 <template>
-    <div class="acme-personal-details-form">
-        <div class="acme-personal-details-form__section">
-            <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
-            <div class="acme-personal-details-form__field">
-                <label for="firstName" class="acme-personal-details-form__label">First name <span class="acme-personal-details-form__required">*</span></label>
-                <lightning-input type="text" id="firstName" name="firstName" required class="acme-personal-details-form__input"></lightning-input>
-            </div>
-            <div class="acme-personal-details-form__field">
-                <label for="middleName" class="acme-personal-details-form__label">Middle name</label>
-                <lightning-input type="text" id="middleName" name="middleName" class="acme-personal-details-form__input"></lightning-input>
-            </div>
-            <div class="acme-personal-details-form__field">
-                <label for="lastName" class="acme-personal-details-form__label">Last name <span class="acme-personal-details-form__required">*</span></label>
-                <lightning-input type="text" id="lastName" name="lastName" required class="acme-personal-details-form__input"></lightning-input>
-            </div>
-        </div>
-        
-        <div class="acme-personal-details-form__section">
-            <h2 class="acme-heading acme-heading_medium">Address</h2>
-            <div class="acme-personal-details-form__field">
-                <label for="address" class="acme-personal-details-form__label">Address</label>
-                <lightning-input type="text" id="address" name="address" class="acme-personal-details-form__input"></lightning-input>
-            </div>
-            <div class="acme-personal-details-form__field">
-                <label for="cityTown" class="acme-personal-details-form__label">City or Town</label>
-                <lightning-input type="text" id="cityTown" name="cityTown" class="acme-personal-details-form__input"></lightning-input>
-            </div>
-            <div class="acme-personal-details-form__field">
-                <label for="state" class="acme-personal-details-form__label">State</label>
-                <lightning-combobox
-                    name="state"
-                    placeholder="Choose a State"
-                    options={stateOptions}
-                    class="acme-personal-details-form__input"
-                ></lightning-combobox>
-            </div>
-            <div class="acme-personal-details-form__field">
-                <label for="zipCode" class="acme-personal-details-form__label">Zip code <span class="acme-personal-details-form__required">*</span></label>
-                <lightning-input type="text" id="zipCode" name="zipCode" required pattern="^\d{5}(-\d{4})?$" message-when-pattern-mismatch="Please enter a valid 5 or 9 digit zip code" class="acme-personal-details-form__input"></lightning-input>
-            </div>
-        </div>
-        
-        <div class="acme-personal-details-form__actions">
-            <lightning-button 
-                label="Submit" 
-                variant="brand" 
-                onclick={handleSubmit} 
-                class="acme-button acme-button_primary"
-            ></lightning-button>
-        </div>
+ <div class="acme-personal-details-form">
+  <div class="acme-personal-details-form__section">
+   <h2 class="acme-heading acme-heading_medium">
+    Personal Information
+   </h2>
+   <div class="acme-personal-details-form__field">
+    <label class="acme-personal-details-form__label" for="firstName">
+     First name
+     <span class="acme-personal-details-form__required">
+      *
+     </span>
+    </label>
+    <input class="acme-personal-details-form__input" id="firstName" required="" type="text"/>
+   </div>
+   <div class="acme-personal-details-form__field">
+    <label class="acme-personal-details-form__label" for="middleName">
+     Middle name
+    </label>
+    <input class="acme-personal-details-form__input" id="middleName" type="text"/>
+   </div>
+   <div class="acme-personal-details-form__field">
+    <label class="acme-personal-details-form__label" for="lastName">
+     Last name
+     <span class="acme-personal-details-form__required">
+      *
+     </span>
+    </label>
+    <input class="acme-personal-details-form__input" id="lastName" required="" type="text"/>
+   </div>
+   <div class="acme-personal-details-form__field">
+    <label class="acme-personal-details-form__label" for="birthdate">
+     Birthdate
+     <span class="acme-personal-details-form__required">
+      *
+     </span>
+    </label>
+    <input class="acme-personal-details-form__input" id="birthdate" required="" type="date"/>
+   </div>
+  </div>
+  <div class="acme-personal-details-form__section">
+   <h2 class="acme-heading acme-heading_medium">
+    Address
+   </h2>
+   <div class="acme-personal-details-form__field">
+    <label class="acme-personal-details-form__label" for="address">
+     Address
+    </label>
+    <input class="acme-personal-details-form__input" id="address" type="text"/>
+   </div>
+   <div class="acme-personal-details-form__field">
+    <label class="acme-personal-details-form__label" for="cityTown">
+     City or Town
+    </label>
+    <input class="acme-personal-details-form__input" id="cityTown" type="text"/>
+   </div>
+   <div class="acme-personal-details-form__field">
+    <label class="acme-personal-details-form__label" for="state">
+     State
+    </label>
+    <div class="acme-personal-details-form__select-wrapper">
+     <select class="acme-personal-details-form__select" id="state">
+      <option value="">
+       Choose a State
+      </option>
+      <option value="NSW">
+       New South Wales
+      </option>
+      <option value="VIC">
+       Victoria
+      </option>
+      <option value="QLD">
+       Queensland
+      </option>
+      <option value="WA">
+       Western Australia
+      </option>
+      <option value="SA">
+       South Australia
+      </option>
+      <option value="TAS">
+       Tasmania
+      </option>
+      <option value="ACT">
+       Australian Capital Territory
+      </option>
+      <option value="NT">
+       Northern Territory
+      </option>
+     </select>
     </div>
+   </div>
+   <div class="acme-personal-details-form__field">
+    <label class="acme-personal-details-form__label" for="zipCode">
+     Zip code
+     <span class="acme-personal-details-form__required">
+      *
+     </span>
+    </label>
+    <input class="acme-personal-details-form__input" id="zipCode" required="" type="text"/>
+   </div>
+   <div class="acme-personal-details-form__field">
+    <label class="acme-personal-details-form__label" for="startDate">
+     Start Date
+     <span class="acme-personal-details-form__required">
+      *
+     </span>
+    </label>
+    <input class="acme-personal-details-form__input" id="startDate" required="" type="date"/>
+   </div>
+   <div class="acme-personal-details-form__field">
+    <label class="acme-personal-details-form__label" for="endDate">
+     End Date
+     <span class="acme-personal-details-form__required">
+      *
+     </span>
+    </label>
+    <input class="acme-personal-details-form__input" id="endDate" required="" type="date"/>
+   </div>
+  </div>
+  <div class="acme-personal-details-form__actions">
+   <button class="acme-button acme-button_primary" onclick="{handleSubmit}">
+    Submit
+   </button>
+  </div>
+ </div>
 </template>

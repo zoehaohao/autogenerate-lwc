@@ -1,66 +1,113 @@
-/* personalDetailsForm.css */
 :host {
-    --acme-blue-color: #0057B8;
-    --acme-gray-color: #424A54;
-    --acme-white-color: #FFFFFF;
-    --acme-teal-color: #00A0B0;
-    --acme-gold-color: #F2C94C;
-    --acme-coral-color: #FF6B6B;
-    --acme-light-gray-color: #F5F7FA;
+  --acme-blue-color: #0057B8;
+  --acme-gray-color: #424A54;
+  --acme-white-color: #FFFFFF;
+  --acme-light-gray-color: #F5F7FA;
+  --acme-medium-gray-color: #E4E7EB;
+  --acme-coral-color: #FF6B6B;
 }
 
 .acme-personal-details-form {
-    font-family: var(--lwc-fontFamily);
-    color: var(--acme-gray-color);
-    background-color: var(--acme-white-color);
-    padding: var(--lwc-spacingMedium);
+  font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  color: var(--acme-gray-color);
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
 }
 
 .acme-personal-details-form__section {
-    margin-bottom: var(--lwc-spacingLarge);
+  margin-bottom: 2rem;
 }
 
 .acme-heading {
-    color: var(--acme-blue-color);
-    font-weight: var(--lwc-fontWeightBold);
+  color: var(--acme-blue-color);
+  font-weight: 700;
+  margin-bottom: 1rem;
 }
 
 .acme-heading_medium {
-    font-size: var(--lwc-fontSize5);
-    margin-bottom: var(--lwc-spacingMedium);
+  font-size: 1.5rem;
 }
 
 .acme-personal-details-form__field {
-    margin-bottom: var(--lwc-spacingSmall);
+  margin-bottom: 1rem;
 }
 
 .acme-personal-details-form__label {
-    display: block;
-    margin-bottom: var(--lwc-spacingXxSmall);
-    text-align: right;
-}
-
-.acme-personal-details-form__input {
-    width: 100%;
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  text-align: right;
 }
 
 .acme-personal-details-form__required {
-    color: var(--acme-coral-color);
-    margin-left: var(--lwc-spacingXxSmall);
+  color: var(--acme-coral-color);
+  margin-left: 0.25rem;
+}
+
+.acme-personal-details-form__input,
+.acme-personal-details-form__select {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid var(--acme-medium-gray-color);
+  border-radius: 4px;
+  background-color: var(--acme-white-color);
+}
+
+.acme-personal-details-form__select-wrapper {
+  position: relative;
+}
+
+.acme-personal-details-form__select-wrapper::after {
+  content: '▼';
+  font-size: 1rem;
+  color: var(--acme-gray-color);
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.acme-personal-details-form__actions {
+  margin-top: 2rem;
+  text-align: right;
+}
+
+.acme-button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .acme-button_primary {
-    background-color: var(--acme-blue-color);
-    border-color: var(--acme-blue-color);
+  background-color: var(--acme-blue-color);
+  color: var(--acme-white-color);
+  border: none;
 }
 
-.acme-button_primary:hover, .acme-button_primary:focus {
-    background-color: var(--acme-teal-color);
-    border-color: var(--acme-teal-color);
+.acme-button_primary:hover,
+.acme-button_primary:focus {
+  background-color: #004A9E;
 }
 
-@media screen and (max-width: 768px) {
-    .acme-personal-details-form__label {
-        text-align: left;
-    }
+@media (min-width: 768px) {
+  .acme-personal-details-form__field {
+    display: flex;
+    align-items: center;
+  }
+
+  .acme-personal-details-form__label {
+    flex: 0 0 30%;
+    margin-bottom: 0;
+    margin-right: 1rem;
+  }
+
+  .acme-personal-details-form__input,
+  .acme-personal-details-form__select {
+    flex: 1;
+  }
 }

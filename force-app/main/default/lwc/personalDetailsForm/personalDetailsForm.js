@@ -1,71 +1,8 @@
-// personalDetailsForm.js
-import { LightningElement, track } from 'lwc';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-
+import {
+  LightningElement
+} from 'lwc';
 export default class PersonalDetailsForm extends LightningElement {
-    @track formData = {
-        firstName: '',
-        middleName: '',
-        lastName: '',
-        address: '',
-        cityTown: '',
-        state: '',
-        zipCode: ''
-    };
-
-    stateOptions = [
-        { label: 'Choose a State', value: '' },
-        { label: 'Alabama', value: 'AL' },
-        { label: 'Alaska', value: 'AK' },
-        // ... Add all other states here
-    ];
-
-    handleInputChange(event) {
-        const field = event.target.name;
-        this.formData[field] = event.target.value;
-    }
-
-    handleSubmit() {
-        if (this.validateForm()) {
-            // Here you would typically send the data to a server
-            console.log('Form submitted:', this.formData);
-            this.showToast('Success', 'Form submitted successfully', 'success');
-            this.resetForm();
-        } else {
-            this.showToast('Error', 'Please fill out all required fields correctly', 'error');
-        }
-    }
-
-    validateForm() {
-        const allValid = [...this.template.querySelectorAll('lightning-input,lightning-combobox')]
-            .reduce((validSoFar, inputField) => {
-                inputField.reportValidity();
-                return validSoFar && inputField.checkValidity();
-            }, true);
-        return allValid;
-    }
-
-    resetForm() {
-        this.formData = {
-            firstName: '',
-            middleName: '',
-            lastName: '',
-            address: '',
-            cityTown: '',
-            state: '',
-            zipCode: ''
-        };
-        this.template.querySelectorAll('lightning-input,lightning-combobox').forEach(field => {
-            field.value = '';
-        });
-    }
-
-    showToast(title, message, variant) {
-        const evt = new ShowToastEvent({
-            title: title,
-            message: message,
-            variant: variant,
-        });
-        this.dispatchEvent(evt);
-    }
-}
+  handleSubmit(event) {
+      event.preventDefault();
+      if (this
+      .validateForm()) { // Perform form submission logic here            console.log('Form submitted successfully');        } else {            console.error('Form validation failed');        }    }    validateForm() {        const inputFields = this.template.querySelectorAll('.acme-personal-details-form__input');        let isValid = true;        inputFields.forEach(field => {            if (field.required && !field.value) {                this.showError(field, 'This field is required');                isValid = false;            } else if (field.id === 'zipCode' && !this.isValidAustralianPostalCode(field.value)) {                this.showError(field, 'Invalid Australian postal code');                isValid = false;            } else if (field.type === 'date' && !this.isValidDate(field.value)) {                this.showError(field, 'Invalid date');                isValid = false;            } else {                this.clearError(field);            }        });        const startDate = this.template.querySelector('#startDate').value;        const endDate = this.template.querySelector('#endDate').value;        if (startDate && endDate && new Date(endDate) <= new Date(startDate)) {            this.showError(this.template.querySelector('#endDate'), 'End Date must be after Start Date');            isValid = false;        }        return isValid;    }    isValidAustralianPostalCode(postalCode) {        return /^[0-9]{4}$/.test(postalCode);    }    isValidDate(dateString) {        return !isNaN(new Date(dateString).getTime());    }    showError(field, message) {        field.setCustomValidity(message);        field.reportValidity();    }    clearError(field) {        field.setCustomValidity('');    }}
