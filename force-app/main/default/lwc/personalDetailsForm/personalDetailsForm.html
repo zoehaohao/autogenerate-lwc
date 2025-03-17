@@ -1,0 +1,27 @@
+<template>
+ <div class="acme-personal-details-form">
+  <lightning-card title="Personal Details Form">
+   <div class="acme-personal-details-form__content">
+    <lightning-input class="acme-personal-details-form__input" label="Full Name" name="fullName" onchange="{handleInputChange}" required="" type="text" value="{fullName}">
+    </lightning-input>
+    <lightning-input class="acme-personal-details-form__input" label="Date of Birth" name="dateOfBirth" onchange="{handleInputChange}" required="" type="date" value="{dateOfBirth}">
+    </lightning-input>
+    <lightning-input class="acme-personal-details-form__input" label="Start Date" name="startDate" onchange="{handleInputChange}" required="" type="date" value="{startDate}">
+    </lightning-input>
+    <lightning-input class="acme-personal-details-form__input" label="End Date" name="endDate" onchange="{handleInputChange}" required="" type="date" value="{endDate}">
+    </lightning-input>
+    <div class="acme-personal-details-form__buttons">
+     <lightning-button class="acme-personal-details-form__button acme-personal-details-form__button--submit" label="Submit" onclick="{handleSubmit}" variant="brand">
+     </lightning-button>
+     <lightning-button class="acme-personal-details-form__button acme-personal-details-form__button--clear" label="Clear" onclick="{handleClear}" variant="neutral">
+     </lightning-button>
+    </div>
+   </div>
+   <template if:true="{errorMessage}">
+    <div class="acme-personal-details-form__error" role="alert">
+     {errorMessage}
+    </div>
+   </template>
+  </lightning-card>
+ </div>
+</template>
