@@ -1,0 +1,43 @@
+:host {
+  --acme-blue-color: #0057B8;
+  --acme-gray-color: #424A54;
+  --acme-white-color: #FFFFFF;
+}
+
+.root-container {
+  font-family: Arial, sans-serif;
+  color: var(--acme-gray-color);
+}
+
+lightning-card {
+  --sds-c-card-color-background: var(--acme-white-color);
+}
+
+lightning-input {
+  --slds-c-input-text-color: var(--acme-gray-color);
+  --slds-c-input-color-background: var(--acme-white-color);
+  margin-bottom: var(--slds-c-card-spacing-block-small, 0.75rem);
+}
+
+lightning-button.slds-button_brand {
+  --sds-c-button-brand-color-background: var(--acme-blue-color);
+  --sds-c-button-text-color: var(--acme-white-color);
+}
+
+lightning-button.slds-button_neutral {
+  --sds-c-button-color-background: var(--acme-white-color);
+  --sds-c-button-text-color: var(--acme-gray-color);
+  --sds-c-button-color-border: var(--acme-gray-color);
+}
+
+.slds-text-color_error {
+  color: #FF6B6B;
+  font-size: 0.875rem;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 768px) {
+  .slds-p-around_medium {
+    padding: var(--slds-c-card-spacing-block-small, 0.75rem);
+  }
+}
