@@ -1,0 +1,57 @@
+.root-container {
+  background-color: var(--slds-c-card-color-background, #FFFFFF);
+  border-radius: var(--slds-c-card-radius-border, 8px);
+  box-shadow: var(--slds-c-card-shadow, 0 2px 8px rgba(66, 74, 84, 0.1));
+  padding: var(--slds-c-card-spacing-block, 24px);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.slds-form-element {
+  margin-bottom: var(--slds-c-form-element-spacing-block-end, 16px);
+}
+
+.slds-input,
+.slds-select {
+  border: 1px solid var(--slds-c-input-color-border, #E4E7EB);
+  border-radius: var(--slds-c-input-radius-border, 4px);
+  height: var(--slds-c-input-sizing-height, 40px);
+  padding: var(--slds-c-input-spacing-horizontal-start, 8px) var(--slds-c-input-spacing-horizontal-end, 12px);
+}
+
+.slds-input:focus,
+.slds-select:focus {
+  border-color: var(--slds-c-input-color-border-focus, #0057B8);
+  box-shadow: var(--slds-c-input-shadow-focus, 0 0 3px #0057B8);
+}
+
+.slds-button {
+  padding: var(--slds-c-button-spacing-block-start, 8px) var(--slds-c-button-spacing-inline-start, 16px);
+  font-size: var(--slds-c-button-text-font-size, 14px);
+  border-radius: var(--slds-c-button-radius-border, 4px);
+  transition: background-color 0.1s ease-in-out;
+}
+
+.slds-button_brand {
+  background-color: var(--slds-c-button-brand-color-background, #0057B8);
+  border-color: var(--slds-c-button-brand-color-border, #0057B8);
+  color: var(--slds-c-button-text-color, #FFFFFF);
+}
+
+.slds-button_brand:hover {
+  background-color: var(--slds-c-button-brand-color-background-hover, #004494);
+}
+
+.slds-button_neutral {
+  background-color: var(--slds-c-button-neutral-color-background, #FFFFFF);
+  border-color: var(--slds-c-button-neutral-color-border, #E4E7EB);
+  color: var(--slds-c-button-text-color, #424A54);
+}
+
+.slds-button_neutral:hover {
+  background-color: var(--slds-c-button-neutral-color-background-hover, #F5F7FA);
+}
+
+.slds-text-color_error {
+  color: var(--slds-c-text-color-error, #FF6B6B);
+}
