@@ -5,48 +5,32 @@ import {
 export default class PersonalDetailsForm extends LightningElement {
     @track formData = {
         firstName: '',
-        middleName: '',
         lastName: '',
-        birthdate: '',
-        address: '',
-        city: '',
-        state: '',
-        zipCode: '',
+        email: '',
+        phone: '',
+        dateOfBirth: '',
+        gender: '',
         startDate: '',
-        endDate: ''
+        endDate: '',
+        comments: ''
     };
     @track errorMessage = '';
-    stateOptions = [{
-        label: 'New South Wales',
-        value: 'NSW'
+    genderOptions = [{
+        label: 'Male',
+        value: 'Male'
     }, {
-        label: 'Victoria',
-        value: 'VIC'
+        label: 'Female',
+        value: 'Female'
     }, {
-        label: 'Queensland',
-        value: 'QLD'
+        label: 'Other',
+        value: 'Other'
     }, {
-        label: 'Western Australia',
-        value: 'WA'
-    }, {
-        label: 'South Australia',
-        value: 'SA'
-    }, {
-        label: 'Tasmania',
-        value: 'TAS'
-    }, {
-        label: 'Australian Capital Territory',
-        value: 'ACT'
-    }, {
-        label: 'Northern Territory',
-        value: 'NT'
+        label: 'Prefer not to say',
+        value: 'Prefer not to say'
     }];
     handleInputChange(event) {
-        const {
-            name,
-            value
-        } = event.target;
-        this.formData[name] = value;
+        const field = event.target.dataset.field;
+        this.formData[field] = event.target.value;
     }
     handleSubmit() {
         if (this.validateForm()) {
@@ -55,40 +39,53 @@ export default class PersonalDetailsForm extends LightningElement {
         }
     }
     validateForm() {
-        const {
-            firstName,
-            lastName,
-            birthdate,
-            zipCode,
-            startDate,
-            endDate
-        } = this.formData;
-        if (!firstName || !lastName || !birthdate || !zipCode || !startDate || !endDate) {
-            this.errorMessage = 'Please fill in all required fields.';
-            return false;
+        const inputFields = this.template.querySelectorAll(
+            'lightning-input, lightning-combobox, lightning-textarea');
+        let isValid = true;
+        let errorMessages = [];
+        inputFields.forEach(field => {
+            if (field.required && !field.value) {
+                isValid = false;
+                field.reportValidity();
+                errorMessages.push(`${field.label} is required.`);
+            }
+        });
+        if (!this.validateEmail(this.formData.email)) {
+            isValid = false;
+            errorMessages.push('Please enter a valid email address.');
         }
-        if (!this.isOver18(birthdate)) {
-            this.errorMessage = 'Applicant must be over 18 years old.';
-            return false;
+        if (!this.validatePhone(this.formData.phone)) {
+            isValid = false;
+            errorMessages.push('Please enter a valid phone number.');
         }
-        if (!this.isStartDateBeforeEndDate(startDate, endDate)) {
-            this.errorMessage = 'Start Date must be earlier than End Date.';
-            return false;
+        if (!this.validateAge(this.formData.dateOfBirth)) {
+            isValid = false;
+            errorMessages.push('You must be at least 18 years old.');
         }
-        return true;
+        if (!this.validateDates(this.formData.startDate, this.formData.endDate)) {
+            isValid = false;
+            errorMessages.push('End date must be after the start date.');
+        }
+        this.errorMessage = errorMessages.join(' ');
+        return isValid;
     }
-    isOver18(birthdate) {
+    validateEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+    validatePhone(phone) {
+        return /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/.test(phone);
+    }
+    validateAge(dateOfBirth) {
         const today = new Date();
-        const birthdateObj = new Date(birthdate);
-        const ageDifference = today.getFullYear() - birthdateObj.getFullYear();
-        const monthDifference = today.getMonth() - birthdateObj.getMonth();
-        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthdateObj
-                .getDate())) {
-            return ageDifference - 1 >= 18;
+        const birthDate = new Date(dateOfBirth);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
         }
-        return ageDifference >= 18;
+        return age >= 18;
     }
-    isStartDateBeforeEndDate(startDate, endDate) {
-        return new Date(startDate) < new Date(endDate);
+    validateDates(startDate, endDate) {
+        return new Date(endDate) > new Date(startDate);
     }
 }

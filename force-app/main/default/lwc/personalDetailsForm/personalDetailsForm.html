@@ -1,1 +1,35 @@
-<template>    <div class="acme-personal-details-form">        <div class="acme-card">            <h2 class="acme-heading acme-heading_medium">Personal Information</h2>            <div class="acme-card__body">                <lightning-input label="First Name" name="firstName" required onchange={handleInputChange}></lightning-input>                <lightning-input label="Middle Name" name="middleName" onchange={handleInputChange}></lightning-input>                <lightning-input label="Last Name" name="lastName" required onchange={handleInputChange}></lightning-input>                <lightning-input type="date" label="Birthdate" name="birthdate" required onchange={handleInputChange}></lightning-input>            </div>        </div>                <div class="acme-card">            <h2 class="acme-heading acme-heading_medium">Address</h2>            <div class="acme-card__body">                <lightning-input label="Address" name="address" onchange={handleInputChange}></lightning-input>                <lightning-input label="City or Town" name="city" onchange={handleInputChange}></lightning-input>                <lightning-combobox label="State" name="state" options={stateOptions} onchange={handleInputChange}></lightning-combobox>                <lightning-input label="Zip Code" name="zipCode" required onchange={handleInputChange}></lightning-input>                <lightning-input type="date" label="Start Date" name="startDate" required onchange={handleInputChange}></lightning-input>                <lightning-input type="date" label="End Date" name="endDate" required onchange={handleInputChange}></lightning-input>            </div>        </div>                <div class="acme-card__footer">            <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="acme-button_primary"></lightning-button>        </div>                <template if:true={errorMessage}>            <div class="acme-error-message">{errorMessage}</div>        </template>    </div></template>
+<template>
+ <div class="acme-personal-details-form">
+  <lightning-card icon-name="standard:person_account" title="Personal Details Form">
+   <div class="acme-card__body">
+    <lightning-input class="acme-input" data-field="firstName" field-level-help="Enter your first name" label="First Name" onchange={handleInputChange} required="">
+    </lightning-input>
+    <lightning-input class="acme-input" data-field="lastName" field-level-help="Enter your last name" label="Last Name" onchange={handleInputChange} required="">
+    </lightning-input>
+    <lightning-input class="acme-input" data-field="email" field-level-help="Enter a valid email address" label="Email" onchange={handleInputChange} required="" type="email">
+    </lightning-input>
+    <lightning-input class="acme-input" data-field="phone" field-level-help="Enter a valid phone number" label="Phone" onchange={handleInputChange} required="" type="tel">
+    </lightning-input>
+    <lightning-input class="acme-input" data-field="dateOfBirth" field-level-help="You must be at least 18 years old" label="Date of Birth" onchange={handleInputChange} required="" type="date">
+    </lightning-input>
+    <lightning-combobox class="acme-input" data-field="gender" field-level-help="Select your gender" label="Gender" onchange={handleInputChange} options={genderOptions} required="">
+    </lightning-combobox>
+    <lightning-input class="acme-input" data-field="startDate" field-level-help="Enter the start date" label="Start Date" onchange={handleInputChange} required="" type="date">
+    </lightning-input>
+    <lightning-input class="acme-input" data-field="endDate" field-level-help="Enter the end date" label="End Date" onchange={handleInputChange} required="" type="date">
+    </lightning-input>
+    <lightning-textarea class="acme-input" data-field="comments" field-level-help="Enter any additional comments" label="Comments" onchange={handleInputChange}>
+    </lightning-textarea>
+    <div class="acme-button-container">
+     <lightning-button class="acme-button acme-button_primary" label="Submit" onclick={handleSubmit} variant="brand">
+     </lightning-button>
+    </div>
+    <template if:true={errorMessage}>
+     <div class="acme-error-message">
+      {errorMessage}
+     </div>
+    </template>
+   </div>
+  </lightning-card>
+ </div>
+</template>
