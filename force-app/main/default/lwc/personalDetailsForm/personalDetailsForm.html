@@ -1,45 +1,57 @@
 <!-- personalDetailsForm.html -->
 <template>
-    <div class="acme-personal-details-form">
-        <div class="acme-card">
-            <h2 class="acme-heading acme-heading_medium">Personal Details</h2>
-            <form onsubmit={handleSubmit}>
-                <div class="acme-form-field">
-                    <label for="firstName" class="acme-label">First Name<span class="acme-required">*</span></label>
-                    <input type="text" id="firstName" name="firstName" required class="acme-input" onchange={handleInputChange}/>
-                </div>
-                <div class="acme-form-field">
-                    <label for="lastName" class="acme-label">Last Name<span class="acme-required">*</span></label>
-                    <input type="text" id="lastName" name="lastName" required class="acme-input" onchange={handleInputChange}/>
-                </div>
-                <div class="acme-form-field">
-                    <label for="email" class="acme-label">Email<span class="acme-required">*</span></label>
-                    <input type="email" id="email" name="email" required class="acme-input" onchange={handleInputChange}/>
-                </div>
-                <div class="acme-form-field">
-                    <label for="phone" class="acme-label">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" class="acme-input" onchange={handleInputChange}/>
-                </div>
-                <div class="acme-form-field">
-                    <label for="dateOfBirth" class="acme-label">Date of Birth<span class="acme-required">*</span></label>
-                    <input type="date" id="dateOfBirth" name="dateOfBirth" required class="acme-input" onchange={handleInputChange}/>
-                </div>
-                <div class="acme-form-field">
-                    <label for="startDate" class="acme-label">Start Date<span class="acme-required">*</span></label>
-                    <input type="date" id="startDate" name="startDate" required class="acme-input" onchange={handleInputChange}/>
-                </div>
-                <div class="acme-form-field">
-                    <label for="endDate" class="acme-label">End Date<span class="acme-required">*</span></label>
-                    <input type="date" id="endDate" name="endDate" required class="acme-input" onchange={handleInputChange}/>
-                </div>
-                <div class="acme-form-field">
-                    <button type="submit" class="acme-button acme-button_primary">Submit</button>
-                </div>
-            </form>
-            <div if:true={errorMessage} class="acme-error-message">
-                <lightning-icon icon-name="utility:error" alternative-text="Error" title="Error" class="acme-icon acme-icon_small"></lightning-icon>
-                <span>{errorMessage}</span>
+    <div class="root-container">
+        <h1 class="acme-heading acme-heading_large">Personal Details Form</h1>
+        <form class="acme-form" onsubmit={handleSubmit}>
+            <div class="acme-form__field">
+                <label for="firstName" class="acme-form__label">First Name<span class="acme-form__required">*</span></label>
+                <input type="text" id="firstName" class="acme-form__input" placeholder="Enter your first name" required onblur={validateField}>
             </div>
+            <div class="acme-form__field">
+                <label for="lastName" class="acme-form__label">Last Name<span class="acme-form__required">*</span></label>
+                <input type="text" id="lastName" class="acme-form__input" placeholder="Enter your last name" required onblur={validateField}>
+            </div>
+            <div class="acme-form__field">
+                <label for="dateOfBirth" class="acme-form__label">Date of Birth<span class="acme-form__required">*</span></label>
+                <input type="date" id="dateOfBirth" class="acme-form__input" required onblur={validateField}>
+            </div>
+            <div class="acme-form__field">
+                <label for="email" class="acme-form__label">Email<span class="acme-form__required">*</span></label>
+                <input type="email" id="email" class="acme-form__input" placeholder="Enter your email address" required onblur={validateField}>
+            </div>
+            <div class="acme-form__field">
+                <label for="phoneNumber" class="acme-form__label">Phone Number</label>
+                <input type="tel" id="phoneNumber" class="acme-form__input" placeholder="Enter your phone number" onblur={validateField}>
+            </div>
+            <div class="acme-form__field">
+                <label for="startDate" class="acme-form__label">Start Date<span class="acme-form__required">*</span></label>
+                <input type="date" id="startDate" class="acme-form__input" required onblur={validateField}>
+            </div>
+            <div class="acme-form__field">
+                <label for="endDate" class="acme-form__label">End Date<span class="acme-form__required">*</span></label>
+                <input type="date" id="endDate" class="acme-form__input" required onblur={validateField}>
+            </div>
+            <div class="acme-form__field">
+                <label for="gender" class="acme-form__label">Gender<span class="acme-form__required">*</span></label>
+                <select id="gender" class="acme-form__select" required onblur={validateField}>
+                    <option value="">Select your gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="acme-form__field">
+                <label for="address" class="acme-form__label">Address<span class="acme-form__required">*</span></label>
+                <textarea id="address" class="acme-form__textarea" placeholder="Enter your full address" required onblur={validateField}></textarea>
+            </div>
+            <div class="acme-form__actions">
+                <button type="submit" class="acme-button acme-button_primary" disabled={isSubmitDisabled}>Submit</button>
+                <button type="button" class="acme-button acme-button_secondary" onclick={handleReset}>Reset</button>
+            </div>
+        </form>
+        <div class="acme-form__links">
+            <a href="/privacy-policy" target="_blank" class="acme-link">Privacy Policy</a>
+            <a href="/terms-of-service" target="_blank" class="acme-link">Terms of Service</a>
         </div>
     </div>
 </template>

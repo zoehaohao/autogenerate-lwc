@@ -1,107 +1,130 @@
 /* personalDetailsForm.css */
 :host {
     --acme-blue-color: #0057B8;
-    --acme-blue-dark-color: #004A9E;
     --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-teal-color: #00A0B0;
+    --acme-gold-color: #F2C94C;
+    --acme-coral-color: #FF6B6B;
     --acme-light-gray-color: #F5F7FA;
     --acme-medium-gray-color: #E4E7EB;
-    --acme-coral-color: #FF6B6B;
+    --acme-dark-gray-color: #7B8794;
 }
 
-.acme-personal-details-form {
+.root-container {
     font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-}
-
-.acme-card {
-    background-color: #FFFFFF;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(66, 74, 84, 0.1);
-    padding: 24px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: var(--slds-c-card-spacing-block, 1rem);
 }
 
 .acme-heading {
     color: var(--acme-blue-color);
-    font-size: 24px;
     font-weight: 700;
-    margin-bottom: 16px;
+    margin-bottom: 1rem;
 }
 
-.acme-form-field {
-    margin-bottom: 16px;
+.acme-heading_large {
+    font-size: 24px;
 }
 
-.acme-label {
+.acme-form__field {
+    margin-bottom: 1rem;
+}
+
+.acme-form__label {
     display: block;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 4px;
+    font-size: 16px;
     color: var(--acme-gray-color);
+    margin-bottom: 0.25rem;
 }
 
-.acme-input {
+.acme-form__required {
+    color: var(--acme-coral-color);
+    margin-left: 0.25rem;
+}
+
+.acme-form__input,
+.acme-form__select,
+.acme-form__textarea {
     width: 100%;
-    height: 40px;
-    padding: 8px 12px;
+    padding: 0.5rem;
     font-size: 16px;
     border: 1px solid var(--acme-medium-gray-color);
     border-radius: 4px;
-    background-color: #FFFFFF;
+    background-color: var(--acme-white-color);
 }
 
-.acme-input:focus {
-    outline: 2px solid var(--acme-blue-color);
-    border-color: var(--acme-blue-color);
+.acme-form__textarea {
+    min-height: 100px;
+    resize: vertical;
 }
 
-.acme-required {
-    color: var(--acme-coral-color);
-    margin-left: 4px;
+.acme-form__actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1rem;
+    margin-top: 1.5rem;
 }
 
 .acme-button {
-    padding: 8px 16px;
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 14px;
+    padding: 0.5rem 1rem;
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .acme-button_primary {
     background-color: var(--acme-blue-color);
-    border: 1px solid var(--acme-blue-color);
-    color: #FFFFFF;
+    color: var(--acme-white-color);
+    border: none;
 }
 
-.acme-button_primary:hover,
-.acme-button_primary:focus {
-    background-color: var(--acme-blue-dark-color);
-    border-color: var(--acme-blue-dark-color);
+.acme-button_primary:hover:not(:disabled) {
+    background-color: #004A9E;
 }
 
-.acme-error-message {
+.acme-button_primary:disabled {
+    background-color: var(--acme-medium-gray-color);
+    cursor: not-allowed;
+}
+
+.acme-button_secondary {
+    background-color: var(--acme-white-color);
+    color: var(--acme-gray-color);
+    border: 1px solid var(--acme-medium-gray-color);
+}
+
+.acme-button_secondary:hover {
+    background-color: var(--acme-light-gray-color);
+}
+
+.acme-form__links {
+    margin-top: 1rem;
     display: flex;
-    align-items: center;
-    color: var(--acme-coral-color);
-    font-size: 14px;
-    margin-top: 16px;
+    gap: 1rem;
 }
 
-.acme-icon {
-    --sds-c-icon-color-foreground: var(--acme-coral-color);
-    margin-right: 8px;
+.acme-link {
+    color: var(--acme-blue-color);
+    text-decoration: none;
 }
 
-.acme-icon_small {
-    width: 16px;
-    height: 16px;
+.acme-link:hover {
+    text-decoration: underline;
 }
 
 @media screen and (max-width: 768px) {
-    .acme-card {
-        padding: 16px;
+    .root-container {
+        padding: 0.5rem;
     }
 
-    .acme-heading {
-        font-size: 20px;
+    .acme-form__actions {
+        flex-direction: column;
+    }
+
+    .acme-button {
+        width: 100%;
     }
 }
