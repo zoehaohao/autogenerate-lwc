@@ -1,1 +1,100 @@
-<template>    <div class="acme-form">        <div class="acme-form__section">            <h2 class="acme-heading acme-heading_medium">Personal Information</h2>            <div class="acme-form__field">                <label for="firstName"><span class="acme-form__required">*</span>First Name</label>                <input type="text" id="firstName" required>            </div>            <div class="acme-form__field">                <label for="middleName">Middle Name</label>                <input type="text" id="middleName">            </div>            <div class="acme-form__field">                <label for="lastName"><span class="acme-form__required">*</span>Last Name</label>                <input type="text" id="lastName" required>            </div>        </div>        <div class="acme-form__section">            <h2 class="acme-heading acme-heading_medium">Address</h2>            <div class="acme-form__field">                <label for="address">Address</label>                <input type="text" id="address">            </div>            <div class="acme-form__field">                <label for="city">City or Town</label>                <input type="text" id="city">            </div>            <div class="acme-form__field">                <label for="state">State</label>                <div class="acme-form__select-wrapper">                    <select id="state">                        <option value="" disabled selected>Choose a State</option>                        <option value="NSW">New South Wales</option>                        <option value="VIC">Victoria</option>                        <option value="QLD">Queensland</option>                        <option value="WA">Western Australia</option>                        <option value="SA">South Australia</option>                        <option value="TAS">Tasmania</option>                        <option value="ACT">Australian Capital Territory</option>                        <option value="NT">Northern Territory</option>                    </select>                </div>            </div>            <div class="acme-form__field">                <label for="zipCode"><span class="acme-form__required">*</span>Zip Code</label>                <input type="text" id="zipCode" required pattern="[0-9]{4}">            </div>        </div>        <div class="acme-form__actions">            <button class="acme-button acme-button_primary" onclick={handleSubmit}>Submit</button>        </div>    </div></template>
+<template>
+ <div class="acme-form">
+  <div class="acme-form__section">
+   <h2 class="acme-heading acme-heading_medium">
+    Personal Information
+   </h2>
+   <div class="acme-form__field">
+    <label for="firstName">
+     <span class="acme-form__required">
+      *
+     </span>
+     First Name
+    </label>
+    <input id="firstName" required="" type="text"/>
+   </div>
+   <div class="acme-form__field">
+    <label for="middleName">
+     Middle Name
+    </label>
+    <input id="middleName" type="text"/>
+   </div>
+   <div class="acme-form__field">
+    <label for="lastName">
+     <span class="acme-form__required">
+      *
+     </span>
+     Last Name
+    </label>
+    <input id="lastName" required="" type="text"/>
+   </div>
+  </div>
+  <div class="acme-form__section">
+   <h2 class="acme-heading acme-heading_medium">
+    Address
+   </h2>
+   <div class="acme-form__field">
+    <label for="address">
+     Address
+    </label>
+    <input id="address" type="text"/>
+   </div>
+   <div class="acme-form__field">
+    <label for="city">
+     City or Town
+    </label>
+    <input id="city" type="text"/>
+   </div>
+   <div class="acme-form__field">
+    <label for="state">
+     State
+    </label>
+    <div class="acme-form__select-wrapper">
+     <select id="state">
+      <option disabled="" selected="" value="">
+       Choose a State
+      </option>
+      <option value="NSW">
+       New South Wales
+      </option>
+      <option value="VIC">
+       Victoria
+      </option>
+      <option value="QLD">
+       Queensland
+      </option>
+      <option value="WA">
+       Western Australia
+      </option>
+      <option value="SA">
+       South Australia
+      </option>
+      <option value="TAS">
+       Tasmania
+      </option>
+      <option value="ACT">
+       Australian Capital Territory
+      </option>
+      <option value="NT">
+       Northern Territory
+      </option>
+     </select>
+    </div>
+   </div>
+   <div class="acme-form__field">
+    <label for="zipCode">
+     <span class="acme-form__required">
+      *
+     </span>
+     Zip Code
+    </label>
+    <input id="zipCode" pattern="[0-9]{4}" required="" type="text"/>
+   </div>
+  </div>
+  <div class="acme-form__actions">
+   <button class="acme-button acme-button_primary" onclick="{handleSubmit}">
+    Submit
+   </button>
+  </div>
+ </div>
+</template>
