@@ -1,0 +1,61 @@
+:host {
+  --acme-blue-color: #0057B8;
+  --acme-gray-color: #424A54;
+  --acme-white-color: #FFFFFF;
+  --acme-teal-color: #00A0B0;
+  --acme-gold-color: #F2C94C;
+  --acme-coral-color: #FF6B6B;
+  --acme-light-gray-color: #F5F7FA;
+}
+
+.acme-application-form {
+  background-color: var(--acme-white-color);
+  border-radius: var(--acme-radius-medium, 4px);
+  box-shadow: var(--acme-shadow-soft, 0 2px 4px rgba(0, 0, 0, 0.1));
+  padding: var(--acme-space-md, 1rem);
+  margin-bottom: var(--acme-space-md, 1rem);
+}
+
+.acme-heading {
+  color: var(--acme-blue-color);
+  font-size: var(--acme-font-size-large, 1.25rem);
+  margin-bottom: var(--acme-space-md, 1rem);
+}
+
+.acme-form-fields {
+  display: grid;
+  gap: var(--acme-space-sm, 0.5rem);
+}
+
+.acme-input {
+  --slds-c-input-color-border: var(--acme-gray-color);
+  --slds-c-input-radius-border: var(--acme-radius-small, 2px);
+}
+
+.acme-form-actions {
+  margin-top: var(--acme-space-md, 1rem);
+}
+
+.acme-button_primary {
+  --slds-c-button-brand-color-background: var(--acme-blue-color);
+  --slds-c-button-brand-color-border: var(--acme-blue-color);
+  --slds-c-button-text-color: var(--acme-white-color);
+}
+
+.acme-button_primary:hover,
+.acme-button_primary:focus {
+  --slds-c-button-brand-color-background-hover: var(--acme-teal-color);
+  --slds-c-button-brand-color-border-hover: var(--acme-teal-color);
+}
+
+.acme-error-message {
+  color: var(--acme-coral-color);
+  font-size: var(--acme-font-size-small, 0.875rem);
+  margin-top: var(--acme-space-sm, 0.5rem);
+}
+
+@media screen and (max-width: 768px) {
+  .acme-application-form {
+    padding: var(--acme-space-sm, 0.5rem);
+  }
+}
