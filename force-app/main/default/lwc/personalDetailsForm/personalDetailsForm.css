@@ -1,0 +1,61 @@
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-teal-color: #00A0B0;
+    --acme-gold-color: #F2C94C;
+    --acme-coral-color: #FF6B6B;
+    --acme-light-gray-color: #F5F7FA;
+}
+
+.acme-personal-details-form {
+    font-family: var(--slds-c-input-text-font-family, Arial, sans-serif);
+}
+
+.acme-card {
+    background-color: var(--acme-white-color);
+    border-radius: var(--slds-c-card-radius-border, 0.25rem);
+    box-shadow: var(--slds-c-card-shadow, 0 2px 2px 0 rgba(0, 0, 0, 0.1));
+    padding: var(--slds-c-card-spacing-block, 1rem);
+    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
+}
+
+.acme-heading {
+    color: var(--acme-blue-color);
+    font-size: var(--slds-c-input-text-font-size-medium, 1rem);
+    font-weight: bold;
+    margin-bottom: var(--slds-c-card-spacing-block-small, 0.5rem);
+}
+
+.acme-card__body {
+    display: grid;
+    gap: var(--slds-c-card-spacing-block-small, 0.5rem);
+}
+
+.acme-card__footer {
+    margin-top: var(--slds-c-card-spacing-block, 1rem);
+}
+
+.acme-button_primary {
+    --slds-c-button-brand-color-background: var(--acme-blue-color);
+    --slds-c-button-brand-color-border: var(--acme-blue-color);
+    --slds-c-button-brand-text-color: var(--acme-white-color);
+}
+
+.acme-button_primary:hover,
+.acme-button_primary:focus {
+    --slds-c-button-brand-color-background-hover: var(--acme-teal-color);
+    --slds-c-button-brand-color-border-hover: var(--acme-teal-color);
+}
+
+.acme-error-message {
+    color: var(--acme-coral-color);
+    font-size: var(--slds-c-input-text-font-size-small, 0.875rem);
+    margin-top: var(--slds-c-card-spacing-block-small, 0.5rem);
+}
+
+@media screen and (max-width: 768px) {
+    .acme-card {
+        padding: var(--slds-c-card-spacing-block-small, 0.5rem);
+    }
+}
