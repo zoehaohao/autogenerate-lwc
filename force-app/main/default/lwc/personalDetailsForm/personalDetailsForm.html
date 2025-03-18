@@ -1,35 +1,31 @@
 <template>
  <div class="acme-personal-details-form">
-  <lightning-card icon-name="standard:person_account" title="Personal Details Form">
-   <div class="acme-card__body">
-    <lightning-input class="acme-input" data-field="firstName" field-level-help="Enter your first name" label="First Name" onchange={handleInputChange} required="">
+  <lightning-card title="Personal Details Form">
+   <div class="acme-personal-details-form__content">
+    <lightning-input label="First Name" name="firstName" onchange="__LWC_BINDING_0_MARKER__" required="">
     </lightning-input>
-    <lightning-input class="acme-input" data-field="lastName" field-level-help="Enter your last name" label="Last Name" onchange={handleInputChange} required="">
+    <lightning-input label="Last Name" name="lastName" onchange="__LWC_BINDING_1_MARKER__" required="">
     </lightning-input>
-    <lightning-input class="acme-input" data-field="email" field-level-help="Enter a valid email address" label="Email" onchange={handleInputChange} required="" type="email">
+    <lightning-input label="Email" name="email" onchange="__LWC_BINDING_2_MARKER__" required="" type="email">
     </lightning-input>
-    <lightning-input class="acme-input" data-field="phone" field-level-help="Enter a valid phone number" label="Phone" onchange={handleInputChange} required="" type="tel">
+    <lightning-input label="Phone" name="phone" onchange="__LWC_BINDING_3_MARKER__" required="" type="tel">
     </lightning-input>
-    <lightning-input class="acme-input" data-field="dateOfBirth" field-level-help="You must be at least 18 years old" label="Date of Birth" onchange={handleInputChange} required="" type="date">
+    <lightning-input label="Date of Birth" name="dateOfBirth" onchange="__LWC_BINDING_4_MARKER__" required="" type="date">
     </lightning-input>
-    <lightning-combobox class="acme-input" data-field="gender" field-level-help="Select your gender" label="Gender" onchange={handleInputChange} options={genderOptions} required="">
+    <lightning-combobox label="Gender" name="gender" onchange="__LWC_BINDING_6_MARKER__" options="__LWC_BINDING_5_MARKER__" required="">
     </lightning-combobox>
-    <lightning-input class="acme-input" data-field="startDate" field-level-help="Enter the start date" label="Start Date" onchange={handleInputChange} required="" type="date">
+    <lightning-input label="Start Date" name="startDate" onchange="__LWC_BINDING_7_MARKER__" required="" type="date">
     </lightning-input>
-    <lightning-input class="acme-input" data-field="endDate" field-level-help="Enter the end date" label="End Date" onchange={handleInputChange} required="" type="date">
+    <lightning-input label="End Date" name="endDate" onchange="__LWC_BINDING_8_MARKER__" required="" type="date">
     </lightning-input>
-    <lightning-textarea class="acme-input" data-field="comments" field-level-help="Enter any additional comments" label="Comments" onchange={handleInputChange}>
-    </lightning-textarea>
-    <div class="acme-button-container">
-     <lightning-button class="acme-button acme-button_primary" label="Submit" onclick={handleSubmit} variant="brand">
-     </lightning-button>
-    </div>
-    <template if:true={errorMessage}>
-     <div class="acme-error-message">
-      {errorMessage}
-     </div>
-    </template>
+    <lightning-button class="acme-personal-details-form__submit-button" label="Submit" onclick="__LWC_BINDING_9_MARKER__" variant="brand">
+    </lightning-button>
    </div>
+   <template if:true={errorMessage}>
+    <div class="acme-personal-details-form__error">
+     {errorMessage}
+    </div>
+   </template>
   </lightning-card>
  </div>
 </template>
