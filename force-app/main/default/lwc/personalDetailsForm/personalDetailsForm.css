@@ -1,0 +1,107 @@
+/* personalDetailsForm.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-blue-dark-color: #004A9E;
+    --acme-gray-color: #424A54;
+    --acme-light-gray-color: #F5F7FA;
+    --acme-medium-gray-color: #E4E7EB;
+    --acme-coral-color: #FF6B6B;
+}
+
+.acme-personal-details-form {
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.acme-card {
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(66, 74, 84, 0.1);
+    padding: 24px;
+}
+
+.acme-heading {
+    color: var(--acme-blue-color);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.acme-form-field {
+    margin-bottom: 16px;
+}
+
+.acme-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--acme-gray-color);
+}
+
+.acme-input {
+    width: 100%;
+    height: 40px;
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1px solid var(--acme-medium-gray-color);
+    border-radius: 4px;
+    background-color: #FFFFFF;
+}
+
+.acme-input:focus {
+    outline: 2px solid var(--acme-blue-color);
+    border-color: var(--acme-blue-color);
+}
+
+.acme-required {
+    color: var(--acme-coral-color);
+    margin-left: 4px;
+}
+
+.acme-button {
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.acme-button_primary {
+    background-color: var(--acme-blue-color);
+    border: 1px solid var(--acme-blue-color);
+    color: #FFFFFF;
+}
+
+.acme-button_primary:hover,
+.acme-button_primary:focus {
+    background-color: var(--acme-blue-dark-color);
+    border-color: var(--acme-blue-dark-color);
+}
+
+.acme-error-message {
+    display: flex;
+    align-items: center;
+    color: var(--acme-coral-color);
+    font-size: 14px;
+    margin-top: 16px;
+}
+
+.acme-icon {
+    --sds-c-icon-color-foreground: var(--acme-coral-color);
+    margin-right: 8px;
+}
+
+.acme-icon_small {
+    width: 16px;
+    height: 16px;
+}
+
+@media screen and (max-width: 768px) {
+    .acme-card {
+        padding: 16px;
+    }
+
+    .acme-heading {
+        font-size: 20px;
+    }
+}
