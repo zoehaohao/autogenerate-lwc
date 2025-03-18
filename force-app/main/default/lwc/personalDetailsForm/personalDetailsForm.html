@@ -1,0 +1,109 @@
+<template>
+ <div class="acme-personal-details-form">
+  <div class="acme-personal-details-form__section">
+   <h2 class="acme-heading acme-heading_medium">
+    Personal Information
+   </h2>
+   <div class="acme-personal-details-form__field-group">
+    <label class="acme-personal-details-form__label" for="firstName">
+     First Name
+     <span class="acme-personal-details-form__required">
+      *
+     </span>
+    </label>
+    <lightning-input class="acme-personal-details-form__input" id="firstName" name="firstName" onchange="{handleInputChange}" required="" type="text">
+    </lightning-input>
+   </div>
+   <div class="acme-personal-details-form__field-group">
+    <label class="acme-personal-details-form__label" for="middleName">
+     Middle Name
+    </label>
+    <lightning-input class="acme-personal-details-form__input" id="middleName" name="middleName" onchange="{handleInputChange}" type="text">
+    </lightning-input>
+   </div>
+   <div class="acme-personal-details-form__field-group">
+    <label class="acme-personal-details-form__label" for="lastName">
+     Last Name
+     <span class="acme-personal-details-form__required">
+      *
+     </span>
+    </label>
+    <lightning-input class="acme-personal-details-form__input" id="lastName" name="lastName" onchange="{handleInputChange}" required="" type="text">
+    </lightning-input>
+   </div>
+   <div class="acme-personal-details-form__field-group">
+    <label class="acme-personal-details-form__label" for="birthdate">
+     Birthdate
+     <span class="acme-personal-details-form__required">
+      *
+     </span>
+    </label>
+    <lightning-input class="acme-personal-details-form__input" id="birthdate" name="birthdate" onchange="{handleInputChange}" required="" type="date">
+    </lightning-input>
+   </div>
+  </div>
+  <div class="acme-personal-details-form__section">
+   <h2 class="acme-heading acme-heading_medium">
+    Address
+   </h2>
+   <div class="acme-personal-details-form__field-group">
+    <label class="acme-personal-details-form__label" for="address">
+     Address
+    </label>
+    <lightning-input class="acme-personal-details-form__input" id="address" name="address" onchange="{handleInputChange}" type="text">
+    </lightning-input>
+   </div>
+   <div class="acme-personal-details-form__field-group">
+    <label class="acme-personal-details-form__label" for="city">
+     City or Town
+    </label>
+    <lightning-input class="acme-personal-details-form__input" id="city" name="city" onchange="{handleInputChange}" type="text">
+    </lightning-input>
+   </div>
+   <div class="acme-personal-details-form__field-group">
+    <label class="acme-personal-details-form__label" for="state">
+     State
+    </label>
+    <lightning-combobox class="acme-personal-details-form__input" id="state" name="state" onchange="{handleInputChange}" options="{stateOptions}">
+    </lightning-combobox>
+   </div>
+   <div class="acme-personal-details-form__field-group">
+    <label class="acme-personal-details-form__label" for="zipCode">
+     Zip Code
+     <span class="acme-personal-details-form__required">
+      *
+     </span>
+    </label>
+    <lightning-input class="acme-personal-details-form__input" id="zipCode" name="zipCode" onchange="{handleInputChange}" required="" type="text">
+    </lightning-input>
+   </div>
+   <div class="acme-personal-details-form__field-group">
+    <label class="acme-personal-details-form__label" for="startDate">
+     Start Date
+     <span class="acme-personal-details-form__required">
+      *
+     </span>
+    </label>
+    <lightning-input class="acme-personal-details-form__input" id="startDate" name="startDate" onchange="{handleInputChange}" required="" type="date">
+    </lightning-input>
+   </div>
+   <div class="acme-personal-details-form__field-group">
+    <label class="acme-personal-details-form__label" for="endDate">
+     End Date
+     <span class="acme-personal-details-form__required">
+      *
+     </span>
+    </label>
+    <lightning-input class="acme-personal-details-form__input" id="endDate" name="endDate" onchange="{handleInputChange}" required="" type="date">
+    </lightning-input>
+   </div>
+  </div>
+  <div class="acme-personal-details-form__error" if:true="{errorMessage}">
+   {errorMessage}
+  </div>
+  <div class="acme-personal-details-form__button-group">
+   <lightning-button class="acme-button_primary" label="Submit" onclick="{handleSubmit}" variant="brand">
+   </lightning-button>
+  </div>
+ </div>
+</template>
