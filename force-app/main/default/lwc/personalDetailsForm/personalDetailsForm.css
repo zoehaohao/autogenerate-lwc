@@ -7,12 +7,10 @@
     --acme-gold-color: #F2C94C;
     --acme-coral-color: #FF6B6B;
     --acme-light-gray-color: #F5F7FA;
-    --acme-medium-gray-color: #E4E7EB;
-    --acme-dark-gray-color: #7B8794;
 }
 
-.root-container {
-    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+.acme-personal-details-form {
+    font-family: Arial, sans-serif;
     max-width: 600px;
     margin: 0 auto;
     padding: var(--slds-c-card-spacing-block, 1rem);
@@ -20,111 +18,51 @@
 
 .acme-heading {
     color: var(--acme-blue-color);
-    font-weight: 700;
-    margin-bottom: 1rem;
+    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
 }
 
 .acme-heading_large {
-    font-size: 24px;
+    font-size: var(--slds-c-input-text-font-size, 1.5rem);
 }
 
-.acme-form__field {
-    margin-bottom: 1rem;
+.acme-heading_medium {
+    font-size: var(--slds-c-input-text-font-size, 1.25rem);
 }
 
-.acme-form__label {
-    display: block;
-    font-size: 16px;
-    color: var(--acme-gray-color);
-    margin-bottom: 0.25rem;
+.acme-form-section {
+    margin-bottom: var(--slds-c-card-spacing-block, 1.5rem);
 }
 
-.acme-form__required {
+.acme-form-row {
+    margin-bottom: var(--slds-c-card-spacing-block, 0.75rem);
+}
+
+.acme-error-container {
+    background-color: var(--acme-light-gray-color);
+    border-left: 4px solid var(--acme-coral-color);
+    padding: var(--slds-c-card-spacing-block, 1rem);
+    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
+}
+
+.acme-error-container p {
     color: var(--acme-coral-color);
-    margin-left: 0.25rem;
+    font-weight: bold;
+    margin-bottom: var(--slds-c-card-spacing-block, 0.5rem);
 }
 
-.acme-form__input,
-.acme-form__select,
-.acme-form__textarea {
-    width: 100%;
-    padding: 0.5rem;
-    font-size: 16px;
-    border: 1px solid var(--acme-medium-gray-color);
-    border-radius: 4px;
-    background-color: var(--acme-white-color);
-}
-
-.acme-form__textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-.acme-form__actions {
+.acme-form-buttons {
     display: flex;
     justify-content: flex-start;
-    gap: 1rem;
-    margin-top: 1.5rem;
-}
-
-.acme-button {
-    font-size: 14px;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    gap: var(--slds-c-card-spacing-block, 1rem);
 }
 
 .acme-button_primary {
-    background-color: var(--acme-blue-color);
-    color: var(--acme-white-color);
-    border: none;
-}
-
-.acme-button_primary:hover:not(:disabled) {
-    background-color: #004A9E;
-}
-
-.acme-button_primary:disabled {
-    background-color: var(--acme-medium-gray-color);
-    cursor: not-allowed;
+    --slds-c-button-brand-color-background: var(--acme-blue-color);
+    --slds-c-button-brand-color-border: var(--acme-blue-color);
 }
 
 .acme-button_secondary {
-    background-color: var(--acme-white-color);
-    color: var(--acme-gray-color);
-    border: 1px solid var(--acme-medium-gray-color);
-}
-
-.acme-button_secondary:hover {
-    background-color: var(--acme-light-gray-color);
-}
-
-.acme-form__links {
-    margin-top: 1rem;
-    display: flex;
-    gap: 1rem;
-}
-
-.acme-link {
-    color: var(--acme-blue-color);
-    text-decoration: none;
-}
-
-.acme-link:hover {
-    text-decoration: underline;
-}
-
-@media screen and (max-width: 768px) {
-    .root-container {
-        padding: 0.5rem;
-    }
-
-    .acme-form__actions {
-        flex-direction: column;
-    }
-
-    .acme-button {
-        width: 100%;
-    }
+    --slds-c-button-neutral-color-background: var(--acme-white-color);
+    --slds-c-button-neutral-color-border: var(--acme-gray-color);
+    --slds-c-button-text-color: var(--acme-gray-color);
 }

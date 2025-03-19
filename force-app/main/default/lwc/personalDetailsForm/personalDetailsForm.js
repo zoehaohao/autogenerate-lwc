@@ -3,119 +3,90 @@ import { LightningElement, track } from 'lwc';
 
 export default class PersonalDetailsForm extends LightningElement {
     @track formData = {};
-    @track errors = {};
-    @track isSubmitDisabled = true;
+    @track errorMessages = [];
 
-    connectedCallback() {
-        this.template.addEventListener('blur', this.validateField.bind(this));
+    titleOptions = [
+        { label: 'Select...', value: '' },
+        { label: 'Mr', value: 'Mr' },
+        { label: 'Mrs', value: 'Mrs' },
+        { label: 'Ms', value: 'Ms' },
+        { label: 'Dr', value: 'Dr' }
+    ];
+
+    genderOptions = [
+        { label: 'Male', value: 'Male' },
+        { label: 'Female', value: 'Female' },
+        { label: 'Other', value: 'Other' }
+    ];
+
+    stateOptions = [
+        { label: 'Select...', value: '' },
+        { label: 'New South Wales', value: 'NSW' },
+        { label: 'Victoria', value: 'VIC' },
+        { label: 'Queensland', value: 'QLD' },
+        { label: 'Western Australia', value: 'WA' },
+        { label: 'South Australia', value: 'SA' },
+        { label: 'Tasmania', value: 'TAS' },
+        { label: 'Australian Capital Territory', value: 'ACT' },
+        { label: 'Northern Territory', value: 'NT' }
+    ];
+
+    countryOptions = [
+        { label: 'Australia', value: 'Australia' },
+        { label: 'New Zealand', value: 'New Zealand' }
+    ];
+
+    handleInputChange(event) {
+        this.formData[event.target.name] = event.target.value;
     }
 
-    handleSubmit(event) {
-        event.preventDefault();
+    handleSubmit() {
         if (this.validateForm()) {
-            this.submitForm();
+            console.log('Form submitted:', this.formData);
         }
     }
 
     handleReset() {
-        if (confirm('Are you sure you want to reset the form?')) {
-            this.template.querySelector('form').reset();
-            this.formData = {};
-            this.errors = {};
-            this.isSubmitDisabled = true;
-        }
-    }
-
-    validateField(event) {
-        const field = event.target;
-        const fieldName = field.id;
-        const fieldValue = field.value;
-
-        this.formData[fieldName] = fieldValue;
-        this.errors[fieldName] = '';
-
-        switch (fieldName) {
-            case 'firstName':
-            case 'lastName':
-            case 'address':
-                if (!fieldValue.trim()) {
-                    this.errors[fieldName] = `${field.labels[0].textContent.replace('*', '')} is required`;
-                }
-                break;
-            case 'dateOfBirth':
-                if (!this.isAdult(fieldValue)) {
-                    this.errors[fieldName] = 'You must be 18 years or older';
-                }
-                break;
-            case 'email':
-                if (!this.isValidEmail(fieldValue)) {
-                    this.errors[fieldName] = 'Please enter a valid email address';
-                }
-                break;
-            case 'phoneNumber':
-                if (fieldValue && !this.isValidPhoneNumber(fieldValue)) {
-                    this.errors[fieldName] = 'Please enter a valid phone number';
-                }
-                break;
-            case 'startDate':
-            case 'endDate':
-                if (this.formData.startDate && this.formData.endDate) {
-                    if (new Date(this.formData.startDate) >= new Date(this.formData.endDate)) {
-                        this.errors.endDate = 'End Date must be later than Start Date';
-                    }
-                }
-                break;
-            case 'gender':
-                if (!fieldValue) {
-                    this.errors[fieldName] = 'Please select a gender';
-                }
-                break;
-        }
-
-        this.isSubmitDisabled = !this.validateForm();
+        this.template.querySelectorAll('lightning-input, lightning-combobox, lightning-radio-group').forEach(element => {
+            element.value = null;
+        });
+        this.formData = {};
+        this.errorMessages = [];
     }
 
     validateForm() {
-        const requiredFields = ['firstName', 'lastName', 'dateOfBirth', 'email', 'startDate', 'endDate', 'gender', 'address'];
-        return requiredFields.every(field => this.formData[field] && !this.errors[field]) && Object.keys(this.errors).every(field => !this.errors[field]);
-    }
+        this.errorMessages = [];
+        let isValid = true;
 
-    isAdult(birthDate) {
-        const today = new Date();
-        const birth = new Date(birthDate);
-        let age = today.getFullYear() - birth.getFullYear();
-        const monthDiff = today.getMonth() - birth.getMonth();
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-            age--;
+        this.template.querySelectorAll('lightning-input, lightning-combobox, lightning-radio-group').forEach(element => {
+            if (element.required && !element.value) {
+                this.errorMessages.push(`${element.label} is required.`);
+                isValid = false;
+            }
+        });
+
+        if (this.formData.birthdate) {
+            const birthDate = new Date(this.formData.birthdate);
+            const today = new Date();
+            const age = today.getFullYear() - birthDate.getFullYear();
+            if (age < 18) {
+                this.errorMessages.push('Applicant must be older than 18 years.');
+                isValid = false;
+            }
         }
-        return age >= 18;
-    }
 
-    isValidEmail(email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
+        if (this.formData.startDate && this.formData.endDate) {
+            if (new Date(this.formData.endDate) <= new Date(this.formData.startDate)) {
+                this.errorMessages.push('End Date must be after Start Date.');
+                isValid = false;
+            }
+        }
 
-    isValidPhoneNumber(phone) {
-        return /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/.test(phone);
-    }
+        if (this.formData.postcode && !/^\d{4}$/.test(this.formData.postcode)) {
+            this.errorMessages.push('Postcode must be 4 digits.');
+            isValid = false;
+        }
 
-    submitForm() {
-        const formattedData = {
-            ...this.formData,
-            dateOfBirth: this.formatDate(this.formData.dateOfBirth),
-            startDate: this.formatDate(this.formData.startDate),
-            endDate: this.formatDate(this.formData.endDate),
-            phoneNumber: this.formData.phoneNumber ? this.formatPhoneNumber(this.formData.phoneNumber) : ''
-        };
-
-        console.log('Submitting form data:', formattedData);
-    }
-
-    formatDate(dateString) {
-        return new Date(dateString).toISOString().split('T')[0];
-    }
-
-    formatPhoneNumber(phoneNumber) {
-        return phoneNumber.replace(/\D/g, '');
+        return isValid;
     }
 }
