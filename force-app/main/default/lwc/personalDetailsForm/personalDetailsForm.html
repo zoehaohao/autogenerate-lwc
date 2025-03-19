@@ -1,126 +1,81 @@
 <!-- personalDetailsForm.html -->
 <template>
-    <div class="root-container">
-        <form class="acme-form">
-            <div class="acme-form__section">
-                <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
-                <div class="acme-form__field">
-                    <label for="firstName" class="acme-form__label">First Name<span class="acme-form__required">*</span></label>
-                    <input type="text" id="firstName" class="acme-form__input" required placeholder="Enter first name" onblur={validateField}>
-                </div>
-                <div class="acme-form__field">
-                    <label for="middleName" class="acme-form__label">Middle Name</label>
-                    <input type="text" id="middleName" class="acme-form__input" placeholder="Enter middle name">
-                </div>
-                <div class="acme-form__field">
-                    <label for="lastName" class="acme-form__label">Last Name<span class="acme-form__required">*</span></label>
-                    <input type="text" id="lastName" class="acme-form__input" required placeholder="Enter last name" onblur={validateField}>
-                </div>
-                <div class="acme-form__field">
-                    <label class="acme-form__label">Gender<span class="acme-form__required">*</span></label>
-                    <div class="acme-form__radio-group">
-                        <input type="radio" id="male" name="gender" value="male" required>
-                        <label for="male">Male</label>
-                        <input type="radio" id="female" name="gender" value="female" required>
-                        <label for="female">Female</label>
-                        <input type="radio" id="other" name="gender" value="other" required>
-                        <label for="other">Other</label>
+    <div class="acme-personal-details-form">
+        <div class="acme-personal-details-form__header">
+            <h2 class="acme-heading acme-heading_medium">Personal Details Form</h2>
+        </div>
+        <div class="acme-personal-details-form__body">
+            <form onsubmit={handleSubmit}>
+                <div class="acme-personal-details-form__section">
+                    <h3 class="acme-heading acme-heading_small">Personal Information</h3>
+                    <div class="acme-personal-details-form__field">
+                        <label for="title" class="acme-label">Title<span class="acme-required">*</span></label>
+                        <lightning-combobox name="title" label="Title" variant="label-hidden" placeholder="Select..." options={titleOptions} required onchange={handleInputChange}></lightning-combobox>
+                    </div>
+                    <div class="acme-personal-details-form__field">
+                        <label for="firstName" class="acme-label">First name<span class="acme-required">*</span></label>
+                        <lightning-input type="text" name="firstName" label="First name" variant="label-hidden" required onchange={handleInputChange}></lightning-input>
+                    </div>
+                    <div class="acme-personal-details-form__field">
+                        <label for="middleName" class="acme-label">Middle name</label>
+                        <lightning-input type="text" name="middleName" label="Middle name" variant="label-hidden" onchange={handleInputChange}></lightning-input>
+                    </div>
+                    <div class="acme-personal-details-form__field">
+                        <label for="lastName" class="acme-label">Last name<span class="acme-required">*</span></label>
+                        <lightning-input type="text" name="lastName" label="Last name" variant="label-hidden" required onchange={handleInputChange}></lightning-input>
+                    </div>
+                    <div class="acme-personal-details-form__field">
+                        <label for="birthdate" class="acme-label">Birthdate<span class="acme-required">*</span></label>
+                        <lightning-input type="date" name="birthdate" label="Birthdate" variant="label-hidden" required onchange={handleInputChange}></lightning-input>
+                    </div>
+                    <div class="acme-personal-details-form__field">
+                        <label class="acme-label">Gender<span class="acme-required">*</span></label>
+                        <lightning-radio-group name="gender" options={genderOptions} required onchange={handleInputChange}></lightning-radio-group>
                     </div>
                 </div>
-                <div class="acme-form__field">
-                    <label for="dob" class="acme-form__label">Date of Birth<span class="acme-form__required">*</span></label>
-                    <input type="date" id="dob" class="acme-form__input" required onblur={validateField}>
-                </div>
-            </div>
-            
-            <div class="acme-form__section">
-                <h2 class="acme-heading acme-heading_medium">Contact Information</h2>
-                <div class="acme-form__field">
-                    <label for="email" class="acme-form__label">Email Address<span class="acme-form__required">*</span></label>
-                    <input type="email" id="email" class="acme-form__input" required placeholder="Enter email address" onblur={validateField}>
-                </div>
-                <div class="acme-form__field">
-                    <label for="phone" class="acme-form__label">Phone Number<span class="acme-form__required">*</span></label>
-                    <input type="tel" id="phone" class="acme-form__input" required placeholder="Enter phone number" onblur={validateField}>
-                </div>
-                <div class="acme-form__field">
-                    <label for="preferredContact" class="acme-form__label">Preferred Contact<span class="acme-form__required">*</span></label>
-                    <select id="preferredContact" class="acme-form__select" required>
-                        <option value="">Choose contact method</option>
-                        <option value="email">Email</option>
-                        <option value="phone">Phone</option>
-                    </select>
-                </div>
-                <div class="acme-form__field">
-                    <input type="checkbox" id="newsletter" class="acme-form__checkbox">
-                    <label for="newsletter" class="acme-form__checkbox-label">Subscribe to Newsletter</label>
-                </div>
-            </div>
-            
-            <div class="acme-form__section">
-                <h2 class="acme-heading acme-heading_medium">Address</h2>
-                <div class="acme-form__field">
-                    <label for="street" class="acme-form__label">Street Address<span class="acme-form__required">*</span></label>
-                    <input type="text" id="street" class="acme-form__input" required placeholder="Enter street address" onblur={validateField}>
-                </div>
-                <div class="acme-form__field">
-                    <label for="city" class="acme-form__label">City<span class="acme-form__required">*</span></label>
-                    <input type="text" id="city" class="acme-form__input" required placeholder="Enter city or town" onblur={validateField}>
-                </div>
-                <div class="acme-form__field">
-                    <label for="state" class="acme-form__label">State<span class="acme-form__required">*</span></label>
-                    <select id="state" class="acme-form__select" required>
-                        <option value="">Choose a State</option>
-                        <!-- Add state options here -->
-                    </select>
-                </div>
-                <div class="acme-form__field">
-                    <label for="zipCode" class="acme-form__label">Zip Code<span class="acme-form__required">*</span></label>
-                    <input type="text" id="zipCode" class="acme-form__input" required placeholder="Enter zip code" onblur={validateField}>
-                </div>
-                <div class="acme-form__field">
-                    <label for="country" class="acme-form__label">Country<span class="acme-form__required">*</span></label>
-                    <select id="country" class="acme-form__select" required>
-                        <option value="United States">United States</option>
-                        <!-- Add more country options here -->
-                    </select>
-                </div>
-            </div>
-            
-            <div class="acme-form__section">
-                <h2 class="acme-heading acme-heading_medium">Preferences</h2>
-                <div class="acme-form__field">
-                    <label for="language" class="acme-form__label">Preferred Language</label>
-                    <select id="language" class="acme-form__select">
-                        <option value="">Select preferred language</option>
-                        <!-- Add language options here -->
-                    </select>
-                </div>
-                <div class="acme-form__field">
-                    <label class="acme-form__label">Communication Preferences<span class="acme-form__required">*</span></label>
-                    <div class="acme-form__checkbox-group">
-                        <input type="checkbox" id="commEmail" class="acme-form__checkbox" name="commPrefs" required>
-                        <label for="commEmail" class="acme-form__checkbox-label">Email</label>
-                        <input type="checkbox" id="commPhone" class="acme-form__checkbox" name="commPrefs" required>
-                        <label for="commPhone" class="acme-form__checkbox-label">Phone</label>
-                        <input type="checkbox" id="commSMS" class="acme-form__checkbox" name="commPrefs" required>
-                        <label for="commSMS" class="acme-form__checkbox-label">SMS</label>
+                <div class="acme-personal-details-form__section">
+                    <h3 class="acme-heading acme-heading_small">Address Details</h3>
+                    <div class="acme-personal-details-form__field">
+                        <label for="addressLine1" class="acme-label">Address Line 1<span class="acme-required">*</span></label>
+                        <lightning-input type="text" name="addressLine1" label="Address Line 1" variant="label-hidden" required onchange={handleInputChange}></lightning-input>
+                    </div>
+                    <div class="acme-personal-details-form__field">
+                        <label for="addressLine2" class="acme-label">Address Line 2</label>
+                        <lightning-input type="text" name="addressLine2" label="Address Line 2" variant="label-hidden" onchange={handleInputChange}></lightning-input>
+                    </div>
+                    <div class="acme-personal-details-form__field">
+                        <label for="suburb" class="acme-label">Suburb/City<span class="acme-required">*</span></label>
+                        <lightning-input type="text" name="suburb" label="Suburb/City" variant="label-hidden" required onchange={handleInputChange}></lightning-input>
+                    </div>
+                    <div class="acme-personal-details-form__field">
+                        <label for="state" class="acme-label">State<span class="acme-required">*</span></label>
+                        <lightning-combobox name="state" label="State" variant="label-hidden" placeholder="Select..." options={stateOptions} required onchange={handleInputChange}></lightning-combobox>
+                    </div>
+                    <div class="acme-personal-details-form__field">
+                        <label for="postcode" class="acme-label">Postcode<span class="acme-required">*</span></label>
+                        <lightning-input type="text" name="postcode" label="Postcode" variant="label-hidden" placeholder="4 digits" pattern="[0-9]{4}" required onchange={handleInputChange}></lightning-input>
+                    </div>
+                    <div class="acme-personal-details-form__field">
+                        <label for="country" class="acme-label">Country<span class="acme-required">*</span></label>
+                        <lightning-combobox name="country" label="Country" variant="label-hidden" options={countryOptions} value="Australia" required onchange={handleInputChange}></lightning-combobox>
+                    </div>
+                    <div class="acme-personal-details-form__field">
+                        <label for="startDate" class="acme-label">Start Date<span class="acme-required">*</span></label>
+                        <lightning-input type="date" name="startDate" label="Start Date" variant="label-hidden" required onchange={handleInputChange}></lightning-input>
+                    </div>
+                    <div class="acme-personal-details-form__field">
+                        <label for="endDate" class="acme-label">End Date<span class="acme-required">*</span></label>
+                        <lightning-input type="date" name="endDate" label="End Date" variant="label-hidden" required onchange={handleInputChange}></lightning-input>
                     </div>
                 </div>
-                <div class="acme-form__field">
-                    <input type="checkbox" id="receiveOffers" class="acme-form__checkbox">
-                    <label for="receiveOffers" class="acme-form__checkbox-label">Receive Offers</label>
+                <div class="acme-personal-details-form__actions">
+                    <lightning-button label="Reset Form" variant="neutral" onclick={handleReset} class="acme-button acme-button_neutral"></lightning-button>
+                    <lightning-button label="Submit" variant="brand" type="submit" class="acme-button acme-button_primary"></lightning-button>
                 </div>
-            </div>
-            
-            <div class="acme-form__actions">
-                <button type="submit" class="acme-button acme-button_primary" onclick={handleSubmit}>Submit</button>
-                <button type="reset" class="acme-button acme-button_secondary" onclick={handleReset}>Reset</button>
-            </div>
-            
-            <div class="acme-form__footer">
-                <a href="/privacy-policy" target="_blank" class="acme-link">Privacy Policy</a>
-            </div>
-        </form>
+            </form>
+        </div>
+        <div class="acme-personal-details-form__footer">
+            <a href="/help" target="_blank" class="acme-link">Help</a>
+        </div>
     </div>
 </template>
