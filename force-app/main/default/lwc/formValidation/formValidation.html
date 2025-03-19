@@ -1,0 +1,99 @@
+<!-- formValidation.html -->
+<template>
+    <div class="acme-formvalidation">
+        <div class="acme-formvalidation__error-container" if:true={errorMessage}>
+            <p class="acme-formvalidation__error-message">{errorMessage}</p>
+        </div>
+        <div class="acme-formvalidation__section">
+            <h2 class="acme-formvalidation__section-header">Personal Information</h2>
+            <div class="acme-formvalidation__field">
+                <label for="title" class="acme-formvalidation__label">Title<span class="acme-formvalidation__required">*</span></label>
+                <select id="title" class="acme-formvalidation__input" required onchange={handleInputChange}>
+                    <option value="">Select...</option>
+                    <option value="Mr">Mr</option>
+                    <option value="Mrs">Mrs</option>
+                    <option value="Ms">Ms</option>
+                    <option value="Dr">Dr</option>
+                </select>
+            </div>
+            <div class="acme-formvalidation__field">
+                <label for="firstName" class="acme-formvalidation__label">First name<span class="acme-formvalidation__required">*</span></label>
+                <input type="text" id="firstName" class="acme-formvalidation__input" required onblur={handleInputChange}>
+            </div>
+            <div class="acme-formvalidation__field">
+                <label for="middleName" class="acme-formvalidation__label">Middle name</label>
+                <input type="text" id="middleName" class="acme-formvalidation__input" onblur={handleInputChange}>
+            </div>
+            <div class="acme-formvalidation__field">
+                <label for="lastName" class="acme-formvalidation__label">Last name<span class="acme-formvalidation__required">*</span></label>
+                <input type="text" id="lastName" class="acme-formvalidation__input" required onblur={handleInputChange}>
+            </div>
+            <div class="acme-formvalidation__field">
+                <label for="birthdate" class="acme-formvalidation__label">Birthdate<span class="acme-formvalidation__required">*</span></label>
+                <input type="date" id="birthdate" class="acme-formvalidation__input" required onblur={handleInputChange}>
+            </div>
+            <div class="acme-formvalidation__field">
+                <label class="acme-formvalidation__label">Gender<span class="acme-formvalidation__required">*</span></label>
+                <div class="acme-formvalidation__radio-group">
+                    <input type="radio" id="male" name="gender" value="male" required onchange={handleInputChange}>
+                    <label for="male">Male</label>
+                    <input type="radio" id="female" name="gender" value="female" required onchange={handleInputChange}>
+                    <label for="female">Female</label>
+                    <input type="radio" id="other" name="gender" value="other" required onchange={handleInputChange}>
+                    <label for="other">Other</label>
+                </div>
+            </div>
+        </div>
+        <div class="acme-formvalidation__section">
+            <h2 class="acme-formvalidation__section-header">Address</h2>
+            <div class="acme-formvalidation__field">
+                <label for="addressLine1" class="acme-formvalidation__label">Address Line 1<span class="acme-formvalidation__required">*</span></label>
+                <input type="text" id="addressLine1" class="acme-formvalidation__input" required onblur={handleInputChange}>
+            </div>
+            <div class="acme-formvalidation__field">
+                <label for="addressLine2" class="acme-formvalidation__label">Address Line 2</label>
+                <input type="text" id="addressLine2" class="acme-formvalidation__input" onblur={handleInputChange}>
+            </div>
+            <div class="acme-formvalidation__field">
+                <label for="suburb" class="acme-formvalidation__label">Suburb/City<span class="acme-formvalidation__required">*</span></label>
+                <input type="text" id="suburb" class="acme-formvalidation__input" required onblur={handleInputChange}>
+            </div>
+            <div class="acme-formvalidation__field">
+                <label for="state" class="acme-formvalidation__label">State<span class="acme-formvalidation__required">*</span></label>
+                <select id="state" class="acme-formvalidation__input" required onchange={handleInputChange}>
+                    <option value="">Select...</option>
+                    <option value="NSW">New South Wales</option>
+                    <option value="VIC">Victoria</option>
+                    <option value="QLD">Queensland</option>
+                    <option value="WA">Western Australia</option>
+                    <option value="SA">South Australia</option>
+                    <option value="TAS">Tasmania</option>
+                    <option value="ACT">Australian Capital Territory</option>
+                    <option value="NT">Northern Territory</option>
+                </select>
+            </div>
+            <div class="acme-formvalidation__field">
+                <label for="postcode" class="acme-formvalidation__label">Postcode<span class="acme-formvalidation__required">*</span></label>
+                <input type="text" id="postcode" class="acme-formvalidation__input" required pattern="[0-9]{4}" maxlength="4" onblur={handleInputChange}>
+            </div>
+            <div class="acme-formvalidation__field">
+                <label for="country" class="acme-formvalidation__label">Country<span class="acme-formvalidation__required">*</span></label>
+                <select id="country" class="acme-formvalidation__input" required onchange={handleInputChange}>
+                    <option value="Australia" selected>Australia</option>
+                </select>
+            </div>
+            <div class="acme-formvalidation__field">
+                <label for="startDate" class="acme-formvalidation__label">Start Date<span class="acme-formvalidation__required">*</span></label>
+                <input type="date" id="startDate" class="acme-formvalidation__input" required onblur={handleInputChange}>
+            </div>
+            <div class="acme-formvalidation__field">
+                <label for="endDate" class="acme-formvalidation__label">End Date<span class="acme-formvalidation__required">*</span></label>
+                <input type="date" id="endDate" class="acme-formvalidation__input" required onblur={handleInputChange}>
+            </div>
+        </div>
+        <div class="acme-formvalidation__button-container">
+            <button class="acme-formvalidation__button acme-formvalidation__button--reset" onclick={handleReset}>Reset Form</button>
+            <button class="acme-formvalidation__button acme-formvalidation__button--submit" onclick={handleSubmit} disabled={!isFormValid}>Submit</button>
+        </div>
+    </div>
+</template>
