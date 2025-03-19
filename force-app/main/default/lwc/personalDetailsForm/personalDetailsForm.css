@@ -1,4 +1,86 @@
-/* personalDetailsForm.css (continued) */
+/* personalDetailsForm.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-teal-color: #00A0B0;
+    --acme-gold-color: #F2C94C;
+    --acme-coral-color: #FF6B6B;
+    --acme-light-gray-color: #F5F7FA;
+    --acme-medium-gray-color: #E0E0E0;
+}
+
+.acme-personal-details-form {
+    font-family: Arial, Helvetica, sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.acme-heading {
+    color: var(--acme-blue-color);
+    margin-bottom: 1rem;
+}
+
+.acme-heading_large {
+    font-size: 24px;
+}
+
+.acme-heading_medium {
+    font-size: 18px;
+}
+
+.acme-form-section {
+    margin-bottom: 2rem;
+}
+
+.acme-form-field {
+    margin-bottom: 1rem;
+}
+
+.acme-form-label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 0.5rem;
+    color: var(--acme-gray-color);
+}
+
+.acme-input,
+.acme-select {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 14px;
+    border: 1px solid var(--acme-medium-gray-color);
+    border-radius: 4px;
+}
+
+.acme-input:focus,
+.acme-select:focus {
+    outline: none;
+    border-color: var(--acme-blue-color);
+    box-shadow: 0 0 0 1px var(--acme-blue-color);
+}
+
+.acme-input_error {
+    border-color: var(--acme-coral-color);
+}
+
+.acme-required {
+    color: var(--acme-coral-color);
+    margin-left: 2px;
+}
+
+.acme-radio-group,
+.acme-checkbox-group {
+    display: flex;
+    gap: 1rem;
+}
+
+.acme-radio,
+.acme-checkbox {
+    margin-right: 0.5rem;
+}
+
 .acme-radio-label,
 .acme-checkbox-label {
     font-size: 14px;
