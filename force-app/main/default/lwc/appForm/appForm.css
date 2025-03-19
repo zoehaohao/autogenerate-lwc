@@ -1,0 +1,51 @@
+/* appForm.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-light-gray-color: #F5F7FA;
+}
+
+.acme-app-form {
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.acme-app-form .slds-card {
+    background-color: var(--acme-white-color);
+    border: 1px solid var(--acme-light-gray-color);
+}
+
+.acme-app-form .slds-card__header {
+    background-color: var(--acme-blue-color);
+    color: var(--acme-white-color);
+    padding: var(--slds-c-card-spacing-block-start, 0.75rem) var(--slds-c-card-spacing-inline-start, 0.75rem);
+}
+
+.acme-app-form .slds-form-element__label {
+    color: var(--acme-gray-color);
+    font-size: var(--slds-c-input-text-font-size, 0.875rem);
+    font-weight: 600;
+}
+
+.acme-app-form .slds-input,
+.acme-app-form .slds-select,
+.acme-app-form .slds-textarea {
+    border-color: var(--acme-light-gray-color);
+}
+
+.acme-app-form .slds-button_brand {
+    background-color: var(--acme-blue-color);
+    border-color: var(--acme-blue-color);
+}
+
+.acme-app-form .slds-button_brand:hover,
+.acme-app-form .slds-button_brand:focus {
+    background-color: #004A9E;
+    border-color: #004A9E;
+}
+
+@media screen and (max-width: 768px) {
+    .acme-app-form .slds-form_stacked .slds-form-element {
+        margin-bottom: var(--slds-c-card-spacing-block-end, 0.75rem);
+    }
+}
