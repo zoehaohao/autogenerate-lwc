@@ -1,76 +1,47 @@
 <!-- personalDetailsForm.html -->
 <template>
-    <div class="acme-personal-details-form">
-        <h1 class="acme-heading acme-heading_large">Personal Details Form</h1>
-        
-        <template if:true={errorMessages.length}>
-            <div class="acme-error-container">
-                <p>Please correct the following errors:</p>
-                <ul>
-                    <template for:each={errorMessages} for:item="error">
-                        <li key={error}>{error}</li>
-                    </template>
-                </ul>
-            </div>
-        </template>
-        
+    <div class="root-container">
         <div class="acme-form-section">
-            <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
-            <div class="acme-form-row">
-                <lightning-combobox name="title" label="Title" value={title} options={titleOptions} required onchange={handleInputChange}></lightning-combobox>
+            <h2 class="acme-heading">Personal Information</h2>
+            <div class="acme-form-field">
+                <label for="firstName" class="acme-label">First name<span class="required-indicator">*</span></label>
+                <input type="text" id="firstName" class="acme-input" required onchange={handleInputChange}>
             </div>
-            <div class="acme-form-row">
-                <lightning-input type="text" name="firstName" label="First name" required onchange={handleInputChange}></lightning-input>
+            <div class="acme-form-field">
+                <label for="middleName" class="acme-label">Middle name</label>
+                <input type="text" id="middleName" class="acme-input" onchange={handleInputChange}>
             </div>
-            <div class="acme-form-row">
-                <lightning-input type="text" name="middleName" label="Middle name" onchange={handleInputChange}></lightning-input>
-            </div>
-            <div class="acme-form-row">
-                <lightning-input type="text" name="lastName" label="Last name" onchange={handleInputChange}></lightning-input>
-            </div>
-            <div class="acme-form-row">
-                <lightning-input type="date" name="birthdate" label="Birthdate" required onchange={handleInputChange}></lightning-input>
-            </div>
-            <div class="acme-form-row">
-                <lightning-radio-group name="gender" label="Gender" options={genderOptions} required onchange={handleInputChange}></lightning-radio-group>
+            <div class="acme-form-field">
+                <label for="lastName" class="acme-label">Last name<span class="required-indicator">*</span></label>
+                <input type="text" id="lastName" class="acme-input" required onchange={handleInputChange}>
             </div>
         </div>
-        
         <div class="acme-form-section">
-            <h2 class="acme-heading acme-heading_medium">Address</h2>
-            <div class="acme-form-row">
-                <lightning-input type="text" name="addressLine1" label="Address Line 1" required onchange={handleInputChange}></lightning-input>
+            <h2 class="acme-heading">Address</h2>
+            <div class="acme-form-field">
+                <label for="address" class="acme-label">Address</label>
+                <input type="text" id="address" class="acme-input" onchange={handleInputChange}>
             </div>
-            <div class="acme-form-row">
-                <lightning-input type="text" name="addressLine2" label="Address Line 2" onchange={handleInputChange}></lightning-input>
+            <div class="acme-form-field">
+                <label for="city" class="acme-label">City or Town</label>
+                <input type="text" id="city" class="acme-input" onchange={handleInputChange}>
             </div>
-            <div class="acme-form-row">
-                <lightning-input type="text" name="suburbCity" label="Suburb/City" required onchange={handleInputChange}></lightning-input>
+            <div class="acme-form-field">
+                <label for="state" class="acme-label">State</label>
+                <div class="acme-select-wrapper">
+                    <select id="state" class="acme-select" onchange={handleInputChange}>
+                        <option value="">Choose a State</option>
+                        <option value="AL">Alabama</option>
+                        <option value="AK">Alaska</option>
+                        <!-- Add other states here -->
+                    </select>
+                </div>
             </div>
-            <div class="acme-form-row">
-                <lightning-combobox name="state" label="State" value={state} options={stateOptions} required onchange={handleInputChange}></lightning-combobox>
-            </div>
-            <div class="acme-form-row">
-                <lightning-input type="text" name="postcode" label="Postcode" required onchange={handleInputChange} pattern="[0-9]{4}" message-when-pattern-mismatch="Postcode must be 4 digits"></lightning-input>
-            </div>
-            <div class="acme-form-row">
-                <lightning-combobox name="country" label="Country" value={country} options={countryOptions} required onchange={handleInputChange}></lightning-combobox>
-            </div>
-        </div>
-        
-        <div class="acme-form-section">
-            <h2 class="acme-heading acme-heading_medium">Date Range</h2>
-            <div class="acme-form-row">
-                <lightning-input type="date" name="startDate" label="Start Date" required onchange={handleInputChange}></lightning-input>
-            </div>
-            <div class="acme-form-row">
-                <lightning-input type="date" name="endDate" label="End Date" required onchange={handleInputChange}></lightning-input>
+            <div class="acme-form-field">
+                <label for="zipCode" class="acme-label">Zip code<span class="required-indicator">*</span></label>
+                <input type="text" id="zipCode" class="acme-input" required onchange={handleInputChange}>
             </div>
         </div>
-        
-        <div class="acme-form-buttons">
-            <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="acme-button acme-button_primary"></lightning-button>
-            <lightning-button label="Reset Form" onclick={handleReset} class="acme-button acme-button_secondary"></lightning-button>
-        </div>
+        <div if:true={errorMessage} class="acme-error-message">{errorMessage}</div>
     </div>
 </template>
