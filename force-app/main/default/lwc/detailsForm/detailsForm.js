@@ -4,108 +4,71 @@ import { LightningElement, track } from 'lwc';
 export default class DetailsForm extends LightningElement {
     @track formData = {};
     @track errorMessage = '';
-    @track isFormValid = false;
-
-    titleOptions = [
-        { label: 'Mr', value: 'Mr' },
-        { label: 'Mrs', value: 'Mrs' },
-        { label: 'Ms', value: 'Ms' },
-        { label: 'Dr', value: 'Dr' }
-    ];
-
-    genderOptions = [
-        { label: 'Male', value: 'Male' },
-        { label: 'Female', value: 'Female' },
-        { label: 'Other', value: 'Other' }
-    ];
-
-    stateOptions = [
-        { label: 'New South Wales', value: 'NSW' },
-        { label: 'Victoria', value: 'VIC' },
-        { label: 'Queensland', value: 'QLD' },
-        { label: 'Western Australia', value: 'WA' },
-        { label: 'South Australia', value: 'SA' },
-        { label: 'Tasmania', value: 'TAS' },
-        { label: 'Australian Capital Territory', value: 'ACT' },
-        { label: 'Northern Territory', value: 'NT' }
-    ];
-
-    countryOptions = [
-        { label: 'Australia', value: 'Australia' },
-        { label: 'New Zealand', value: 'New Zealand' }
-    ];
 
     handleInputChange(event) {
-        this.formData[event.target.name] = event.target.value;
-        this.validateForm();
-    }
-
-    validateForm() {
-        const allInputs = this.template.querySelectorAll('lightning-input, lightning-combobox, lightning-radio-group');
-        let isValid = true;
-
-        allInputs.forEach(input => {
-            if (!input.checkValidity()) {
-                input.reportValidity();
-                isValid = false;
-            }
-        });
-
-        if (isValid) {
-            isValid = this.validateAge() && this.validateDateRange();
-        }
-
-        this.isFormValid = isValid;
-        return isValid;
-    }
-
-    validateAge() {
-        if (this.formData.birthdate) {
-            const birthDate = new Date(this.formData.birthdate);
-            const today = new Date();
-            let age = today.getFullYear() - birthDate.getFullYear();
-            const monthDiff = today.getMonth() - birthDate.getMonth();
-            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                age--;
-            }
-            if (age < 18) {
-                this.errorMessage = 'You must be at least 18 years old.';
-                return false;
-            }
-        }
-        return true;
-    }
-
-    validateDateRange() {
-        if (this.formData.startDate && this.formData.endDate) {
-            const startDate = new Date(this.formData.startDate);
-            const endDate = new Date(this.formData.endDate);
-            if (startDate >= endDate) {
-                this.errorMessage = 'End Date must be after Start Date.';
-                return false;
-            }
-        }
-        return true;
+        const field = event.target.dataset.field;
+        const value = event.target.value;
+        this.formData[field] = value;
     }
 
     handleSubmit() {
         if (this.validateForm()) {
-            this.errorMessage = '';
             console.log('Form submitted:', this.formData);
+            this.errorMessage = '';
         }
     }
 
-    handleReset() {
-        this.formData = {};
-        this.errorMessage = '';
-        this.isFormValid = false;
-        const allInputs = this.template.querySelectorAll('lightning-input, lightning-combobox, lightning-radio-group');
-        allInputs.forEach(input => {
-            if (input.type === 'checkbox' || input.type === 'checkbox-button') {
-                input.checked = false;
-            } else if (input.type !== 'button') {
-                input.value = null;
-            }
-        });
+    validateForm() {
+        const { firstName, lastName, email, phone, dateOfBirth, street, city, state, zipCode, startDate, endDate } = this.formData;
+
+        if (!firstName || !lastName || !email || !phone || !dateOfBirth || !street || !city || !state || !zipCode || !startDate || !endDate) {
+            this.errorMessage = 'Please fill in all required fields.';
+            return false;
+        }
+
+        if (!this.isValidEmail(email)) {
+            this.errorMessage = 'Please enter a valid email address.';
+            return false;
+        }
+
+        if (!this.isValidPhone(phone)) {
+            this.errorMessage = 'Please enter a valid phone number.';
+            return false;
+        }
+
+        if (!this.isOver18(dateOfBirth)) {
+            this.errorMessage = 'Applicant must be over 18 years old.';
+            return false;
+        }
+
+        if (!this.isValidDateRange(startDate, endDate)) {
+            this.errorMessage = 'Start date must be earlier than end date.';
+            return false;
+        }
+
+        return true;
+    }
+
+    isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    isValidPhone(phone) {
+        return /^\d{10}$/.test(phone.replace(/\D/g, ''));
+    }
+
+    isOver18(dateOfBirth) {
+        const today = new Date();
+        const birthDate = new Date(dateOfBirth);
+        const age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age >= 18;
+    }
+
+    isValidDateRange(startDate, endDate) {
+        return new Date(startDate) < new Date(endDate);
     }
 }
