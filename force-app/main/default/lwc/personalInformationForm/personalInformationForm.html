@@ -1,0 +1,89 @@
+<!-- personalInformationForm.html -->
+<template>
+    <div class="root-container slds-p-around_medium">
+        <h1 class="slds-text-heading_large slds-m-bottom_medium">Personal Information Form</h1>
+        <form class="slds-form" onsubmit={handleSubmit}>
+            <div class="slds-form-element slds-m-bottom_medium">
+                <label class="slds-form-element__label" for="firstName">
+                    <abbr class="slds-required" title="required">*</abbr> First name
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="text" id="firstName" class="slds-input" required onchange={handleInputChange} />
+                </div>
+            </div>
+            <div class="slds-form-element slds-m-bottom_medium">
+                <label class="slds-form-element__label" for="middleName">Middle name</label>
+                <div class="slds-form-element__control">
+                    <input type="text" id="middleName" class="slds-input" onchange={handleInputChange} />
+                </div>
+            </div>
+            <div class="slds-form-element slds-m-bottom_medium">
+                <label class="slds-form-element__label" for="lastName">
+                    <abbr class="slds-required" title="required">*</abbr> Last name
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="text" id="lastName" class="slds-input" required onchange={handleInputChange} />
+                </div>
+            </div>
+            <div class="slds-form-element slds-m-bottom_medium">
+                <label class="slds-form-element__label" for="birthdate">
+                    <abbr class="slds-required" title="required">*</abbr> Birthdate
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="date" id="birthdate" class="slds-input" required onchange={handleInputChange} />
+                </div>
+            </div>
+            <div class="slds-form-element slds-m-bottom_medium">
+                <label class="slds-form-element__label" for="address">Address</label>
+                <div class="slds-form-element__control">
+                    <input type="text" id="address" class="slds-input" onchange={handleInputChange} />
+                </div>
+            </div>
+            <div class="slds-form-element slds-m-bottom_medium">
+                <label class="slds-form-element__label" for="city">City or Town</label>
+                <div class="slds-form-element__control">
+                    <input type="text" id="city" class="slds-input" onchange={handleInputChange} />
+                </div>
+            </div>
+            <div class="slds-form-element slds-m-bottom_medium">
+                <label class="slds-form-element__label" for="state">State</label>
+                <div class="slds-form-element__control">
+                    <select id="state" class="slds-select" onchange={handleInputChange}>
+                        <option value="">Choose a State</option>
+                        <!-- Add state options here -->
+                    </select>
+                </div>
+            </div>
+            <div class="slds-form-element slds-m-bottom_medium">
+                <label class="slds-form-element__label" for="zipCode">
+                    <abbr class="slds-required" title="required">*</abbr> Zip code
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="text" id="zipCode" class="slds-input" required pattern="^[0-9]{5}(?:-[0-9]{4})?$" onchange={handleInputChange} />
+                </div>
+            </div>
+            <div class="slds-form-element slds-m-bottom_medium">
+                <label class="slds-form-element__label" for="startDate">
+                    <abbr class="slds-required" title="required">*</abbr> Start Date
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="date" id="startDate" class="slds-input" required onchange={handleInputChange} />
+                </div>
+            </div>
+            <div class="slds-form-element slds-m-bottom_medium">
+                <label class="slds-form-element__label" for="endDate">
+                    <abbr class="slds-required" title="required">*</abbr> End Date
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="date" id="endDate" class="slds-input" required onchange={handleInputChange} />
+                </div>
+            </div>
+            <div class="slds-grid slds-grid_align-end slds-m-top_medium">
+                <button class="slds-button slds-button_neutral slds-m-right_x-small" onclick={handleClear}>Clear</button>
+                <button class="slds-button slds-button_brand" type="submit">Submit</button>
+            </div>
+        </form>
+        <div if:true={errorMessage} class="slds-text-color_error slds-m-top_small">{errorMessage}</div>
+        <a href="/dashboard" class="slds-m-top_medium slds-button slds-button_neutral">Return to Dashboard</a>
+    </div>
+</template>
