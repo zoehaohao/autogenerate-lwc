@@ -1,0 +1,53 @@
+/* personalDetailsForm.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-error-color: #C23934;
+}
+.acme-personal-details-form {
+    font-family: var(--slds-c-input-text-font-family, Arial, sans-serif);
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--slds-c-card-spacing-block, 1rem);
+}
+.acme-personal-details-form__section {
+    margin-bottom: var(--slds-c-card-spacing-block, 1.5rem);
+}
+.acme-heading {
+    color: var(--acme-blue-color);
+    font-weight: bold;
+    margin-bottom: var(--slds-c-card-spacing-block, 0.5rem);
+}
+.acme-heading_medium {
+    font-size: var(--slds-c-input-text-font-size, 1.25rem);
+}
+.acme-personal-details-form__error {
+    color: var(--acme-error-color);
+    margin-top: var(--slds-c-card-spacing-block, 0.5rem);
+    font-weight: bold;
+}
+.acme-personal-details-form__button-container {
+    margin-top: var(--slds-c-card-spacing-block, 1rem);
+    text-align: right;
+}
+.acme-button_primary {
+    --slds-c-button-brand-color-background: var(--acme-blue-color);
+    --slds-c-button-brand-color-border: var(--acme-blue-color);
+}
+.acme-button_primary:hover, .acme-button_primary:focus {
+    --slds-c-button-brand-color-background-hover: var(--acme-blue-color);
+    --slds-c-button-brand-color-border-hover: var(--acme-blue-color);
+    filter: brightness(90%);
+}
+@media screen and (max-width: 768px) {
+    .acme-personal-details-form {
+        padding: var(--slds-c-card-spacing-block, 0.5rem);
+    }
+    .slds-grid {
+        display: block;
+    }
+    .slds-col {
+        margin-bottom: var(--slds-c-card-spacing-block, 0.5rem);
+    }
+}

@@ -1,0 +1,53 @@
+<!-- personalDetailsForm.html -->
+<template>
+    <div class="acme-personal-details-form">
+        <div class="acme-personal-details-form__section">
+            <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input label="First Name" name="firstName" required onchange={handleInputChange}></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input label="Middle Name" name="middleName" onchange={handleInputChange}></lightning-input>
+                </div>
+            </div>
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input label="Last Name" name="lastName" required onchange={handleInputChange}></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input type="date" label="Birthdate" name="birthdate" required onchange={handleInputChange}></lightning-input>
+                </div>
+            </div>
+        </div>
+        <div class="acme-personal-details-form__section">
+            <h2 class="acme-heading acme-heading_medium">Address</h2>
+            <lightning-input label="Address" name="address" onchange={handleInputChange}></lightning-input>
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input label="City/Town" name="city" onchange={handleInputChange}></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-combobox label="State" name="state" options={stateOptions} onchange={handleInputChange}></lightning-combobox>
+                </div>
+            </div>
+            <lightning-input label="Zip Code" name="zipCode" required onchange={handleInputChange} pattern="[0-9]{5}" message-when-pattern-mismatch="Please enter a valid 5-digit zip code"></lightning-input>
+        </div>
+        <div class="acme-personal-details-form__section">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input type="date" label="Start Date" name="startDate" required onchange={handleInputChange}></lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input type="date" label="End Date" name="endDate" required onchange={handleInputChange}></lightning-input>
+                </div>
+            </div>
+        </div>
+        <div class="acme-personal-details-form__error" if:true={errorMessage}>
+            {errorMessage}
+        </div>
+        <div class="acme-personal-details-form__button-container">
+            <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="acme-button_primary"></lightning-button>
+        </div>
+    </div>
+</template>
