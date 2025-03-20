@@ -1,0 +1,61 @@
+<!-- caseForm1.html -->
+<template>
+    <div class="acme-case-form">
+        <div class="acme-card">
+            <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
+            <div class="acme-form-group">
+                <label for="firstName" class="acme-form-label">First Name<span class="acme-required">*</span></label>
+                <lightning-input type="text" id="firstName" name="firstName" required onchange={handleInputChange}></lightning-input>
+            </div>
+            <div class="acme-form-group">
+                <label for="middleName" class="acme-form-label">Middle Name</label>
+                <lightning-input type="text" id="middleName" name="middleName" onchange={handleInputChange}></lightning-input>
+            </div>
+            <div class="acme-form-group">
+                <label for="lastName" class="acme-form-label">Last Name<span class="acme-required">*</span></label>
+                <lightning-input type="text" id="lastName" name="lastName" required onchange={handleInputChange}></lightning-input>
+            </div>
+            <div class="acme-form-group">
+                <label for="birthdate" class="acme-form-label">Birthdate<span class="acme-required">*</span></label>
+                <lightning-input type="date" id="birthdate" name="birthdate" required onchange={handleInputChange}></lightning-input>
+            </div>
+        </div>
+
+        <div class="acme-card">
+            <h2 class="acme-heading acme-heading_medium">Address</h2>
+            <div class="acme-form-group">
+                <label for="address" class="acme-form-label">Address</label>
+                <lightning-input type="text" id="address" name="address" onchange={handleInputChange}></lightning-input>
+            </div>
+            <div class="acme-form-group">
+                <label for="city" class="acme-form-label">City/Town</label>
+                <lightning-input type="text" id="city" name="city" onchange={handleInputChange}></lightning-input>
+            </div>
+            <div class="acme-form-group">
+                <label for="state" class="acme-form-label">State</label>
+                <lightning-combobox id="state" name="state" options={stateOptions} onchange={handleInputChange}></lightning-combobox>
+            </div>
+            <div class="acme-form-group">
+                <label for="zipCode" class="acme-form-label">Zip Code<span class="acme-required">*</span></label>
+                <lightning-input type="text" id="zipCode" name="zipCode" required onchange={handleInputChange}></lightning-input>
+            </div>
+            <div class="acme-form-group">
+                <label for="startDate" class="acme-form-label">Start Date<span class="acme-required">*</span></label>
+                <lightning-input type="date" id="startDate" name="startDate" required onchange={handleInputChange}></lightning-input>
+            </div>
+            <div class="acme-form-group">
+                <label for="endDate" class="acme-form-label">End Date<span class="acme-required">*</span></label>
+                <lightning-input type="date" id="endDate" name="endDate" required onchange={handleInputChange}></lightning-input>
+            </div>
+        </div>
+
+        <div class="acme-button-group">
+            <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="acme-button acme-button_primary"></lightning-button>
+            <lightning-button label="Clear" onclick={handleClear} class="acme-button acme-button_secondary"></lightning-button>
+        </div>
+
+        <template if:true={errorMessage}>
+            <div class="acme-error-message">{errorMessage}</div>
+        </template>
+    </div>
+</template>
