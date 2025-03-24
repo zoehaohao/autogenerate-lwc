@@ -1,0 +1,137 @@
+<!-- personalDetailsForm.html -->
+<template>
+    <div class="root-container">
+        <div class="form-container">
+            <lightning-messages></lightning-messages>
+            
+            <div class="section personal-info">
+                <h2 class="section-header">Personal Information</h2>
+                <div class="field-group">
+                    <lightning-input 
+                        type="text" 
+                        label="First Name" 
+                        required
+                        placeholder="Enter first name"
+                        pattern="[A-Za-z]+"
+                        message-when-pattern-mismatch="Please enter letters only"
+                        onchange={handleInputChange}
+                        class="field"
+                        name="firstName">
+                    </lightning-input>
+
+                    <lightning-input 
+                        type="text" 
+                        label="Middle Name"
+                        placeholder="Enter middle name"
+                        pattern="[A-Za-z]*"
+                        message-when-pattern-mismatch="Please enter letters only"
+                        onchange={handleInputChange}
+                        class="field"
+                        name="middleName">
+                    </lightning-input>
+
+                    <lightning-input 
+                        type="text" 
+                        label="Last Name"
+                        required
+                        placeholder="Enter last name"
+                        pattern="[A-Za-z]+"
+                        message-when-pattern-mismatch="Please enter letters only"
+                        onchange={handleInputChange}
+                        class="field"
+                        name="lastName">
+                    </lightning-input>
+
+                    <fieldset class="gender-group">
+                        <legend>Gender<span class="required">*</span></legend>
+                        <lightning-radio-group
+                            name="gender"
+                            options={genderOptions}
+                            required
+                            onchange={handleInputChange}>
+                        </lightning-radio-group>
+                    </fieldset>
+
+                    <lightning-input 
+                        type="date" 
+                        label="Date of Birth"
+                        required
+                        onchange={handleInputChange}
+                        class="field"
+                        name="dateOfBirth">
+                    </lightning-input>
+
+                    <lightning-combobox
+                        name="maritalStatus"
+                        label="Marital Status"
+                        options={maritalStatusOptions}
+                        placeholder="Select marital status"
+                        onchange={handleInputChange}
+                        class="field">
+                    </lightning-combobox>
+
+                    <lightning-combobox
+                        name="nationality"
+                        label="Nationality"
+                        options={nationalityOptions}
+                        placeholder="Select nationality"
+                        required
+                        onchange={handleInputChange}
+                        class="field">
+                    </lightning-combobox>
+
+                    <lightning-input 
+                        type="text" 
+                        label="SSN"
+                        required
+                        placeholder="Enter SSN"
+                        pattern="\d{3}-\d{2}-\d{4}"
+                        message-when-pattern-mismatch="Please enter SSN in XXX-XX-XXXX format"
+                        onchange={handleInputChange}
+                        class="field"
+                        name="ssn">
+                    </lightning-input>
+
+                    <lightning-input 
+                        type="text" 
+                        label="Driver's License"
+                        placeholder="Enter driver's license number"
+                        pattern="[A-Za-z0-9]+"
+                        message-when-pattern-mismatch="Please enter alphanumeric characters only"
+                        onchange={handleInputChange}
+                        class="field"
+                        name="driversLicense">
+                    </lightning-input>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <div class="left-buttons">
+                    <lightning-button 
+                        label="Save Draft" 
+                        onclick={handleSaveDraft}
+                        class="save-draft-button">
+                    </lightning-button>
+                    <lightning-button 
+                        label="Clear Form" 
+                        onclick={handleClearForm}
+                        variant="destructive"
+                        class="clear-form-button">
+                    </lightning-button>
+                </div>
+                <lightning-button 
+                    label="Submit" 
+                    onclick={handleSubmit}
+                    variant="brand"
+                    disabled={isSubmitDisabled}
+                    class="submit-button">
+                </lightning-button>
+            </div>
+
+            <div class="footer-links">
+                <a href="/privacy-policy" target="_blank">Privacy Policy</a>
+                <a href="/terms-of-service" target="_blank">Terms of Service</a>
+            </div>
+        </div>
+    </div>
+</template>
