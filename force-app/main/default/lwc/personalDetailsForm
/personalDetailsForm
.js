@@ -3,6 +3,8 @@ import { LightningElement, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class PersonalDetailsForm extends LightningElement {
+    @track currentSection = 1;
+    @track errorMessage = '';
     @track formData = {
         firstName: '',
         middleName: '',
@@ -12,10 +14,16 @@ export default class PersonalDetailsForm extends LightningElement {
         maritalStatus: '',
         nationality: '',
         ssn: '',
-        driversLicense: ''
+        driversLicense: '',
+        email: '',
+        phone: '',
+        preferredContact: '',
+        newsletter: false,
+        altPhone: '',
+        socialMedia: '',
+        imHandle: '',
+        fax: ''
     };
-
-    @track isSubmitDisabled = true;
 
     genderOptions = [
         { label: 'Male', value: 'male' },
@@ -36,65 +44,95 @@ export default class PersonalDetailsForm extends LightningElement {
         { label: 'United Kingdom', value: 'uk' }
     ];
 
-    handleInputChange(event) {
-        const { name, value } = event.target;
-        this.formData[name] = value;
-        this.validateForm();
+    contactMethodOptions = [
+        { label: 'Email', value: 'email' },
+        { label: 'Phone', value: 'phone' },
+        { label: 'SMS', value: 'sms' }
+    ];
+
+    get isPersonalInfoSection() {
+        return this.currentSection === 1;
     }
 
-    validateForm() {
-        const requiredFields = ['firstName', 'lastName', 'gender', 'dateOfBirth', 'nationality', 'ssn'];
-        const allFieldsValid = requiredFields.every(field => this.formData[field]);
-        
-        const ssnPattern = /^\d{3}-\d{2}-\d{4}$/;
-        const namePattern = /^[A-Za-z]+$/;
+    get isContactInfoSection() {
+        return this.currentSection === 2;
+    }
 
-        const isValid = allFieldsValid &&
-            namePattern.test(this.formData.firstName) &&
-            namePattern.test(this.formData.lastName) &&
-            (!this.formData.middleName || namePattern.test(this.formData.middleName)) &&
-            ssnPattern.test(this.formData.ssn);
+    get isLastSection() {
+        return this.currentSection === 2;
+    }
 
-        this.isSubmitDisabled = !isValid;
+    get isSubmitDisabled() {
+        return !this.validateCurrentSection();
+    }
+
+    handleInputChange(event) {
+        const field = event.target.dataset.field;
+        const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+        this.formData[field] = value;
+        this.validateField(event.target);
+    }
+
+    validateField(field) {
+        if (field.required && !field.value) {
+            field.setCustomValidity('This field is required');
+        } else {
+            field.setCustomValidity('');
+        }
+        field.reportValidity();
+    }
+
+    validateCurrentSection() {
+        const fields = [...this.template.querySelectorAll('lightning-input, lightning-combobox, lightning-radio-group')];
+        return fields.reduce((valid, field) => {
+            this.validateField(field);
+            return valid && field.checkValidity();
+        }, true);
+    }
+
+    handlePrevious() {
+        if (this.currentSection > 1) {
+            this.currentSection--;
+            this.errorMessage = '';
+        }
+    }
+
+    handleNext() {
+        if (this.validateCurrentSection()) {
+            if (this.currentSection < 2) {
+                this.currentSection++;
+                this.errorMessage = '';
+            }
+        } else {
+            this.errorMessage = 'Please fill in all required fields correctly';
+        }
+    }
+
+    handleSaveProgress() {
+        if (this.validateCurrentSection()) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Success',
+                    message: 'Progress saved successfully',
+                    variant: 'success'
+                })
+            );
+        } else {
+            this.errorMessage = 'Please correct the errors before saving';
+        }
     }
 
     handleSubmit() {
-        if (this.isSubmitDisabled) return;
-
-        this.showToast('Success', 'Form submitted successfully', 'success');
-    }
-
-    handleSaveDraft() {
-        localStorage.setItem('formDraft', JSON.stringify(this.formData));
-        this.showToast('Success', 'Draft saved successfully', 'success');
-    }
-
-    handleClearForm() {
-        this.formData = {
-            firstName: '',
-            middleName: '',
-            lastName: '',
-            gender: '',
-            dateOfBirth: '',
-            maritalStatus: '',
-            nationality: '',
-            ssn: '',
-            driversLicense: ''
-        };
-        this.template.querySelectorAll('lightning-input, lightning-combobox, lightning-radio-group')
-            .forEach(element => {
-                element.value = '';
-            });
-        this.isSubmitDisabled = true;
-    }
-
-    showToast(title, message, variant) {
-        this.dispatchEvent(
-            new ShowToastEvent({
-                title,
-                message,
-                variant
-            })
-        );
+        if (this.validateCurrentSection()) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Success',
+                    message: 'Form submitted successfully',
+                    variant: 'success'
+                })
+            );
+        } else {
+            this.errorMessage = 'Please correct all errors before submitting';
+        }
     }
 }
