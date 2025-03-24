@@ -1,21 +1,13 @@
 // personalDetailsForm.js
 import { LightningElement, track } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class PersonalDetailsForm extends LightningElement {
-    @track formData = {
-        firstName: '',
-        middleName: '',
-        lastName: '',
-        gender: '',
-        dateOfBirth: '',
-        maritalStatus: '',
-        nationality: '',
-        ssn: '',
-        driversLicense: ''
-    };
-
-    @track formErrors = {};
+    @track formData = {};
+    @track errors = {};
+    @track errorSummary;
     @track isSubmitDisabled = true;
+    autoSaveInterval;
 
     genderOptions = [
         { label: 'Male', value: 'male' },
@@ -30,108 +22,82 @@ export default class PersonalDetailsForm extends LightningElement {
         { label: 'Widowed', value: 'widowed' }
     ];
 
-    nationalityOptions = [
-        { label: 'United States', value: 'us' },
-        { label: 'Canada', value: 'ca' },
-        { label: 'United Kingdom', value: 'uk' }
+    preferredContactOptions = [
+        { label: 'Email', value: 'email' },
+        { label: 'Phone', value: 'phone' },
+        { label: 'Mail', value: 'mail' }
     ];
 
-    handleInputChange(event) {
-        const field = event.target.label.toLowerCase().replace(' ', '');
-        this.formData[field] = event.target.value;
-        this.validateField(field, event.target.value);
-        this.validateForm();
+    connectedCallback() {
+        this.setupAutoSave();
     }
 
-    validateField(field, value) {
-        this.formErrors[field] = '';
-
-        switch(field) {
-            case 'firstname':
-            case 'lastname':
-                if (!value) {
-                    this.formErrors[field] = `${field} is required`;
-                } else if (!/^[A-Za-z]+$/.test(value)) {
-                    this.formErrors[field] = 'Only letters are allowed';
-                }
-                break;
-            case 'ssn':
-                if (!value) {
-                    this.formErrors[field] = 'SSN is required';
-                } else if (!/^\d{3}-\d{2}-\d{4}$/.test(value)) {
-                    this.formErrors[field] = 'Invalid SSN format (XXX-XX-XXXX)';
-                }
-                break;
-            case 'driverslicense':
-                if (value && !/^[A-Za-z0-9]+$/.test(value)) {
-                    this.formErrors[field] = 'Only alphanumeric characters allowed';
-                }
-                break;
-            case 'nationality':
-                if (!value) {
-                    this.formErrors[field] = 'Nationality is required';
-                }
-                break;
+    disconnectedCallback() {
+        if (this.autoSaveInterval) {
+            clearInterval(this.autoSaveInterval);
         }
     }
 
-    validateForm() {
-        const requiredFields = ['firstname', 'lastname', 'gender', 'dateofbirth', 'nationality', 'ssn'];
-        const isValid = requiredFields.every(field => {
-            const value = this.formData[field];
-            return value && !this.formErrors[field];
-        });
-        this.isSubmitDisabled = !isValid;
+    setupAutoSave() {
+        this.autoSaveInterval = setInterval(() => {
+            this.handleSaveDraft();
+        }, 300000);
     }
 
-    handleSave() {
+    handleInputValidation(event) {
+        const fieldName = event.target.fieldName;
+        const value = event.target.value;
+        const required = event.target.required;
+        
+        this.formData[fieldName] = value;
+        
+        if (required && !value) {
+            this.errors[fieldName] = 'This field is required';
+        } else {
+            delete this.errors[fieldName];
+        }
+        
         this.validateForm();
-        if (Object.keys(this.formErrors).length === 0) {
-            this.dispatchEvent(new CustomEvent('save', {
-                detail: this.formData
-            }));
+    }
+
+    validateForm() {
+        const errorCount = Object.keys(this.errors).length;
+        this.isSubmitDisabled = errorCount > 0;
+        
+        if (errorCount > 0) {
+            this.errorSummary = `Please correct ${errorCount} error${errorCount > 1 ? 's' : ''} in the form.`;
+        } else {
+            this.errorSummary = null;
         }
     }
 
     handleSubmit() {
-        this.validateForm();
-        if (!this.isSubmitDisabled) {
-            this.dispatchEvent(new CustomEvent('submit', {
-                detail: this.formData
-            }));
-        }
-    }
-
-    handleReset() {
-        this.formData = {
-            firstName: '',
-            middleName: '',
-            lastName: '',
-            gender: '',
-            dateOfBirth: '',
-            maritalStatus: '',
-            nationality: '',
-            ssn: '',
-            driversLicense: ''
-        };
-        this.formErrors = {};
-        this.isSubmitDisabled = true;
+        if (this.isSubmitDisabled) return;
         
-        this.template.querySelectorAll('lightning-input, lightning-radio-group, lightning-combobox')
-            .forEach(element => {
-                if (element.reset) {
-                    element.reset();
-                }
-            });
+        this.showToast('Success', 'Form submitted successfully', 'success');
     }
 
-    handlePrivacyPolicy(event) {
-        event.preventDefault();
-        this.dispatchEvent(new CustomEvent('privacypolicy'));
+    handleSaveDraft() {
+        localStorage.setItem('formDraft', JSON.stringify(this.formData));
+        this.showToast('Success', 'Draft saved successfully', 'success');
     }
 
-    handleTermsOfService(event) {
-        event.preventDefault();
-        this.dispatchEvent(new CustomEvent('termsofservice'));
+    handleClearForm() {
+        this.formData = {};
+        this.errors = {};
+        this.errorSummary = null;
+        this.template.querySelectorAll('lightning-input').forEach(input => {
+            input.value = '';
+        });
+    }
+
+    showToast(title, message, variant) {
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: title,
+                message: message,
+                variant: variant
+            })
+        );
     }
 }

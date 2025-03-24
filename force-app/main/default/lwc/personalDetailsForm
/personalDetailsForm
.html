@@ -2,125 +2,41 @@
 <template>
     <div class="root-container">
         <div class="form-container">
-            <div class="section personal-info">
-                <h2 class="section-header">
-                    <lightning-icon icon-name="standard:user" size="small"></lightning-icon>
-                    Personal Information
-                </h2>
-                <div class="field-group">
-                    <lightning-input 
-                        label="First Name" 
-                        required
-                        type="text"
-                        placeholder="Enter first name"
-                        pattern="[A-Za-z]+"
-                        message-when-pattern-mismatch="Please enter text only"
-                        onchange={handleInputChange}
-                        class="field">
-                    </lightning-input>
-
-                    <lightning-input 
-                        label="Middle Name"
-                        type="text"
-                        placeholder="Enter middle name"
-                        pattern="[A-Za-z]*"
-                        message-when-pattern-mismatch="Please enter text only"
-                        onchange={handleInputChange}
-                        class="field">
-                    </lightning-input>
-
-                    <lightning-input 
-                        label="Last Name"
-                        required
-                        type="text"
-                        placeholder="Enter last name"
-                        pattern="[A-Za-z]+"
-                        message-when-pattern-mismatch="Please enter text only"
-                        onchange={handleInputChange}
-                        class="field">
-                    </lightning-input>
-
-                    <lightning-radio-group
-                        label="Gender"
-                        required
-                        options={genderOptions}
-                        onchange={handleInputChange}
-                        class="field">
-                    </lightning-radio-group>
-
-                    <lightning-input 
-                        label="Date of Birth"
-                        required
-                        type="date"
-                        onchange={handleInputChange}
-                        class="field">
-                    </lightning-input>
-
-                    <lightning-combobox
-                        label="Marital Status"
-                        options={maritalStatusOptions}
-                        placeholder="Select marital status"
-                        onchange={handleInputChange}
-                        class="field">
-                    </lightning-combobox>
-
-                    <lightning-combobox
-                        label="Nationality"
-                        required
-                        options={nationalityOptions}
-                        placeholder="Select nationality"
-                        onchange={handleInputChange}
-                        class="field">
-                    </lightning-combobox>
-
-                    <lightning-input 
-                        label="SSN"
-                        required
-                        type="text"
-                        placeholder="Enter SSN"
-                        pattern="\d{3}-\d{2}-\d{4}"
-                        message-when-pattern-mismatch="Please enter SSN in XXX-XX-XXXX format"
-                        onchange={handleInputChange}
-                        class="field">
-                    </lightning-input>
-
-                    <lightning-input 
-                        label="Driver's License"
-                        type="text"
-                        placeholder="Enter license number"
-                        pattern="[A-Za-z0-9]+"
-                        message-when-pattern-mismatch="Please enter alphanumeric characters only"
-                        onchange={handleInputChange}
-                        class="field">
-                    </lightning-input>
+            <template if:true={errorSummary}>
+                <div class="error-summary slds-text-color_error">
+                    <lightning-icon icon-name="utility:error" size="small" variant="error"></lightning-icon>
+                    <span>{errorSummary}</span>
                 </div>
-            </div>
+            </template>
 
-            <div class="form-footer">
-                <lightning-button 
-                    label="Reset"
-                    variant="destructive"
-                    onclick={handleReset}
-                    class="reset-button">
-                </lightning-button>
-                <lightning-button 
-                    label="Save"
-                    variant="brand"
-                    onclick={handleSave}
-                    class="save-button">
-                </lightning-button>
-                <lightning-button 
-                    label="Submit"
-                    variant="brand"
-                    disabled={isSubmitDisabled}
-                    onclick={handleSubmit}
-                    class="submit-button">
-                </lightning-button>
-            </div>
-
-            <div class="links-footer">
-                <a href="#" onclick={handlePrivacyPolicy}>Privacy Policy</a>
-                <a href="#" onclick={handleTermsOfService}>Terms of Service</a>
+            <!-- Personal Information Section -->
+            <div class="form-section">
+                <h2 class="section-header">Personal Information</h2>
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input 
+                            type="text" 
+                            label="First Name" 
+                            required 
+                            pattern="[A-Za-z]+" 
+                            message-when-pattern-mismatch="Please enter letters only"
+                            placeholder="Enter first name"
+                            onblur={handleInputValidation}
+                            field-name="firstName">
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                        <lightning-input 
+                            type="text" 
+                            label="Middle Name" 
+                            pattern="[A-Za-z]*"
+                            message-when-pattern-mismatch="Please enter letters only"
+                            placeholder="Enter middle name"
+                            onblur={handleInputValidation}
+                            field-name="middleName">
+                        </lightning-input>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
