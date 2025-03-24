@@ -2,225 +2,126 @@
 <template>
     <div class="root-container">
         <div class="form-container">
-            <div class="section" if:true={isPersonalInfoSection}>
-                <h2 class="section-header">Personal Information</h2>
+            <div class="section personal-info">
+                <h2 class="section-header">
+                    <lightning-icon icon-name="standard:user" size="small"></lightning-icon>
+                    Personal Information
+                </h2>
                 <div class="field-group">
                     <lightning-input 
-                        type="text" 
                         label="First Name" 
-                        required 
+                        required
+                        type="text"
                         placeholder="Enter first name"
                         pattern="[A-Za-z]+"
-                        message-when-pattern-mismatch="Please enter letters only"
+                        message-when-pattern-mismatch="Please enter text only"
                         onchange={handleInputChange}
-                        data-field="firstName"
-                        value={formData.firstName}>
+                        class="field">
                     </lightning-input>
 
                     <lightning-input 
-                        type="text" 
-                        label="Middle Name" 
+                        label="Middle Name"
+                        type="text"
                         placeholder="Enter middle name"
-                        pattern="[A-Za-z]+"
-                        message-when-pattern-mismatch="Please enter letters only"
+                        pattern="[A-Za-z]*"
+                        message-when-pattern-mismatch="Please enter text only"
                         onchange={handleInputChange}
-                        data-field="middleName"
-                        value={formData.middleName}>
+                        class="field">
                     </lightning-input>
 
                     <lightning-input 
-                        type="text" 
-                        label="Last Name" 
+                        label="Last Name"
                         required
+                        type="text"
                         placeholder="Enter last name"
                         pattern="[A-Za-z]+"
-                        message-when-pattern-mismatch="Please enter letters only"
+                        message-when-pattern-mismatch="Please enter text only"
                         onchange={handleInputChange}
-                        data-field="lastName"
-                        value={formData.lastName}>
+                        class="field">
                     </lightning-input>
 
                     <lightning-radio-group
-                        name="gender"
                         label="Gender"
-                        options={genderOptions}
                         required
+                        options={genderOptions}
                         onchange={handleInputChange}
-                        data-field="gender"
-                        value={formData.gender}>
+                        class="field">
                     </lightning-radio-group>
 
                     <lightning-input 
-                        type="date" 
                         label="Date of Birth"
                         required
+                        type="date"
                         onchange={handleInputChange}
-                        data-field="dateOfBirth"
-                        value={formData.dateOfBirth}>
+                        class="field">
                     </lightning-input>
 
                     <lightning-combobox
                         label="Marital Status"
                         options={maritalStatusOptions}
+                        placeholder="Select marital status"
                         onchange={handleInputChange}
-                        data-field="maritalStatus"
-                        value={formData.maritalStatus}>
+                        class="field">
                     </lightning-combobox>
 
                     <lightning-combobox
                         label="Nationality"
                         required
                         options={nationalityOptions}
+                        placeholder="Select nationality"
                         onchange={handleInputChange}
-                        data-field="nationality"
-                        value={formData.nationality}>
+                        class="field">
                     </lightning-combobox>
 
                     <lightning-input 
-                        type="text" 
                         label="SSN"
                         required
-                        pattern="[0-9]{9}"
-                        message-when-pattern-mismatch="Please enter 9 digits"
+                        type="text"
                         placeholder="Enter SSN"
+                        pattern="\d{3}-\d{2}-\d{4}"
+                        message-when-pattern-mismatch="Please enter SSN in XXX-XX-XXXX format"
                         onchange={handleInputChange}
-                        data-field="ssn"
-                        value={formData.ssn}>
+                        class="field">
                     </lightning-input>
 
                     <lightning-input 
-                        type="text" 
                         label="Driver's License"
+                        type="text"
                         placeholder="Enter license number"
                         pattern="[A-Za-z0-9]+"
                         message-when-pattern-mismatch="Please enter alphanumeric characters only"
                         onchange={handleInputChange}
-                        data-field="driversLicense"
-                        value={formData.driversLicense}>
+                        class="field">
                     </lightning-input>
                 </div>
             </div>
 
-            <div class="section" if:true={isContactInfoSection}>
-                <h2 class="section-header">Contact Information</h2>
-                <div class="field-group">
-                    <lightning-input 
-                        type="email" 
-                        label="Email"
-                        required
-                        placeholder="Enter email address"
-                        onchange={handleInputChange}
-                        data-field="email"
-                        value={formData.email}>
-                    </lightning-input>
-
-                    <lightning-input 
-                        type="tel" 
-                        label="Phone"
-                        required
-                        pattern="^\(\d{3}\) \d{3}-\d{4}$"
-                        message-when-pattern-mismatch="Please enter phone in format (XXX) XXX-XXXX"
-                        placeholder="Enter phone number"
-                        onchange={handleInputChange}
-                        data-field="phone"
-                        value={formData.phone}>
-                    </lightning-input>
-
-                    <lightning-combobox
-                        label="Preferred Contact Method"
-                        required
-                        options={contactMethodOptions}
-                        onchange={handleInputChange}
-                        data-field="preferredContact"
-                        value={formData.preferredContact}>
-                    </lightning-combobox>
-
-                    <lightning-input 
-                        type="checkbox" 
-                        label="Subscribe to Newsletter"
-                        onchange={handleInputChange}
-                        data-field="newsletter"
-                        checked={formData.newsletter}>
-                    </lightning-input>
-
-                    <lightning-input 
-                        type="tel" 
-                        label="Alternative Phone"
-                        pattern="^\(\d{3}\) \d{3}-\d{4}$"
-                        message-when-pattern-mismatch="Please enter phone in format (XXX) XXX-XXXX"
-                        placeholder="Enter alt phone"
-                        onchange={handleInputChange}
-                        data-field="altPhone"
-                        value={formData.altPhone}>
-                    </lightning-input>
-
-                    <lightning-input 
-                        type="text" 
-                        label="Social Media"
-                        placeholder="Enter handle"
-                        onchange={handleInputChange}
-                        data-field="socialMedia"
-                        value={formData.socialMedia}>
-                    </lightning-input>
-
-                    <lightning-input 
-                        type="text" 
-                        label="IM Handle"
-                        placeholder="Enter IM handle"
-                        onchange={handleInputChange}
-                        data-field="imHandle"
-                        value={formData.imHandle}>
-                    </lightning-input>
-
-                    <lightning-input 
-                        type="text" 
-                        label="Fax"
-                        pattern="[0-9]+"
-                        message-when-pattern-mismatch="Please enter numbers only"
-                        placeholder="Enter fax number"
-                        onchange={handleInputChange}
-                        data-field="fax"
-                        value={formData.fax}>
-                    </lightning-input>
-                </div>
-            </div>
-
-            <div class="button-group">
+            <div class="form-footer">
                 <lightning-button 
-                    label="Previous" 
-                    onclick={handlePrevious}
-                    class="slds-m-right_x-small"
-                    variant="neutral">
+                    label="Reset"
+                    variant="destructive"
+                    onclick={handleReset}
+                    class="reset-button">
                 </lightning-button>
-                
                 <lightning-button 
-                    label="Save Progress"
-                    onclick={handleSaveProgress}
-                    class="slds-m-right_x-small"
-                    variant="brand">
-                </lightning-button>
-
-                <lightning-button 
-                    label="Next"
-                    onclick={handleNext}
-                    variant="brand">
-                </lightning-button>
-
-                <lightning-button 
-                    if:true={isLastSection}
-                    label="Submit"
-                    onclick={handleSubmit}
+                    label="Save"
                     variant="brand"
-                    class="submit-button"
-                    disabled={isSubmitDisabled}>
+                    onclick={handleSave}
+                    class="save-button">
+                </lightning-button>
+                <lightning-button 
+                    label="Submit"
+                    variant="brand"
+                    disabled={isSubmitDisabled}
+                    onclick={handleSubmit}
+                    class="submit-button">
                 </lightning-button>
             </div>
 
-            <template if:true={errorMessage}>
-                <div class="error-message">
-                    {errorMessage}
-                </div>
-            </template>
+            <div class="links-footer">
+                <a href="#" onclick={handlePrivacyPolicy}>Privacy Policy</a>
+                <a href="#" onclick={handleTermsOfService}>Terms of Service</a>
+            </div>
         </div>
     </div>
 </template>

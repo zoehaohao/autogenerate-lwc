@@ -1,10 +1,7 @@
 // personalDetailsForm.js
 import { LightningElement, track } from 'lwc';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class PersonalDetailsForm extends LightningElement {
-    @track currentSection = 1;
-    @track errorMessage = '';
     @track formData = {
         firstName: '',
         middleName: '',
@@ -14,16 +11,11 @@ export default class PersonalDetailsForm extends LightningElement {
         maritalStatus: '',
         nationality: '',
         ssn: '',
-        driversLicense: '',
-        email: '',
-        phone: '',
-        preferredContact: '',
-        newsletter: false,
-        altPhone: '',
-        socialMedia: '',
-        imHandle: '',
-        fax: ''
+        driversLicense: ''
     };
+
+    @track formErrors = {};
+    @track isSubmitDisabled = true;
 
     genderOptions = [
         { label: 'Male', value: 'male' },
@@ -44,95 +36,102 @@ export default class PersonalDetailsForm extends LightningElement {
         { label: 'United Kingdom', value: 'uk' }
     ];
 
-    contactMethodOptions = [
-        { label: 'Email', value: 'email' },
-        { label: 'Phone', value: 'phone' },
-        { label: 'SMS', value: 'sms' }
-    ];
-
-    get isPersonalInfoSection() {
-        return this.currentSection === 1;
-    }
-
-    get isContactInfoSection() {
-        return this.currentSection === 2;
-    }
-
-    get isLastSection() {
-        return this.currentSection === 2;
-    }
-
-    get isSubmitDisabled() {
-        return !this.validateCurrentSection();
-    }
-
     handleInputChange(event) {
-        const field = event.target.dataset.field;
-        const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-        this.formData[field] = value;
-        this.validateField(event.target);
+        const field = event.target.label.toLowerCase().replace(' ', '');
+        this.formData[field] = event.target.value;
+        this.validateField(field, event.target.value);
+        this.validateForm();
     }
 
-    validateField(field) {
-        if (field.required && !field.value) {
-            field.setCustomValidity('This field is required');
-        } else {
-            field.setCustomValidity('');
-        }
-        field.reportValidity();
-    }
+    validateField(field, value) {
+        this.formErrors[field] = '';
 
-    validateCurrentSection() {
-        const fields = [...this.template.querySelectorAll('lightning-input, lightning-combobox, lightning-radio-group')];
-        return fields.reduce((valid, field) => {
-            this.validateField(field);
-            return valid && field.checkValidity();
-        }, true);
-    }
-
-    handlePrevious() {
-        if (this.currentSection > 1) {
-            this.currentSection--;
-            this.errorMessage = '';
-        }
-    }
-
-    handleNext() {
-        if (this.validateCurrentSection()) {
-            if (this.currentSection < 2) {
-                this.currentSection++;
-                this.errorMessage = '';
-            }
-        } else {
-            this.errorMessage = 'Please fill in all required fields correctly';
+        switch(field) {
+            case 'firstname':
+            case 'lastname':
+                if (!value) {
+                    this.formErrors[field] = `${field} is required`;
+                } else if (!/^[A-Za-z]+$/.test(value)) {
+                    this.formErrors[field] = 'Only letters are allowed';
+                }
+                break;
+            case 'ssn':
+                if (!value) {
+                    this.formErrors[field] = 'SSN is required';
+                } else if (!/^\d{3}-\d{2}-\d{4}$/.test(value)) {
+                    this.formErrors[field] = 'Invalid SSN format (XXX-XX-XXXX)';
+                }
+                break;
+            case 'driverslicense':
+                if (value && !/^[A-Za-z0-9]+$/.test(value)) {
+                    this.formErrors[field] = 'Only alphanumeric characters allowed';
+                }
+                break;
+            case 'nationality':
+                if (!value) {
+                    this.formErrors[field] = 'Nationality is required';
+                }
+                break;
         }
     }
 
-    handleSaveProgress() {
-        if (this.validateCurrentSection()) {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Success',
-                    message: 'Progress saved successfully',
-                    variant: 'success'
-                })
-            );
-        } else {
-            this.errorMessage = 'Please correct the errors before saving';
+    validateForm() {
+        const requiredFields = ['firstname', 'lastname', 'gender', 'dateofbirth', 'nationality', 'ssn'];
+        const isValid = requiredFields.every(field => {
+            const value = this.formData[field];
+            return value && !this.formErrors[field];
+        });
+        this.isSubmitDisabled = !isValid;
+    }
+
+    handleSave() {
+        this.validateForm();
+        if (Object.keys(this.formErrors).length === 0) {
+            this.dispatchEvent(new CustomEvent('save', {
+                detail: this.formData
+            }));
         }
     }
 
     handleSubmit() {
-        if (this.validateCurrentSection()) {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Success',
-                    message: 'Form submitted successfully',
-                    variant: 'success'
-                })
-            );
-        } else {
-            this.errorMessage = 'Please correct all errors before submitting';
+        this.validateForm();
+        if (!this.isSubmitDisabled) {
+            this.dispatchEvent(new CustomEvent('submit', {
+                detail: this.formData
+            }));
         }
+    }
+
+    handleReset() {
+        this.formData = {
+            firstName: '',
+            middleName: '',
+            lastName: '',
+            gender: '',
+            dateOfBirth: '',
+            maritalStatus: '',
+            nationality: '',
+            ssn: '',
+            driversLicense: ''
+        };
+        this.formErrors = {};
+        this.isSubmitDisabled = true;
+        
+        this.template.querySelectorAll('lightning-input, lightning-radio-group, lightning-combobox')
+            .forEach(element => {
+                if (element.reset) {
+                    element.reset();
+                }
+            });
+    }
+
+    handlePrivacyPolicy(event) {
+        event.preventDefault();
+        this.dispatchEvent(new CustomEvent('privacypolicy'));
+    }
+
+    handleTermsOfService(event) {
+        event.preventDefault();
+        this.dispatchEvent(new CustomEvent('termsofservice'));
     }
 }
