@@ -1,103 +1,135 @@
 // personalDetailsForm.js
 import { LightningElement, track } from 'lwc';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class PersonalDetailsForm extends LightningElement {
-    @track formData = {};
+    @track formData = {
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        gender: '',
+        dateOfBirth: '',
+        maritalStatus: '',
+        nationality: '',
+        ssn: '',
+        driversLicense: '',
+        email: '',
+        phone: '',
+        preferredContact: '',
+        newsletter: false,
+        altPhone: '',
+        socialMedia: '',
+        skype: '',
+        fax: ''
+    };
+
     @track errors = {};
-    @track errorSummary;
-    @track isSubmitDisabled = true;
-    autoSaveInterval;
+    @track formErrors = [];
 
-    genderOptions = [
-        { label: 'Male', value: 'male' },
-        { label: 'Female', value: 'female' },
-        { label: 'Other', value: 'other' }
+    nationalityOptions = [
+        { label: 'United States', value: 'US' },
+        { label: 'Canada', value: 'CA' },
+        { label: 'United Kingdom', value: 'UK' },
+        { label: 'Australia', value: 'AU' }
     ];
 
-    maritalStatusOptions = [
-        { label: 'Single', value: 'single' },
-        { label: 'Married', value: 'married' },
-        { label: 'Divorced', value: 'divorced' },
-        { label: 'Widowed', value: 'widowed' }
-    ];
-
-    preferredContactOptions = [
-        { label: 'Email', value: 'email' },
-        { label: 'Phone', value: 'phone' },
-        { label: 'Mail', value: 'mail' }
-    ];
-
-    connectedCallback() {
-        this.setupAutoSave();
+    handleFieldChange(event) {
+        const field = event.target.dataset.field || event.target.id;
+        const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+        this.formData[field] = value;
+        this.validateField(event);
     }
 
-    disconnectedCallback() {
-        if (this.autoSaveInterval) {
-            clearInterval(this.autoSaveInterval);
+    validateField(event) {
+        const field = event.target.dataset.field || event.target.id;
+        const value = this.formData[field];
+        
+        delete this.errors[field];
+
+        switch(field) {
+            case 'firstName':
+            case 'lastName':
+                if (!value || value.trim() === '') {
+                    this.errors[field] = `${field === 'firstName' ? 'First' : 'Last'} name is required`;
+                }
+                break;
+            case 'email':
+                if (!value) {
+                    this.errors.email = 'Email is required';
+                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                    this.errors.email = 'Please enter a valid email address';
+                }
+                break;
+            case 'phone':
+                if (!value) {
+                    this.errors.phone = 'Phone number is required';
+                } else if (!/^\(\d{3}\) \d{3}-\d{4}$/.test(value)) {
+                    this.errors.phone = 'Please enter phone in (XXX) XXX-XXXX format';
+                }
+                break;
+            case 'ssn':
+                if (!value) {
+                    this.errors.ssn = 'SSN is required';
+                } else if (!/^\d{9}$/.test(value.replace(/\D/g, ''))) {
+                    this.errors.ssn = 'Please enter a valid 9-digit SSN';
+                }
+                break;
+            case 'dateOfBirth':
+                if (!value) {
+                    this.errors.dateOfBirth = 'Date of birth is required';
+                } else {
+                    const dob = new Date(value);
+                    const today = new Date();
+                    if (dob >= today) {
+                        this.errors.dateOfBirth = 'Date of birth must be in the past';
+                    }
+                }
+                break;
         }
+
+        this.updateFormErrors();
     }
 
-    setupAutoSave() {
-        this.autoSaveInterval = setInterval(() => {
-            this.handleSaveDraft();
-        }, 300000);
-    }
-
-    handleInputValidation(event) {
-        const fieldName = event.target.fieldName;
-        const value = event.target.value;
-        const required = event.target.required;
-        
-        this.formData[fieldName] = value;
-        
-        if (required && !value) {
-            this.errors[fieldName] = 'This field is required';
-        } else {
-            delete this.errors[fieldName];
-        }
-        
-        this.validateForm();
-    }
-
-    validateForm() {
-        const errorCount = Object.keys(this.errors).length;
-        this.isSubmitDisabled = errorCount > 0;
-        
-        if (errorCount > 0) {
-            this.errorSummary = `Please correct ${errorCount} error${errorCount > 1 ? 's' : ''} in the form.`;
-        } else {
-            this.errorSummary = null;
-        }
+    updateFormErrors() {
+        this.formErrors = Object.values(this.errors);
     }
 
     handleSubmit() {
-        if (this.isSubmitDisabled) return;
+        this.validateAllFields();
         
-        this.showToast('Success', 'Form submitted successfully', 'success');
+        if (this.formErrors.length === 0) {
+            // Submit form logic here
+            console.log('Form submitted:', this.formData);
+        }
     }
 
-    handleSaveDraft() {
-        localStorage.setItem('formDraft', JSON.stringify(this.formData));
-        this.showToast('Success', 'Draft saved successfully', 'success');
-    }
-
-    handleClearForm() {
-        this.formData = {};
-        this.errors = {};
-        this.errorSummary = null;
-        this.template.querySelectorAll('lightning-input').forEach(input => {
-            input.value = '';
+    validateAllFields() {
+        const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'ssn', 'dateOfBirth', 'nationality'];
+        requiredFields.forEach(field => {
+            this.validateField({ target: { dataset: { field }, id: field } });
         });
     }
 
-    showToast(title, message, variant) {
-        this.dispatchEvent(
-            new ShowToastEvent({
-                title: title,
-                message: message,
-                variant: variant
-            })
-        );
+    handleClear() {
+        this.formData = {
+            firstName: '',
+            middleName: '',
+            lastName: '',
+            gender: '',
+            dateOfBirth: '',
+            maritalStatus: '',
+            nationality: '',
+            ssn: '',
+            driversLicense: '',
+            email: '',
+            phone: '',
+            preferredContact: '',
+            newsletter: false,
+            altPhone: '',
+            socialMedia: '',
+            skype: '',
+            fax: ''
+        };
+        this.errors = {};
+        this.formErrors = [];
     }
 }

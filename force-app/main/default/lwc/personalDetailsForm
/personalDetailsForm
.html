@@ -1,43 +1,67 @@
 <!-- personalDetailsForm.html -->
 <template>
     <div class="root-container">
-        <div class="form-container">
-            <template if:true={errorSummary}>
-                <div class="error-summary slds-text-color_error">
-                    <lightning-icon icon-name="utility:error" size="small" variant="error"></lightning-icon>
-                    <span>{errorSummary}</span>
-                </div>
-            </template>
+        <div if:true={formErrors} class="error-summary slds-m-bottom_medium">
+            <div class="slds-text-color_error">Please correct the following errors:</div>
+            <ul class="slds-list_dotted">
+                <template for:each={formErrors} for:item="error">
+                    <li key={error} class="slds-text-color_error">{error}</li>
+                </template>
+            </ul>
+        </div>
 
-            <!-- Personal Information Section -->
-            <div class="form-section">
-                <h2 class="section-header">Personal Information</h2>
-                <div class="slds-grid slds-wrap slds-gutters">
-                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                        <lightning-input 
-                            type="text" 
-                            label="First Name" 
-                            required 
-                            pattern="[A-Za-z]+" 
-                            message-when-pattern-mismatch="Please enter letters only"
-                            placeholder="Enter first name"
-                            onblur={handleInputValidation}
-                            field-name="firstName">
-                        </lightning-input>
-                    </div>
-                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                        <lightning-input 
-                            type="text" 
-                            label="Middle Name" 
-                            pattern="[A-Za-z]*"
-                            message-when-pattern-mismatch="Please enter letters only"
-                            placeholder="Enter middle name"
-                            onblur={handleInputValidation}
-                            field-name="middleName">
-                        </lightning-input>
+        <!-- Personal Information Section -->
+        <div class="section">
+            <h2 class="section-heading">Personal Information</h2>
+            <div class="slds-form">
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label" for="firstName">
+                        <abbr class="slds-required" title="required">*</abbr>First Name
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="firstName" class="slds-input" 
+                               placeholder="Enter first name" required
+                               onblur={validateField}
+                               data-field="firstName"
+                               value={formData.firstName}/>
+                        <div if:true={errors.firstName} class="slds-form-element__help slds-text-color_error">
+                            {errors.firstName}
+                        </div>
                     </div>
                 </div>
+
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label" for="middleName">Middle Name</label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="middleName" class="slds-input" 
+                               placeholder="Enter middle name"
+                               value={formData.middleName}/>
+                    </div>
+                </div>
+
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label" for="lastName">
+                        <abbr class="slds-required" title="required">*</abbr>Last Name
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="lastName" class="slds-input" 
+                               placeholder="Enter last name" required
+                               onblur={validateField}
+                               data-field="lastName"
+                               value={formData.lastName}/>
+                        <div if:true={errors.lastName} class="slds-form-element__help slds-text-color_error">
+                            {errors.lastName}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rest of the form fields -->
             </div>
+        </div>
+
+        <div class="button-container">
+            <button class="slds-button slds-button_neutral" onclick={handleClear}>Clear</button>
+            <button class="slds-button slds-button_brand" onclick={handleSubmit}>Submit</button>
         </div>
     </div>
 </template>
