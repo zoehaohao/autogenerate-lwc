@@ -2,50 +2,94 @@
 :host {
     --acme-blue-color: #0057B8;
     --acme-gray-color: #424A54;
-    --acme-error-color: #FF6B6B;
+    --acme-coral-color: #FF6B6B;
 }
 
 .root-container {
-    padding: var(--slds-c-card-spacing-block, 1rem);
-    max-width: 70%;
+    font-family: 'Salesforce Sans', Arial, Helvetica, sans-serif;
+    max-width: 1200px;
     margin: 0 auto;
+    padding: var(--slds-c-card-spacing-block);
 }
 
 .section {
-    margin-bottom: var(--slds-c-card-spacing-block, 2rem);
+    margin-bottom: var(--slds-c-card-spacing-block-end, 2rem);
+    padding: var(--slds-c-card-spacing-block, 1.5rem);
+    background: var(--slds-c-card-color-background, white);
+    border-radius: var(--slds-c-card-radius-border, 0.25rem);
+    box-shadow: var(--slds-c-card-shadow);
 }
 
 .section-heading {
     color: var(--acme-blue-color);
     font-size: 1.125rem;
-    font-weight: 600;
+    font-weight: 700;
     margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--slds-c-card-color-border, #d8dde6);
+}
+
+.slds-form-element {
+    margin-bottom: 1rem;
+}
+
+.slds-form-element__label {
+    color: var(--acme-gray-color);
+    font-size: 0.875rem;
+    text-align: right;
+}
+
+.slds-input,
+.slds-select {
+    height: 2.5rem;
+    border: 1px solid var(--slds-c-input-color-border, #ccc);
+}
+
+.slds-input:focus,
+.slds-select:focus {
+    border-color: var(--acme-blue-color);
+    box-shadow: 0 0 3px var(--acme-blue-color);
+}
+
+.slds-form-element__help {
+    color: var(--acme-coral-color);
+    font-size: 0.75rem;
+}
+
+.error-summary {
+    background-color: #fafafa;
+    border: 1px solid var(--acme-coral-color);
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
 }
 
 .button-container {
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
-    margin-top: 2rem;
 }
 
-.error-summary {
-    background-color: var(--slds-c-card-color-background, #f3f2f2);
-    padding: 1rem;
-    border-left: 4px solid var(--acme-error-color);
-    margin-bottom: 1rem;
+.slds-button_brand {
+    background-color: var(--acme-blue-color);
+    border-color: var(--acme-blue-color);
 }
 
-@media screen and (max-width: 768px) {
+.slds-button_brand:hover {
+    background-color: var(--acme-blue-color);
+    filter: brightness(90%);
+}
+
+@media (max-width: 768px) {
     .root-container {
-        max-width: 90%;
+        width: 90%;
+        padding: 1rem;
+    }
+    
+    .slds-form-element__label {
+        text-align: left;
     }
 }
 
-@media screen and (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 769px) and (max-width: 1024px) {
     .root-container {
-        max-width: 80%;
+        width: 80%;
     }
 }

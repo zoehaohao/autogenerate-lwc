@@ -24,112 +24,85 @@ export default class PersonalDetailsForm extends LightningElement {
 
     @track errors = {};
     @track formErrors = [];
-
-    nationalityOptions = [
-        { label: 'United States', value: 'US' },
-        { label: 'Canada', value: 'CA' },
-        { label: 'United Kingdom', value: 'UK' },
-        { label: 'Australia', value: 'AU' }
-    ];
-
-    handleFieldChange(event) {
-        const field = event.target.dataset.field || event.target.id;
-        const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-        this.formData[field] = value;
-        this.validateField(event);
+    
+    get isSubmitDisabled() {
+        return Object.keys(this.errors).length > 0 || !this.isFormValid();
     }
 
     validateField(event) {
-        const field = event.target.dataset.field || event.target.id;
-        const value = this.formData[field];
+        const field = event.target.dataset.field;
+        const value = event.target.value;
         
-        delete this.errors[field];
+        this.errors[field] = '';
 
         switch(field) {
             case 'firstName':
             case 'lastName':
-                if (!value || value.trim() === '') {
-                    this.errors[field] = `${field === 'firstName' ? 'First' : 'Last'} name is required`;
+                if (!value.match(/^[A-Za-z]+$/)) {
+                    this.errors[field] = 'Only letters are allowed';
                 }
                 break;
             case 'email':
-                if (!value) {
-                    this.errors.email = 'Email is required';
-                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                    this.errors.email = 'Please enter a valid email address';
+                if (!value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                    this.errors[field] = 'Please enter a valid email address';
                 }
                 break;
             case 'phone':
-                if (!value) {
-                    this.errors.phone = 'Phone number is required';
-                } else if (!/^\(\d{3}\) \d{3}-\d{4}$/.test(value)) {
-                    this.errors.phone = 'Please enter phone in (XXX) XXX-XXXX format';
+            case 'altPhone':
+                if (value && !value.match(/^\(\d{3}\) \d{3}-\d{4}$/)) {
+                    this.errors[field] = 'Please enter phone in (XXX) XXX-XXXX format';
                 }
                 break;
             case 'ssn':
-                if (!value) {
-                    this.errors.ssn = 'SSN is required';
-                } else if (!/^\d{9}$/.test(value.replace(/\D/g, ''))) {
-                    this.errors.ssn = 'Please enter a valid 9-digit SSN';
-                }
-                break;
-            case 'dateOfBirth':
-                if (!value) {
-                    this.errors.dateOfBirth = 'Date of birth is required';
-                } else {
-                    const dob = new Date(value);
-                    const today = new Date();
-                    if (dob >= today) {
-                        this.errors.dateOfBirth = 'Date of birth must be in the past';
-                    }
+                if (!value.match(/^\d{3}-\d{2}-\d{4}$/)) {
+                    this.errors[field] = 'Please enter SSN in XXX-XX-XXXX format';
                 }
                 break;
         }
 
-        this.updateFormErrors();
+        this.updateFormValidity();
     }
 
-    updateFormErrors() {
-        this.formErrors = Object.values(this.errors);
+    handleFieldChange(event) {
+        const field = event.target.name || event.target.dataset.field;
+        const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+        
+        this.formData[field] = value;
+        this.validateField(event);
+    }
+
+    isFormValid() {
+        const requiredFields = ['firstName', 'lastName', 'gender', 'dateOfBirth', 
+                              'nationality', 'ssn', 'email', 'phone', 'preferredContact'];
+        
+        return requiredFields.every(field => this.formData[field]);
+    }
+
+    updateFormValidity() {
+        this.formErrors = Object.values(this.errors).filter(error => error);
     }
 
     handleSubmit() {
-        this.validateAllFields();
-        
-        if (this.formErrors.length === 0) {
-            // Submit form logic here
+        if (this.isFormValid() && Object.keys(this.errors).length === 0) {
+            // Handle form submission
             console.log('Form submitted:', this.formData);
+        } else {
+            this.updateFormValidity();
         }
     }
 
-    validateAllFields() {
-        const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'ssn', 'dateOfBirth', 'nationality'];
-        requiredFields.forEach(field => {
-            this.validateField({ target: { dataset: { field }, id: field } });
-        });
+    handleSaveDraft() {
+        // Handle save draft functionality
+        console.log('Form saved as draft:', this.formData);
     }
 
     handleClear() {
-        this.formData = {
-            firstName: '',
-            middleName: '',
-            lastName: '',
-            gender: '',
-            dateOfBirth: '',
-            maritalStatus: '',
-            nationality: '',
-            ssn: '',
-            driversLicense: '',
-            email: '',
-            phone: '',
-            preferredContact: '',
-            newsletter: false,
-            altPhone: '',
-            socialMedia: '',
-            skype: '',
-            fax: ''
-        };
+        this.formData = {};
         this.errors = {};
         this.formErrors = [];
+        
+        this.template.querySelectorAll('input').forEach(input => {
+            input.value = '';
+        });
     }
 }
