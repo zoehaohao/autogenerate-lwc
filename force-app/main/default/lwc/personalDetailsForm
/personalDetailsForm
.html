@@ -1,0 +1,49 @@
+<!-- personalDetailsForm.html -->
+<template>
+    <div class="root-container">
+        <div class="form-section">
+            <h2 class="section-title">Personal Information</h2>
+            <div class="field-container">
+                <label for="name" class="field-label">
+                    Name<span class="required-indicator">*</span>
+                </label>
+                <input 
+                    type="text" 
+                    id="name"
+                    class="input-field"
+                    placeholder="Enter your name"
+                    required
+                    onblur={handleNameBlur}
+                    value={nameValue}
+                />
+                <div if:true={nameError} class="error-message">
+                    {nameError}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2 class="section-title">Address</h2>
+            <div class="field-container">
+                <label for="address" class="field-label">Address</label>
+                <input 
+                    type="text" 
+                    id="address"
+                    class="input-field"
+                    placeholder="Enter your address"
+                    value={addressValue}
+                />
+            </div>
+        </div>
+
+        <div class="button-container">
+            <button 
+                class="submit-button" 
+                onclick={handleSubmit}
+                disabled={isSubmitDisabled}
+            >
+                Submit
+            </button>
+        </div>
+    </div>
+</template>
