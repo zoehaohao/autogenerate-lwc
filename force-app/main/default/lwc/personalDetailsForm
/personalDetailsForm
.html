@@ -1,49 +1,95 @@
 <!-- personalDetailsForm.html -->
 <template>
     <div class="root-container">
-        <div class="form-section">
-            <h2 class="section-title">Personal Information</h2>
-            <div class="field-container">
-                <label for="name" class="field-label">
-                    Name<span class="required-indicator">*</span>
-                </label>
-                <input 
+        <div class="form-container">
+            <div class="section personal-info">
+                <h2>Personal Information</h2>
+                <lightning-input 
+                    label="First Name" 
                     type="text" 
-                    id="name"
-                    class="input-field"
-                    placeholder="Enter your name"
-                    required
-                    onblur={handleNameBlur}
-                    value={nameValue}
-                />
-                <div if:true={nameError} class="error-message">
-                    {nameError}
-                </div>
-            </div>
-        </div>
-
-        <div class="form-section">
-            <h2 class="section-title">Address</h2>
-            <div class="field-container">
-                <label for="address" class="field-label">Address</label>
-                <input 
+                    required 
+                    placeholder="Enter first name"
+                    onchange={handleInputChange}
+                    name="firstName"
+                    class="form-element">
+                </lightning-input>
+                
+                <lightning-input 
+                    label="Middle Name" 
                     type="text" 
-                    id="address"
-                    class="input-field"
-                    placeholder="Enter your address"
-                    value={addressValue}
-                />
+                    placeholder="Enter middle name"
+                    onchange={handleInputChange}
+                    name="middleName"
+                    class="form-element">
+                </lightning-input>
+                
+                <lightning-input 
+                    label="Last Name" 
+                    type="text" 
+                    required 
+                    placeholder="Enter last name"
+                    onchange={handleInputChange}
+                    name="lastName"
+                    class="form-element">
+                </lightning-input>
             </div>
-        </div>
-
-        <div class="button-container">
-            <button 
-                class="submit-button" 
-                onclick={handleSubmit}
-                disabled={isSubmitDisabled}
-            >
-                Submit
-            </button>
+            
+            <div class="section address-info">
+                <h2>Address</h2>
+                <lightning-input 
+                    label="Address" 
+                    type="text" 
+                    placeholder="Enter address"
+                    onchange={handleInputChange}
+                    name="address"
+                    class="form-element">
+                </lightning-input>
+                
+                <lightning-input 
+                    label="City/Town" 
+                    type="text" 
+                    placeholder="Enter city or town"
+                    onchange={handleInputChange}
+                    name="city"
+                    class="form-element">
+                </lightning-input>
+                
+                <lightning-combobox
+                    label="State"
+                    placeholder="Choose a State"
+                    options={stateOptions}
+                    onchange={handleInputChange}
+                    name="state"
+                    class="form-element">
+                </lightning-combobox>
+                
+                <lightning-input 
+                    label="Zip Code" 
+                    type="text" 
+                    required 
+                    pattern="[0-9]{5}"
+                    placeholder="Enter zip code"
+                    onchange={handleInputChange}
+                    name="zipCode"
+                    message-when-pattern-mismatch="Please enter a valid 5-digit zip code"
+                    class="form-element">
+                </lightning-input>
+            </div>
+            
+            <div class="button-container">
+                <lightning-button 
+                    label="Reset" 
+                    onclick={handleReset}
+                    variant="neutral"
+                    class="reset-button">
+                </lightning-button>
+                <lightning-button 
+                    label="Submit" 
+                    onclick={handleSubmit}
+                    variant="brand"
+                    class="submit-button">
+                </lightning-button>
+            </div>
         </div>
     </div>
 </template>
