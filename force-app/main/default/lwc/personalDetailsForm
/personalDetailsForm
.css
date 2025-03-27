@@ -2,51 +2,131 @@
 :host {
     --acme-blue-color: #0057B8;
     --acme-gray-color: #424A54;
+    --acme-error-color: #FF6B6B;
+    --acme-border-color: #E4E7EB;
 }
 
 .root-container {
-    background-color: var(--lwc-colorBackground);
-    padding: var(--lwc-spacingMedium);
+    font-family: 'Salesforce Sans', system-ui, -apple-system;
+    color: var(--acme-gray-color);
+    line-height: 1.5;
 }
 
 .form-container {
-    max-width: 60%;
+    background: #FFFFFF;
+    max-width: 600px;
     margin: 0 auto;
+    padding: var(--slds-c-card-spacing-block, 1.5rem);
 }
 
 .section {
-    margin-bottom: var(--lwc-spacingLarge);
+    margin-bottom: 1rem;
 }
 
-.section h2 {
+.section-header {
     color: var(--acme-blue-color);
-    font-size: var(--lwc-fontSize5);
-    font-weight: 700;
-    margin-bottom: var(--lwc-spacingMedium);
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
 }
 
-.form-element {
-    margin-bottom: var(--lwc-spacingSmall);
+.field-group {
+    margin-bottom: 0.75rem;
+}
+
+label {
+    display: block;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+    text-align: right;
+}
+
+.required {
+    color: #FF0000;
+    margin-left: 0.25rem;
+}
+
+input, select {
+    width: 100%;
+    height: 40px;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--acme-border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+input:focus, select:focus {
+    outline: 2px solid var(--acme-blue-color);
+    border-radius: 0;
+}
+
+.select-container {
+    position: relative;
+}
+
+.error-message {
+    color: var(--acme-error-color);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.input-field.error {
+    border-color: var(--acme-error-color);
 }
 
 .button-container {
     display: flex;
     justify-content: space-between;
-    margin-top: var(--lwc-spacingLarge);
+    margin-top: 1.5rem;
 }
 
-.reset-button {
-    margin-right: var(--lwc-spacingSmall);
+.submit-button, .clear-button {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+}
+
+.submit-button {
+    background-color: var(--acme-blue-color);
+    color: #FFFFFF;
+}
+
+.submit-button:hover:not(:disabled) {
+    background-color: #004A9E;
+}
+
+.submit-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.clear-button {
+    background-color: #FFFFFF;
+    border: 1px solid var(--acme-border-color);
+    color: var(--acme-gray-color);
+}
+
+.clear-button:hover {
+    background-color: #F5F7FA;
+}
+
+.form-error {
+    color: var(--acme-error-color);
+    margin-top: 1rem;
+    text-align: center;
 }
 
 @media screen and (max-width: 768px) {
     .form-container {
-        max-width: 100%;
+        width: 100%;
+        padding: 1rem;
     }
 }
 
-@media screen and (min-width: 769px) and (max-width: 1024px) {
+@media screen and (min-width: 768px) and (max-width: 1024px) {
     .form-container {
-        max-width: 80%;
+        width: 80%;
     }
 }

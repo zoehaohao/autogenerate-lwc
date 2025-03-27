@@ -1,6 +1,5 @@
 // personalDetailsForm.js
 import { LightningElement, track } from 'lwc';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class PersonalDetailsForm extends LightningElement {
     @track formData = {
@@ -13,97 +12,102 @@ export default class PersonalDetailsForm extends LightningElement {
         zipCode: ''
     };
 
-    stateOptions = [
-        { label: 'Alabama', value: 'AL' },
-        { label: 'Alaska', value: 'AK' },
-        { label: 'Arizona', value: 'AZ' },
-        { label: 'Arkansas', value: 'AR' },
-        { label: 'California', value: 'CA' },
-        { label: 'Colorado', value: 'CO' },
-        { label: 'Connecticut', value: 'CT' },
-        { label: 'Delaware', value: 'DE' },
-        { label: 'Florida', value: 'FL' },
-        { label: 'Georgia', value: 'GA' },
-        { label: 'Hawaii', value: 'HI' },
-        { label: 'Idaho', value: 'ID' },
-        { label: 'Illinois', value: 'IL' },
-        { label: 'Indiana', value: 'IN' },
-        { label: 'Iowa', value: 'IA' },
-        { label: 'Kansas', value: 'KS' },
-        { label: 'Kentucky', value: 'KY' },
-        { label: 'Louisiana', value: 'LA' },
-        { label: 'Maine', value: 'ME' },
-        { label: 'Maryland', value: 'MD' },
-        { label: 'Massachusetts', value: 'MA' },
-        { label: 'Michigan', value: 'MI' },
-        { label: 'Minnesota', value: 'MN' },
-        { label: 'Mississippi', value: 'MS' },
-        { label: 'Missouri', value: 'MO' },
-        { label: 'Montana', value: 'MT' },
-        { label: 'Nebraska', value: 'NE' },
-        { label: 'Nevada', value: 'NV' },
-        { label: 'New Hampshire', value: 'NH' },
-        { label: 'New Jersey', value: 'NJ' },
-        { label: 'New Mexico', value: 'NM' },
-        { label: 'New York', value: 'NY' },
-        { label: 'North Carolina', value: 'NC' },
-        { label: 'North Dakota', value: 'ND' },
-        { label: 'Ohio', value: 'OH' },
-        { label: 'Oklahoma', value: 'OK' },
-        { label: 'Oregon', value: 'OR' },
-        { label: 'Pennsylvania', value: 'PA' },
-        { label: 'Rhode Island', value: 'RI' },
-        { label: 'South Carolina', value: 'SC' },
-        { label: 'South Dakota', value: 'SD' },
-        { label: 'Tennessee', value: 'TN' },
-        { label: 'Texas', value: 'TX' },
-        { label: 'Utah', value: 'UT' },
-        { label: 'Vermont', value: 'VT' },
-        { label: 'Virginia', value: 'VA' },
-        { label: 'Washington', value: 'WA' },
-        { label: 'West Virginia', value: 'WV' },
-        { label: 'Wisconsin', value: 'WI' },
-        { label: 'Wyoming', value: 'WY' }
+    @track errors = {
+        firstName: '',
+        lastName: '',
+        zipCode: ''
+    };
+
+    @track formError = '';
+
+    states = [
+        'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA',
+        'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD',
+        'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ',
+        'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC',
+        'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
     ];
 
-    handleInputChange(event) {
-        const field = event.target.name;
-        const value = event.target.value;
-        this.formData = { ...this.formData, [field]: value };
+    get stateOptions() {
+        return this.states.map(state => ({
+            label: state,
+            value: state
+        }));
+    }
+
+    get isSubmitDisabled() {
+        return !this.formData.firstName || 
+               !this.formData.lastName || 
+               !this.formData.zipCode ||
+               Object.values(this.errors).some(error => error);
+    }
+
+    get firstNameClass() {
+        return `input-field ${this.errors.firstName ? 'error' : ''}`;
+    }
+
+    get lastNameClass() {
+        return `input-field ${this.errors.lastName ? 'error' : ''}`;
+    }
+
+    get zipCodeClass() {
+        return `input-field ${this.errors.zipCode ? 'error' : ''}`;
+    }
+
+    handleChange(event) {
+        const { name, value } = event.target;
+        this.formData = { ...this.formData, [name]: value };
+        this.errors[name] = '';
+        this.formError = '';
+    }
+
+    handleBlur(event) {
+        const { name, value } = event.target;
+        this.validateField(name, value);
+    }
+
+    validateField(name, value) {
+        switch(name) {
+            case 'firstName':
+            case 'lastName':
+                if (!value.trim()) {
+                    this.errors[name] = `${name === 'firstName' ? 'First' : 'Last'} name is required`;
+                }
+                break;
+            case 'zipCode':
+                if (!value) {
+                    this.errors.zipCode = 'Zip code is required';
+                } else if (!/^\d{5}(-\d{4})?$/.test(value)) {
+                    this.errors.zipCode = 'Invalid zip code format (12345 or 12345-6789)';
+                }
+                break;
+        }
     }
 
     validateForm() {
-        const allValid = [...this.template.querySelectorAll('lightning-input, lightning-combobox')]
-            .reduce((validSoFar, inputField) => {
-                return validSoFar && inputField.checkValidity();
-            }, true);
-        return allValid;
+        let isValid = true;
+        
+        Object.keys(this.formData).forEach(field => {
+            if (['firstName', 'lastName', 'zipCode'].includes(field)) {
+                this.validateField(field, this.formData[field]);
+                if (this.errors[field]) {
+                    isValid = false;
+                }
+            }
+        });
+
+        return isValid;
     }
 
     handleSubmit() {
         if (this.validateForm()) {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Success',
-                    message: 'Form submitted successfully',
-                    variant: 'success'
-                })
-            );
+            console.log('Form submitted:', this.formData);
         } else {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Error',
-                    message: 'Please fill in all required fields correctly',
-                    variant: 'error'
-                })
-            );
-            this.template.querySelectorAll('lightning-input, lightning-combobox').forEach(element => {
-                element.reportValidity();
-            });
+            this.formError = 'Please correct the errors before submitting.';
         }
     }
 
-    handleReset() {
+    handleClear() {
         this.formData = {
             firstName: '',
             middleName: '',
@@ -113,10 +117,11 @@ export default class PersonalDetailsForm extends LightningElement {
             state: '',
             zipCode: ''
         };
-        this.template.querySelectorAll('lightning-input, lightning-combobox').forEach(element => {
-            if (element.type !== 'submit') {
-                element.value = '';
-            }
-        });
+        this.errors = {
+            firstName: '',
+            lastName: '',
+            zipCode: ''
+        };
+        this.formError = '';
     }
 }

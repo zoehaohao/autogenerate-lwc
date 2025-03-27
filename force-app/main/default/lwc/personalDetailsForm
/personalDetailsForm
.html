@@ -3,92 +3,105 @@
     <div class="root-container">
         <div class="form-container">
             <div class="section personal-info">
-                <h2>Personal Information</h2>
-                <lightning-input 
-                    label="First Name" 
-                    type="text" 
-                    required 
-                    placeholder="Enter first name"
-                    onchange={handleInputChange}
-                    name="firstName"
-                    class="form-element">
-                </lightning-input>
-                
-                <lightning-input 
-                    label="Middle Name" 
-                    type="text" 
-                    placeholder="Enter middle name"
-                    onchange={handleInputChange}
-                    name="middleName"
-                    class="form-element">
-                </lightning-input>
-                
-                <lightning-input 
-                    label="Last Name" 
-                    type="text" 
-                    required 
-                    placeholder="Enter last name"
-                    onchange={handleInputChange}
-                    name="lastName"
-                    class="form-element">
-                </lightning-input>
+                <h2 class="section-header">Personal Information</h2>
+                <div class="field-group">
+                    <label for="firstName">First Name<span class="required">*</span></label>
+                    <input type="text" 
+                           id="firstName" 
+                           name="firstName" 
+                           required 
+                           placeholder="Enter first name"
+                           class={firstNameClass}
+                           value={firstName}
+                           onblur={handleBlur}
+                           onchange={handleChange}/>
+                    <div if:true={firstNameError} class="error-message">{firstNameError}</div>
+                </div>
+
+                <div class="field-group">
+                    <label for="middleName">Middle Name</label>
+                    <input type="text" 
+                           id="middleName" 
+                           name="middleName" 
+                           placeholder="Enter middle name"
+                           value={middleName}
+                           onchange={handleChange}/>
+                </div>
+
+                <div class="field-group">
+                    <label for="lastName">Last Name<span class="required">*</span></label>
+                    <input type="text" 
+                           id="lastName" 
+                           name="lastName" 
+                           required 
+                           placeholder="Enter last name"
+                           class={lastNameClass}
+                           value={lastName}
+                           onblur={handleBlur}
+                           onchange={handleChange}/>
+                    <div if:true={lastNameError} class="error-message">{lastNameError}</div>
+                </div>
             </div>
-            
+
             <div class="section address-info">
-                <h2>Address</h2>
-                <lightning-input 
-                    label="Address" 
-                    type="text" 
-                    placeholder="Enter address"
-                    onchange={handleInputChange}
-                    name="address"
-                    class="form-element">
-                </lightning-input>
-                
-                <lightning-input 
-                    label="City/Town" 
-                    type="text" 
-                    placeholder="Enter city or town"
-                    onchange={handleInputChange}
-                    name="city"
-                    class="form-element">
-                </lightning-input>
-                
-                <lightning-combobox
-                    label="State"
-                    placeholder="Choose a State"
-                    options={stateOptions}
-                    onchange={handleInputChange}
-                    name="state"
-                    class="form-element">
-                </lightning-combobox>
-                
-                <lightning-input 
-                    label="Zip Code" 
-                    type="text" 
-                    required 
-                    pattern="[0-9]{5}"
-                    placeholder="Enter zip code"
-                    onchange={handleInputChange}
-                    name="zipCode"
-                    message-when-pattern-mismatch="Please enter a valid 5-digit zip code"
-                    class="form-element">
-                </lightning-input>
+                <h2 class="section-header">Address</h2>
+                <div class="field-group">
+                    <label for="address">Address</label>
+                    <input type="text" 
+                           id="address" 
+                           name="address" 
+                           placeholder="Enter street address"
+                           value={address}
+                           onchange={handleChange}/>
+                </div>
+
+                <div class="field-group">
+                    <label for="city">City or Town</label>
+                    <input type="text" 
+                           id="city" 
+                           name="city" 
+                           placeholder="Enter city or town"
+                           value={city}
+                           onchange={handleChange}/>
+                </div>
+
+                <div class="field-group">
+                    <label for="state">State</label>
+                    <div class="select-container">
+                        <select id="state" 
+                                name="state"
+                                value={state}
+                                onchange={handleChange}>
+                            <option value="">Choose a State</option>
+                            {stateOptions}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label for="zipCode">Zip Code<span class="required">*</span></label>
+                    <input type="text" 
+                           id="zipCode" 
+                           name="zipCode" 
+                           required 
+                           placeholder="Enter zip code"
+                           class={zipCodeClass}
+                           value={zipCode}
+                           onblur={handleBlur}
+                           onchange={handleChange}/>
+                    <div if:true={zipCodeError} class="error-message">{zipCodeError}</div>
+                </div>
             </div>
-            
+
             <div class="button-container">
-                <lightning-button 
-                    label="Reset" 
-                    onclick={handleReset}
-                    variant="neutral"
-                    class="reset-button">
-                </lightning-button>
-                <lightning-button 
-                    label="Submit" 
-                    onclick={handleSubmit}
-                    variant="brand"
-                    class="submit-button">
-                </lightning-button>
+                <button class="clear-button" onclick={handleClear}>Clear</button>
+                <button class="submit-button" 
+                        onclick={handleSubmit} 
+                        disabled={isSubmitDisabled}>Submit</button>
+            </div>
+
+            <div if:true={formError} class="form-error">
+                {formError}
             </div>
         </div>
     </div>
