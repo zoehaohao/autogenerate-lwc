@@ -1,0 +1,110 @@
+<!-- validationForm.html -->
+<template>
+    <div class="root-container">
+        <div class="slds-form" role="form">
+            <div class="slds-form-element" class={nameFieldClass}>
+                <label class="slds-form-element__label" for="name">
+                    <abbr class="slds-required" title="required">*</abbr>
+                    Name
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="text" 
+                           id="name" 
+                           class="slds-input" 
+                           required
+                           minlength="2"
+                           maxlength="50"
+                           value={name}
+                           onchange={handleNameChange}
+                           onblur={validateName}/>
+                </div>
+                <div if:true={nameError} class="slds-form-element__help">{nameError}</div>
+            </div>
+
+            <div class="slds-form-element" class={emailFieldClass}>
+                <label class="slds-form-element__label" for="email">
+                    <abbr class="slds-required" title="required">*</abbr>
+                    Email
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="email" 
+                           id="email" 
+                           class="slds-input"
+                           required
+                           value={email}
+                           onchange={handleEmailChange}
+                           onblur={validateEmail}/>
+                </div>
+                <div if:true={emailError} class="slds-form-element__help">{emailError}</div>
+            </div>
+
+            <div class="slds-form-element" class={phoneFieldClass}>
+                <label class="slds-form-element__label" for="phone">
+                    Phone
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="tel" 
+                           id="phone" 
+                           class="slds-input"
+                           pattern="[0-9]{10}"
+                           value={phone}
+                           onchange={handlePhoneChange}
+                           onblur={validatePhone}/>
+                </div>
+                <div if:true={phoneError} class="slds-form-element__help">{phoneError}</div>
+            </div>
+
+            <div class="slds-form-element" class={ageFieldClass}>
+                <label class="slds-form-element__label" for="age">
+                    <abbr class="slds-required" title="required">*</abbr>
+                    Age
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="number" 
+                           id="age" 
+                           class="slds-input"
+                           required
+                           min="18"
+                           max="120"
+                           value={age}
+                           onchange={handleAgeChange}
+                           onblur={validateAge}/>
+                </div>
+                <div if:true={ageError} class="slds-form-element__help">{ageError}</div>
+            </div>
+
+            <div class="slds-form-element" class={urlFieldClass}>
+                <label class="slds-form-element__label" for="website">
+                    Website
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="url" 
+                           id="website" 
+                           class="slds-input"
+                           value={website}
+                           onchange={handleWebsiteChange}
+                           onblur={validateWebsite}/>
+                </div>
+                <div if:true={websiteError} class="slds-form-element__help">{websiteError}</div>
+            </div>
+
+            <div class="slds-m-top_medium">
+                <button class="slds-button slds-button_brand" 
+                        onclick={handleSubmit}
+                        disabled={isSubmitDisabled}>
+                    Submit
+                </button>
+            </div>
+
+            <div if:true={formError} class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                <span class="slds-assistive-text">error</span>
+                <h2>{formError}</h2>
+            </div>
+
+            <div if:true={successMessage} class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_success" role="alert">
+                <span class="slds-assistive-text">success</span>
+                <h2>{successMessage}</h2>
+            </div>
+        </div>
+    </div>
+</template>
