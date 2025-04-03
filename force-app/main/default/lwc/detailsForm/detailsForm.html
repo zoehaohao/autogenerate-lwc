@@ -1,32 +1,26 @@
 <!-- detailsForm.html -->
 <template>
-    <div class="acme-detailsform">
-        <h1 class="acme-heading acme-heading_large">Details Form</h1>
-        <div class="acme-detailsform__error-summary" if:true={hasErrors}>
-            <p>Please correct the following errors:</p>
-            <ul>
-                <template for:each={errorMessages} for:item="error">
-                    <li key={error}>{error}</li>
-                </template>
-            </ul>
-        </div>
-        <div class="acme-detailsform__fields">
-            <lightning-input label="First Name" name="firstName" required min-length="2" value={firstName} onchange={handleInputChange}></lightning-input>
-            <lightning-input label="Last Name" name="lastName" required min-length="2" value={lastName} onchange={handleInputChange}></lightning-input>
-            <lightning-input type="date" label="Date of Birth" name="dateOfBirth" required value={dateOfBirth} onchange={handleInputChange}></lightning-input>
-            <lightning-input type="date" label="Start Date" name="startDate" required value={startDate} onchange={handleInputChange}></lightning-input>
-            <lightning-input type="date" label="End Date" name="endDate" required value={endDate} onchange={handleInputChange}></lightning-input>
-            <lightning-input type="email" label="Email" name="email" required value={email} onchange={handleInputChange}></lightning-input>
-            <lightning-input type="tel" label="Phone" name="phone" pattern="[\(]\d{3}[\)]\s\d{3}[\-]\d{4}" placeholder="(XXX) XXX-XXXX" value={phone} onchange={handleInputChange}></lightning-input>
-        </div>
-        <div class="acme-detailsform__actions">
-            <lightning-button label="Cancel" onclick={handleCancel} class="acme-button acme-button_secondary"></lightning-button>
-            <lightning-button label="Reset" onclick={handleReset} class="acme-button acme-button_secondary"></lightning-button>
-            <lightning-button label="Submit" onclick={handleSubmit} disabled={isSubmitDisabled} class="acme-button acme-button_primary"></lightning-button>
-        </div>
-        <div class="acme-detailsform__links">
-            <a href="/lightning/n/FormHelp" class="acme-link">Help</a>
-            <a href="/lightning/page/home" class="acme-link">Back to Home</a>
-        </div>
+    <div class="acme-details-form">
+        <lightning-card title="Details Form" class="acme-card">
+            <div class="acme-card__body">
+                <lightning-combobox name="title" label="Title" required options={titleOptions} onchange={handleInputChange}></lightning-combobox>
+                <lightning-input name="firstName" label="First Name" required onchange={handleInputChange}></lightning-input>
+                <lightning-input name="middleName" label="Middle Name" onchange={handleInputChange}></lightning-input>
+                <lightning-input name="lastName" label="Last Name" required onchange={handleInputChange}></lightning-input>
+                <lightning-input name="birthdate" label="Birthdate" type="date" required onchange={handleInputChange}></lightning-input>
+                <lightning-radio-group name="gender" label="Gender" options={genderOptions} required onchange={handleInputChange}></lightning-radio-group>
+                <lightning-input name="addressLine1" label="Address Line 1" required onchange={handleInputChange}></lightning-input>
+                <lightning-input name="addressLine2" label="Address Line 2" onchange={handleInputChange}></lightning-input>
+                <lightning-input name="suburb" label="Suburb/City" required onchange={handleInputChange}></lightning-input>
+                <lightning-combobox name="state" label="State" required options={stateOptions} onchange={handleInputChange}></lightning-combobox>
+                <lightning-input name="postcode" label="Postcode" required pattern="[0-9]{4}" message-when-pattern-mismatch="Please enter a 4-digit postcode" onchange={handleInputChange}></lightning-input>
+                <lightning-combobox name="country" label="Country" required options={countryOptions} value="Australia" onchange={handleInputChange}></lightning-combobox>
+                <lightning-input name="startDate" label="Start Date" type="date" required onchange={handleInputChange}></lightning-input>
+                <lightning-input name="endDate" label="End Date" type="date" required onchange={handleInputChange}></lightning-input>
+                <div class="acme-button-group">
+                    <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="acme-button acme-button_primary"></lightning-button>
+                </div>
+            </div>
+        </lightning-card>
     </div>
 </template>

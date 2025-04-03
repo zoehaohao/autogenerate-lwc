@@ -1,96 +1,95 @@
 // detailsForm.js
 import { LightningElement, track } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class DetailsForm extends LightningElement {
-    @track firstName = '';
-    @track lastName = '';
-    @track dateOfBirth = '';
-    @track startDate = new Date().toISOString().split('T')[0];
-    @track endDate = '';
-    @track email = '';
-    @track phone = '';
-    @track errorMessages = [];
-
-    get hasErrors() {
-        return this.errorMessages.length > 0;
-    }
-
-    get isSubmitDisabled() {
-        return this.hasErrors || !this.firstName || !this.lastName || !this.dateOfBirth || !this.startDate || !this.endDate || !this.email;
-    }
+    @track formData = {};
+    titleOptions = [
+        { label: 'Mr', value: 'Mr' },
+        { label: 'Mrs', value: 'Mrs' },
+        { label: 'Ms', value: 'Ms' },
+        { label: 'Dr', value: 'Dr' }
+    ];
+    genderOptions = [
+        { label: 'Male', value: 'Male' },
+        { label: 'Female', value: 'Female' },
+        { label: 'Other', value: 'Other' }
+    ];
+    stateOptions = [
+        { label: 'NSW', value: 'NSW' },
+        { label: 'VIC', value: 'VIC' },
+        { label: 'QLD', value: 'QLD' },
+        { label: 'WA', value: 'WA' },
+        { label: 'SA', value: 'SA' },
+        { label: 'TAS', value: 'TAS' },
+        { label: 'ACT', value: 'ACT' },
+        { label: 'NT', value: 'NT' }
+    ];
+    countryOptions = [
+        { label: 'Australia', value: 'Australia' },
+        { label: 'New Zealand', value: 'New Zealand' }
+    ];
 
     handleInputChange(event) {
         const { name, value } = event.target;
-        this[name] = value;
-        this.validateField(name, value);
+        this.formData[name] = value;
     }
 
-    validateField(name, value) {
-        this.errorMessages = this.errorMessages.filter(error => !error.startsWith(name));
-
-        switch (name) {
-            case 'firstName':
-            case 'lastName':
-                if (value.length < 2) {
-                    this.errorMessages.push(`${name} must be at least 2 characters long`);
-                }
-                break;
-            case 'dateOfBirth':
-                if (!this.isOver18(value)) {
-                    this.errorMessages.push('You must be 18 years or older');
-                }
-                break;
-            case 'startDate':
-            case 'endDate':
-                if (this.startDate && this.endDate && new Date(this.startDate) >= new Date(this.endDate)) {
-                    this.errorMessages.push('Start Date must be before End Date');
-                }
-                break;
-            case 'email':
-                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                    this.errorMessages.push('Invalid email format');
-                }
-                break;
-            case 'phone':
-                if (value && !/^\(\d{3}\)\s\d{3}-\d{4}$/.test(value)) {
-                    this.errorMessages.push('Invalid phone format');
-                }
-                break;
+    handleSubmit() {
+        if (this.validateForm()) {
+            console.log('Form submitted:', this.formData);
+            this.showToast('Success', 'Form submitted successfully', 'success');
         }
     }
 
-    isOver18(birthDate) {
+    validateForm() {
+        const allValid = [...this.template.querySelectorAll('lightning-input, lightning-combobox, lightning-radio-group')]
+            .reduce((validSoFar, inputField) => {
+                inputField.reportValidity();
+                return validSoFar && inputField.checkValidity();
+            }, true);
+
+        if (!allValid) {
+            return false;
+        }
+
+        if (!this.validateAge()) {
+            this.showToast('Error', 'Applicant must be over 18 years old', 'error');
+            return false;
+        }
+
+        if (!this.validateDates()) {
+            this.showToast('Error', 'End date must be after start date', 'error');
+            return false;
+        }
+
+        return true;
+    }
+
+    validateAge() {
+        const birthdate = new Date(this.formData.birthdate);
         const today = new Date();
-        const birth = new Date(birthDate);
-        let age = today.getFullYear() - birth.getFullYear();
-        const monthDiff = today.getMonth() - birth.getMonth();
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+        let age = today.getFullYear() - birthdate.getFullYear();
+        const m = today.getMonth() - birthdate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthdate.getDate())) {
             age--;
         }
         return age >= 18;
     }
 
-    handleSubmit() {
-        if (!this.isSubmitDisabled) {
-            console.log('Form submitted');
-        }
+    validateDates() {
+        const startDate = new Date(this.formData.startDate);
+        const endDate = new Date(this.formData.endDate);
+        return endDate > startDate;
     }
 
-    handleReset() {
-        this.template.querySelectorAll('lightning-input').forEach(input => {
-            input.value = '';
-        });
-        this.firstName = '';
-        this.lastName = '';
-        this.dateOfBirth = '';
-        this.startDate = new Date().toISOString().split('T')[0];
-        this.endDate = '';
-        this.email = '';
-        this.phone = '';
-        this.errorMessages = [];
-    }
-
-    handleCancel() {
-        window.history.back();
+    showToast(title, message, variant) {
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: title,
+                message: message,
+                variant: variant,
+            }),
+        );
     }
 }

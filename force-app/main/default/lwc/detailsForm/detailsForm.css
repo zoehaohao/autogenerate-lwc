@@ -9,37 +9,22 @@
     --acme-light-gray-color: #F5F7FA;
 }
 
-.acme-detailsform {
-    font-family: 'Salesforce Sans', Arial, sans-serif;
-    max-width: 70%;
-    margin: 0 auto;
+.acme-details-form {
+    font-family: Arial, sans-serif;
+}
+
+.acme-card {
+    background-color: var(--acme-white-color);
+    border-radius: var(--slds-c-card-radius-border, 0.25rem);
+    box-shadow: var(--slds-c-card-shadow);
+}
+
+.acme-card__body {
     padding: var(--slds-c-card-spacing-block, 1rem);
 }
 
-.acme-heading_large {
-    font-size: 24px;
-    color: var(--acme-blue-color);
-    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
-}
-
-.acme-detailsform__error-summary {
-    background-color: var(--acme-coral-color);
-    color: var(--acme-white-color);
-    padding: var(--slds-c-card-spacing-block, 0.5rem);
-    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
-    border-radius: var(--slds-c-card-radius-border, 0.25rem);
-}
-
-.acme-detailsform__fields {
-    display: grid;
-    gap: var(--slds-c-card-spacing-block, 1rem);
-}
-
-.acme-detailsform__actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--slds-c-card-spacing-block, 0.5rem);
-    margin-top: var(--slds-c-card-spacing-block, 1rem);
+.acme-button-group {
+    margin-top: var(--slds-c-button-spacing-block-start, 1rem);
 }
 
 .acme-button_primary {
@@ -47,34 +32,13 @@
     --slds-c-button-brand-color-border: var(--acme-blue-color);
 }
 
-.acme-button_secondary {
-    --slds-c-button-neutral-color-background: var(--acme-light-gray-color);
-    --slds-c-button-neutral-color-border: var(--acme-gray-color);
-}
-
-.acme-detailsform__links {
-    margin-top: var(--slds-c-card-spacing-block, 1rem);
-    text-align: center;
-}
-
-.acme-link {
-    color: var(--acme-blue-color);
-    text-decoration: none;
-    margin: 0 var(--slds-c-card-spacing-block, 0.5rem);
-}
-
-.acme-link:hover {
-    text-decoration: underline;
+.acme-button_primary:hover, .acme-button_primary:focus {
+    --slds-c-button-brand-color-background-hover: var(--acme-teal-color);
+    --slds-c-button-brand-color-border-hover: var(--acme-teal-color);
 }
 
 @media screen and (max-width: 768px) {
-    .acme-detailsform {
-        max-width: 90%;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .acme-detailsform {
-        max-width: 100%;
+    .acme-card__body {
+        padding: var(--slds-c-card-spacing-block, 0.75rem);
     }
 }
