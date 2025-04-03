@@ -1,0 +1,32 @@
+<!-- detailsForm.html -->
+<template>
+    <div class="acme-detailsform">
+        <h1 class="acme-heading acme-heading_large">Details Form</h1>
+        <div class="acme-detailsform__error-summary" if:true={hasErrors}>
+            <p>Please correct the following errors:</p>
+            <ul>
+                <template for:each={errorMessages} for:item="error">
+                    <li key={error}>{error}</li>
+                </template>
+            </ul>
+        </div>
+        <div class="acme-detailsform__fields">
+            <lightning-input label="First Name" name="firstName" required min-length="2" value={firstName} onchange={handleInputChange}></lightning-input>
+            <lightning-input label="Last Name" name="lastName" required min-length="2" value={lastName} onchange={handleInputChange}></lightning-input>
+            <lightning-input type="date" label="Date of Birth" name="dateOfBirth" required value={dateOfBirth} onchange={handleInputChange}></lightning-input>
+            <lightning-input type="date" label="Start Date" name="startDate" required value={startDate} onchange={handleInputChange}></lightning-input>
+            <lightning-input type="date" label="End Date" name="endDate" required value={endDate} onchange={handleInputChange}></lightning-input>
+            <lightning-input type="email" label="Email" name="email" required value={email} onchange={handleInputChange}></lightning-input>
+            <lightning-input type="tel" label="Phone" name="phone" pattern="[\(]\d{3}[\)]\s\d{3}[\-]\d{4}" placeholder="(XXX) XXX-XXXX" value={phone} onchange={handleInputChange}></lightning-input>
+        </div>
+        <div class="acme-detailsform__actions">
+            <lightning-button label="Cancel" onclick={handleCancel} class="acme-button acme-button_secondary"></lightning-button>
+            <lightning-button label="Reset" onclick={handleReset} class="acme-button acme-button_secondary"></lightning-button>
+            <lightning-button label="Submit" onclick={handleSubmit} disabled={isSubmitDisabled} class="acme-button acme-button_primary"></lightning-button>
+        </div>
+        <div class="acme-detailsform__links">
+            <a href="/lightning/n/FormHelp" class="acme-link">Help</a>
+            <a href="/lightning/page/home" class="acme-link">Back to Home</a>
+        </div>
+    </div>
+</template>
