@@ -1,132 +1,53 @@
 /* personalDetailsForm.css */
-:host {
-    --acme-blue-color: #0057B8;
-    --acme-gray-color: #424A54;
-    --acme-error-color: #FF6B6B;
-    --acme-border-color: #E4E7EB;
-}
-
 .root-container {
-    font-family: 'Salesforce Sans', system-ui, -apple-system;
-    color: var(--acme-gray-color);
-    line-height: 1.5;
+    max-width: 70%;
+    margin: 0 auto;
 }
 
 .form-container {
-    background: #FFFFFF;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: var(--slds-c-card-spacing-block, 1.5rem);
+    padding: var(--slds-c-card-spacing-block);
 }
 
 .section {
-    margin-bottom: 1rem;
+    margin-bottom: var(--slds-c-card-spacing-block);
 }
 
 .section-header {
-    color: var(--acme-blue-color);
-    font-size: 1.125rem;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    font-size: 18px;
+    line-height: 1.5;
+    color: #181818;
+    margin-bottom: var(--slds-c-card-spacing-block-start);
     font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-.field-group {
-    margin-bottom: 0.75rem;
-}
-
-label {
-    display: block;
-    font-size: 0.875rem;
-    margin-bottom: 0.25rem;
-    text-align: right;
-}
-
-.required {
-    color: #FF0000;
-    margin-left: 0.25rem;
-}
-
-input, select {
-    width: 100%;
-    height: 40px;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid var(--acme-border-color);
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-input:focus, select:focus {
-    outline: 2px solid var(--acme-blue-color);
-    border-radius: 0;
-}
-
-.select-container {
-    position: relative;
-}
-
-.error-message {
-    color: var(--acme-error-color);
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-}
-
-.input-field.error {
-    border-color: var(--acme-error-color);
 }
 
 .button-container {
     display: flex;
-    justify-content: space-between;
-    margin-top: 1.5rem;
+    justify-content: flex-end;
+    margin-top: var(--slds-c-card-spacing-block);
 }
 
-.submit-button, .clear-button {
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    border: none;
-}
-
-.submit-button {
-    background-color: var(--acme-blue-color);
-    color: #FFFFFF;
-}
-
-.submit-button:hover:not(:disabled) {
-    background-color: #004A9E;
-}
-
-.submit-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.clear-button {
-    background-color: #FFFFFF;
-    border: 1px solid var(--acme-border-color);
-    color: var(--acme-gray-color);
-}
-
-.clear-button:hover {
-    background-color: #F5F7FA;
-}
-
-.form-error {
-    color: var(--acme-error-color);
-    margin-top: 1rem;
-    text-align: center;
+.error lightning-input {
+    --slds-c-input-color-border: #C23934;
 }
 
 @media screen and (max-width: 768px) {
-    .form-container {
+    .root-container {
+        max-width: 100%;
+    }
+
+    .button-container {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .button-container lightning-button {
         width: 100%;
-        padding: 1rem;
     }
 }
 
-@media screen and (min-width: 768px) and (max-width: 1024px) {
-    .form-container {
-        width: 80%;
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .root-container {
+        max-width: 90%;
     }
 }

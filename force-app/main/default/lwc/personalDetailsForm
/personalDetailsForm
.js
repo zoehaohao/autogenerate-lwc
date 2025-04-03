@@ -1,127 +1,73 @@
 // personalDetailsForm.js
 import { LightningElement, track } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class PersonalDetailsForm extends LightningElement {
-    @track formData = {
-        firstName: '',
-        middleName: '',
-        lastName: '',
-        address: '',
-        city: '',
-        state: '',
-        zipCode: ''
-    };
-
-    @track errors = {
-        firstName: '',
-        lastName: '',
-        zipCode: ''
-    };
-
-    @track formError = '';
-
-    states = [
-        'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA',
-        'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD',
-        'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ',
-        'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC',
-        'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'
-    ];
-
-    get stateOptions() {
-        return this.states.map(state => ({
-            label: state,
-            value: state
-        }));
-    }
+    @track name = '';
+    @track address = '';
+    @track nameError = false;
+    @track isSubmitting = false;
 
     get isSubmitDisabled() {
-        return !this.formData.firstName || 
-               !this.formData.lastName || 
-               !this.formData.zipCode ||
-               Object.values(this.errors).some(error => error);
+        return !this.name || this.nameError || this.isSubmitting;
     }
 
-    get firstNameClass() {
-        return `input-field ${this.errors.firstName ? 'error' : ''}`;
+    get nameFieldClass() {
+        return this.nameError ? 'error' : '';
     }
 
-    get lastNameClass() {
-        return `input-field ${this.errors.lastName ? 'error' : ''}`;
+    handleNameChange(event) {
+        this.name = event.target.value;
+        this.validateName();
     }
 
-    get zipCodeClass() {
-        return `input-field ${this.errors.zipCode ? 'error' : ''}`;
+    handleAddressChange(event) {
+        this.address = event.target.value;
     }
 
-    handleChange(event) {
-        const { name, value } = event.target;
-        this.formData = { ...this.formData, [name]: value };
-        this.errors[name] = '';
-        this.formError = '';
-    }
-
-    handleBlur(event) {
-        const { name, value } = event.target;
-        this.validateField(name, value);
-    }
-
-    validateField(name, value) {
-        switch(name) {
-            case 'firstName':
-            case 'lastName':
-                if (!value.trim()) {
-                    this.errors[name] = `${name === 'firstName' ? 'First' : 'Last'} name is required`;
-                }
-                break;
-            case 'zipCode':
-                if (!value) {
-                    this.errors.zipCode = 'Zip code is required';
-                } else if (!/^\d{5}(-\d{4})?$/.test(value)) {
-                    this.errors.zipCode = 'Invalid zip code format (12345 or 12345-6789)';
-                }
-                break;
+    validateName() {
+        if (!this.name || this.name.trim().length === 0) {
+            this.nameError = true;
+            return false;
         }
-    }
-
-    validateForm() {
-        let isValid = true;
-        
-        Object.keys(this.formData).forEach(field => {
-            if (['firstName', 'lastName', 'zipCode'].includes(field)) {
-                this.validateField(field, this.formData[field]);
-                if (this.errors[field]) {
-                    isValid = false;
-                }
-            }
-        });
-
-        return isValid;
+        this.nameError = false;
+        return true;
     }
 
     handleSubmit() {
-        if (this.validateForm()) {
-            console.log('Form submitted:', this.formData);
-        } else {
-            this.formError = 'Please correct the errors before submitting.';
+        if (!this.validateName()) {
+            this.showToast('Error', 'Please fill in all required fields', 'error');
+            return;
+        }
+
+        this.isSubmitting = true;
+        
+        try {
+            this.showToast('Success', 'Form submitted successfully', 'success');
+            this.handleReset();
+        } catch (error) {
+            this.showToast('Error', 'An error occurred while submitting the form', 'error');
+        } finally {
+            this.isSubmitting = false;
         }
     }
 
-    handleClear() {
-        this.formData = {
-            firstName: '',
-            middleName: '',
-            lastName: '',
-            address: '',
-            city: '',
-            state: '',
-            zipCode: ''
-        };
-        this.errors = {
-            firstName: '',
-            lastName: '',
-            zipCode: ''
-        };
-        this.formError = '';
+    handleReset() {
+        this.name = '';
+        this.address = '';
+        this.nameError = false;
+    }
+
+    handleCancel() {
+        window.history.back();
+    }
+
+    showToast(title, message, variant) {
+        const evt = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant,
+        });
+        this.dispatchEvent(evt);
     }
 }
