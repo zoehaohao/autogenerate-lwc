@@ -1,26 +1,45 @@
 <!-- detailsForm.html -->
 <template>
     <div class="acme-details-form">
-        <lightning-card title="Details Form" class="acme-card">
-            <div class="acme-card__body">
-                <lightning-combobox name="title" label="Title" required options={titleOptions} onchange={handleInputChange}></lightning-combobox>
-                <lightning-input name="firstName" label="First Name" required onchange={handleInputChange}></lightning-input>
-                <lightning-input name="middleName" label="Middle Name" onchange={handleInputChange}></lightning-input>
-                <lightning-input name="lastName" label="Last Name" required onchange={handleInputChange}></lightning-input>
-                <lightning-input name="birthdate" label="Birthdate" type="date" required onchange={handleInputChange}></lightning-input>
-                <lightning-radio-group name="gender" label="Gender" options={genderOptions} required onchange={handleInputChange}></lightning-radio-group>
-                <lightning-input name="addressLine1" label="Address Line 1" required onchange={handleInputChange}></lightning-input>
-                <lightning-input name="addressLine2" label="Address Line 2" onchange={handleInputChange}></lightning-input>
-                <lightning-input name="suburb" label="Suburb/City" required onchange={handleInputChange}></lightning-input>
-                <lightning-combobox name="state" label="State" required options={stateOptions} onchange={handleInputChange}></lightning-combobox>
-                <lightning-input name="postcode" label="Postcode" required pattern="[0-9]{4}" message-when-pattern-mismatch="Please enter a 4-digit postcode" onchange={handleInputChange}></lightning-input>
-                <lightning-combobox name="country" label="Country" required options={countryOptions} value="Australia" onchange={handleInputChange}></lightning-combobox>
-                <lightning-input name="startDate" label="Start Date" type="date" required onchange={handleInputChange}></lightning-input>
-                <lightning-input name="endDate" label="End Date" type="date" required onchange={handleInputChange}></lightning-input>
-                <div class="acme-button-group">
-                    <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="acme-button acme-button_primary"></lightning-button>
+        <h1 class="acme-heading acme-heading_large">Details Form</h1>
+        <div class="acme-details-form__content">
+            <template if:true={errorMessages.length}>
+                <div class="acme-details-form__error-panel">
+                    <template for:each={errorMessages} for:item="error">
+                        <p key={error} class="acme-details-form__error-message">{error}</p>
+                    </template>
                 </div>
+            </template>
+            <div class="acme-details-form__field">
+                <label for="firstName" class="acme-details-form__label">First Name<span class="acme-details-form__required">*</span></label>
+                <input type="text" id="firstName" class="acme-details-form__input" placeholder="Enter first name" required minlength="2" value={firstName} onblur={handleInputBlur}>
+                <span if:true={errors.firstName} class="acme-details-form__field-error">{errors.firstName}</span>
             </div>
-        </lightning-card>
+            <div class="acme-details-form__field">
+                <label for="lastName" class="acme-details-form__label">Last Name<span class="acme-details-form__required">*</span></label>
+                <input type="text" id="lastName" class="acme-details-form__input" placeholder="Enter last name" required minlength="2" value={lastName} onblur={handleInputBlur}>
+                <span if:true={errors.lastName} class="acme-details-form__field-error">{errors.lastName}</span>
+            </div>
+            <div class="acme-details-form__field">
+                <label for="dateOfBirth" class="acme-details-form__label">Date of Birth<span class="acme-details-form__required">*</span></label>
+                <input type="date" id="dateOfBirth" class="acme-details-form__input" required value={dateOfBirth} onblur={handleInputBlur}>
+                <span if:true={errors.dateOfBirth} class="acme-details-form__field-error">{errors.dateOfBirth}</span>
+            </div>
+            <div class="acme-details-form__field">
+                <label for="startDate" class="acme-details-form__label">Start Date<span class="acme-details-form__required">*</span></label>
+                <input type="date" id="startDate" class="acme-details-form__input" required value={startDate} min={today} onblur={handleInputBlur}>
+                <span if:true={errors.startDate} class="acme-details-form__field-error">{errors.startDate}</span>
+            </div>
+            <div class="acme-details-form__field">
+                <label for="endDate" class="acme-details-form__label">End Date<span class="acme-details-form__required">*</span></label>
+                <input type="date" id="endDate" class="acme-details-form__input" required value={endDate} onblur={handleInputBlur}>
+                <span if:true={errors.endDate} class="acme-details-form__field-error">{errors.endDate}</span>
+            </div>
+            <div class="acme-details-form__actions">
+                <button class="acme-button acme-button_primary" onclick={handleSubmit}>Submit</button>
+                <button class="acme-button acme-button_secondary" onclick={handleReset}>Reset</button>
+            </div>
+        </div>
+        <a href="/help/details-form" class="acme-details-form__help-link">Form Help</a>
     </div>
 </template>

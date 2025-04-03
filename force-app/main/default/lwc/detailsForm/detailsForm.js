@@ -3,93 +3,96 @@ import { LightningElement, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class DetailsForm extends LightningElement {
-    @track formData = {};
-    titleOptions = [
-        { label: 'Mr', value: 'Mr' },
-        { label: 'Mrs', value: 'Mrs' },
-        { label: 'Ms', value: 'Ms' },
-        { label: 'Dr', value: 'Dr' }
-    ];
-    genderOptions = [
-        { label: 'Male', value: 'Male' },
-        { label: 'Female', value: 'Female' },
-        { label: 'Other', value: 'Other' }
-    ];
-    stateOptions = [
-        { label: 'NSW', value: 'NSW' },
-        { label: 'VIC', value: 'VIC' },
-        { label: 'QLD', value: 'QLD' },
-        { label: 'WA', value: 'WA' },
-        { label: 'SA', value: 'SA' },
-        { label: 'TAS', value: 'TAS' },
-        { label: 'ACT', value: 'ACT' },
-        { label: 'NT', value: 'NT' }
-    ];
-    countryOptions = [
-        { label: 'Australia', value: 'Australia' },
-        { label: 'New Zealand', value: 'New Zealand' }
-    ];
+    @track firstName = '';
+    @track lastName = '';
+    @track dateOfBirth = '';
+    @track startDate = '';
+    @track endDate = '';
+    @track errors = {};
+    @track errorMessages = [];
 
-    handleInputChange(event) {
-        const { name, value } = event.target;
-        this.formData[name] = value;
+    get today() {
+        return new Date().toISOString().split('T')[0];
     }
 
-    handleSubmit() {
-        if (this.validateForm()) {
-            console.log('Form submitted:', this.formData);
-            this.showToast('Success', 'Form submitted successfully', 'success');
-        }
+    handleInputBlur(event) {
+        const { id, value } = event.target;
+        this[id] = value;
+        this.validateField(id, value);
     }
 
-    validateForm() {
-        const allValid = [...this.template.querySelectorAll('lightning-input, lightning-combobox, lightning-radio-group')]
-            .reduce((validSoFar, inputField) => {
-                inputField.reportValidity();
-                return validSoFar && inputField.checkValidity();
-            }, true);
-
-        if (!allValid) {
-            return false;
+    validateField(fieldName, value) {
+        this.errors[fieldName] = '';
+        switch (fieldName) {
+            case 'firstName':
+            case 'lastName':
+                if (value.length < 2) {
+                    this.errors[fieldName] = `${fieldName} must be at least 2 characters long`;
+                }
+                break;
+            case 'dateOfBirth':
+                if (!this.isOver18(value)) {
+                    this.errors[fieldName] = 'You must be at least 18 years old';
+                }
+                break;
+            case 'startDate':
+                if (new Date(value) < new Date().setHours(0, 0, 0, 0)) {
+                    this.errors[fieldName] = 'Start date must be today or in the future';
+                }
+                break;
+            case 'endDate':
+                if (new Date(value) <= new Date(this.startDate)) {
+                    this.errors[fieldName] = 'End date must be after the start date';
+                }
+                break;
         }
-
-        if (!this.validateAge()) {
-            this.showToast('Error', 'Applicant must be over 18 years old', 'error');
-            return false;
-        }
-
-        if (!this.validateDates()) {
-            this.showToast('Error', 'End date must be after start date', 'error');
-            return false;
-        }
-
-        return true;
+        this.updateErrorMessages();
     }
 
-    validateAge() {
-        const birthdate = new Date(this.formData.birthdate);
+    isOver18(birthDate) {
         const today = new Date();
-        let age = today.getFullYear() - birthdate.getFullYear();
-        const m = today.getMonth() - birthdate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthdate.getDate())) {
+        const birth = new Date(birthDate);
+        let age = today.getFullYear() - birth.getFullYear();
+        const monthDiff = today.getMonth() - birth.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
             age--;
         }
         return age >= 18;
     }
 
-    validateDates() {
-        const startDate = new Date(this.formData.startDate);
-        const endDate = new Date(this.formData.endDate);
-        return endDate > startDate;
+    updateErrorMessages() {
+        this.errorMessages = Object.values(this.errors).filter(error => error);
     }
 
-    showToast(title, message, variant) {
-        this.dispatchEvent(
-            new ShowToastEvent({
-                title: title,
-                message: message,
-                variant: variant,
-            }),
-        );
+    validateForm() {
+        const fields = ['firstName', 'lastName', 'dateOfBirth', 'startDate', 'endDate'];
+        fields.forEach(field => this.validateField(field, this[field]));
+        return Object.values(this.errors).every(error => !error);
+    }
+
+    handleSubmit() {
+        if (this.validateForm()) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Success',
+                    message: 'Form submitted successfully',
+                    variant: 'success'
+                })
+            );
+            this.handleReset();
+        }
+    }
+
+    handleReset() {
+        this.template.querySelectorAll('input').forEach(input => {
+            input.value = '';
+        });
+        this.firstName = '';
+        this.lastName = '';
+        this.dateOfBirth = '';
+        this.startDate = '';
+        this.endDate = '';
+        this.errors = {};
+        this.errorMessages = [];
     }
 }
