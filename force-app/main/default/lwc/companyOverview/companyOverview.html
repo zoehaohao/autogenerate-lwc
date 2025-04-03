@@ -1,0 +1,54 @@
+<!-- companyOverview.html -->
+<template>
+    <div class="acme-company-overview">
+        <div class="acme-company-overview__header">
+            <img src="/assets/images/acme-logo.svg" alt="acmeCorp Logo" class="acme-company-overview__logo">
+            <h1 class="acme-heading acme-heading_large">{companyName}</h1>
+        </div>
+        <div class="acme-company-overview__actions">
+            <lightning-button label="Export Data" onclick={handleExport} class="acme-button acme-button_secondary"></lightning-button>
+            <lightning-button-icon icon-name="utility:refresh" alternative-text="Refresh" title="Refresh" onclick={handleRefresh} class="acme-icon-button"></lightning-button-icon>
+        </div>
+        <div class="acme-company-overview__content">
+            <div class="acme-company-overview__metrics">
+                <h2 class="acme-heading acme-heading_medium">Key Metrics</h2>
+                <div class="acme-metrics-grid">
+                    <div class="acme-metric">
+                        <p class="acme-metric__label">Industry</p>
+                        <p class="acme-metric__value">{industry}</p>
+                    </div>
+                    <div class="acme-metric">
+                        <p class="acme-metric__label">Founded Date</p>
+                        <p class="acme-metric__value">{foundedDate}</p>
+                    </div>
+                    <div class="acme-metric">
+                        <p class="acme-metric__label">Revenue</p>
+                        <p class="acme-metric__value">{revenue}</p>
+                    </div>
+                    <div class="acme-metric">
+                        <p class="acme-metric__label">Employee Count</p>
+                        <p class="acme-metric__value">{employeeCount}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="acme-company-overview__info">
+                <h2 class="acme-heading acme-heading_medium">Company Information</h2>
+                <p>{companyDescription}</p>
+            </div>
+            <div class="acme-company-overview__performance">
+                <h2 class="acme-heading acme-heading_medium">Performance Indicators</h2>
+                <div class="acme-performance-chart">
+                    <!-- Placeholder for performance chart -->
+                </div>
+            </div>
+        </div>
+        <div class="acme-company-overview__footer">
+            <lightning-button label="View Details" onclick={handleViewDetails} class="acme-button acme-button_primary"></lightning-button>
+            <div class="acme-company-overview__links">
+                <a href="/company-details" class="acme-link">Company Details</a>
+                <a href="/financial-reports" target="_blank" class="acme-link">Financial Reports</a>
+                <a href="/contacts" class="acme-link">Contact Directory</a>
+            </div>
+        </div>
+    </div>
+</template>

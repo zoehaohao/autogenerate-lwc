@@ -1,0 +1,117 @@
+/* companyOverview.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-teal-color: #00A0B0;
+    --acme-gold-color: #F2C94C;
+    --acme-coral-color: #FF6B6B;
+    --acme-light-gray-color: #F5F7FA;
+}
+
+.acme-company-overview {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    color: var(--acme-gray-color);
+    background-color: var(--acme-white-color);
+    padding: var(--lwc-spacingMedium);
+}
+
+.acme-company-overview__header {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--lwc-spacingMedium);
+}
+
+.acme-company-overview__logo {
+    width: 120px;
+    height: 40px;
+    margin-right: var(--lwc-spacingSmall);
+}
+
+.acme-heading {
+    font-weight: bold;
+}
+
+.acme-heading_large {
+    font-size: 24px;
+}
+
+.acme-heading_medium {
+    font-size: 18px;
+}
+
+.acme-company-overview__actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: var(--lwc-spacingMedium);
+}
+
+.acme-button {
+    margin-left: var(--lwc-spacingSmall);
+}
+
+.acme-button_primary {
+    background-color: var(--acme-blue-color);
+    border-color: var(--acme-blue-color);
+    color: var(--acme-white-color);
+}
+
+.acme-button_secondary {
+    background-color: var(--acme-white-color);
+    border-color: var(--acme-blue-color);
+    color: var(--acme-blue-color);
+}
+
+.acme-icon-button {
+    --sds-c-icon-color-foreground: var(--acme-blue-color);
+}
+
+.acme-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--lwc-spacingMedium);
+}
+
+.acme-metric__label {
+    font-size: 12px;
+    margin-bottom: var(--lwc-spacingXxSmall);
+}
+
+.acme-metric__value {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.acme-company-overview__footer {
+    margin-top: var(--lwc-spacingLarge);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.acme-link {
+    color: var(--acme-blue-color);
+    text-decoration: none;
+    margin-left: var(--lwc-spacingMedium);
+}
+
+.acme-link:hover {
+    text-decoration: underline;
+}
+
+@media screen and (max-width: 768px) {
+    .acme-company-overview__footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .acme-company-overview__links {
+        margin-top: var(--lwc-spacingMedium);
+    }
+
+    .acme-link {
+        display: block;
+        margin-left: 0;
+        margin-bottom: var(--lwc-spacingSmall);
+    }
+}
