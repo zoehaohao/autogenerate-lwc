@@ -1,45 +1,22 @@
 <!-- detailsForm.html -->
 <template>
-    <div class="acme-details-form">
-        <h1 class="acme-heading acme-heading_large">Details Form</h1>
-        <div class="acme-details-form__content">
-            <template if:true={errorMessages.length}>
-                <div class="acme-details-form__error-panel">
-                    <template for:each={errorMessages} for:item="error">
-                        <p key={error} class="acme-details-form__error-message">{error}</p>
-                    </template>
-                </div>
-            </template>
-            <div class="acme-details-form__field">
-                <label for="firstName" class="acme-details-form__label">First Name<span class="acme-details-form__required">*</span></label>
-                <input type="text" id="firstName" class="acme-details-form__input" placeholder="Enter first name" required minlength="2" value={firstName} onblur={handleInputBlur}>
-                <span if:true={errors.firstName} class="acme-details-form__field-error">{errors.firstName}</span>
-            </div>
-            <div class="acme-details-form__field">
-                <label for="lastName" class="acme-details-form__label">Last Name<span class="acme-details-form__required">*</span></label>
-                <input type="text" id="lastName" class="acme-details-form__input" placeholder="Enter last name" required minlength="2" value={lastName} onblur={handleInputBlur}>
-                <span if:true={errors.lastName} class="acme-details-form__field-error">{errors.lastName}</span>
-            </div>
-            <div class="acme-details-form__field">
-                <label for="dateOfBirth" class="acme-details-form__label">Date of Birth<span class="acme-details-form__required">*</span></label>
-                <input type="date" id="dateOfBirth" class="acme-details-form__input" required value={dateOfBirth} onblur={handleInputBlur}>
-                <span if:true={errors.dateOfBirth} class="acme-details-form__field-error">{errors.dateOfBirth}</span>
-            </div>
-            <div class="acme-details-form__field">
-                <label for="startDate" class="acme-details-form__label">Start Date<span class="acme-details-form__required">*</span></label>
-                <input type="date" id="startDate" class="acme-details-form__input" required value={startDate} min={today} onblur={handleInputBlur}>
-                <span if:true={errors.startDate} class="acme-details-form__field-error">{errors.startDate}</span>
-            </div>
-            <div class="acme-details-form__field">
-                <label for="endDate" class="acme-details-form__label">End Date<span class="acme-details-form__required">*</span></label>
-                <input type="date" id="endDate" class="acme-details-form__input" required value={endDate} onblur={handleInputBlur}>
-                <span if:true={errors.endDate} class="acme-details-form__field-error">{errors.endDate}</span>
-            </div>
-            <div class="acme-details-form__actions">
-                <button class="acme-button acme-button_primary" onclick={handleSubmit}>Submit</button>
-                <button class="acme-button acme-button_secondary" onclick={handleReset}>Reset</button>
-            </div>
+    <div class="slds-card acme-details-form">
+        <div class="slds-card__header slds-grid slds-grid_align-spread">
+            <h2 class="slds-text-heading_medium slds-truncate">Details Form</h2>
+            <lightning-button-icon icon-name="utility:help" variant="bare" alternative-text="Form Help" title="Form Help" onclick={showHelp}></lightning-button-icon>
         </div>
-        <a href="/help/details-form" class="acme-details-form__help-link">Form Help</a>
+        <div class="slds-card__body slds-card__body_inner">
+            <form onsubmit={handleSubmit}>
+                <lightning-input label="Full Name" name="fullName" required min-length="2" placeholder="Enter your full name" onblur={validateField}></lightning-input>
+                <lightning-input type="date" label="Date of Birth" name="dateOfBirth" required onblur={validateField}></lightning-input>
+                <lightning-input type="date" label="Start Date" name="startDate" required onblur={validateField}></lightning-input>
+                <lightning-input type="date" label="End Date" name="endDate" required onblur={validateField}></lightning-input>
+                <lightning-input type="email" label="Email" name="email" required placeholder="Enter your email" onblur={validateField}></lightning-input>
+                <div class="slds-m-top_medium slds-text-align_center">
+                    <lightning-button label="Submit" variant="brand" type="submit" class="slds-m-right_x-small" disabled={isFormInvalid}></lightning-button>
+                    <lightning-button label="Reset" onclick={handleReset}></lightning-button>
+                </div>
+            </form>
+        </div>
     </div>
 </template>

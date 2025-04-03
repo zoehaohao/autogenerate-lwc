@@ -3,50 +3,42 @@ import { LightningElement, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class DetailsForm extends LightningElement {
-    @track firstName = '';
-    @track lastName = '';
-    @track dateOfBirth = '';
-    @track startDate = '';
-    @track endDate = '';
+    @track formData = {};
     @track errors = {};
-    @track errorMessages = [];
+    @track isFormInvalid = true;
 
-    get today() {
-        return new Date().toISOString().split('T')[0];
-    }
+    validateField(event) {
+        const { name, value } = event.target;
+        this.formData[name] = value;
+        this.errors[name] = '';
 
-    handleInputBlur(event) {
-        const { id, value } = event.target;
-        this[id] = value;
-        this.validateField(id, value);
-    }
-
-    validateField(fieldName, value) {
-        this.errors[fieldName] = '';
-        switch (fieldName) {
-            case 'firstName':
-            case 'lastName':
+        switch(name) {
+            case 'fullName':
                 if (value.length < 2) {
-                    this.errors[fieldName] = `${fieldName} must be at least 2 characters long`;
+                    this.errors[name] = 'Name must be at least 2 characters long';
                 }
                 break;
             case 'dateOfBirth':
                 if (!this.isOver18(value)) {
-                    this.errors[fieldName] = 'You must be at least 18 years old';
+                    this.errors[name] = 'You must be at least 18 years old to submit this form';
                 }
                 break;
             case 'startDate':
-                if (new Date(value) < new Date().setHours(0, 0, 0, 0)) {
-                    this.errors[fieldName] = 'Start date must be today or in the future';
+            case 'endDate':
+                if (this.formData.startDate && this.formData.endDate) {
+                    if (new Date(this.formData.endDate) <= new Date(this.formData.startDate)) {
+                        this.errors['endDate'] = 'End date must be after start date';
+                    }
                 }
                 break;
-            case 'endDate':
-                if (new Date(value) <= new Date(this.startDate)) {
-                    this.errors[fieldName] = 'End date must be after the start date';
+            case 'email':
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+                    this.errors[name] = 'Please enter a valid email address';
                 }
                 break;
         }
-        this.updateErrorMessages();
+
+        this.isFormInvalid = Object.values(this.errors).some(error => error !== '') || Object.values(this.formData).some(value => !value);
     }
 
     isOver18(birthDate) {
@@ -60,39 +52,32 @@ export default class DetailsForm extends LightningElement {
         return age >= 18;
     }
 
-    updateErrorMessages() {
-        this.errorMessages = Object.values(this.errors).filter(error => error);
-    }
-
-    validateForm() {
-        const fields = ['firstName', 'lastName', 'dateOfBirth', 'startDate', 'endDate'];
-        fields.forEach(field => this.validateField(field, this[field]));
-        return Object.values(this.errors).every(error => !error);
-    }
-
-    handleSubmit() {
-        if (this.validateForm()) {
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Success',
-                    message: 'Form submitted successfully',
-                    variant: 'success'
-                })
-            );
+    handleSubmit(event) {
+        event.preventDefault();
+        if (!this.isFormInvalid) {
+            // Here you would typically call an Apex method to save the data
+            console.log('Form submitted:', this.formData);
+            this.showToast('Success', 'Form submitted successfully', 'success');
             this.handleReset();
+        } else {
+            this.showToast('Error', 'Please correct the errors in the form', 'error');
         }
     }
 
     handleReset() {
-        this.template.querySelectorAll('input').forEach(input => {
+        this.template.querySelectorAll('lightning-input').forEach(input => {
             input.value = '';
         });
-        this.firstName = '';
-        this.lastName = '';
-        this.dateOfBirth = '';
-        this.startDate = '';
-        this.endDate = '';
+        this.formData = {};
         this.errors = {};
-        this.errorMessages = [];
+        this.isFormInvalid = true;
+    }
+
+    showToast(title, message, variant) {
+        this.dispatchEvent(new ShowToastEvent({ title, message, variant }));
+    }
+
+    showHelp() {
+        this.showToast('Form Help', 'Fill out all fields and submit the form', 'info');
     }
 }
