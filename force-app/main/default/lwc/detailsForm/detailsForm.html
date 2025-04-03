@@ -1,22 +1,44 @@
 <!-- detailsForm.html -->
 <template>
-    <div class="slds-card acme-details-form">
-        <div class="slds-card__header slds-grid slds-grid_align-spread">
-            <h2 class="slds-text-heading_medium slds-truncate">Details Form</h2>
-            <lightning-button-icon icon-name="utility:help" variant="bare" alternative-text="Form Help" title="Form Help" onclick={showHelp}></lightning-button-icon>
+    <div class="acme-details-form">
+        <div class="acme-details-form__header">
+            <h2 class="acme-heading acme-heading_medium">Details Form</h2>
         </div>
-        <div class="slds-card__body slds-card__body_inner">
-            <form onsubmit={handleSubmit}>
-                <lightning-input label="Full Name" name="fullName" required min-length="2" placeholder="Enter your full name" onblur={validateField}></lightning-input>
-                <lightning-input type="date" label="Date of Birth" name="dateOfBirth" required onblur={validateField}></lightning-input>
-                <lightning-input type="date" label="Start Date" name="startDate" required onblur={validateField}></lightning-input>
-                <lightning-input type="date" label="End Date" name="endDate" required onblur={validateField}></lightning-input>
-                <lightning-input type="email" label="Email" name="email" required placeholder="Enter your email" onblur={validateField}></lightning-input>
-                <div class="slds-m-top_medium slds-text-align_center">
-                    <lightning-button label="Submit" variant="brand" type="submit" class="slds-m-right_x-small" disabled={isFormInvalid}></lightning-button>
-                    <lightning-button label="Reset" onclick={handleReset}></lightning-button>
+        <div class="acme-details-form__content">
+            <form>
+                <div class="acme-form-field">
+                    <label for="firstName" class="acme-form-label">First Name</label>
+                    <input type="text" id="firstName" class="acme-input" placeholder="Enter first name" required minlength="2" onblur={validateField}>
+                    <div if:true={errors.firstName} class="acme-error-message">{errors.firstName}</div>
+                </div>
+                <div class="acme-form-field">
+                    <label for="lastName" class="acme-form-label">Last Name</label>
+                    <input type="text" id="lastName" class="acme-input" placeholder="Enter last name" required minlength="2" onblur={validateField}>
+                    <div if:true={errors.lastName} class="acme-error-message">{errors.lastName}</div>
+                </div>
+                <div class="acme-form-field">
+                    <label for="dateOfBirth" class="acme-form-label">Date of Birth</label>
+                    <input type="date" id="dateOfBirth" class="acme-input" required onblur={validateField}>
+                    <div if:true={errors.dateOfBirth} class="acme-error-message">{errors.dateOfBirth}</div>
+                </div>
+                <div class="acme-form-field">
+                    <label for="startDate" class="acme-form-label">Start Date</label>
+                    <input type="date" id="startDate" class="acme-input" required onblur={validateField}>
+                    <div if:true={errors.startDate} class="acme-error-message">{errors.startDate}</div>
+                </div>
+                <div class="acme-form-field">
+                    <label for="endDate" class="acme-form-label">End Date</label>
+                    <input type="date" id="endDate" class="acme-input" required onblur={validateField}>
+                    <div if:true={errors.endDate} class="acme-error-message">{errors.endDate}</div>
+                </div>
+                <div class="acme-form-actions">
+                    <button type="submit" class="acme-button acme-button_primary" onclick={handleSubmit}>Submit</button>
+                    <button type="button" class="acme-button acme-button_secondary" onclick={handleReset}>Reset</button>
                 </div>
             </form>
+        </div>
+        <div class="acme-details-form__footer">
+            <a href="/help" target="_blank" class="acme-link">Form Help</a>
         </div>
     </div>
 </template>

@@ -1,40 +1,110 @@
 /* detailsForm.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-coral-color: #FF6B6B;
+}
+
 .acme-details-form {
-    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: var(--slds-c-card-spacing-block, 1rem);
+    background-color: var(--acme-white-color);
+    border-radius: var(--slds-c-card-radius-border, 0.25rem);
+    box-shadow: var(--slds-c-card-shadow, 0 2px 2px 0 rgba(0, 0, 0, 0.1));
 }
 
-.acme-details-form .slds-card__header {
-    background-color: var(--acme-blue-color, #0057B8);
-    color: #FFFFFF;
-    padding: var(--slds-c-card-spacing-block-start, 0.75rem) var(--slds-c-card-spacing-inline-start, 1rem);
+.acme-heading {
+    font-size: 1.25rem;
+    color: var(--acme-gray-color);
+    margin-bottom: 1rem;
 }
 
-.acme-details-form .slds-text-heading_medium {
-    font-size: 20px;
+.acme-form-field {
+    margin-bottom: 1rem;
 }
 
-.acme-details-form .slds-card__body {
-    background-color: var(--acme-white-color, #FFFFFF);
+.acme-form-label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--acme-gray-color);
+    margin-bottom: 0.25rem;
 }
 
-.acme-details-form lightning-input {
-    margin-bottom: var(--slds-c-card-spacing-block-end, 0.75rem);
+.acme-input {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    border: 1px solid var(--slds-c-input-color-border, #d8dde6);
+    border-radius: var(--slds-c-input-radius-border, 0.25rem);
+    transition: border-color 0.1s linear;
 }
 
-.acme-details-form .slds-button_brand {
-    background-color: var(--acme-blue-color, #0057B8);
-    border-color: var(--acme-blue-color, #0057B8);
+.acme-input:focus {
+    outline: none;
+    border-color: var(--acme-blue-color);
+    box-shadow: 0 0 3px var(--acme-blue-color);
 }
 
-.acme-details-form .slds-button_brand:hover,
-.acme-details-form .slds-button_brand:focus {
-    background-color: var(--acme-blue-dark-color, #004A9E);
-    border-color: var(--acme-blue-dark-color, #004A9E);
+.acme-error-message {
+    color: var(--acme-coral-color);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.acme-form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.acme-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    border-radius: var(--slds-c-button-radius-border, 0.25rem);
+    cursor: pointer;
+    transition: background-color 0.1s linear;
+}
+
+.acme-button_primary {
+    background-color: var(--acme-blue-color);
+    color: var(--acme-white-color);
+    border: none;
+}
+
+.acme-button_primary:hover {
+    background-color: #004A9E;
+}
+
+.acme-button_secondary {
+    background-color: var(--acme-white-color);
+    color: var(--acme-blue-color);
+    border: 1px solid var(--acme-blue-color);
+}
+
+.acme-button_secondary:hover {
+    background-color: #F5F7FA;
+}
+
+.acme-link {
+    color: var(--acme-blue-color);
+    text-decoration: none;
+    font-size: 0.875rem;
+}
+
+.acme-link:hover {
+    text-decoration: underline;
 }
 
 @media screen and (max-width: 768px) {
-    .acme-details-form .slds-button {
-        width: 100%;
-        margin: 0.5rem 0;
+    .acme-details-form {
+        padding: 0.75rem;
+    }
+
+    .acme-input {
+        font-size: 16px;
     }
 }
