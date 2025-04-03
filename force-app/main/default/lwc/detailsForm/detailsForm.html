@@ -1,61 +1,41 @@
 <!-- detailsForm.html -->
 <template>
     <div class="acme-details-form">
-        <div class="acme-details-form__header">
-            <h2 class="acme-heading acme-heading_medium">Details Form</h2>
+        <div class="acme-details-form__field">
+            <label for="fullName" class="acme-details-form__label">Full Name<span class="acme-details-form__required">*</span></label>
+            <input type="text" id="fullName" class="acme-details-form__input" placeholder="Enter your full name" required minlength="2" value={fullName} onblur={validateField} />
+            <div if:true={errors.fullName} class="acme-details-form__error">
+                <lightning-icon icon-name="utility:error" alternative-text="Error" title="Error" class="acme-icon acme-icon_small"></lightning-icon>
+                <span>{errors.fullName}</span>
+            </div>
         </div>
-        <div class="acme-details-form__fields">
-            <lightning-input 
-                label="Full Name" 
-                type="text" 
-                required 
-                class="acme-input"
-                onchange={handleInputChange}
-                data-id="fullName">
-            </lightning-input>
-            <lightning-input 
-                label="Date of Birth" 
-                type="date" 
-                required 
-                class="acme-input"
-                onchange={handleInputChange}
-                data-id="dateOfBirth">
-            </lightning-input>
-            <lightning-input 
-                label="Start Date" 
-                type="date" 
-                required 
-                class="acme-input"
-                onchange={handleInputChange}
-                data-id="startDate">
-            </lightning-input>
-            <lightning-input 
-                label="End Date" 
-                type="date" 
-                required 
-                class="acme-input"
-                onchange={handleInputChange}
-                data-id="endDate">
-            </lightning-input>
+        <div class="acme-details-form__field">
+            <label for="dateOfBirth" class="acme-details-form__label">Date of Birth<span class="acme-details-form__required">*</span></label>
+            <input type="date" id="dateOfBirth" class="acme-details-form__input" required value={dateOfBirth} onblur={validateField} />
+            <div if:true={errors.dateOfBirth} class="acme-details-form__error">
+                <lightning-icon icon-name="utility:error" alternative-text="Error" title="Error" class="acme-icon acme-icon_small"></lightning-icon>
+                <span>{errors.dateOfBirth}</span>
+            </div>
         </div>
-        <div class="acme-details-form__messages">
-            <template if:true={errorMessage}>
-                <div class="acme-error-message">{errorMessage}</div>
-            </template>
+        <div class="acme-details-form__field">
+            <label for="startDate" class="acme-details-form__label">Start Date<span class="acme-details-form__required">*</span></label>
+            <input type="date" id="startDate" class="acme-details-form__input" required value={startDate} onblur={validateField} />
+            <div if:true={errors.startDate} class="acme-details-form__error">
+                <lightning-icon icon-name="utility:error" alternative-text="Error" title="Error" class="acme-icon acme-icon_small"></lightning-icon>
+                <span>{errors.startDate}</span>
+            </div>
+        </div>
+        <div class="acme-details-form__field">
+            <label for="endDate" class="acme-details-form__label">End Date<span class="acme-details-form__required">*</span></label>
+            <input type="date" id="endDate" class="acme-details-form__input" required value={endDate} onblur={validateField} />
+            <div if:true={errors.endDate} class="acme-details-form__error">
+                <lightning-icon icon-name="utility:error" alternative-text="Error" title="Error" class="acme-icon acme-icon_small"></lightning-icon>
+                <span>{errors.endDate}</span>
+            </div>
         </div>
         <div class="acme-details-form__buttons">
-            <lightning-button 
-                label="Submit" 
-                variant="brand" 
-                onclick={handleSubmit}
-                class="acme-button acme-button_primary">
-            </lightning-button>
-            <lightning-button 
-                label="Reset" 
-                variant="neutral" 
-                onclick={handleReset}
-                class="acme-button acme-button_neutral">
-            </lightning-button>
+            <button class="acme-button acme-button_primary" onclick={handleSubmit} disabled={!isFormValid}>Submit</button>
+            <button class="acme-button acme-button_secondary" onclick={handleReset}>Reset</button>
         </div>
     </div>
 </template>
