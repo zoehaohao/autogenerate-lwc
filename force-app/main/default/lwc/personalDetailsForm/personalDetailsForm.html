@@ -1,0 +1,31 @@
+<!-- personalDetailsForm.html -->
+<template>
+    <div class="acme-personal-details-form">
+        <h1 class="acme-heading acme-heading_large">Personal Details Form</h1>
+        <div class="acme-form-grid">
+            <div class="acme-form-section">
+                <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
+                <lightning-input label="First Name" required class="acme-input" onblur={validateField} data-id="firstName"></lightning-input>
+                <lightning-input label="Middle Name" class="acme-input"></lightning-input>
+                <lightning-input label="Last Name" required class="acme-input" onblur={validateField} data-id="lastName"></lightning-input>
+                <lightning-input type="date" label="Birthdate" required class="acme-input" onblur={validateField} data-id="birthdate"></lightning-input>
+            </div>
+            <div class="acme-form-section">
+                <h2 class="acme-heading acme-heading_medium">Address Information</h2>
+                <lightning-input label="Address" class="acme-input"></lightning-input>
+                <lightning-input label="City/Town" class="acme-input"></lightning-input>
+                <lightning-combobox label="State" options={stateOptions} class="acme-input"></lightning-combobox>
+                <lightning-input label="Zip Code" required class="acme-input" onblur={validateField} data-id="zipCode"></lightning-input>
+            </div>
+        </div>
+        <div class="acme-form-section">
+            <lightning-input type="date" label="Start Date" required class="acme-input" onblur={validateField} data-id="startDate"></lightning-input>
+            <lightning-input type="date" label="End Date" required class="acme-input" onblur={validateField} data-id="endDate"></lightning-input>
+        </div>
+        <div class="acme-form-actions">
+            <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="acme-button acme-button_primary"></lightning-button>
+            <lightning-button label="Clear" onclick={handleClear} class="acme-button acme-button_secondary"></lightning-button>
+            <a href="#" onclick={handleCancel} class="acme-link">Cancel</a>
+        </div>
+    </div>
+</template>
