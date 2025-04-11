@@ -2,72 +2,42 @@
 :host {
     --acme-blue-color: #0057B8;
     --acme-gray-color: #424A54;
-    --acme-white-color: #FFFFFF;
-    --acme-teal-color: #00A0B0;
-    --acme-gold-color: #F2C94C;
     --acme-coral-color: #FF6B6B;
-    --acme-light-gray-color: #F5F7FA;
 }
-
-.acme-personal-details-form {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: var(--slds-c-card-spacing-block, 1rem);
+.root-container {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    color: var(--acme-gray-color);
 }
-
 .acme-heading {
-    color: var(--acme-blue-color);
-    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
-}
-
-.acme-heading_large {
-    font-size: 24px;
-}
-
-.acme-heading_medium {
     font-size: 18px;
-}
-
-.acme-form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--slds-c-card-spacing-block, 1rem);
-}
-
-.acme-form-section {
-    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
-}
-
-.acme-input {
-    margin-bottom: var(--slds-c-card-spacing-block, 0.5rem);
-}
-
-.acme-form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--slds-c-card-spacing-block, 0.5rem);
-    margin-top: var(--slds-c-card-spacing-block, 1rem);
-}
-
-.acme-button_primary {
-    --slds-c-button-brand-color-background: var(--acme-blue-color);
-    --slds-c-button-brand-color-border: var(--acme-blue-color);
-}
-
-.acme-button_secondary {
-    --slds-c-button-color-background: var(--acme-light-gray-color);
-    --slds-c-button-color-border: var(--acme-gray-color);
-}
-
-.acme-link {
+    font-weight: 600;
     color: var(--acme-blue-color);
-    text-decoration: none;
-    margin-left: var(--slds-c-card-spacing-block, 0.5rem);
+    margin-bottom: var(--slds-c-card-spacing-block-small, 0.75rem);
 }
-
+.slds-form-element__label {
+    font-size: 14px;
+    text-align: right;
+}
+.slds-input, .slds-select {
+    font-size: 16px;
+}
+.slds-required {
+    color: var(--acme-coral-color);
+}
+.slds-button_brand {
+    background-color: var(--acme-blue-color);
+    border-color: var(--acme-blue-color);
+}
+.slds-button_brand:hover, .slds-button_brand:focus {
+    background-color: #004A9E;
+    border-color: #004A9E;
+}
+.slds-text-color_error {
+    color: var(--acme-coral-color);
+    font-size: 12px;
+}
 @media screen and (max-width: 768px) {
-    .acme-form-grid {
-        grid-template-columns: 1fr;
+    .slds-form-element__label {
+        text-align: left;
     }
 }
