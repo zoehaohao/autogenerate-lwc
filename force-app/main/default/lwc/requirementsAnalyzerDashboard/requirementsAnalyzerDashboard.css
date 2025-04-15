@@ -1,0 +1,103 @@
+/* requirementsAnalyzerDashboard.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-teal-color: #00A0B0;
+    --acme-gold-color: #F2C94C;
+    --acme-coral-color: #FF6B6B;
+    --acme-light-gray-color: #F5F7FA;
+}
+
+.acme-requirements-analyzer {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    color: var(--acme-gray-color);
+    background-color: var(--acme-light-gray-color);
+    padding: var(--lwc-spacingMedium, 1rem);
+}
+
+.acme-heading {
+    font-weight: bold;
+    margin-bottom: var(--lwc-spacingSmall, 0.75rem);
+}
+
+.acme-heading_large {
+    font-size: 24px;
+}
+
+.acme-heading_medium {
+    font-size: 20px;
+}
+
+.acme-requirements-analyzer__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--lwc-spacingMedium, 1rem);
+}
+
+.acme-requirements-analyzer__content {
+    display: flex;
+    gap: var(--lwc-spacingMedium, 1rem);
+}
+
+.acme-requirements-analyzer__sidebar {
+    flex: 0 0 30%;
+}
+
+.acme-requirements-analyzer__main {
+    flex: 1;
+}
+
+.acme-requirements-analyzer__panel {
+    flex: 0 0 20%;
+}
+
+.acme-card {
+    background-color: var(--acme-white-color);
+    border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
+    box-shadow: var(--lwc-shadowSoft, 0 2px 2px 0 rgba(0, 0, 0, 0.1));
+    padding: var(--lwc-spacingMedium, 1rem);
+    margin-bottom: var(--lwc-spacingMedium, 1rem);
+}
+
+.acme-button {
+    transition: transform 0.1s ease-in-out, opacity 0.1s ease-in-out;
+}
+
+.acme-button:hover {
+    transform: scale(1.02);
+    opacity: 0.9;
+}
+
+.acme-button_primary {
+    --sds-c-button-brand-color-background: var(--acme-blue-color);
+    --sds-c-button-brand-color-border: var(--acme-blue-color);
+}
+
+.acme-button_secondary {
+    --sds-c-button-neutral-color-background: var(--acme-gray-color);
+    --sds-c-button-neutral-color-border: var(--acme-gray-color);
+}
+
+.acme-button_success {
+    --sds-c-button-success-color-background: var(--acme-teal-color);
+    --sds-c-button-success-color-border: var(--acme-teal-color);
+}
+
+.acme-button_destructive {
+    --sds-c-button-destructive-color-background: var(--acme-coral-color);
+    --sds-c-button-destructive-color-border: var(--acme-coral-color);
+}
+
+@media screen and (max-width: 768px) {
+    .acme-requirements-analyzer__content {
+        flex-direction: column;
+    }
+
+    .acme-requirements-analyzer__sidebar,
+    .acme-requirements-analyzer__main,
+    .acme-requirements-analyzer__panel {
+        flex: 1 1 100%;
+    }
+}
