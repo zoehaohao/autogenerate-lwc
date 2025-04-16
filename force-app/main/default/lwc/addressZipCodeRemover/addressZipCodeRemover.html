@@ -1,0 +1,50 @@
+<!-- addressZipCodeRemover.html -->
+<template>
+    <div class="acme-address-component">
+        <form class="acme-form" onsubmit={handleSubmit}>
+            <div class="acme-form__field">
+                <label for="street" class="acme-form__label">Street Address</label>
+                <input type="text" id="street" name="street" required minlength="5" maxlength="100" placeholder="Enter street address" class="acme-form__input" onchange={handleInputChange} onblur={handleBlur}>
+                <div if:true={errors.street} class="acme-form__error">{errors.street}</div>
+            </div>
+            <div class="acme-form__field">
+                <label for="apartment" class="acme-form__label">Apartment/Suite</label>
+                <input type="text" id="apartment" name="apartment" maxlength="50" placeholder="Apt, Suite, Unit (Optional)" class="acme-form__input" onchange={handleInputChange} onblur={handleBlur}>
+                <div if:true={errors.apartment} class="acme-form__error">{errors.apartment}</div>
+            </div>
+            <div class="acme-form__field">
+                <label for="city" class="acme-form__label">City</label>
+                <input type="text" id="city" name="city" required minlength="2" maxlength="50" placeholder="Enter city" class="acme-form__input" onchange={handleInputChange} onblur={handleBlur}>
+                <div if:true={errors.city} class="acme-form__error">{errors.city}</div>
+            </div>
+            <div class="acme-form__field">
+                <label for="state" class="acme-form__label">State/Province</label>
+                <select id="state" name="state" required class="acme-form__select" onchange={handleInputChange} onblur={handleBlur}>
+                    <option value="">Select state/province</option>
+                    <template for:each={stateOptions} for:item="state">
+                        <option key={state.value} value={state.value}>{state.label}</option>
+                    </template>
+                </select>
+                <div if:true={errors.state} class="acme-form__error">{errors.state}</div>
+            </div>
+            <div class="acme-form__field">
+                <label for="country" class="acme-form__label">Country</label>
+                <select id="country" name="country" required class="acme-form__select" onchange={handleCountryChange} onblur={handleBlur}>
+                    <option value="">Select country</option>
+                    <template for:each={countryOptions} for:item="country">
+                        <option key={country.value} value={country.value}>{country.label}</option>
+                    </template>
+                </select>
+                <div if:true={errors.country} class="acme-form__error">{errors.country}</div>
+            </div>
+            <div class="acme-form__actions">
+                <button type="button" class="acme-button acme-button_secondary" onclick={handleClear}>Clear</button>
+                <button type="submit" class="acme-button acme-button_primary" disabled={isSubmitDisabled}>Save Address</button>
+            </div>
+        </form>
+        <div class="acme-form__links">
+            <a href="/address-help" target="_blank" class="acme-link">Address Help</a>
+            <a href="/privacy" target="_blank" class="acme-link">Privacy Policy</a>
+        </div>
+    </div>
+</template>
