@@ -1,0 +1,66 @@
+/* addressFieldsEditor.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-light-gray-color: #F5F7FA;
+    --acme-medium-gray-color: #DDDBDA;
+    --acme-error-color: #C23934;
+}
+
+.acme-address-editor {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    color: var(--acme-gray-color);
+}
+
+.acme-address-editor__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--slds-c-card-spacing-block, 0.75rem);
+}
+
+.acme-address-editor__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--slds-c-card-spacing-block, 0.75rem);
+    margin-top: var(--slds-c-card-spacing-block, 1rem);
+}
+
+.acme-button {
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.acme-button_primary {
+    background-color: var(--acme-blue-color);
+    border-color: var(--acme-blue-color);
+    color: var(--acme-white-color);
+}
+
+.acme-button_primary:hover:not(:disabled) {
+    background-color: #004A9E;
+    border-color: #004A9E;
+}
+
+.acme-button_secondary {
+    background-color: var(--acme-white-color);
+    border-color: var(--acme-medium-gray-color);
+    color: var(--acme-gray-color);
+}
+
+.acme-button_secondary:hover {
+    background-color: var(--acme-light-gray-color);
+}
+
+@media screen and (max-width: 480px) {
+    .acme-address-editor__actions {
+        flex-direction: column;
+    }
+
+    .acme-button {
+        width: 100%;
+    }
+}

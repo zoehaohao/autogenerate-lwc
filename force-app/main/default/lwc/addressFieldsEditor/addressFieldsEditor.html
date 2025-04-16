@@ -1,0 +1,58 @@
+<!-- addressFieldsEditor.html -->
+<template>
+    <div class="acme-address-editor">
+        <div class="acme-address-editor__form">
+            <lightning-textarea
+                name="street"
+                label="Street Address"
+                required
+                placeholder="Enter street address"
+                maxlength="255"
+                value={street}
+                onchange={handleInputChange}
+            ></lightning-textarea>
+            <lightning-input
+                type="text"
+                name="city"
+                label="City"
+                required
+                placeholder="Enter city"
+                maxlength="40"
+                value={city}
+                onchange={handleInputChange}
+            ></lightning-input>
+            <lightning-input
+                type="text"
+                name="state"
+                label="State/Province"
+                required
+                placeholder="Enter state/province"
+                maxlength="40"
+                value={state}
+                onchange={handleInputChange}
+            ></lightning-input>
+            <lightning-combobox
+                name="country"
+                label="Country"
+                required
+                placeholder="Select country"
+                value={country}
+                options={countryOptions}
+                onchange={handleInputChange}
+            ></lightning-combobox>
+        </div>
+        <div class="acme-address-editor__actions">
+            <lightning-button
+                label="Cancel"
+                onclick={handleCancel}
+                class="acme-button acme-button_secondary"
+            ></lightning-button>
+            <lightning-button
+                label="Save"
+                onclick={handleSave}
+                disabled={isSaveDisabled}
+                class="acme-button acme-button_primary"
+            ></lightning-button>
+        </div>
+    </div>
+</template>
