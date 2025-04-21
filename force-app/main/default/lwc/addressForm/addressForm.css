@@ -1,0 +1,98 @@
+/* addressForm.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-teal-color: #00A0B0;
+    --acme-gold-color: #F2C94C;
+    --acme-coral-color: #FF6B6B;
+    --acme-light-gray-color: #F5F7FA;
+}
+
+.acme-address-form {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    color: var(--acme-gray-color);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.acme-heading {
+    color: var(--acme-blue-color);
+    font-size: 18px;
+    margin-bottom: var(--slds-c-card-spacing-block, 0.75rem);
+}
+
+.acme-address-form__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.acme-address-form__field {
+    display: flex;
+    flex-direction: column;
+}
+
+.acme-address-form__label {
+    font-size: 14px;
+    margin-bottom: 0.25rem;
+}
+
+.acme-address-form__input {
+    font-size: 16px;
+    padding: 0.5rem;
+    border: 1px solid var(--acme-light-gray-color);
+    border-radius: 4px;
+}
+
+.acme-address-form__required {
+    color: var(--acme-coral-color);
+    margin-left: 0.25rem;
+}
+
+.acme-address-form__actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.acme-button {
+    padding: 0.5rem 1rem;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.acme-button_primary {
+    background-color: var(--acme-blue-color);
+    color: var(--acme-white-color);
+    border: none;
+}
+
+.acme-button_primary:hover:not(:disabled) {
+    background-color: #004A9E;
+}
+
+.acme-button_secondary {
+    background-color: var(--acme-white-color);
+    color: var(--acme-blue-color);
+    border: 1px solid var(--acme-blue-color);
+    margin-right: 0.5rem;
+}
+
+.acme-button_secondary:hover {
+    background-color: var(--acme-light-gray-color);
+}
+
+.acme-address-form__error {
+    color: var(--acme-coral-color);
+    font-size: 12px;
+    margin-top: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+    .acme-address-form__grid {
+        grid-template-columns: 1fr;
+    }
+}

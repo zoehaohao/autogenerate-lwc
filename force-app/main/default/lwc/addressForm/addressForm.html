@@ -1,0 +1,63 @@
+<!-- addressForm.html -->
+<template>
+    <div class="acme-address-form">
+        <div class="acme-address-form__section">
+            <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
+            <div class="acme-address-form__grid">
+                <div class="acme-address-form__field">
+                    <label for="firstName" class="acme-address-form__label">First Name<span class="acme-address-form__required">*</span></label>
+                    <input type="text" id="firstName" class="acme-address-form__input" required placeholder="Enter first name" onchange={handleInputChange}>
+                </div>
+                <div class="acme-address-form__field">
+                    <label for="middleName" class="acme-address-form__label">Middle Name</label>
+                    <input type="text" id="middleName" class="acme-address-form__input" placeholder="Enter middle name" onchange={handleInputChange}>
+                </div>
+                <div class="acme-address-form__field">
+                    <label for="lastName" class="acme-address-form__label">Last Name<span class="acme-address-form__required">*</span></label>
+                    <input type="text" id="lastName" class="acme-address-form__input" required placeholder="Enter last name" onchange={handleInputChange}>
+                </div>
+                <div class="acme-address-form__field">
+                    <label for="birthdate" class="acme-address-form__label">Birthdate<span class="acme-address-form__required">*</span></label>
+                    <input type="date" id="birthdate" class="acme-address-form__input" required onchange={handleInputChange}>
+                </div>
+            </div>
+        </div>
+        <div class="acme-address-form__section">
+            <h2 class="acme-heading acme-heading_medium">Address</h2>
+            <div class="acme-address-form__grid">
+                <div class="acme-address-form__field">
+                    <label for="address" class="acme-address-form__label">Address</label>
+                    <input type="text" id="address" class="acme-address-form__input" placeholder="Enter address" onchange={handleInputChange}>
+                </div>
+                <div class="acme-address-form__field">
+                    <label for="city" class="acme-address-form__label">City/Town</label>
+                    <input type="text" id="city" class="acme-address-form__input" placeholder="Enter city" onchange={handleInputChange}>
+                </div>
+                <div class="acme-address-form__field">
+                    <label for="state" class="acme-address-form__label">State</label>
+                    <select id="state" class="acme-address-form__input" onchange={handleInputChange}>
+                        <option value="">Choose a State</option>
+                        <!-- Add state options here -->
+                    </select>
+                </div>
+                <div class="acme-address-form__field">
+                    <label for="zipCode" class="acme-address-form__label">Zip Code<span class="acme-address-form__required">*</span></label>
+                    <input type="text" id="zipCode" class="acme-address-form__input" required placeholder="Enter zip code" onchange={handleInputChange}>
+                </div>
+                <div class="acme-address-form__field">
+                    <label for="startDate" class="acme-address-form__label">Start Date<span class="acme-address-form__required">*</span></label>
+                    <input type="date" id="startDate" class="acme-address-form__input" required onchange={handleInputChange}>
+                </div>
+                <div class="acme-address-form__field">
+                    <label for="endDate" class="acme-address-form__label">End Date<span class="acme-address-form__required">*</span></label>
+                    <input type="date" id="endDate" class="acme-address-form__input" required onchange={handleInputChange}>
+                </div>
+            </div>
+        </div>
+        <div class="acme-address-form__actions">
+            <button class="acme-button acme-button_secondary" onclick={handleClear}>Clear</button>
+            <button class="acme-button acme-button_primary" onclick={handleSubmit} disabled={!isFormValid}>Submit</button>
+        </div>
+        <div if:true={errorMessage} class="acme-address-form__error">{errorMessage}</div>
+    </div>
+</template>
