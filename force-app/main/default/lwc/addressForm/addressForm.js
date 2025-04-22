@@ -3,52 +3,11 @@ import { LightningElement, track } from 'lwc';
 
 export default class AddressForm extends LightningElement {
     @track formData = {};
-    @track errorMessage = '';
-    @track isFormValid = false;
-
-    handleInputChange(event) {
-        const { id, value } = event.target;
-        this.formData[id] = value;
-        this.validateForm();
-    }
-
-    validateForm() {
-        const requiredFields = ['firstName', 'lastName', 'birthdate', 'zipCode', 'startDate', 'endDate'];
-        let isValid = true;
-        let errors = [];
-
-        requiredFields.forEach(field => {
-            if (!this.formData[field]) {
-                isValid = false;
-                errors.push(`${field.charAt(0).toUpperCase() + field.slice(1)} is required.`);
-            }
-        });
-
-        if (this.formData.zipCode && !/^\d{5}$/.test(this.formData.zipCode)) {
-            isValid = false;
-            errors.push('Zip Code must be 5 digits.');
-        }
-
-        if (this.formData.birthdate && new Date(this.formData.birthdate) >= new Date()) {
-            isValid = false;
-            errors.push('Birthdate must be in the past.');
-        }
-
-        if (this.formData.startDate && this.formData.endDate && new Date(this.formData.endDate) <= new Date(this.formData.startDate)) {
-            isValid = false;
-            errors.push('End Date must be after Start Date.');
-        }
-
-        this.isFormValid = isValid;
-        this.errorMessage = errors.join(' ');
-    }
+    @track errors = {};
 
     handleSubmit() {
-        if (this.isFormValid) {
+        if (this.validateForm()) {
             console.log('Form submitted:', this.formData);
-            this.errorMessage = '';
-        } else {
-            this.errorMessage = 'Please correct the errors before submitting.';
         }
     }
 
@@ -57,7 +16,36 @@ export default class AddressForm extends LightningElement {
             element.value = '';
         });
         this.formData = {};
-        this.errorMessage = '';
-        this.isFormValid = false;
+        this.errors = {};
+    }
+
+    validateField(event) {
+        const field = event.target;
+        const fieldName = field.id;
+        const value = field.value;
+
+        this.formData[fieldName] = value;
+        this.errors[fieldName] = '';
+
+        if (field.required && !value) {
+            this.errors[fieldName] = `${fieldName} is required`;
+        } else if (fieldName === 'zipCode' && !/^\d{5}(-\d{4})?$/.test(value)) {
+            this.errors[fieldName] = 'Invalid zip code format';
+        } else if (fieldName === 'endDate' && this.formData.startDate && new Date(value) <= new Date(this.formData.startDate)) {
+            this.errors[fieldName] = 'End Date must be after Start Date';
+        }
+
+        field.setCustomValidity(this.errors[fieldName]);
+        field.reportValidity();
+    }
+
+    validateForm() {
+        let isValid = true;
+        this.template.querySelectorAll('input, select').forEach(element => {
+            if (element.reportValidity() === false) {
+                isValid = false;
+            }
+        });
+        return isValid;
     }
 }
