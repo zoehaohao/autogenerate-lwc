@@ -1,0 +1,83 @@
+/* formUpdater.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-error-color: #FF6B6B;
+}
+
+.acme-form-updater {
+    font-family: var(--lwc-fontFamily);
+    color: var(--acme-gray-color);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.acme-heading {
+    color: var(--acme-blue-color);
+    font-size: 18px;
+    margin-bottom: var(--lwc-spacingMedium);
+}
+
+.acme-form-updater__section {
+    margin-bottom: var(--lwc-spacingLarge);
+}
+
+.acme-form-updater__field {
+    margin-bottom: var(--lwc-spacingSmall);
+}
+
+.acme-form-updater__label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: var(--lwc-spacingXxSmall);
+}
+
+.acme-form-updater__input,
+.acme-form-updater__select {
+    width: 100%;
+    padding: var(--lwc-spacingXSmall);
+    font-size: 16px;
+    border: 1px solid var(--lwc-colorBorder);
+    border-radius: var(--lwc-borderRadiusMedium);
+}
+
+.acme-form-updater__input:focus,
+.acme-form-updater__select:focus {
+    outline: none;
+    border-color: var(--acme-blue-color);
+    box-shadow: 0 0 3px var(--acme-blue-color);
+}
+
+.acme-form-updater__input--error {
+    border-color: var(--acme-error-color);
+}
+
+.acme-form-updater__required {
+    color: var(--acme-error-color);
+    margin-left: 2px;
+}
+
+.acme-button {
+    padding: var(--lwc-spacingSmall) var(--lwc-spacingMedium);
+    font-size: 16px;
+    border-radius: var(--lwc-borderRadiusMedium);
+    cursor: pointer;
+}
+
+.acme-button_primary {
+    background-color: var(--acme-blue-color);
+    color: var(--acme-white-color);
+    border: none;
+}
+
+.acme-button_primary:hover {
+    background-color: var(--lwc-brandAccessibleActive);
+}
+
+@media screen and (max-width: 768px) {
+    .acme-form-updater__input,
+    .acme-form-updater__select {
+        width: 100%;
+    }
+}

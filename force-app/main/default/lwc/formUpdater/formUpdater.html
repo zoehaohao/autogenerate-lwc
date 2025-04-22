@@ -1,0 +1,45 @@
+<!-- formUpdater.html -->
+<template>
+    <div class="acme-form-updater">
+        <div class="acme-form-updater__section">
+            <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
+            <div class="acme-form-updater__field">
+                <label for="firstName" class="acme-form-updater__label">First Name<span class="acme-form-updater__required">*</span></label>
+                <input type="text" id="firstName" class="acme-form-updater__input" required placeholder="Enter first name" onblur={validateField}>
+            </div>
+            <div class="acme-form-updater__field">
+                <label for="lastName" class="acme-form-updater__label">Last Name<span class="acme-form-updater__required">*</span></label>
+                <input type="text" id="lastName" class="acme-form-updater__input" required placeholder="Enter last name" onblur={validateField}>
+            </div>
+            <div class="acme-form-updater__field">
+                <label for="birthdate" class="acme-form-updater__label">Birthdate<span class="acme-form-updater__required">*</span></label>
+                <input type="date" id="birthdate" class="acme-form-updater__input" required placeholder="MM/DD/YYYY" onblur={validateField}>
+            </div>
+        </div>
+        <div class="acme-form-updater__section">
+            <h2 class="acme-heading acme-heading_medium">Address</h2>
+            <div class="acme-form-updater__field">
+                <label for="address" class="acme-form-updater__label">Address</label>
+                <input type="text" id="address" class="acme-form-updater__input" placeholder="Enter address">
+            </div>
+            <div class="acme-form-updater__field">
+                <label for="state" class="acme-form-updater__label">State</label>
+                <select id="state" class="acme-form-updater__select">
+                    <option value="">Choose a State</option>
+                    <!-- Add state options here -->
+                </select>
+            </div>
+            <div class="acme-form-updater__field">
+                <label for="startDate" class="acme-form-updater__label">Start Date<span class="acme-form-updater__required">*</span></label>
+                <input type="date" id="startDate" class="acme-form-updater__input" required placeholder="MM/DD/YYYY" onblur={validateField}>
+            </div>
+            <div class="acme-form-updater__field">
+                <label for="endDate" class="acme-form-updater__label">End Date<span class="acme-form-updater__required">*</span></label>
+                <input type="date" id="endDate" class="acme-form-updater__input" required placeholder="MM/DD/YYYY" onblur={validateField}>
+            </div>
+        </div>
+        <div class="acme-form-updater__footer">
+            <button class="acme-button acme-button_primary" onclick={handleSubmit}>Submit</button>
+        </div>
+    </div>
+</template>
