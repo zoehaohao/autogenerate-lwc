@@ -1,92 +1,62 @@
 <!-- addressForm.html -->
 <template>
-    <div class="acme-address-form slds-grid slds-wrap">
-        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-right_medium">
-            <h2 class="acme-section-header">Personal Information</h2>
-            <div class="slds-form-element">
-                <label class="slds-form-element__label" for="firstName">
-                    <abbr class="slds-required" title="required">*</abbr> First Name
-                </label>
-                <div class="slds-form-element__control">
-                    <input type="text" id="firstName" class="slds-input" required placeholder="Enter first name" onblur={validateField} />
+    <div class="acme-address-form">
+        <div class="acme-address-form__section">
+            <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
+            <div class="acme-address-form__grid">
+                <div class="acme-address-form__field">
+                    <label for="firstName" class="acme-address-form__label">First Name<span class="acme-address-form__required">*</span></label>
+                    <input type="text" id="firstName" required class="acme-address-form__input" onchange={handleInputChange}>
                 </div>
-            </div>
-            <div class="slds-form-element">
-                <label class="slds-form-element__label" for="middleName">Middle Name</label>
-                <div class="slds-form-element__control">
-                    <input type="text" id="middleName" class="slds-input" placeholder="Enter middle name" />
+                <div class="acme-address-form__field">
+                    <label for="middleName" class="acme-address-form__label">Middle Name</label>
+                    <input type="text" id="middleName" class="acme-address-form__input" onchange={handleInputChange}>
                 </div>
-            </div>
-            <div class="slds-form-element">
-                <label class="slds-form-element__label" for="lastName">
-                    <abbr class="slds-required" title="required">*</abbr> Last Name
-                </label>
-                <div class="slds-form-element__control">
-                    <input type="text" id="lastName" class="slds-input" required placeholder="Enter last name" onblur={validateField} />
+                <div class="acme-address-form__field">
+                    <label for="lastName" class="acme-address-form__label">Last Name<span class="acme-address-form__required">*</span></label>
+                    <input type="text" id="lastName" required class="acme-address-form__input" onchange={handleInputChange}>
                 </div>
-            </div>
-            <div class="slds-form-element">
-                <label class="slds-form-element__label" for="birthdate">
-                    <abbr class="slds-required" title="required">*</abbr> Birthdate
-                </label>
-                <div class="slds-form-element__control">
-                    <input type="date" id="birthdate" class="slds-input" required onblur={validateField} />
+                <div class="acme-address-form__field">
+                    <label for="birthdate" class="acme-address-form__label">Birthdate<span class="acme-address-form__required">*</span></label>
+                    <input type="date" id="birthdate" required class="acme-address-form__input" onchange={handleInputChange}>
                 </div>
             </div>
         </div>
-        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-            <h2 class="acme-section-header">Address</h2>
-            <div class="slds-form-element">
-                <label class="slds-form-element__label" for="address">Address</label>
-                <div class="slds-form-element__control">
-                    <input type="text" id="address" class="slds-input" placeholder="Enter address" />
+        <div class="acme-address-form__section">
+            <h2 class="acme-heading acme-heading_medium">Address</h2>
+            <div class="acme-address-form__grid">
+                <div class="acme-address-form__field">
+                    <label for="address" class="acme-address-form__label">Address</label>
+                    <input type="text" id="address" class="acme-address-form__input" onchange={handleInputChange}>
                 </div>
-            </div>
-            <div class="slds-form-element">
-                <label class="slds-form-element__label" for="city">City or Town</label>
-                <div class="slds-form-element__control">
-                    <input type="text" id="city" class="slds-input" placeholder="Enter city" />
+                <div class="acme-address-form__field">
+                    <label for="city" class="acme-address-form__label">City/Town</label>
+                    <input type="text" id="city" class="acme-address-form__input" onchange={handleInputChange}>
                 </div>
-            </div>
-            <div class="slds-form-element">
-                <label class="slds-form-element__label" for="state">State</label>
-                <div class="slds-form-element__control">
-                    <div class="slds-select_container">
-                        <select id="state" class="slds-select">
-                            <option value="">Choose a State</option>
-                            <!-- Add state options here -->
-                        </select>
-                    </div>
+                <div class="acme-address-form__field">
+                    <label for="state" class="acme-address-form__label">State</label>
+                    <select id="state" class="acme-address-form__select" onchange={handleInputChange}>
+                        <option value="">Choose a State</option>
+                        <!-- Add state options here -->
+                    </select>
                 </div>
-            </div>
-            <div class="slds-form-element">
-                <label class="slds-form-element__label" for="zipCode">
-                    <abbr class="slds-required" title="required">*</abbr> Zip code
-                </label>
-                <div class="slds-form-element__control">
-                    <input type="text" id="zipCode" class="slds-input" required placeholder="Enter zip code" onblur={validateField} />
+                <div class="acme-address-form__field">
+                    <label for="zipCode" class="acme-address-form__label">Zip Code<span class="acme-address-form__required">*</span></label>
+                    <input type="text" id="zipCode" required class="acme-address-form__input" onchange={handleInputChange}>
                 </div>
-            </div>
-            <div class="slds-form-element">
-                <label class="slds-form-element__label" for="startDate">
-                    <abbr class="slds-required" title="required">*</abbr> Start Date
-                </label>
-                <div class="slds-form-element__control">
-                    <input type="date" id="startDate" class="slds-input" required onblur={validateField} />
+                <div class="acme-address-form__field">
+                    <label for="startDate" class="acme-address-form__label">Start Date<span class="acme-address-form__required">*</span></label>
+                    <input type="date" id="startDate" required class="acme-address-form__input" onchange={handleInputChange}>
                 </div>
-            </div>
-            <div class="slds-form-element">
-                <label class="slds-form-element__label" for="endDate">
-                    <abbr class="slds-required" title="required">*</abbr> End Date
-                </label>
-                <div class="slds-form-element__control">
-                    <input type="date" id="endDate" class="slds-input" required onblur={validateField} />
+                <div class="acme-address-form__field">
+                    <label for="endDate" class="acme-address-form__label">End Date<span class="acme-address-form__required">*</span></label>
+                    <input type="date" id="endDate" required class="acme-address-form__input" onchange={handleInputChange}>
                 </div>
             </div>
         </div>
-        <div class="slds-col slds-size_1-of-1 slds-text-align_right slds-m-top_medium">
-            <button class="slds-button slds-button_neutral" onclick={handleClear}>Clear</button>
-            <button class="slds-button slds-button_brand" onclick={handleSubmit}>Submit</button>
+        <div class="acme-address-form__error" if:true={errorMessage}>{errorMessage}</div>
+        <div class="acme-address-form__button-container">
+            <button class="acme-button acme-button_primary" onclick={handleSubmit}>Submit</button>
         </div>
     </div>
 </template>

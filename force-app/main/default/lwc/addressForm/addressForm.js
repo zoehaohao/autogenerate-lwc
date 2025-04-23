@@ -3,49 +3,85 @@ import { LightningElement, track } from 'lwc';
 
 export default class AddressForm extends LightningElement {
     @track formData = {};
-    @track errors = {};
+    @track errorMessage = '';
+
+    handleInputChange(event) {
+        const { id, value } = event.target;
+        this.formData[id] = value;
+        this.validateField(id, value);
+    }
+
+    validateField(fieldId, value) {
+        switch (fieldId) {
+            case 'firstName':
+            case 'lastName':
+            case 'zipCode':
+                if (!value.trim()) {
+                    this.setFieldError(fieldId, 'This field is required');
+                } else {
+                    this.clearFieldError(fieldId);
+                }
+                break;
+            case 'birthdate':
+            case 'startDate':
+            case 'endDate':
+                if (!this.isValidDate(value)) {
+                    this.setFieldError(fieldId, 'Please enter a valid date');
+                } else {
+                    this.clearFieldError(fieldId);
+                }
+                break;
+        }
+
+        if (fieldId === 'endDate' && this.formData.startDate) {
+            if (new Date(value) <= new Date(this.formData.startDate)) {
+                this.setFieldError(fieldId, 'End Date must be after Start Date');
+            } else {
+                this.clearFieldError(fieldId);
+            }
+        }
+    }
+
+    isValidDate(dateString) {
+        return !isNaN(new Date(dateString).getTime());
+    }
+
+    setFieldError(fieldId, message) {
+        const field = this.template.querySelector(`#${fieldId}`);
+        field.setCustomValidity(message);
+        field.reportValidity();
+    }
+
+    clearFieldError(fieldId) {
+        const field = this.template.querySelector(`#${fieldId}`);
+        field.setCustomValidity('');
+        field.reportValidity();
+    }
 
     handleSubmit() {
         if (this.validateForm()) {
             console.log('Form submitted:', this.formData);
+            this.errorMessage = '';
+            this.resetForm();
+        } else {
+            this.errorMessage = 'Please correct the errors in the form.';
         }
-    }
-
-    handleClear() {
-        this.template.querySelectorAll('input, select').forEach(element => {
-            element.value = '';
-        });
-        this.formData = {};
-        this.errors = {};
-    }
-
-    validateField(event) {
-        const field = event.target;
-        const fieldName = field.id;
-        const value = field.value;
-
-        this.formData[fieldName] = value;
-        this.errors[fieldName] = '';
-
-        if (field.required && !value) {
-            this.errors[fieldName] = `${fieldName} is required`;
-        } else if (fieldName === 'zipCode' && !/^\d{5}(-\d{4})?$/.test(value)) {
-            this.errors[fieldName] = 'Invalid zip code format';
-        } else if (fieldName === 'endDate' && this.formData.startDate && new Date(value) <= new Date(this.formData.startDate)) {
-            this.errors[fieldName] = 'End Date must be after Start Date';
-        }
-
-        field.setCustomValidity(this.errors[fieldName]);
-        field.reportValidity();
     }
 
     validateForm() {
-        let isValid = true;
-        this.template.querySelectorAll('input, select').forEach(element => {
-            if (element.reportValidity() === false) {
-                isValid = false;
-            }
+        const allValid = [...this.template.querySelectorAll('input, select')]
+            .reduce((validSoFar, inputField) => {
+                inputField.reportValidity();
+                return validSoFar && inputField.checkValidity();
+            }, true);
+
+        return allValid;
+    }
+
+    resetForm() {
+        this.formData = {};
+        this.template.querySelectorAll('input, select').forEach(field => {
+            field.value = '';
         });
-        return isValid;
     }
 }
