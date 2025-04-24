@@ -2,71 +2,76 @@
 import { LightningElement, track } from 'lwc';
 
 export default class PersonalInfoForm extends LightningElement {
-    @track formData = {};
-    @track errors = {};
+    @track formData = {
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        birthdate: '',
+        address: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        startDate: '',
+        endDate: ''
+    };
+
+    @track errorMessage = '';
     @track isFormValid = false;
 
-    validateField(event) {
-        const field = event.target;
-        const fieldName = field.id;
-        const fieldValue = field.value;
+    handleInputChange(event) {
+        const { id, value } = event.target;
+        this.formData[id] = value;
+        this.validateForm();
+    }
 
-        this.formData[fieldName] = fieldValue;
-        this.errors[fieldName] = '';
-
-        switch (fieldName) {
-            case 'firstName':
-            case 'lastName':
-                if (!fieldValue.trim()) {
-                    this.errors[fieldName] = `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
-                }
-                break;
-            case 'birthdate':
-                if (!this.isValidDate(fieldValue) || !this.isOver18(fieldValue)) {
-                    this.errors[fieldName] = 'Must be a valid date and 18+ years old';
-                }
-                break;
-            case 'zipCode':
-                if (!/^\d{5}(-\d{4})?$/.test(fieldValue)) {
-                    this.errors[fieldName] = 'Zip Code must be 5 or 9 digits';
-                }
-                break;
-            case 'startDate':
-            case 'endDate':
-                if (!this.isValidDate(fieldValue)) {
-                    this.errors[fieldName] = 'Must be a valid date';
-                } else if (fieldName === 'endDate' && new Date(fieldValue) <= new Date(this.formData.startDate)) {
-                    this.errors[fieldName] = 'End Date must be after Start Date';
-                }
-                break;
+    validateForm() {
+        const requiredFields = ['firstName', 'lastName', 'birthdate', 'zipCode', 'startDate', 'endDate'];
+        const isAllRequiredFieldsFilled = requiredFields.every(field => this.formData[field].trim() !== '');
+        
+        if (!isAllRequiredFieldsFilled) {
+            this.errorMessage = 'Please fill in all required fields.';
+            this.isFormValid = false;
+            return;
         }
 
-        this.checkFormValidity();
-    }
-
-    isValidDate(dateString) {
-        return !isNaN(new Date(dateString).getTime());
-    }
-
-    isOver18(birthdate) {
-        const today = new Date();
-        const birthDate = new Date(birthdate);
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const monthDiff = today.getMonth() - birthDate.getMonth();
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
+        if (!/^\d{5}(-\d{4})?$/.test(this.formData.zipCode)) {
+            this.errorMessage = 'Invalid Zip Code format.';
+            this.isFormValid = false;
+            return;
         }
-        return age >= 18;
-    }
 
-    checkFormValidity() {
-        this.isFormValid = Object.keys(this.errors).every(key => !this.errors[key]) &&
-            ['firstName', 'lastName', 'birthdate', 'zipCode', 'startDate', 'endDate'].every(field => this.formData[field]);
+        const startDate = new Date(this.formData.startDate);
+        const endDate = new Date(this.formData.endDate);
+        if (endDate <= startDate) {
+            this.errorMessage = 'End Date must be after Start Date.';
+            this.isFormValid = false;
+            return;
+        }
+
+        this.errorMessage = '';
+        this.isFormValid = true;
     }
 
     handleSubmit() {
         if (this.isFormValid) {
             console.log('Form submitted:', this.formData);
+            // Here you would typically send the data to a server
+            // Reset form after successful submission
+            this.formData = {
+                firstName: '',
+                middleName: '',
+                lastName: '',
+                birthdate: '',
+                address: '',
+                city: '',
+                state: '',
+                zipCode: '',
+                startDate: '',
+                endDate: ''
+            };
+            this.isFormValid = false;
+            // Show success message (you might want to use a toast notification here)
+            alert('Form submitted successfully!');
         }
     }
 }

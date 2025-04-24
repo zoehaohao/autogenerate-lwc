@@ -2,21 +2,25 @@
 :host {
     --acme-blue-color: #0057B8;
     --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-coral-color: #FF6B6B;
     --acme-light-gray-color: #F5F7FA;
     --acme-medium-gray-color: #E4E7EB;
-    --acme-coral-color: #FF6B6B;
 }
 
 .root-container {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     max-width: 1200px;
     margin: 0 auto;
+    padding: 32px 24px;
+    background-color: var(--acme-white-color);
 }
 
-h2 {
-    color: var(--acme-blue-color);
+.section-heading {
     font-size: 18px;
+    color: var(--acme-blue-color);
     font-weight: 700;
+    margin-bottom: 16px;
 }
 
 .slds-form-element__label {
@@ -26,21 +30,16 @@ h2 {
 
 .slds-input,
 .slds-select {
-    font-size: 16px;
-    height: 40px;
     border: 1px solid var(--acme-medium-gray-color);
     border-radius: 4px;
+    height: 40px;
+    font-size: 16px;
 }
 
 .slds-input:focus,
 .slds-select:focus {
     border-color: var(--acme-blue-color);
     box-shadow: 0 0 3px var(--acme-blue-color);
-}
-
-.slds-has-error .slds-input,
-.slds-has-error .slds-select {
-    border-color: var(--acme-coral-color);
 }
 
 .slds-button_brand {
@@ -54,8 +53,25 @@ h2 {
     border-color: #004A9E;
 }
 
-@media screen and (max-width: 768px) {
+.slds-button_brand:disabled {
+    background-color: var(--acme-medium-gray-color);
+    border-color: var(--acme-medium-gray-color);
+}
+
+.slds-required {
+    color: var(--acme-coral-color);
+}
+
+.slds-text-color_error {
+    color: var(--acme-coral-color);
+}
+
+@media (max-width: 768px) {
     .slds-medium-size_1-of-2 {
         width: 100%;
+    }
+    
+    .slds-p-right_medium {
+        padding-right: 0;
     }
 }

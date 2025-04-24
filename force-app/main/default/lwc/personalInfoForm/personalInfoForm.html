@@ -1,21 +1,21 @@
 <!-- personalInfoForm.html -->
 <template>
-    <div class="root-container slds-p-around_medium">
+    <div class="root-container">
         <div class="slds-grid slds-wrap">
             <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-right_medium">
-                <h2 class="slds-text-heading_medium slds-m-bottom_small">Personal Information</h2>
+                <h2 class="section-heading">Personal Information</h2>
                 <div class="slds-form-element slds-m-bottom_small">
                     <label class="slds-form-element__label" for="firstName">
                         <abbr class="slds-required" title="required">*</abbr> First Name
                     </label>
                     <div class="slds-form-element__control">
-                        <input type="text" id="firstName" class="slds-input" required onblur={validateField} />
+                        <input type="text" id="firstName" class="slds-input" placeholder="Enter first name" required onchange={handleInputChange} />
                     </div>
                 </div>
                 <div class="slds-form-element slds-m-bottom_small">
                     <label class="slds-form-element__label" for="middleName">Middle Name</label>
                     <div class="slds-form-element__control">
-                        <input type="text" id="middleName" class="slds-input" />
+                        <input type="text" id="middleName" class="slds-input" placeholder="Enter middle name" onchange={handleInputChange} />
                     </div>
                 </div>
                 <div class="slds-form-element slds-m-bottom_small">
@@ -23,7 +23,7 @@
                         <abbr class="slds-required" title="required">*</abbr> Last Name
                     </label>
                     <div class="slds-form-element__control">
-                        <input type="text" id="lastName" class="slds-input" required onblur={validateField} />
+                        <input type="text" id="lastName" class="slds-input" placeholder="Enter last name" required onchange={handleInputChange} />
                     </div>
                 </div>
                 <div class="slds-form-element slds-m-bottom_small">
@@ -31,30 +31,32 @@
                         <abbr class="slds-required" title="required">*</abbr> Birthdate
                     </label>
                     <div class="slds-form-element__control">
-                        <input type="date" id="birthdate" class="slds-input" required onblur={validateField} />
+                        <input type="date" id="birthdate" class="slds-input" required onchange={handleInputChange} />
                     </div>
                 </div>
             </div>
             <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                <h2 class="slds-text-heading_medium slds-m-bottom_small">Address</h2>
+                <h2 class="section-heading">Address</h2>
                 <div class="slds-form-element slds-m-bottom_small">
                     <label class="slds-form-element__label" for="address">Address</label>
                     <div class="slds-form-element__control">
-                        <input type="text" id="address" class="slds-input" />
+                        <input type="text" id="address" class="slds-input" placeholder="Enter address" onchange={handleInputChange} />
                     </div>
                 </div>
                 <div class="slds-form-element slds-m-bottom_small">
                     <label class="slds-form-element__label" for="city">City/Town</label>
                     <div class="slds-form-element__control">
-                        <input type="text" id="city" class="slds-input" />
+                        <input type="text" id="city" class="slds-input" placeholder="Enter city" onchange={handleInputChange} />
                     </div>
                 </div>
                 <div class="slds-form-element slds-m-bottom_small">
                     <label class="slds-form-element__label" for="state">State</label>
                     <div class="slds-form-element__control">
-                        <select id="state" class="slds-select">
+                        <select id="state" class="slds-select" onchange={handleInputChange}>
                             <option value="">Choose a State</option>
-                            <!-- Add state options here -->
+                            <option value="AL">Alabama</option>
+                            <option value="AK">Alaska</option>
+                            <!-- Add more states here -->
                         </select>
                     </div>
                 </div>
@@ -63,7 +65,7 @@
                         <abbr class="slds-required" title="required">*</abbr> Zip Code
                     </label>
                     <div class="slds-form-element__control">
-                        <input type="text" id="zipCode" class="slds-input" required onblur={validateField} />
+                        <input type="text" id="zipCode" class="slds-input" placeholder="Enter zip code" required onchange={handleInputChange} />
                     </div>
                 </div>
                 <div class="slds-form-element slds-m-bottom_small">
@@ -71,7 +73,7 @@
                         <abbr class="slds-required" title="required">*</abbr> Start Date
                     </label>
                     <div class="slds-form-element__control">
-                        <input type="date" id="startDate" class="slds-input" required onblur={validateField} />
+                        <input type="date" id="startDate" class="slds-input" required onchange={handleInputChange} />
                     </div>
                 </div>
                 <div class="slds-form-element slds-m-bottom_small">
@@ -79,7 +81,7 @@
                         <abbr class="slds-required" title="required">*</abbr> End Date
                     </label>
                     <div class="slds-form-element__control">
-                        <input type="date" id="endDate" class="slds-input" required onblur={validateField} />
+                        <input type="date" id="endDate" class="slds-input" required onchange={handleInputChange} />
                     </div>
                 </div>
             </div>
@@ -87,5 +89,8 @@
         <div class="slds-m-top_medium">
             <button class="slds-button slds-button_brand" onclick={handleSubmit} disabled={!isFormValid}>Submit</button>
         </div>
+        <template if:true={errorMessage}>
+            <div class="slds-text-color_error slds-m-top_small">{errorMessage}</div>
+        </template>
     </div>
 </template>
