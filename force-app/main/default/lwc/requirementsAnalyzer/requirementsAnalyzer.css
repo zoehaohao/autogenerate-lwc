@@ -14,67 +14,42 @@
 .acme-requirements-analyzer {
     font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     color: var(--acme-gray-color);
+}
+
+.acme-card {
     background-color: var(--acme-white-color);
-    padding: var(--lwc-spacingMedium, 1rem);
+    border: 1px solid var(--acme-medium-gray-color);
+    border-radius: 4px;
+    padding: var(--slds-c-card-spacing-block, 1rem);
 }
 
-.acme-heading_large {
-    font-size: 24px;
+.acme-heading {
     font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.acme-heading_medium {
+    font-size: 20px;
     color: var(--acme-blue-color);
-    margin-bottom: var(--lwc-spacingSmall, 0.75rem);
 }
 
-.acme-requirements-analyzer__content {
-    display: flex;
-    gap: var(--lwc-spacingMedium, 1rem);
+lightning-button.slds-button_brand {
+    --slds-c-button-brand-color-background: var(--acme-blue-color);
+    --slds-c-button-brand-color-border: var(--acme-blue-color);
 }
 
-.acme-requirements-analyzer__sidebar {
-    flex: 0 0 300px;
-}
-
-.acme-requirements-analyzer__main {
-    flex: 1;
-}
-
-.acme-form-field {
-    margin-bottom: var(--lwc-spacingSmall, 0.75rem);
-}
-
-.acme-button {
-    margin-right: var(--lwc-spacingXxSmall, 0.25rem);
-}
-
-.acme-button_primary {
-    --sds-c-button-brand-color-background: var(--acme-blue-color);
-    --sds-c-button-brand-color-border: var(--acme-blue-color);
-}
-
-.acme-button_secondary {
-    --sds-c-button-outline-brand-color-border: var(--acme-teal-color);
-    --sds-c-button-text-color: var(--acme-teal-color);
-}
-
-.acme-button_neutral {
-    --sds-c-button-neutral-color-background: var(--acme-light-gray-color);
-    --sds-c-button-neutral-color-border: var(--acme-medium-gray-color);
-}
-
-.acme-requirements-analyzer__footer {
-    margin-top: var(--lwc-spacingMedium, 1rem);
-}
-
-.acme-requirements-analyzer__links {
-    margin-top: var(--lwc-spacingSmall, 0.75rem);
+lightning-button.slds-button_brand:hover,
+lightning-button.slds-button_brand:focus {
+    --slds-c-button-brand-color-background-hover: var(--acme-teal-color);
+    --slds-c-button-brand-color-border-hover: var(--acme-teal-color);
 }
 
 @media screen and (max-width: 768px) {
-    .acme-requirements-analyzer__content {
-        flex-direction: column;
+    .slds-grid {
+        display: block;
     }
 
-    .acme-requirements-analyzer__sidebar {
-        flex: 1 1 auto;
+    .slds-col {
+        margin-bottom: 1rem;
     }
 }

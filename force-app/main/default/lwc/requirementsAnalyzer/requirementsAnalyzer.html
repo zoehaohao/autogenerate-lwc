@@ -1,76 +1,71 @@
 <!-- requirementsAnalyzer.html -->
 <template>
-    <div class="acme-requirements-analyzer">
-        <div class="acme-requirements-analyzer__header">
-            <h1 class="acme-heading acme-heading_large">Requirements Analyzer</h1>
-        </div>
-        <div class="acme-requirements-analyzer__content">
-            <div class="acme-requirements-analyzer__sidebar">
-                <div class="acme-file-upload">
+    <div class="acme-requirements-analyzer slds-p-around_medium">
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-size_1-of-3">
+                <div class="acme-card">
+                    <h2 class="acme-heading acme-heading_medium">Document Upload</h2>
                     <lightning-file-upload
-                        label="Document Input"
+                        label="Upload Requirements Document"
                         name="fileUploader"
                         accept={acceptedFormats}
                         record-id={recordId}
                         onuploadfinished={handleUploadFinished}
                         multiple
                     ></lightning-file-upload>
-                </div>
-                <div class="acme-form-field">
-                    <lightning-input 
-                        label="Project Name" 
-                        type="text" 
-                        required
-                        placeholder="Enter project name"
-                        maxlength="80"
-                        value={projectName}
-                        onchange={handleProjectNameChange}
-                    ></lightning-input>
-                </div>
-                <div class="acme-form-field">
-                    <lightning-combobox
-                        label="Analysis Type"
-                        value={analysisType}
-                        placeholder="Select type"
-                        options={analysisTypeOptions}
-                        onchange={handleAnalysisTypeChange}
-                        required
-                    ></lightning-combobox>
-                </div>
-            </div>
-            <div class="acme-requirements-analyzer__main">
-                <template if:true={analysisResults}>
-                    <div class="acme-analysis-results">
-                        <!-- Analysis results content here -->
+                    <div class="slds-form slds-p-top_medium">
+                        <lightning-combobox
+                            name="analysisType"
+                            label="Analysis Type"
+                            value={analysisType}
+                            placeholder="Select analysis type"
+                            options={analysisOptions}
+                            required
+                            onchange={handleAnalysisTypeChange}
+                        ></lightning-combobox>
+                        <lightning-input
+                            type="text"
+                            label="Project Name"
+                            name="projectName"
+                            required
+                            maxlength="80"
+                            value={projectName}
+                            onchange={handleProjectNameChange}
+                        ></lightning-input>
+                        <lightning-textarea
+                            name="description"
+                            label="Description"
+                            maxlength="1000"
+                            value={description}
+                            onchange={handleDescriptionChange}
+                        ></lightning-textarea>
                     </div>
-                </template>
+                </div>
+            </div>
+            <div class="slds-col slds-size_2-of-3">
+                <div class="acme-card">
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col">
+                            <h2 class="acme-heading acme-heading_medium">Analysis Results</h2>
+                        </div>
+                        <div class="slds-col slds-text-align_right">
+                            <lightning-button-group>
+                                <lightning-button label="Analyze" variant="brand" onclick={handleAnalyze}></lightning-button>
+                                <lightning-button label="Export" onclick={handleExport}></lightning-button>
+                            </lightning-button-group>
+                        </div>
+                    </div>
+                    <div if:true={analysisResults} class="slds-p-top_medium">
+                        <!-- Analysis results display here -->
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="acme-requirements-analyzer__footer">
-            <lightning-button 
-                label="Analyze" 
-                variant="brand" 
-                onclick={handleAnalyze}
-                class="acme-button acme-button_primary"
-            ></lightning-button>
-            <lightning-button 
-                label="Clear" 
-                onclick={handleClear}
-                class="acme-button acme-button_neutral"
-            ></lightning-button>
-            <lightning-button 
-                label="Export" 
-                onclick={handleExport}
-                disabled={!analysisResults}
-                class="acme-button acme-button_secondary"
-            ></lightning-button>
-        </div>
-        <div class="acme-requirements-analyzer__links">
-            <lightning-button-group>
-                <lightning-button label="History" onclick={navigateToHistory}></lightning-button>
-                <lightning-button label="Settings" onclick={navigateToSettings}></lightning-button>
-                <lightning-button label="Help" onclick={navigateToHelp}></lightning-button>
-            </lightning-button-group>
+        <div class="slds-grid slds-gutters slds-p-top_medium">
+            <div class="slds-col slds-text-align_right">
+                <lightning-button label="Save" variant="success" onclick={handleSave} class="slds-m-right_x-small"></lightning-button>
+                <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+            </div>
         </div>
     </div>
 </template>

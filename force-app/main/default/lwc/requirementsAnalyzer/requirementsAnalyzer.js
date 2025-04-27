@@ -1,101 +1,90 @@
 // requirementsAnalyzer.js
-import { LightningElement, track } from 'lwc';
-import { NavigationMixin } from 'lightning/navigation';
+import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
-export default class RequirementsAnalyzer extends NavigationMixin(LightningElement) {
-    @track projectName = '';
+export default class RequirementsAnalyzer extends LightningElement {
+    @api recordId;
     @track analysisType = 'Standard';
-    @track analysisResults = null;
-    acceptedFormats = ['.doc', '.docx', '.pdf', '.txt'];
-    analysisTypeOptions = [
-        { label: 'Standard', value: 'Standard' },
-        { label: 'Advanced', value: 'Advanced' },
-        { label: 'Custom', value: 'Custom' }
-    ];
+    @track projectName = '';
+    @track description = '';
+    @track analysisResults;
+
+    acceptedFormats = ['.pdf', '.doc', '.docx'];
+
+    get analysisOptions() {
+        return [
+            { label: 'Standard', value: 'Standard' },
+            { label: 'Advanced', value: 'Advanced' },
+            { label: 'Custom', value: 'Custom' }
+        ];
+    }
 
     handleUploadFinished(event) {
         const uploadedFiles = event.detail.files;
-        this.validateFiles(uploadedFiles);
-    }
-
-    validateFiles(files) {
-        const validFiles = files.filter(file => this.acceptedFormats.includes('.' + file.name.split('.').pop().toLowerCase()));
-        if (validFiles.length !== files.length) {
-            this.showToast('Error', 'Invalid file format. Please upload only .doc, .docx, .pdf, or .txt files.', 'error');
-        }
-    }
-
-    handleProjectNameChange(event) {
-        this.projectName = event.target.value;
+        this.showToast('Success', `${uploadedFiles.length} file(s) uploaded successfully`, 'success');
     }
 
     handleAnalysisTypeChange(event) {
         this.analysisType = event.detail.value;
     }
 
+    handleProjectNameChange(event) {
+        this.projectName = event.detail.value;
+    }
+
+    handleDescriptionChange(event) {
+        this.description = event.detail.value;
+    }
+
     handleAnalyze() {
-        if (this.validateForm()) {
-            this.performAnalysis();
+        if (this.validateFields()) {
+            // Perform analysis logic here
+            this.analysisResults = 'Analysis results would be displayed here.';
+            this.showToast('Success', 'Analysis completed successfully', 'success');
         }
     }
 
-    validateForm() {
-        const allValid = [...this.template.querySelectorAll('lightning-input, lightning-combobox')]
+    handleExport() {
+        if (this.analysisResults) {
+            // Export logic here
+            this.showToast('Success', 'Results exported successfully', 'success');
+        } else {
+            this.showToast('Error', 'No results to export', 'error');
+        }
+    }
+
+    handleSave() {
+        if (this.validateFields()) {
+            // Save logic here
+            this.showToast('Success', 'Analysis saved successfully', 'success');
+        }
+    }
+
+    handleCancel() {
+        this.resetFields();
+        this.showToast('Info', 'Form cleared', 'info');
+    }
+
+    validateFields() {
+        const allValid = [...this.template.querySelectorAll('lightning-input, lightning-combobox, lightning-textarea')]
             .reduce((validSoFar, inputField) => {
                 inputField.reportValidity();
                 return validSoFar && inputField.checkValidity();
             }, true);
 
         if (!allValid) {
-            this.showToast('Error', 'Please fill in all required fields correctly.', 'error');
+            this.showToast('Error', 'Please fill all required fields correctly', 'error');
         }
         return allValid;
     }
 
-    performAnalysis() {
-        this.showToast('Success', 'Analysis started. This may take a few moments.', 'success');
-    }
-
-    handleClear() {
-        this.projectName = '';
+    resetFields() {
         this.analysisType = 'Standard';
+        this.projectName = '';
+        this.description = '';
         this.analysisResults = null;
-        [...this.template.querySelectorAll('lightning-input, lightning-combobox')].forEach(field => {
+        this.template.querySelectorAll('lightning-input, lightning-combobox, lightning-textarea').forEach(field => {
             field.value = null;
-        });
-    }
-
-    handleExport() {
-        if (this.analysisResults) {
-            this.showToast('Success', 'Exporting analysis results.', 'success');
-        }
-    }
-
-    navigateToHistory() {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__navItemPage',
-            attributes: {
-                apiName: 'AnalysisHistory'
-            },
-        });
-    }
-
-    navigateToSettings() {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__navItemPage',
-            attributes: {
-                apiName: 'AnalyzerSettings'
-            },
-        });
-    }
-
-    navigateToHelp() {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__webPage',
-            attributes: {
-                url: '/lightning/n/AnalyzerHelp'
-            },
         });
     }
 
