@@ -1,53 +1,112 @@
 <!-- personalDetailsForm.html -->
 <template>
-    <div class="acme-personal-details-form">
-        <div class="acme-personal-details-form__grid">
-            <div class="acme-personal-details-form__section">
-                <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
-                <div class="acme-personal-details-form__field">
-                    <lightning-input label="First Name" required field-level-help="Enter your first name" onchange={handleInputChange} data-field="firstName"></lightning-input>
+    <div class="root-container">
+        <h1 class="form-title">Personal Details Form</h1>
+        
+        <template if:true={errorMessage}>
+            <div class="error-summary" role="alert">
+                {errorMessage}
+            </div>
+        </template>
+        
+        <form onsubmit={handleSubmit}>
+            <div class="form-section">
+                <h2>Personal Information</h2>
+                <div class="form-field">
+                    <label for="title">Title<span class="required">*</span></label>
+                    <select id="title" required onchange={handleInputChange}>
+                        <option value="">Select...</option>
+                        <option value="Mr">Mr</option>
+                        <option value="Mrs">Mrs</option>
+                        <option value="Ms">Ms</option>
+                        <option value="Dr">Dr</option>
+                    </select>
                 </div>
-                <div class="acme-personal-details-form__field">
-                    <lightning-input label="Middle Name" onchange={handleInputChange} data-field="middleName"></lightning-input>
+                <div class="form-field">
+                    <label for="firstName">First name<span class="required">*</span></label>
+                    <input type="text" id="firstName" required onchange={handleInputChange}>
                 </div>
-                <div class="acme-personal-details-form__field">
-                    <lightning-input label="Last Name" required field-level-help="Enter your last name" onchange={handleInputChange} data-field="lastName"></lightning-input>
+                <div class="form-field">
+                    <label for="middleName">Middle name</label>
+                    <input type="text" id="middleName" onchange={handleInputChange}>
                 </div>
-                <div class="acme-personal-details-form__field">
-                    <lightning-input type="date" label="Birthdate" required field-level-help="Enter your date of birth" onchange={handleInputChange} data-field="birthdate"></lightning-input>
+                <div class="form-field">
+                    <label for="lastName">Last name</label>
+                    <input type="text" id="lastName" onchange={handleInputChange}>
+                </div>
+                <div class="form-field">
+                    <label for="birthdate">Birthdate<span class="required">*</span></label>
+                    <input type="date" id="birthdate" required onchange={handleInputChange}>
+                </div>
+                <div class="form-field">
+                    <label>Gender<span class="required">*</span></label>
+                    <div class="radio-group">
+                        <input type="radio" id="male" name="gender" value="male" required onchange={handleInputChange}>
+                        <label for="male">Male</label>
+                        <input type="radio" id="female" name="gender" value="female" required onchange={handleInputChange}>
+                        <label for="female">Female</label>
+                        <input type="radio" id="other" name="gender" value="other" required onchange={handleInputChange}>
+                        <label for="other">Other</label>
+                    </div>
                 </div>
             </div>
-            <div class="acme-personal-details-form__section">
-                <h2 class="acme-heading acme-heading_medium">Address Information</h2>
-                <div class="acme-personal-details-form__field">
-                    <lightning-input label="Address" required field-level-help="Enter your street address" onchange={handleInputChange} data-field="address"></lightning-input>
+            
+            <div class="form-section">
+                <h2>Address</h2>
+                <div class="form-field">
+                    <label for="addressLine1">Address Line 1<span class="required">*</span></label>
+                    <input type="text" id="addressLine1" required onchange={handleInputChange}>
                 </div>
-                <div class="acme-personal-details-form__field">
-                    <lightning-input label="City/Town" required field-level-help="Enter your city or town" onchange={handleInputChange} data-field="city"></lightning-input>
+                <div class="form-field">
+                    <label for="addressLine2">Address Line 2</label>
+                    <input type="text" id="addressLine2" onchange={handleInputChange}>
                 </div>
-                <div class="acme-personal-details-form__field">
-                    <lightning-input label="State" required field-level-help="Enter your state" onchange={handleInputChange} data-field="state"></lightning-input>
+                <div class="form-field">
+                    <label for="suburb">Suburb/City<span class="required">*</span></label>
+                    <input type="text" id="suburb" required onchange={handleInputChange}>
                 </div>
-                <div class="acme-personal-details-form__field">
-                    <lightning-input label="Zip Code" required field-level-help="Enter your zip code" pattern="[0-9]{5}" message-when-pattern-mismatch="Please enter a valid 5-digit zip code" onchange={handleInputChange} data-field="zipCode"></lightning-input>
+                <div class="form-field">
+                    <label for="state">State<span class="required">*</span></label>
+                    <select id="state" required onchange={handleInputChange}>
+                        <option value="">Select...</option>
+                        <option value="NSW">New South Wales</option>
+                        <option value="VIC">Victoria</option>
+                        <option value="QLD">Queensland</option>
+                        <option value="WA">Western Australia</option>
+                        <option value="SA">South Australia</option>
+                        <option value="TAS">Tasmania</option>
+                        <option value="ACT">Australian Capital Territory</option>
+                        <option value="NT">Northern Territory</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="postcode">Postcode<span class="required">*</span></label>
+                    <input type="text" id="postcode" required placeholder="4-digit code" maxlength="4" onchange={handleInputChange}>
+                </div>
+                <div class="form-field">
+                    <label for="country">Country<span class="required">*</span></label>
+                    <select id="country" required onchange={handleInputChange}>
+                        <option value="Australia">Australia</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="startDate">Start Date<span class="required">*</span></label>
+                    <input type="date" id="startDate" required onchange={handleInputChange}>
+                </div>
+                <div class="form-field">
+                    <label for="endDate">End Date<span class="required">*</span></label>
+                    <input type="date" id="endDate" required onchange={handleInputChange}>
                 </div>
             </div>
-        </div>
-        <div class="acme-personal-details-form__date-range">
-            <div class="acme-personal-details-form__field">
-                <lightning-input type="date" label="Start Date" required field-level-help="Enter the start date" onchange={handleInputChange} data-field="startDate"></lightning-input>
+            
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" onclick={handleReset}>Reset Form</button>
+                <button type="submit" class="btn-primary">Submit</button>
             </div>
-            <div class="acme-personal-details-form__field">
-                <lightning-input type="date" label="End Date" required field-level-help="Enter the end date" onchange={handleInputChange} data-field="endDate"></lightning-input>
-            </div>
-        </div>
-        <div class="acme-personal-details-form__buttons">
-            <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="acme-button_primary"></lightning-button>
-            <lightning-button label="Clear" onclick={handleClear} class="acme-button_secondary"></lightning-button>
-            <lightning-button label="Cancel" onclick={handleCancel} class="acme-button_secondary"></lightning-button>
-        </div>
-        <div if:true={errorMessage} class="acme-personal-details-form__error">
-            <p>{errorMessage}</p>
+        </form>
+        
+        <div class="back-link">
+            <a href="/dashboard">Back to Dashboard</a>
         </div>
     </div>
 </template>

@@ -6,133 +6,61 @@ export default class PersonalDetailsForm extends LightningElement {
     @track errorMessage = '';
 
     handleInputChange(event) {
-        const field = event.target.dataset.field;
-        const value = event.target.value;
-        this.formData[field] = value;
-        this.validateField(field, value);
+        const { id, value } = event.target;
+        this.formData[id] = value;
+        this.validateField(id, value);
     }
 
-    validateField(field, value) {
-        switch (field) {
-            case 'firstName':
-            case 'lastName':
-            case 'address':
-            case 'city':
-            case 'state':
-                if (!value) {
-                    this.setFieldError(field, 'This field is required');
-                } else {
-                    this.clearFieldError(field);
+    validateField(fieldId, value) {
+        let errorMsg = '';
+        switch (fieldId) {
+            case 'postcode':
+                if (!/^\d{4}$/.test(value)) {
+                    errorMsg = 'Postcode must be 4 digits';
                 }
                 break;
-            case 'zipCode':
-                if (!value) {
-                    this.setFieldError(field, 'This field is required');
-                } else if (!/^\d{5}$/.test(value)) {
-                    this.setFieldError(field, 'Please enter a valid 5-digit zip code');
-                } else {
-                    this.clearFieldError(field);
-                }
-                break;
-            case 'birthdate':
-                if (!value) {
-                    this.setFieldError(field, 'This field is required');
-                } else {
-                    const age = this.calculateAge(new Date(value));
-                    if (age < 18) {
-                        this.setFieldError(field, 'You must be at least 18 years old');
-                    } else {
-                        this.clearFieldError(field);
-                    }
-                }
-                break;
-            case 'startDate':
             case 'endDate':
-                if (!value) {
-                    this.setFieldError(field, 'This field is required');
-                } else {
-                    this.clearFieldError(field);
+                if (this.formData.startDate && new Date(value) <= new Date(this.formData.startDate)) {
+                    errorMsg = 'End Date must be after Start Date';
                 }
-                this.validateDateRange();
                 break;
         }
+        this.setFieldError(fieldId, errorMsg);
     }
 
-    setFieldError(field, message) {
-        const inputElement = this.template.querySelector(`lightning-input[data-field="${field}"]`);
-        if (inputElement) {
-            inputElement.setCustomValidity(message);
-            inputElement.reportValidity();
+    setFieldError(fieldId, errorMsg) {
+        const field = this.template.querySelector(`#${fieldId}`);
+        if (field) {
+            field.setCustomValidity(errorMsg);
+            field.reportValidity();
         }
     }
 
-    clearFieldError(field) {
-        const inputElement = this.template.querySelector(`lightning-input[data-field="${field}"]`);
-        if (inputElement) {
-            inputElement.setCustomValidity('');
-            inputElement.reportValidity();
-        }
-    }
-
-    calculateAge(birthDate) {
-        const today = new Date();
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const monthDiff = today.getMonth() - birthDate.getMonth();
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
-        return age;
-    }
-
-    validateDateRange() {
-        const startDate = new Date(this.formData.startDate);
-        const endDate = new Date(this.formData.endDate);
-        if (startDate && endDate && startDate > endDate) {
-            this.setFieldError('endDate', 'End Date must be after Start Date');
-        } else {
-            this.clearFieldError('endDate');
-        }
-    }
-
-    handleSubmit() {
+    handleSubmit(event) {
+        event.preventDefault();
         if (this.validateForm()) {
             console.log('Form submitted:', this.formData);
             this.errorMessage = '';
         } else {
-            this.errorMessage = 'Please correct the errors before submitting.';
+            this.errorMessage = 'Please correct the errors in the form.';
         }
     }
 
     validateForm() {
-        const requiredFields = ['firstName', 'lastName', 'birthdate', 'address', 'city', 'state', 'zipCode', 'startDate', 'endDate'];
-        let isValid = true;
-
-        requiredFields.forEach(field => {
-            if (!this.formData[field]) {
-                this.setFieldError(field, 'This field is required');
-                isValid = false;
-            } else {
-                this.validateField(field, this.formData[field]);
-                if (this.template.querySelector(`lightning-input[data-field="${field}"]`).validity.valid === false) {
-                    isValid = false;
-                }
-            }
-        });
-
-        return isValid;
+        const allValid = [...this.template.querySelectorAll('input, select')]
+            .reduce((validSoFar, inputField) => {
+                inputField.reportValidity();
+                return validSoFar && inputField.checkValidity();
+            }, true);
+        return allValid;
     }
 
-    handleClear() {
+    handleReset() {
+        this.template.querySelector('form').reset();
         this.formData = {};
         this.errorMessage = '';
-        this.template.querySelectorAll('lightning-input').forEach(input => {
-            input.value = '';
-            input.setCustomValidity('');
-            input.reportValidity();
+        [...this.template.querySelectorAll('input, select')].forEach(field => {
+            field.setCustomValidity('');
         });
-    }
-
-    handleCancel() {
-        this.handleClear();
     }
 }
