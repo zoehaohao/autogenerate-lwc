@@ -1,111 +1,138 @@
 // personalDetailsForm.js
 import { LightningElement, track } from 'lwc';
-import { NavigationMixin } from 'lightning/navigation';
 
-export default class PersonalDetailsForm extends NavigationMixin(LightningElement) {
+export default class PersonalDetailsForm extends LightningElement {
     @track formData = {};
     @track errorMessage = '';
 
     handleInputChange(event) {
-        const { id, value } = event.target;
-        this.formData[id] = value;
-        this.validateField(id, value);
+        const field = event.target.dataset.field;
+        const value = event.target.value;
+        this.formData[field] = value;
+        this.validateField(field, value);
     }
 
-    validateField(fieldName, value) {
-        switch (fieldName) {
+    validateField(field, value) {
+        switch (field) {
             case 'firstName':
             case 'lastName':
-            case 'zipCode':
-                if (!value.trim()) {
-                    this.setFieldError(fieldName, 'This field is required');
+            case 'address':
+            case 'city':
+            case 'state':
+                if (!value) {
+                    this.setFieldError(field, 'This field is required');
                 } else {
-                    this.clearFieldError(fieldName);
+                    this.clearFieldError(field);
+                }
+                break;
+            case 'zipCode':
+                if (!value) {
+                    this.setFieldError(field, 'This field is required');
+                } else if (!/^\d{5}$/.test(value)) {
+                    this.setFieldError(field, 'Please enter a valid 5-digit zip code');
+                } else {
+                    this.clearFieldError(field);
                 }
                 break;
             case 'birthdate':
-                if (!this.isOver18(value)) {
-                    this.setFieldError(fieldName, 'You must be over 18 years old');
+                if (!value) {
+                    this.setFieldError(field, 'This field is required');
                 } else {
-                    this.clearFieldError(fieldName);
+                    const age = this.calculateAge(new Date(value));
+                    if (age < 18) {
+                        this.setFieldError(field, 'You must be at least 18 years old');
+                    } else {
+                        this.clearFieldError(field);
+                    }
                 }
                 break;
             case 'startDate':
             case 'endDate':
+                if (!value) {
+                    this.setFieldError(field, 'This field is required');
+                } else {
+                    this.clearFieldError(field);
+                }
                 this.validateDateRange();
                 break;
         }
     }
 
-    isOver18(birthdate) {
+    setFieldError(field, message) {
+        const inputElement = this.template.querySelector(`lightning-input[data-field="${field}"]`);
+        if (inputElement) {
+            inputElement.setCustomValidity(message);
+            inputElement.reportValidity();
+        }
+    }
+
+    clearFieldError(field) {
+        const inputElement = this.template.querySelector(`lightning-input[data-field="${field}"]`);
+        if (inputElement) {
+            inputElement.setCustomValidity('');
+            inputElement.reportValidity();
+        }
+    }
+
+    calculateAge(birthDate) {
         const today = new Date();
-        const birthDate = new Date(birthdate);
         let age = today.getFullYear() - birthDate.getFullYear();
         const monthDiff = today.getMonth() - birthDate.getMonth();
         if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
             age--;
         }
-        return age >= 18;
+        return age;
     }
 
     validateDateRange() {
         const startDate = new Date(this.formData.startDate);
         const endDate = new Date(this.formData.endDate);
-        if (startDate > endDate) {
+        if (startDate && endDate && startDate > endDate) {
             this.setFieldError('endDate', 'End Date must be after Start Date');
         } else {
             this.clearFieldError('endDate');
         }
     }
 
-    setFieldError(fieldName, message) {
-        const field = this.template.querySelector(`#${fieldName}`);
-        field.setCustomValidity(message);
-        field.reportValidity();
-    }
-
-    clearFieldError(fieldName) {
-        const field = this.template.querySelector(`#${fieldName}`);
-        field.setCustomValidity('');
-        field.reportValidity();
-    }
-
     handleSubmit() {
         if (this.validateForm()) {
             console.log('Form submitted:', this.formData);
             this.errorMessage = '';
-            this.handleClear();
         } else {
-            this.errorMessage = 'Please correct the errors in the form.';
+            this.errorMessage = 'Please correct the errors before submitting.';
         }
     }
 
     validateForm() {
-        const allValid = [...this.template.querySelectorAll('input')]
-            .reduce((validSoFar, inputField) => {
-                inputField.reportValidity();
-                return validSoFar && inputField.checkValidity();
-            }, true);
-        return allValid;
+        const requiredFields = ['firstName', 'lastName', 'birthdate', 'address', 'city', 'state', 'zipCode', 'startDate', 'endDate'];
+        let isValid = true;
+
+        requiredFields.forEach(field => {
+            if (!this.formData[field]) {
+                this.setFieldError(field, 'This field is required');
+                isValid = false;
+            } else {
+                this.validateField(field, this.formData[field]);
+                if (this.template.querySelector(`lightning-input[data-field="${field}"]`).validity.valid === false) {
+                    isValid = false;
+                }
+            }
+        });
+
+        return isValid;
     }
 
     handleClear() {
         this.formData = {};
         this.errorMessage = '';
-        this.template.querySelectorAll('input').forEach(input => {
+        this.template.querySelectorAll('lightning-input').forEach(input => {
             input.value = '';
             input.setCustomValidity('');
             input.reportValidity();
         });
-        this.template.querySelector('select').value = '';
     }
 
     handleCancel() {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__webPage',
-            attributes: {
-                url: '/'
-            }
-        });
+        this.handleClear();
     }
 }
