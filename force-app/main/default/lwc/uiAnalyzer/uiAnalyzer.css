@@ -1,0 +1,70 @@
+/* uiAnalyzer.css */
+:host {
+    --acme-blue: #0057B8;
+    --acme-gray: #424A54;
+    --acme-white: #FFFFFF;
+    --acme-teal: #00A0B0;
+    --acme-gold: #F2C94C;
+    --acme-coral: #FF6B6B;
+    --light-gray: #F5F7FA;
+    --medium-gray: #E4E7EB;
+    --dark-gray: #7B8794;
+}
+
+.root-container {
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: var(--acme-gray);
+    background-color: var(--acme-white);
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--acme-blue);
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.main-content {
+    background-color: var(--light-gray);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(66, 74, 84, 0.1);
+    padding: 1.5rem;
+}
+
+.sidebar lightning-card {
+    background-color: var(--light-gray);
+}
+
+lightning-button.slds-button_brand {
+    background-color: var(--acme-blue);
+    border-color: var(--acme-blue);
+}
+
+lightning-button.slds-button_brand:hover {
+    background-color: #004A9E;
+}
+
+lightning-button.slds-button_neutral {
+    color: var(--acme-gray);
+    border-color: var(--medium-gray);
+}
+
+lightning-input, lightning-combobox {
+    margin-bottom: 0.75rem;
+}
+
+@media (max-width: 768px) {
+    .slds-float_right {
+        float: none;
+        margin-top: 1rem;
+    }
+}
