@@ -2,76 +2,79 @@
 import { LightningElement, track } from 'lwc';
 
 export default class PersonalInfoForm extends LightningElement {
-    @track formData = {
-        firstName: '',
-        middleName: '',
-        lastName: '',
-        birthdate: '',
-        address: '',
-        city: '',
-        state: '',
-        zipCode: '',
-        startDate: '',
-        endDate: ''
-    };
-
     @track errorMessage = '';
-    @track isFormValid = false;
 
-    handleInputChange(event) {
-        const { id, value } = event.target;
-        this.formData[id] = value;
-        this.validateForm();
+    validateField(event) {
+        const field = event.target;
+        const fieldName = field.id;
+        const fieldValue = field.value;
+
+        switch (fieldName) {
+            case 'firstName':
+            case 'lastName':
+                if (!fieldValue.trim()) {
+                    this.setFieldError(field, `${fieldName} is required`);
+                } else {
+                    this.clearFieldError(field);
+                }
+                break;
+            case 'birthdate':
+            case 'startDate':
+            case 'endDate':
+                if (!fieldValue) {
+                    this.setFieldError(field, `${fieldName} is required`);
+                } else if (!this.isValidDate(fieldValue)) {
+                    this.setFieldError(field, `Invalid date format`);
+                } else {
+                    this.clearFieldError(field);
+                }
+                break;
+            case 'zipCode':
+                if (!fieldValue.trim()) {
+                    this.setFieldError(field, 'Zip code is required');
+                } else if (!this.isValidZipCode(fieldValue)) {
+                    this.setFieldError(field, 'Invalid zip code format');
+                } else {
+                    this.clearFieldError(field);
+                }
+                break;
+        }
     }
 
-    validateForm() {
-        const requiredFields = ['firstName', 'lastName', 'birthdate', 'zipCode', 'startDate', 'endDate'];
-        const isAllRequiredFieldsFilled = requiredFields.every(field => this.formData[field].trim() !== '');
-        
-        if (!isAllRequiredFieldsFilled) {
-            this.errorMessage = 'Please fill in all required fields.';
-            this.isFormValid = false;
-            return;
-        }
+    setFieldError(field, message) {
+        field.setCustomValidity(message);
+        field.reportValidity();
+    }
 
-        if (!/^\d{5}(-\d{4})?$/.test(this.formData.zipCode)) {
-            this.errorMessage = 'Invalid Zip Code format.';
-            this.isFormValid = false;
-            return;
-        }
+    clearFieldError(field) {
+        field.setCustomValidity('');
+        field.reportValidity();
+    }
 
-        const startDate = new Date(this.formData.startDate);
-        const endDate = new Date(this.formData.endDate);
-        if (endDate <= startDate) {
-            this.errorMessage = 'End Date must be after Start Date.';
-            this.isFormValid = false;
-            return;
-        }
+    isValidDate(dateString) {
+        const date = new Date(dateString);
+        return !isNaN(date.getTime());
+    }
 
-        this.errorMessage = '';
-        this.isFormValid = true;
+    isValidZipCode(zipCode) {
+        return /^\d{5}(-\d{4})?$/.test(zipCode);
     }
 
     handleSubmit() {
-        if (this.isFormValid) {
-            console.log('Form submitted:', this.formData);
-            // Here you would typically send the data to a server
-            // Reset form after successful submission
-            this.formData = {
-                firstName: '',
-                middleName: '',
-                lastName: '',
-                birthdate: '',
-                address: '',
-                city: '',
-                state: '',
-                zipCode: '',
-                startDate: '',
-                endDate: ''
-            };
-            this.isFormValid = false;
-            // Show success message (you might want to use a toast notification here)
-            alert('Form submitted successfully!');
+        const form = this.template.querySelector('form');
+        if (form.checkValidity()) {
+            // Process form submission
+            this.errorMessage = '';
+        } else {
+            this.errorMessage = 'Please fill out all required fields correctly.';
         }
+    }
+
+    handleClear() {
+        this.template.querySelectorAll('input, select').forEach(field => {
+            field.value = '';
+            this.clearFieldError(field);
+        });
+        this.errorMessage = '';
     }
 }
