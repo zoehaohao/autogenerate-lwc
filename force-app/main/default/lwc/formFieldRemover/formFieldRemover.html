@@ -1,0 +1,56 @@
+<!-- formFieldRemover.html -->
+<template>
+    <div class="root-container">
+        <div class="slds-form" role="form">
+            <div class="slds-form-element slds-form-element_stacked">
+                <label class="slds-form-element__label" for="firstName">
+                    <abbr class="slds-required" title="required">*</abbr> First Name
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="text" id="firstName" class="slds-input" placeholder="Enter first name" required minlength="2" pattern="[A-Za-z]+" onblur={validateField} />
+                </div>
+                <div if:true={errors.firstName} class="slds-form-element__help" id="error-firstName">{errors.firstName}</div>
+            </div>
+            <div class="slds-form-element slds-form-element_stacked">
+                <label class="slds-form-element__label" for="lastName">
+                    <abbr class="slds-required" title="required">*</abbr> Last Name
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="text" id="lastName" class="slds-input" placeholder="Enter last name" required minlength="2" pattern="[A-Za-z]+" onblur={validateField} />
+                </div>
+                <div if:true={errors.lastName} class="slds-form-element__help" id="error-lastName">{errors.lastName}</div>
+            </div>
+            <div class="slds-form-element slds-form-element_stacked">
+                <label class="slds-form-element__label" for="email">
+                    <abbr class="slds-required" title="required">*</abbr> Email
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="email" id="email" class="slds-input" placeholder="Enter email" required onblur={validateField} />
+                </div>
+                <div if:true={errors.email} class="slds-form-element__help" id="error-email">{errors.email}</div>
+            </div>
+            <div class="slds-form-element slds-form-element_stacked">
+                <label class="slds-form-element__label" for="phone">Phone</label>
+                <div class="slds-form-element__control">
+                    <input type="tel" id="phone" class="slds-input" placeholder="(XXX) XXX-XXXX" onblur={validateField} />
+                </div>
+                <div if:true={errors.phone} class="slds-form-element__help" id="error-phone">{errors.phone}</div>
+            </div>
+            <div class="slds-form-element slds-form-element_stacked">
+                <label class="slds-form-element__label" for="address">Address</label>
+                <div class="slds-form-element__control">
+                    <textarea id="address" class="slds-textarea" placeholder="Enter address" maxlength="200" onblur={validateField}></textarea>
+                </div>
+                <div if:true={errors.address} class="slds-form-element__help" id="error-address">{errors.address}</div>
+            </div>
+        </div>
+        <div class="slds-grid slds-grid_align-spread slds-m-top_medium">
+            <button class="slds-button slds-button_neutral" onclick={handleReset}>Reset</button>
+            <button class="slds-button slds-button_brand" onclick={handleSubmit} disabled={!isFormValid}>Submit</button>
+        </div>
+        <div class="slds-grid slds-grid_align-center slds-m-top_small">
+            <a href="/help" target="_blank" class="slds-m-right_small">Form Help</a>
+            <a href="/privacy" target="_blank">Privacy Policy</a>
+        </div>
+    </div>
+</template>
