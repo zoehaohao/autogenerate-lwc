@@ -1,60 +1,54 @@
 <!-- personalInfoForm.html -->
 <template>
     <div class="acme-personal-info-form">
-        <h2 class="acme-heading acme-heading_medium">Personal Information Form</h2>
-        <div class="acme-form-section">
-            <h3 class="acme-heading acme-heading_small">Personal Information</h3>
-            <div class="acme-form-field">
-                <label for="firstName" class="acme-label">First name<span class="acme-required">*</span></label>
-                <input type="text" id="firstName" class="acme-input" required onblur={validateField}>
+        <div class="acme-personal-info-form__section">
+            <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
+            <div class="acme-personal-info-form__field-group">
+                <label for="firstName" class="acme-personal-info-form__label">First Name<span class="acme-personal-info-form__required">*</span></label>
+                <lightning-input type="text" id="firstName" name="firstName" required onblur={validateField}></lightning-input>
             </div>
-            <div class="acme-form-field">
-                <label for="middleName" class="acme-label">Middle name</label>
-                <input type="text" id="middleName" class="acme-input">
+            <div class="acme-personal-info-form__field-group">
+                <label for="middleName" class="acme-personal-info-form__label">Middle Name</label>
+                <lightning-input type="text" id="middleName" name="middleName"></lightning-input>
             </div>
-            <div class="acme-form-field">
-                <label for="lastName" class="acme-label">Last name<span class="acme-required">*</span></label>
-                <input type="text" id="lastName" class="acme-input" required onblur={validateField}>
+            <div class="acme-personal-info-form__field-group">
+                <label for="lastName" class="acme-personal-info-form__label">Last Name<span class="acme-personal-info-form__required">*</span></label>
+                <lightning-input type="text" id="lastName" name="lastName" required onblur={validateField}></lightning-input>
             </div>
-            <div class="acme-form-field">
-                <label for="birthdate" class="acme-label">Birthdate<span class="acme-required">*</span></label>
-                <input type="date" id="birthdate" class="acme-input" required onblur={validateField}>
-            </div>
-        </div>
-        <div class="acme-form-section">
-            <h3 class="acme-heading acme-heading_small">Address</h3>
-            <div class="acme-form-field">
-                <label for="address" class="acme-label">Address</label>
-                <input type="text" id="address" class="acme-input">
-            </div>
-            <div class="acme-form-field">
-                <label for="city" class="acme-label">City or Town</label>
-                <input type="text" id="city" class="acme-input">
-            </div>
-            <div class="acme-form-field">
-                <label for="state" class="acme-label">State</label>
-                <select id="state" class="acme-select">
-                    <option value="">Choose a State</option>
-                    <!-- Add state options here -->
-                </select>
-            </div>
-            <div class="acme-form-field">
-                <label for="zipCode" class="acme-label">Zip code<span class="acme-required">*</span></label>
-                <input type="text" id="zipCode" class="acme-input" required onblur={validateField}>
-            </div>
-            <div class="acme-form-field">
-                <label for="startDate" class="acme-label">Start Date<span class="acme-required">*</span></label>
-                <input type="date" id="startDate" class="acme-input" required onblur={validateField}>
-            </div>
-            <div class="acme-form-field">
-                <label for="endDate" class="acme-label">End Date<span class="acme-required">*</span></label>
-                <input type="date" id="endDate" class="acme-input" required onblur={validateField}>
+            <div class="acme-personal-info-form__field-group">
+                <label for="birthdate" class="acme-personal-info-form__label">Birthdate<span class="acme-personal-info-form__required">*</span></label>
+                <lightning-input type="date" id="birthdate" name="birthdate" required onblur={validateField}></lightning-input>
             </div>
         </div>
-        <div class="acme-form-actions">
-            <button class="acme-button acme-button_secondary" onclick={handleClear}>Clear</button>
-            <button class="acme-button acme-button_primary" onclick={handleSubmit}>Submit</button>
+        <div class="acme-personal-info-form__section">
+            <h2 class="acme-heading acme-heading_medium">Address</h2>
+            <div class="acme-personal-info-form__field-group">
+                <label for="address" class="acme-personal-info-form__label">Address</label>
+                <lightning-input type="text" id="address" name="address"></lightning-input>
+            </div>
+            <div class="acme-personal-info-form__field-group">
+                <label for="city" class="acme-personal-info-form__label">City or Town</label>
+                <lightning-input type="text" id="city" name="city"></lightning-input>
+            </div>
+            <div class="acme-personal-info-form__field-group">
+                <label for="state" class="acme-personal-info-form__label">State</label>
+                <lightning-combobox id="state" name="state" placeholder="Choose a State" options={stateOptions}></lightning-combobox>
+            </div>
+            <div class="acme-personal-info-form__field-group">
+                <label for="zipCode" class="acme-personal-info-form__label">Zip Code<span class="acme-personal-info-form__required">*</span></label>
+                <lightning-input type="text" id="zipCode" name="zipCode" required pattern="[0-9]{5}" onblur={validateField}></lightning-input>
+            </div>
+            <div class="acme-personal-info-form__field-group">
+                <label for="startDate" class="acme-personal-info-form__label">Start Date<span class="acme-personal-info-form__required">*</span></label>
+                <lightning-input type="date" id="startDate" name="startDate" required onblur={validateField}></lightning-input>
+            </div>
+            <div class="acme-personal-info-form__field-group">
+                <label for="endDate" class="acme-personal-info-form__label">End Date<span class="acme-personal-info-form__required">*</span></label>
+                <lightning-input type="date" id="endDate" name="endDate" required onblur={validateField}></lightning-input>
+            </div>
         </div>
-        <div if:true={errorMessage} class="acme-error-message">{errorMessage}</div>
+        <div class="acme-personal-info-form__button-container">
+            <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="acme-button_primary"></lightning-button>
+        </div>
     </div>
 </template>
