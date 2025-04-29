@@ -1,78 +1,87 @@
 /* formFieldRemover.css */
 :host {
-    --acme-blue: #0057B8;
-    --acme-gray: #424A54;
-    --acme-coral: #FF6B6B;
-    --light-gray: #F5F7FA;
-    --medium-gray: #E4E7EB;
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-teal-color: #00A0B0;
+    --acme-gold-color: #F2C94C;
+    --acme-coral-color: #FF6B6B;
+    --acme-light-gray-color: #F5F7FA;
+    --acme-medium-gray-color: #E4E7EB;
+    --acme-dark-gray-color: #7B8794;
 }
 
 .root-container {
     font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    max-width: 50%;
+    max-width: 600px;
     margin: 0 auto;
-    padding: var(--slds-c-card-spacing-block);
+    padding: var(--slds-c-card-spacing-block, 1rem);
 }
 
-@media (max-width: 768px) {
-    .root-container {
-        max-width: 90%;
-    }
-}
-
-@media (max-width: 480px) {
-    .root-container {
-        max-width: 100%;
-    }
+h1 {
+    color: var(--acme-blue-color);
+    font-weight: 700;
 }
 
 .slds-form-element__label {
-    font-size: var(--slds-c-input-label-font-size, 0.875rem);
-    color: var(--acme-gray);
+    font-size: var(--slds-c-input-label-font-size, 0.75rem);
+    color: var(--acme-gray-color);
 }
 
 .slds-input,
 .slds-textarea {
-    border-color: var(--medium-gray);
-    border-radius: 4px;
+    border-color: var(--acme-medium-gray-color);
 }
 
 .slds-input:focus,
 .slds-textarea:focus {
-    border-color: var(--medium-gray);
-    box-shadow: 0 0 0 2px var(--acme-blue);
-}
-
-.slds-form-element__help {
-    color: var(--acme-coral);
+    border-color: var(--acme-blue-color);
+    box-shadow: 0 0 3px var(--acme-blue-color);
 }
 
 .slds-button_brand {
-    background-color: var(--acme-blue);
-    border-color: var(--acme-blue);
+    background-color: var(--acme-blue-color);
+    border-color: var(--acme-blue-color);
 }
 
 .slds-button_brand:hover,
 .slds-button_brand:focus {
-    background-color: #004A9E;
+    background-color: var(--acme-teal-color);
+    border-color: var(--acme-teal-color);
 }
 
 .slds-button_neutral {
-    color: var(--acme-blue);
-    border-color: var(--acme-blue);
+    color: var(--acme-gray-color);
+    border-color: var(--acme-medium-gray-color);
 }
 
 .slds-button_neutral:hover,
 .slds-button_neutral:focus {
-    background-color: rgba(0, 87, 184, 0.1);
+    background-color: var(--acme-light-gray-color);
+}
+
+.slds-form-element__help {
+    color: var(--acme-coral-color);
 }
 
 a {
-    color: var(--acme-blue);
+    color: var(--acme-blue-color);
     text-decoration: none;
 }
 
 a:hover,
 a:focus {
     text-decoration: underline;
+}
+
+@media screen and (max-width: 480px) {
+    .slds-grid {
+        flex-direction: column;
+    }
+
+    .slds-button {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
 }
