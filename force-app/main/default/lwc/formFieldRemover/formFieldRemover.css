@@ -2,39 +2,26 @@
 :host {
     --acme-blue-color: #0057B8;
     --acme-gray-color: #424A54;
-    --acme-white-color: #FFFFFF;
-    --acme-teal-color: #00A0B0;
-    --acme-gold-color: #F2C94C;
-    --acme-coral-color: #FF6B6B;
-    --acme-light-gray-color: #F5F7FA;
-    --acme-medium-gray-color: #E4E7EB;
-    --acme-dark-gray-color: #7B8794;
+    --acme-error-color: #FF6B6B;
 }
 
 .root-container {
     font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    max-width: 600px;
+    max-width: 50%;
     margin: 0 auto;
-    padding: var(--slds-c-card-spacing-block, 1rem);
 }
 
-h1 {
-    color: var(--acme-blue-color);
-    font-weight: 700;
-}
-
-.slds-form-element__label {
-    font-size: var(--slds-c-input-label-font-size, 0.75rem);
-    color: var(--acme-gray-color);
+.slds-form-element {
+    margin-bottom: var(--slds-c-card-spacing-block-small, 0.75rem);
 }
 
 .slds-input,
-.slds-textarea {
-    border-color: var(--acme-medium-gray-color);
+.slds-select {
+    border-color: var(--slds-c-input-color-border, #dddbda);
 }
 
 .slds-input:focus,
-.slds-textarea:focus {
+.slds-select:focus {
     border-color: var(--acme-blue-color);
     box-shadow: 0 0 3px var(--acme-blue-color);
 }
@@ -46,42 +33,46 @@ h1 {
 
 .slds-button_brand:hover,
 .slds-button_brand:focus {
-    background-color: var(--acme-teal-color);
-    border-color: var(--acme-teal-color);
+    background-color: #004A9E;
+    border-color: #004A9E;
 }
 
-.slds-button_neutral {
+.slds-button_neutral:hover {
+    background-color: #f4f6f9;
+}
+
+.slds-text-color_error {
+    color: var(--acme-error-color);
+}
+
+.slds-form-element__label {
+    font-size: 0.875rem;
     color: var(--acme-gray-color);
-    border-color: var(--acme-medium-gray-color);
 }
 
-.slds-button_neutral:hover,
-.slds-button_neutral:focus {
-    background-color: var(--acme-light-gray-color);
+.slds-input,
+.slds-select {
+    font-size: 1rem;
 }
 
-.slds-form-element__help {
-    color: var(--acme-coral-color);
-}
-
-a {
+.slds-text-link {
     color: var(--acme-blue-color);
-    text-decoration: none;
+    font-size: 0.875rem;
 }
 
-a:hover,
-a:focus {
-    text-decoration: underline;
+@media screen and (max-width: 768px) {
+    .root-container {
+        max-width: 90%;
+    }
 }
 
 @media screen and (max-width: 480px) {
-    .slds-grid {
-        flex-direction: column;
+    .root-container {
+        max-width: 100%;
     }
 
     .slds-button {
         width: 100%;
-        margin-right: 0;
         margin-bottom: 0.5rem;
     }
 }
