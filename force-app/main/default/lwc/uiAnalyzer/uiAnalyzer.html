@@ -1,67 +1,36 @@
 <!-- uiAnalyzer.html -->
 <template>
-    <div class="root-container slds-p-around_medium">
-        <header class="slds-m-bottom_medium">
-            <div class="slds-grid slds-gutters slds-wrap">
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3">
-                    <lightning-file-upload
-                        label="File Upload"
-                        name="fileUploader"
-                        accept={acceptedFormats}
-                        record-id={recordId}
-                        onuploadfinished={handleUploadFinished}
-                        multiple
-                    ></lightning-file-upload>
-                </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
-                    <lightning-button-group class="slds-float_right">
-                        <lightning-button label="Analyze" variant="brand" onclick={handleAnalyze}></lightning-button>
-                        <lightning-button label="Export" variant="neutral" onclick={handleExport} disabled={isExportDisabled}></lightning-button>
-                    </lightning-button-group>
-                </div>
+    <div class="acme-ui-analyzer">
+        <div class="acme-ui-analyzer__header">
+            <h1 class="acme-heading acme-heading_large">UI Analyzer</h1>
+            <div class="acme-ui-analyzer__controls">
+                <lightning-button label="Analyze" variant="brand" onclick={handleAnalyze} class="acme-button acme-button_primary"></lightning-button>
+                <lightning-button label="Reset" variant="neutral" onclick={handleReset} class="acme-button acme-button_neutral"></lightning-button>
             </div>
-        </header>
-        <div class="slds-grid slds-gutters slds-wrap">
-            <div class="slds-col slds-size_1-of-1 slds-large-size_9-of-12">
-                <div class="main-content">
-                    <lightning-card title="Analytics Display" icon-name="utility:chart">
-                        <div class="slds-p-horizontal_medium">
-                            <!-- Analytics content will be dynamically inserted here -->
-                        </div>
-                    </lightning-card>
-                </div>
+        </div>
+        <div class="acme-ui-analyzer__content">
+            <div class="acme-ui-analyzer__sidebar">
+                <lightning-input type="url" label="URL" required placeholder="Enter URL to analyze" onchange={handleUrlChange} class="acme-input"></lightning-input>
+                <lightning-combobox label="Element Selector" required options={elementOptions} value={selectedElement} onchange={handleElementChange} placeholder="Select element type" class="acme-input"></lightning-combobox>
+                <lightning-input type="number" label="Analysis Depth" required min="1" max="5" value="3" onchange={handleDepthChange} class="acme-input"></lightning-input>
+                <lightning-combobox label="Export Format" required options={exportOptions} value={selectedFormat} onchange={handleFormatChange} placeholder="Choose format" class="acme-input"></lightning-combobox>
             </div>
-            <div class="slds-col slds-size_1-of-1 slds-large-size_3-of-12">
-                <div class="sidebar">
-                    <lightning-card title="Filters & Options" icon-name="utility:filterlist">
-                        <div class="slds-p-horizontal_medium">
-                            <lightning-input type="date" name="startDate" label="Start Date" onchange={handleDateChange}></lightning-input>
-                            <lightning-input type="date" name="endDate" label="End Date" onchange={handleDateChange}></lightning-input>
-                            <lightning-combobox
-                                name="analysisType"
-                                label="Analysis Type"
-                                value={analysisType}
-                                placeholder="Select Analysis Type"
-                                options={analysisOptions}
-                                onchange={handleAnalysisTypeChange}
-                                class="slds-m-top_small"
-                            ></lightning-combobox>
-                            <lightning-button label="Reset" variant="neutral" onclick={handleReset} class="slds-m-top_small"></lightning-button>
-                        </div>
-                    </lightning-card>
+            <div class="acme-ui-analyzer__main">
+                <div class="acme-ui-analyzer__viewport">
+                    <!-- Analysis viewport content -->
+                </div>
+                <div class="acme-ui-analyzer__results">
+                    <h2 class="acme-heading acme-heading_medium">Analysis Results</h2>
+                    <template if:true={analysisResults}>
+                        <!-- Display analysis results -->
+                        <lightning-button label="Export" variant="success" onclick={handleExport} class="acme-button acme-button_success"></lightning-button>
+                        <lightning-button label="Save" variant="brand" onclick={handleSave} class="acme-button acme-button_primary"></lightning-button>
+                    </template>
                 </div>
             </div>
         </div>
-        <footer class="slds-m-top_medium">
-            <div class="slds-grid slds-gutters">
-                <div class="slds-col">
-                    <lightning-button-group>
-                        <lightning-button label="Dashboard" onclick={navigateToDashboard}></lightning-button>
-                        <lightning-button label="Settings" onclick={navigateToSettings}></lightning-button>
-                        <lightning-button label="Help Guide" onclick={openHelpGuide}></lightning-button>
-                    </lightning-button-group>
-                </div>
-            </div>
-        </footer>
+        <div class="acme-ui-analyzer__footer">
+            <p class="acme-text acme-text_small">Status: {analysisStatus}</p>
+        </div>
     </div>
 </template>

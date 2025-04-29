@@ -1,70 +1,85 @@
 /* uiAnalyzer.css */
 :host {
-    --acme-blue: #0057B8;
-    --acme-gray: #424A54;
-    --acme-white: #FFFFFF;
-    --acme-teal: #00A0B0;
-    --acme-gold: #F2C94C;
-    --acme-coral: #FF6B6B;
-    --light-gray: #F5F7FA;
-    --medium-gray: #E4E7EB;
-    --dark-gray: #7B8794;
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-teal-color: #00A0B0;
+    --acme-gold-color: #F2C94C;
+    --acme-coral-color: #FF6B6B;
+    --acme-light-gray-color: #F5F7FA;
+    --acme-medium-gray-color: #E4E7EB;
+    --acme-dark-gray-color: #7B8794;
 }
 
-.root-container {
+.acme-ui-analyzer {
     font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    color: var(--acme-gray);
-    background-color: var(--acme-white);
+    color: var(--acme-gray-color);
+    background-color: var(--acme-white-color);
+    padding: var(--slds-c-card-spacing-block, 1rem);
 }
 
-h1 {
+.acme-ui-analyzer__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.acme-heading_large {
     font-size: 2rem;
     font-weight: 700;
-    color: var(--acme-blue);
+    color: var(--acme-blue-color);
 }
 
-h2 {
+.acme-heading_medium {
     font-size: 1.5rem;
     font-weight: 700;
+    color: var(--acme-gray-color);
 }
 
-h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
+.acme-ui-analyzer__content {
+    display: flex;
+    gap: 1rem;
 }
 
-.main-content {
-    background-color: var(--light-gray);
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(66, 74, 84, 0.1);
-    padding: 1.5rem;
+.acme-ui-analyzer__sidebar {
+    flex: 0 0 300px;
 }
 
-.sidebar lightning-card {
-    background-color: var(--light-gray);
+.acme-ui-analyzer__main {
+    flex: 1;
 }
 
-lightning-button.slds-button_brand {
-    background-color: var(--acme-blue);
-    border-color: var(--acme-blue);
+.acme-input {
+    margin-bottom: 1rem;
 }
 
-lightning-button.slds-button_brand:hover {
-    background-color: #004A9E;
+.acme-button {
+    margin-right: 0.5rem;
 }
 
-lightning-button.slds-button_neutral {
-    color: var(--acme-gray);
-    border-color: var(--medium-gray);
+.acme-button_primary {
+    --slds-c-button-brand-color-background: var(--acme-blue-color);
+    --slds-c-button-brand-color-border: var(--acme-blue-color);
 }
 
-lightning-input, lightning-combobox {
-    margin-bottom: 0.75rem;
+.acme-button_success {
+    --slds-c-button-success-color-background: var(--acme-teal-color);
+    --slds-c-button-success-color-border: var(--acme-teal-color);
+}
+
+.acme-ui-analyzer__footer {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    color: var(--acme-dark-gray-color);
 }
 
 @media (max-width: 768px) {
-    .slds-float_right {
-        float: none;
-        margin-top: 1rem;
+    .acme-ui-analyzer__content {
+        flex-direction: column;
+    }
+
+    .acme-ui-analyzer__sidebar {
+        flex: 1 1 auto;
     }
 }

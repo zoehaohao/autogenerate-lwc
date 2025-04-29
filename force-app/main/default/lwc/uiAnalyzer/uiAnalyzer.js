@@ -1,79 +1,79 @@
 // uiAnalyzer.js
 import { LightningElement, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import { NavigationMixin } from 'lightning/navigation';
 
-export default class UiAnalyzer extends NavigationMixin(LightningElement) {
-    @track analysisType = 'Basic Analysis';
-    @track startDate;
-    @track endDate;
-    @track isExportDisabled = true;
-    acceptedFormats = ['.csv', '.pdf', '.docx'];
-    analysisOptions = [
-        { label: 'Basic Analysis', value: 'Basic Analysis' },
-        { label: 'Advanced Analysis', value: 'Advanced Analysis' },
-        { label: 'Custom Analysis', value: 'Custom Analysis' }
+export default class UiAnalyzer extends LightningElement {
+    @track url = '';
+    @track selectedElement = 'All';
+    @track analysisDepth = 3;
+    @track selectedFormat = 'JSON';
+    @track analysisResults = null;
+    @track analysisStatus = 'Ready';
+
+    elementOptions = [
+        { label: 'All', value: 'All' },
+        { label: 'Buttons', value: 'Buttons' },
+        { label: 'Forms', value: 'Forms' },
+        { label: 'Images', value: 'Images' }
     ];
 
-    connectedCallback() {
-        const today = new Date();
-        const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
-        this.startDate = thirtyDaysAgo.toISOString().split('T')[0];
-        this.endDate = today.toISOString().split('T')[0];
+    exportOptions = [
+        { label: 'JSON', value: 'JSON' },
+        { label: 'CSV', value: 'CSV' },
+        { label: 'XML', value: 'XML' }
+    ];
+
+    handleUrlChange(event) {
+        this.url = event.target.value;
     }
 
-    handleUploadFinished(event) {
-        const uploadedFiles = event.detail.files;
-        this.validateFiles(uploadedFiles);
+    handleElementChange(event) {
+        this.selectedElement = event.detail.value;
     }
 
-    validateFiles(files) {
-        const maxSize = 10 * 1024 * 1024; // 10MB
-        const invalidFiles = files.filter(file => file.size > maxSize);
-        if (invalidFiles.length > 0) {
-            this.showToast('Error', 'One or more files exceed the 10MB limit', 'error');
-        } else {
-            this.showToast('Success', `${files.length} file(s) uploaded successfully`, 'success');
-        }
+    handleDepthChange(event) {
+        this.analysisDepth = parseInt(event.target.value, 10);
+    }
+
+    handleFormatChange(event) {
+        this.selectedFormat = event.detail.value;
     }
 
     handleAnalyze() {
-        if (this.validateDateRange()) {
-            // Perform analysis logic here
-            this.isExportDisabled = false;
-            this.showToast('Success', 'Analysis completed', 'success');
-        }
-    }
-
-    handleExport() {
-        // Export logic here
-        this.showToast('Success', 'Report exported successfully', 'success');
-    }
-
-    handleDateChange(event) {
-        const { name, value } = event.target;
-        this[name] = value;
-    }
-
-    handleAnalysisTypeChange(event) {
-        this.analysisType = event.detail.value;
+        if (!this.validateInputs()) return;
+        this.analysisStatus = 'Analyzing...';
+        // Simulating analysis process
+        setTimeout(() => {
+            this.analysisResults = { /* Simulated results */ };
+            this.analysisStatus = 'Analysis complete';
+            this.showToast('Success', 'Analysis completed successfully', 'success');
+        }, 2000);
     }
 
     handleReset() {
-        this.template.querySelectorAll('lightning-input, lightning-combobox').forEach(element => {
-            element.value = null;
-        });
-        this.analysisType = 'Basic Analysis';
-        this.isExportDisabled = true;
+        this.url = '';
+        this.selectedElement = 'All';
+        this.analysisDepth = 3;
+        this.selectedFormat = 'JSON';
+        this.analysisResults = null;
+        this.analysisStatus = 'Ready';
     }
 
-    validateDateRange() {
-        const start = new Date(this.startDate);
-        const end = new Date(this.endDate);
-        const today = new Date();
+    handleExport() {
+        // Implement export logic
+        this.showToast('Success', 'Results exported', 'success');
+    }
 
-        if (start > end || end > today) {
-            this.showToast('Error', 'Invalid date range', 'error');
+    handleSave() {
+        // Implement save logic
+        this.showToast('Success', 'Analysis saved', 'success');
+    }
+
+    validateInputs() {
+        const urlInput = this.template.querySelector('lightning-input[type="url"]');
+        const isValid = urlInput.checkValidity();
+        if (!isValid) {
+            urlInput.reportValidity();
             return false;
         }
         return true;
@@ -87,27 +87,5 @@ export default class UiAnalyzer extends NavigationMixin(LightningElement) {
                 variant: variant,
             }),
         );
-    }
-
-    navigateToDashboard() {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__webPage',
-            attributes: {
-                url: '/analytics-dashboard'
-            }
-        });
-    }
-
-    navigateToSettings() {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__webPage',
-            attributes: {
-                url: '/analyzer-settings'
-            }
-        });
-    }
-
-    openHelpGuide() {
-        window.open('/analyzer-help', '_blank');
     }
 }
