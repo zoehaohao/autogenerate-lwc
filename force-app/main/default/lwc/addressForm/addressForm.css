@@ -3,20 +3,14 @@
     --acme-blue-color: #0057B8;
     --acme-gray-color: #424A54;
     --acme-white-color: #FFFFFF;
-    --acme-light-gray-color: #F5F7FA;
-    --acme-medium-gray-color: #CCCCCC;
-    --acme-coral-color: #FF6B6B;
+    --acme-error-color: #FF6B6B;
 }
 
 .acme-address-form {
-    font-family: sans-serif;
-    max-width: 800px;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    max-width: 600px;
     margin: 0 auto;
     padding: var(--acme-space-md, 1rem);
-}
-
-.acme-address-form__section {
-    margin-bottom: var(--acme-space-lg, 2rem);
 }
 
 .acme-heading {
@@ -25,31 +19,28 @@
     margin-bottom: var(--acme-space-md, 1rem);
 }
 
-.acme-address-form__grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--acme-space-md, 1rem);
+.acme-address-form__section {
+    margin-bottom: var(--acme-space-lg, 2rem);
 }
 
 .acme-address-form__field {
-    display: flex;
-    flex-direction: column;
+    margin-bottom: var(--acme-space-sm, 0.5rem);
 }
 
 .acme-address-form__label {
+    display: block;
     color: var(--acme-gray-color);
     font-size: 14px;
     margin-bottom: var(--acme-space-xs, 0.25rem);
-    text-align: left;
 }
 
 .acme-address-form__input,
 .acme-address-form__select {
+    width: 100%;
+    padding: var(--acme-space-xs, 0.25rem);
     font-size: 16px;
-    padding: var(--acme-space-sm, 0.5rem);
-    border: 1px solid var(--acme-medium-gray-color);
-    border-radius: var(--acme-radius-small, 4px);
-    background-color: var(--acme-white-color);
+    border: 1px solid #DDDBDA;
+    border-radius: var(--acme-radius-small, 0.25rem);
 }
 
 .acme-address-form__input:focus,
@@ -57,43 +48,58 @@
     outline: 2px solid var(--acme-blue-color);
 }
 
+.acme-address-form__input_error {
+    border-color: var(--acme-error-color);
+}
+
 .acme-address-form__required {
-    color: var(--acme-coral-color);
+    color: var(--acme-error-color);
     margin-left: var(--acme-space-xxs, 0.125rem);
 }
 
-.acme-address-form__error {
-    color: var(--acme-coral-color);
-    font-size: 14px;
-    margin-top: var(--acme-space-sm, 0.5rem);
-}
-
-.acme-address-form__button-container {
-    margin-top: var(--acme-space-lg, 2rem);
-    text-align: right;
-}
-
 .acme-button {
-    font-size: 16px;
     padding: var(--acme-space-sm, 0.5rem) var(--acme-space-md, 1rem);
-    border: none;
-    border-radius: var(--acme-radius-small, 4px);
+    font-size: 16px;
+    border-radius: var(--acme-radius-small, 0.25rem);
     cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
 .acme-button_primary {
     background-color: var(--acme-blue-color);
     color: var(--acme-white-color);
+    border: none;
 }
 
-.acme-button_primary:hover,
-.acme-button_primary:focus {
-    background-color: var(--acme-blue-dark-color, #004A9E);
+.acme-button_secondary {
+    background-color: var(--acme-white-color);
+    color: var(--acme-blue-color);
+    border: 1px solid var(--acme-blue-color);
+}
+
+.acme-address-form__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--acme-space-sm, 0.5rem);
+    margin-top: var(--acme-space-md, 1rem);
+}
+
+.acme-address-form__link {
+    text-align: right;
+    margin-top: var(--acme-space-sm, 0.5rem);
+}
+
+.acme-address-form__link a {
+    color: var(--acme-blue-color);
+    text-decoration: none;
 }
 
 @media screen and (max-width: 768px) {
-    .acme-address-form__grid {
-        grid-template-columns: 1fr;
+    .acme-address-form {
+        padding: var(--acme-space-sm, 0.5rem);
+    }
+
+    .acme-address-form__input,
+    .acme-address-form__select {
+        font-size: 14px;
     }
 }
