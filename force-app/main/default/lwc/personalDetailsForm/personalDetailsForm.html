@@ -1,112 +1,163 @@
 <!-- personalDetailsForm.html -->
 <template>
     <div class="root-container">
-        <h1 class="form-title">Personal Details Form</h1>
-        
-        <template if:true={errorMessage}>
-            <div class="error-summary" role="alert">
-                {errorMessage}
-            </div>
-        </template>
-        
-        <form onsubmit={handleSubmit}>
-            <div class="form-section">
-                <h2>Personal Information</h2>
-                <div class="form-field">
-                    <label for="title">Title<span class="required">*</span></label>
-                    <select id="title" required onchange={handleInputChange}>
-                        <option value="">Select...</option>
-                        <option value="Mr">Mr</option>
-                        <option value="Mrs">Mrs</option>
-                        <option value="Ms">Ms</option>
-                        <option value="Dr">Dr</option>
-                    </select>
-                </div>
-                <div class="form-field">
-                    <label for="firstName">First name<span class="required">*</span></label>
-                    <input type="text" id="firstName" required onchange={handleInputChange}>
-                </div>
-                <div class="form-field">
-                    <label for="middleName">Middle name</label>
-                    <input type="text" id="middleName" onchange={handleInputChange}>
-                </div>
-                <div class="form-field">
-                    <label for="lastName">Last name</label>
-                    <input type="text" id="lastName" onchange={handleInputChange}>
-                </div>
-                <div class="form-field">
-                    <label for="birthdate">Birthdate<span class="required">*</span></label>
-                    <input type="date" id="birthdate" required onchange={handleInputChange}>
-                </div>
-                <div class="form-field">
-                    <label>Gender<span class="required">*</span></label>
-                    <div class="radio-group">
-                        <input type="radio" id="male" name="gender" value="male" required onchange={handleInputChange}>
-                        <label for="male">Male</label>
-                        <input type="radio" id="female" name="gender" value="female" required onchange={handleInputChange}>
-                        <label for="female">Female</label>
-                        <input type="radio" id="other" name="gender" value="other" required onchange={handleInputChange}>
-                        <label for="other">Other</label>
+        <div class="acme-form slds-p-around_medium">
+            <h1 class="acme-heading acme-heading_large slds-m-bottom_medium">Personal Details Form</h1>
+            
+            <div class="acme-form__section slds-m-bottom_medium">
+                <h2 class="acme-heading acme-heading_medium slds-m-bottom_small">Personal Information</h2>
+                
+                <lightning-combobox
+                    label="Title"
+                    name="title"
+                    value={title}
+                    placeholder="Select..."
+                    options={titleOptions}
+                    required
+                    onchange={handleInputChange}
+                ></lightning-combobox>
+                
+                <lightning-input
+                    type="text"
+                    label="First name"
+                    name="firstName"
+                    required
+                    onchange={handleInputChange}
+                ></lightning-input>
+                
+                <lightning-input
+                    type="text"
+                    label="Middle name"
+                    name="middleName"
+                    onchange={handleInputChange}
+                ></lightning-input>
+                
+                <lightning-input
+                    type="text"
+                    label="Last name"
+                    name="lastName"
+                    required
+                    onchange={handleInputChange}
+                ></lightning-input>
+                
+                <lightning-input
+                    type="date"
+                    label="Birthdate"
+                    name="birthdate"
+                    required
+                    onchange={handleInputChange}
+                ></lightning-input>
+                
+                <fieldset class="slds-form-element">
+                    <legend class="slds-form-element__legend slds-form-element__label">Gender</legend>
+                    <div class="slds-form-element__control">
+                        <div class="slds-radio_button-group">
+                            <template for:each={genderOptions} for:item="option">
+                                <span class="slds-button slds-radio_button" key={option.value}>
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        id={option.value}
+                                        value={option.value}
+                                        onchange={handleInputChange}
+                                    />
+                                    <label class="slds-radio_button__label" for={option.value}>
+                                        <span class="slds-radio_faux">{option.label}</span>
+                                    </label>
+                                </span>
+                            </template>
+                        </div>
                     </div>
-                </div>
+                </fieldset>
             </div>
             
-            <div class="form-section">
-                <h2>Address</h2>
-                <div class="form-field">
-                    <label for="addressLine1">Address Line 1<span class="required">*</span></label>
-                    <input type="text" id="addressLine1" required onchange={handleInputChange}>
-                </div>
-                <div class="form-field">
-                    <label for="addressLine2">Address Line 2</label>
-                    <input type="text" id="addressLine2" onchange={handleInputChange}>
-                </div>
-                <div class="form-field">
-                    <label for="suburb">Suburb/City<span class="required">*</span></label>
-                    <input type="text" id="suburb" required onchange={handleInputChange}>
-                </div>
-                <div class="form-field">
-                    <label for="state">State<span class="required">*</span></label>
-                    <select id="state" required onchange={handleInputChange}>
-                        <option value="">Select...</option>
-                        <option value="NSW">New South Wales</option>
-                        <option value="VIC">Victoria</option>
-                        <option value="QLD">Queensland</option>
-                        <option value="WA">Western Australia</option>
-                        <option value="SA">South Australia</option>
-                        <option value="TAS">Tasmania</option>
-                        <option value="ACT">Australian Capital Territory</option>
-                        <option value="NT">Northern Territory</option>
-                    </select>
-                </div>
-                <div class="form-field">
-                    <label for="postcode">Postcode<span class="required">*</span></label>
-                    <input type="text" id="postcode" required placeholder="4-digit code" maxlength="4" onchange={handleInputChange}>
-                </div>
-                <div class="form-field">
-                    <label for="country">Country<span class="required">*</span></label>
-                    <select id="country" required onchange={handleInputChange}>
-                        <option value="Australia">Australia</option>
-                    </select>
-                </div>
-                <div class="form-field">
-                    <label for="startDate">Start Date<span class="required">*</span></label>
-                    <input type="date" id="startDate" required onchange={handleInputChange}>
-                </div>
-                <div class="form-field">
-                    <label for="endDate">End Date<span class="required">*</span></label>
-                    <input type="date" id="endDate" required onchange={handleInputChange}>
-                </div>
+            <div class="acme-form__section slds-m-bottom_medium">
+                <h2 class="acme-heading acme-heading_medium slds-m-bottom_small">Address</h2>
+                
+                <lightning-input
+                    type="text"
+                    label="Address Line 1"
+                    name="addressLine1"
+                    required
+                    onchange={handleInputChange}
+                ></lightning-input>
+                
+                <lightning-input
+                    type="text"
+                    label="Address Line 2"
+                    name="addressLine2"
+                    onchange={handleInputChange}
+                ></lightning-input>
+                
+                <lightning-input
+                    type="text"
+                    label="Suburb/City"
+                    name="city"
+                    required
+                    onchange={handleInputChange}
+                ></lightning-input>
+                
+                <lightning-combobox
+                    label="State"
+                    name="state"
+                    value={state}
+                    placeholder="Select..."
+                    options={stateOptions}
+                    required
+                    onchange={handleInputChange}
+                ></lightning-combobox>
+                
+                <lightning-input
+                    type="text"
+                    label="Postcode"
+                    name="postcode"
+                    pattern="[0-9]{4}"
+                    message-when-pattern-mismatch="Please enter a 4-digit code"
+                    required
+                    onchange={handleInputChange}
+                ></lightning-input>
+                
+                <lightning-combobox
+                    label="Country"
+                    name="country"
+                    value={country}
+                    placeholder="Select..."
+                    options={countryOptions}
+                    required
+                    onchange={handleInputChange}
+                ></lightning-combobox>
+                
+                <lightning-input
+                    type="date"
+                    label="Start Date"
+                    name="startDate"
+                    required
+                    onchange={handleInputChange}
+                ></lightning-input>
+                
+                <lightning-input
+                    type="date"
+                    label="End Date"
+                    name="endDate"
+                    required
+                    onchange={handleInputChange}
+                ></lightning-input>
             </div>
             
-            <div class="form-actions">
-                <button type="button" class="btn-secondary" onclick={handleReset}>Reset Form</button>
-                <button type="submit" class="btn-primary">Submit</button>
+            <div class="acme-form__actions slds-grid slds-grid_align-spread">
+                <lightning-button
+                    label="Reset Form"
+                    onclick={handleReset}
+                    class="acme-button acme-button_secondary"
+                ></lightning-button>
+                <lightning-button
+                    label="Submit"
+                    onclick={handleSubmit}
+                    variant="brand"
+                    class="acme-button acme-button_primary"
+                    disabled={isFormInvalid}
+                ></lightning-button>
             </div>
-        </form>
-        
-        <div class="back-link">
-            <a href="/dashboard">Back to Dashboard</a>
         </div>
     </div>
 </template>

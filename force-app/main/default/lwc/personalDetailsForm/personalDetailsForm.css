@@ -1,124 +1,75 @@
 /* personalDetailsForm.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-light-gray-color: #F5F7FA;
+    --acme-medium-gray-color: #E4E7EB;
+    --acme-error-color: #FF6B6B;
+}
+
 .root-container {
-    font-family: var(--lwc-fontFamily);
-    max-width: 70%;
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.acme-form {
+    background-color: var(--acme-white-color);
+    max-width: 800px;
     margin: 0 auto;
-    padding: var(--lwc-spacingMedium);
 }
 
-.form-title {
-    font-size: var(--lwc-fontSize7);
-    color: var(--lwc-colorTextDefault);
+.acme-heading {
+    color: var(--acme-gray-color);
+}
+
+.acme-heading_large {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.acme-heading_medium {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.acme-form__section {
     margin-bottom: var(--lwc-spacingMedium);
 }
 
-.error-summary {
-    background-color: var(--lwc-colorBackgroundError);
-    color: var(--lwc-colorTextError);
-    padding: var(--lwc-spacingSmall);
-    margin-bottom: var(--lwc-spacingMedium);
-    border-radius: var(--lwc-borderRadiusMedium);
+.acme-button_primary {
+    --sds-c-button-brand-color-background: var(--acme-blue-color);
+    --sds-c-button-brand-color-border: var(--acme-blue-color);
 }
 
-.form-section {
-    margin-bottom: var(--lwc-spacingLarge);
+.acme-button_primary:hover, .acme-button_primary:focus {
+    --sds-c-button-brand-color-background-hover: #004A9E;
+    --sds-c-button-brand-color-border-hover: #004A9E;
 }
 
-.form-section h2 {
-    font-size: var(--lwc-fontSize5);
-    color: var(--lwc-colorTextDefault);
-    margin-bottom: var(--lwc-spacingSmall);
+.acme-button_secondary {
+    --sds-c-button-neutral-color-background: var(--acme-light-gray-color);
+    --sds-c-button-neutral-color-border: var(--acme-medium-gray-color);
 }
 
-.form-field {
-    margin-bottom: var(--lwc-spacingSmall);
+.acme-button_secondary:hover, .acme-button_secondary:focus {
+    --sds-c-button-neutral-color-background-hover: var(--acme-medium-gray-color);
+    --sds-c-button-neutral-color-border-hover: var(--acme-gray-color);
 }
 
-label {
-    display: block;
-    font-size: var(--lwc-fontSize3);
-    margin-bottom: var(--lwc-spacingXxSmall);
-}
-
-input, select {
-    width: 100%;
-    padding: var(--lwc-spacingXSmall);
-    font-size: var(--lwc-fontSize4);
-    border: 1px solid var(--lwc-colorBorder);
-    border-radius: var(--lwc-borderRadiusMedium);
-}
-
-input:focus, select:focus {
-    outline: 2px solid var(--lwc-colorBorderBrand);
-    border-color: var(--lwc-colorBorderBrand);
-}
-
-.radio-group {
-    display: flex;
-    gap: var(--lwc-spacingMedium);
-}
-
-.radio-group input[type="radio"] {
-    width: auto;
-    margin-right: var(--lwc-spacingXxSmall);
-}
-
-.required {
-    color: var(--lwc-colorTextError);
-    margin-left: var(--lwc-spacingXxSmall);
-}
-
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--lwc-spacingSmall);
-    margin-top: var(--lwc-spacingMedium);
-}
-
-.btn-primary, .btn-secondary {
-    padding: var(--lwc-spacingSmall) var(--lwc-spacingMedium);
-    font-size: var(--lwc-fontSize4);
-    border-radius: var(--lwc-borderRadiusMedium);
-    cursor: pointer;
-}
-
-.btn-primary {
-    background-color: var(--lwc-colorBackgroundButtonBrand);
-    color: var(--lwc-colorTextButtonBrand);
-    border: none;
-}
-
-.btn-secondary {
-    background-color: var(--lwc-colorBackgroundButtonDefault);
-    color: var(--lwc-colorTextButtonDefault);
-    border: 1px solid var(--lwc-colorBorderButtonDefault);
-}
-
-.btn-primary:hover, .btn-secondary:hover {
-    filter: brightness(90%);
-}
-
-.back-link {
-    margin-top: var(--lwc-spacingMedium);
-}
-
-.back-link a {
-    color: var(--lwc-colorTextLink);
-    text-decoration: none;
-}
-
-.back-link a:hover {
-    text-decoration: underline;
-}
-
-@media (max-width: 768px) {
-    .root-container {
-        max-width: 90%;
+@media screen and (max-width: 768px) {
+    .acme-form {
+        padding: var(--lwc-spacingSmall);
     }
 }
 
-@media (max-width: 480px) {
-    .root-container {
-        max-width: 100%;
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .acme-form {
+        width: 80%;
+    }
+}
+
+@media screen and (min-width: 1025px) {
+    .acme-form {
+        width: 60%;
     }
 }

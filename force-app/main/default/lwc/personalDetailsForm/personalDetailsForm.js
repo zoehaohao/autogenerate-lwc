@@ -1,66 +1,99 @@
 // personalDetailsForm.js
 import { LightningElement, track } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class PersonalDetailsForm extends LightningElement {
     @track formData = {};
-    @track errorMessage = '';
+    @track isFormInvalid = true;
+
+    titleOptions = [
+        { label: 'Mr', value: 'Mr' },
+        { label: 'Mrs', value: 'Mrs' },
+        { label: 'Ms', value: 'Ms' },
+        { label: 'Dr', value: 'Dr' }
+    ];
+
+    genderOptions = [
+        { label: 'Male', value: 'male' },
+        { label: 'Female', value: 'female' },
+        { label: 'Other', value: 'other' }
+    ];
+
+    stateOptions = [
+        { label: 'New South Wales', value: 'NSW' },
+        { label: 'Victoria', value: 'VIC' },
+        { label: 'Queensland', value: 'QLD' },
+        { label: 'Western Australia', value: 'WA' },
+        { label: 'South Australia', value: 'SA' },
+        { label: 'Tasmania', value: 'TAS' },
+        { label: 'Australian Capital Territory', value: 'ACT' },
+        { label: 'Northern Territory', value: 'NT' }
+    ];
+
+    countryOptions = [
+        { label: 'Australia', value: 'Australia' },
+        { label: 'New Zealand', value: 'New Zealand' }
+    ];
+
+    connectedCallback() {
+        this.formData.country = 'Australia';
+    }
 
     handleInputChange(event) {
-        const { id, value } = event.target;
-        this.formData[id] = value;
-        this.validateField(id, value);
-    }
-
-    validateField(fieldId, value) {
-        let errorMsg = '';
-        switch (fieldId) {
-            case 'postcode':
-                if (!/^\d{4}$/.test(value)) {
-                    errorMsg = 'Postcode must be 4 digits';
-                }
-                break;
-            case 'endDate':
-                if (this.formData.startDate && new Date(value) <= new Date(this.formData.startDate)) {
-                    errorMsg = 'End Date must be after Start Date';
-                }
-                break;
-        }
-        this.setFieldError(fieldId, errorMsg);
-    }
-
-    setFieldError(fieldId, errorMsg) {
-        const field = this.template.querySelector(`#${fieldId}`);
-        if (field) {
-            field.setCustomValidity(errorMsg);
-            field.reportValidity();
-        }
-    }
-
-    handleSubmit(event) {
-        event.preventDefault();
-        if (this.validateForm()) {
-            console.log('Form submitted:', this.formData);
-            this.errorMessage = '';
-        } else {
-            this.errorMessage = 'Please correct the errors in the form.';
-        }
+        const { name, value } = event.target;
+        this.formData[name] = value;
+        this.validateForm();
     }
 
     validateForm() {
-        const allValid = [...this.template.querySelectorAll('input, select')]
-            .reduce((validSoFar, inputField) => {
-                inputField.reportValidity();
-                return validSoFar && inputField.checkValidity();
-            }, true);
-        return allValid;
+        const allInputs = this.template.querySelectorAll('lightning-input, lightning-combobox');
+        let isValid = true;
+
+        allInputs.forEach(input => {
+            if (!input.checkValidity()) {
+                input.reportValidity();
+                isValid = false;
+            }
+        });
+
+        if (this.formData.endDate && this.formData.startDate) {
+            if (new Date(this.formData.endDate) <= new Date(this.formData.startDate)) {
+                isValid = false;
+                this.showToast('Error', 'End Date must be after Start Date', 'error');
+            }
+        }
+
+        this.isFormInvalid = !isValid;
+    }
+
+    handleSubmit() {
+        if (!this.isFormInvalid) {
+            console.log('Form submitted:', this.formData);
+            this.showToast('Success', 'Form submitted successfully', 'success');
+            this.handleReset();
+        } else {
+            this.showToast('Error', 'Please fill all required fields correctly', 'error');
+        }
     }
 
     handleReset() {
-        this.template.querySelector('form').reset();
-        this.formData = {};
-        this.errorMessage = '';
-        [...this.template.querySelectorAll('input, select')].forEach(field => {
-            field.setCustomValidity('');
+        this.formData = { country: 'Australia' };
+        this.template.querySelectorAll('lightning-input, lightning-combobox').forEach(element => {
+            if (element.type === 'checkbox' || element.type === 'checkbox-button') {
+                element.checked = false;
+            } else if (element.type !== 'button') {
+                element.value = null;
+            }
         });
+        this.isFormInvalid = true;
+    }
+
+    showToast(title, message, variant) {
+        const evt = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant,
+        });
+        this.dispatchEvent(evt);
     }
 }
