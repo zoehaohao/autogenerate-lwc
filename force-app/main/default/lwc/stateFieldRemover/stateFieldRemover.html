@@ -1,0 +1,28 @@
+<!-- stateFieldRemover.html -->
+<template>
+    <div class="acme-state-field-remover">
+        <div class="acme-state-field-remover__header">
+            <h1 class="acme-heading acme-heading_large">State Field Remover</h1>
+        </div>
+        <div class="acme-state-field-remover__content">
+            <lightning-input label="Form ID" type="text" required placeholder="Enter Form ID" class="acme-input"></lightning-input>
+            <lightning-input type="checkbox" label="Batch Mode" class="acme-checkbox"></lightning-input>
+            <lightning-input type="checkbox" label="Confirmation" required class="acme-checkbox"></lightning-input>
+        </div>
+        <div class="acme-state-field-remover__actions">
+            <lightning-button label="Preview Changes" onclick={handlePreview} class="acme-button acme-button_secondary"></lightning-button>
+            <lightning-button label="Remove State Field" onclick={handleRemove} variant="brand" class="acme-button acme-button_primary"></lightning-button>
+        </div>
+        <div class="acme-state-field-remover__results" if:true={showResults}>
+            <!-- Results content will be dynamically populated -->
+        </div>
+        <div class="acme-state-field-remover__footer">
+            <lightning-button label="Cancel Operation" onclick={handleCancel} class="acme-button acme-button_destructive"></lightning-button>
+            <lightning-button label="Export Log" onclick={handleExport} class="acme-button acme-button_neutral"></lightning-button>
+        </div>
+        <div class="acme-state-field-remover__links">
+            <a href="/fieldManagementUtilities" class="acme-link">Back to Utilities</a>
+            <a href="/docs/stateFieldRemover" target="_blank" class="acme-link">View Documentation</a>
+        </div>
+    </div>
+</template>
