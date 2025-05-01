@@ -1,51 +1,50 @@
 // personalInfoForm.js
 import { LightningElement, track } from 'lwc';
 export default class PersonalInfoForm extends LightningElement {
-    @track formData = {};
-    @track errorMessage = '';
+    @track errors = {};
     stateOptions = [
         { value: 'AL', label: 'Alabama' },
         { value: 'AK', label: 'Alaska' },
         { value: 'AZ', label: 'Arizona' },
     ];
-    handleInputChange(event) {
-        const { id, value } = event.target;
-        this.formData[id] = value;
+    validateField(event) {
+        const fieldName = event.target.id;
+        const fieldValue = event.target.value;
+        let errorMessage = '';
+        switch (fieldName) {
+            case 'firstName':
+            case 'lastName':
+                if (!fieldValue.trim()) {
+                    errorMessage = `${fieldName === 'firstName' ? 'First' : 'Last'} Name is required`;
+                }
+                break;
+            case 'birthdate':
+            case 'startDate':
+            case 'endDate':
+                if (!fieldValue) {
+                    errorMessage = 'Date is required';
+                } else if (!/^\d{4}-\d{2}-\d{2}$/.test(fieldValue)) {
+                    errorMessage = 'Invalid date format';
+                }
+                break;
+            case 'zipCode':
+                if (!fieldValue.trim()) {
+                    errorMessage = 'Zip Code is required';
+                } else if (!/^\d{5}(?:[-\s]\d{4})?$/.test(fieldValue)) {
+                    errorMessage = 'Invalid Zip Code format';
+                }
+                break;
+        }
+        this.errors = { ...this.errors, [fieldName]: errorMessage };
     }
     handleSubmit() {
-        if (this.validateForm()) {
-            console.log('Form submitted:', this.formData);
-            this.errorMessage = '';
-        }
-    }
-    handleClear() {
         this.template.querySelectorAll('input, select').forEach(element => {
-            element.value = '';
+            this.validateField({ target: element });
         });
-        this.formData = {};
-        this.errorMessage = '';
-    }
-    validateForm() {
-        const requiredFields = ['firstName', 'lastName', 'birthdate', 'zipCode', 'startDate', 'endDate'];
-        let isValid = true;
-        requiredFields.forEach(field => {
-            if (!this.formData[field]) {
-                isValid = false;
-                this.errorMessage = 'Please fill in all required fields.';
-            }
-        });
-        if (isValid) {
-            if (!/^\d{5}$/.test(this.formData.zipCode)) {
-                isValid = false;
-                this.errorMessage = 'Zip code must be 5 digits.';
-            }
-            const startDate = new Date(this.formData.startDate);
-            const endDate = new Date(this.formData.endDate);
-            if (startDate >= endDate) {
-                isValid = false;
-                this.errorMessage = 'Start Date must be before End Date.';
-            }
+        if (Object.values(this.errors).every(error => !error)) {
+            console.log('Form submitted successfully');
+        } else {
+            console.log('Form has errors');
         }
-        return isValid;
     }
 }
