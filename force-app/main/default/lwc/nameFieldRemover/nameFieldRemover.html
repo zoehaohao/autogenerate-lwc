@@ -1,0 +1,44 @@
+<!-- nameFieldRemover.html -->
+<template>
+    <div class="acme-name-field-remover">
+        <div class="acme-name-field-remover__form">
+            <lightning-input
+                label="First Name"
+                name="firstName"
+                type="text"
+                required
+                placeholder="Enter first name"
+                pattern="[A-Za-z]{2,50}"
+                message-when-pattern-mismatch="Please enter 2-50 letters only"
+                onchange={handleInputChange}
+                class="acme-name-field-remover__input"
+            ></lightning-input>
+            <lightning-input
+                label="Last Name"
+                name="lastName"
+                type="text"
+                required
+                placeholder="Enter last name"
+                pattern="[A-Za-z]{2,50}"
+                message-when-pattern-mismatch="Please enter 2-50 letters only"
+                onchange={handleInputChange}
+                class="acme-name-field-remover__input"
+            ></lightning-input>
+            <div class="acme-name-field-remover__buttons">
+                <lightning-button
+                    label="Submit"
+                    variant="brand"
+                    onclick={handleSubmit}
+                    class="acme-name-field-remover__button acme-name-field-remover__button_submit"
+                    disabled={isSubmitDisabled}
+                ></lightning-button>
+                <lightning-button
+                    label="Clear"
+                    variant="neutral"
+                    onclick={handleClear}
+                    class="acme-name-field-remover__button acme-name-field-remover__button_clear"
+                ></lightning-button>
+            </div>
+        </div>
+    </div>
+</template>
