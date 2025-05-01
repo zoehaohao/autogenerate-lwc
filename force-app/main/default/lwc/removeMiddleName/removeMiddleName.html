@@ -1,0 +1,35 @@
+<!-- removeMiddleName.html -->
+<template>
+    <div class="root-container slds-p-around_medium">
+        <h1 class="slds-text-heading_large slds-m-bottom_medium">Remove Middle Name Form</h1>
+        <div class="slds-form" role="form">
+            <div class="slds-form-element slds-m-bottom_medium" data-id="firstNameContainer">
+                <label class="slds-form-element__label" for="firstName">
+                    <abbr class="slds-required" title="required">*</abbr> First Name
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="text" id="firstName" class="slds-input" placeholder="Enter first name" required minlength="2" maxlength="40" pattern="[a-zA-Z\s\-]+" value={firstName} onchange={handleInputChange} onblur={validateField}/>
+                </div>
+                <div if:true={firstNameError} class="slds-form-element__help slds-text-color_error">{firstNameError}</div>
+            </div>
+            <div class="slds-form-element slds-m-bottom_medium" data-id="lastNameContainer">
+                <label class="slds-form-element__label" for="lastName">
+                    <abbr class="slds-required" title="required">*</abbr> Last Name
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="text" id="lastName" class="slds-input" placeholder="Enter last name" required minlength="2" maxlength="40" pattern="[a-zA-Z\s\-]+" value={lastName} onchange={handleInputChange} onblur={validateField}/>
+                </div>
+                <div if:true={lastNameError} class="slds-form-element__help slds-text-color_error">{lastNameError}</div>
+            </div>
+        </div>
+        <div class="slds-grid slds-grid_align-center slds-m-top_medium">
+            <button class="slds-button slds-button_brand slds-m-right_x-small" onclick={handleSubmit} disabled={isSubmitDisabled}>Submit</button>
+            <button class="slds-button slds-button_neutral" onclick={handleClear}>Clear</button>
+        </div>
+        <div if:true={formError} class="slds-text-color_error slds-m-top_small">{formError}</div>
+        <div if:true={formSuccess} class="slds-text-color_success slds-m-top_small">{formSuccess}</div>
+        <div class="slds-text-align_right slds-m-top_medium">
+            <a href="https://www.lightningdesignsystem.com/" target="_blank" rel="noopener noreferrer">Help</a>
+        </div>
+    </div>
+</template>
