@@ -1,36 +1,46 @@
 <!-- uiAnalyzer.html -->
 <template>
-    <div class="acme-ui-analyzer">
-        <div class="acme-ui-analyzer__header">
-            <h1 class="acme-heading acme-heading_large">UI Analyzer</h1>
-            <div class="acme-ui-analyzer__controls">
-                <lightning-button label="Analyze" variant="brand" onclick={handleAnalyze} class="acme-button acme-button_primary"></lightning-button>
-                <lightning-button label="Reset" variant="neutral" onclick={handleReset} class="acme-button acme-button_neutral"></lightning-button>
-            </div>
-        </div>
-        <div class="acme-ui-analyzer__content">
-            <div class="acme-ui-analyzer__sidebar">
-                <lightning-input type="url" label="URL" required placeholder="Enter URL to analyze" onchange={handleUrlChange} class="acme-input"></lightning-input>
-                <lightning-combobox label="Element Selector" required options={elementOptions} value={selectedElement} onchange={handleElementChange} placeholder="Select element type" class="acme-input"></lightning-combobox>
-                <lightning-input type="number" label="Analysis Depth" required min="1" max="5" value="3" onchange={handleDepthChange} class="acme-input"></lightning-input>
-                <lightning-combobox label="Export Format" required options={exportOptions} value={selectedFormat} onchange={handleFormatChange} placeholder="Choose format" class="acme-input"></lightning-combobox>
-            </div>
-            <div class="acme-ui-analyzer__main">
-                <div class="acme-ui-analyzer__viewport">
-                    <!-- Analysis viewport content -->
+    <div class="acme-uianalyzer">
+        <header class="acme-uianalyzer__header">
+            <h1 class="acme-uianalyzer__title">UI Analyzer Dashboard</h1>
+            <button class="acme-button_primary" onclick={startAnalysis}>Start Analysis</button>
+            <button class="acme-button_secondary" onclick={stopAnalysis} if:true={isAnalysisRunning}>Stop Analysis</button>
+        </header>
+        <div class="acme-uianalyzer__content">
+            <aside class="acme-uianalyzer__sidebar acme-uianalyzer__sidebar--left">
+                <form class="acme-form">
+                    <div class="acme-form__field">
+                        <label for="analysisName">Analysis Name</label>
+                        <input type="text" id="analysisName" required minlength="3" placeholder="Enter analysis name" class="acme-input" onchange={handleInputChange}>
+                    </div>
+                    <div class="acme-form__field">
+                        <label for="targetUrl">Target URL</label>
+                        <input type="url" id="targetUrl" required placeholder="https://..." class="acme-input" onchange={handleInputChange}>
+                    </div>
+                    <div class="acme-form__field">
+                        <label for="depthLevel">Depth Level</label>
+                        <input type="number" id="depthLevel" required min="1" max="5" value="1" class="acme-input" onchange={handleInputChange}>
+                    </div>
+                    <div class="acme-form__field">
+                        <label for="schedule">Schedule</label>
+                        <input type="datetime-local" id="schedule" class="acme-input" onchange={handleInputChange}>
+                    </div>
+                    <button class="acme-button_secondary" onclick={saveTemplate}>Save Template</button>
+                </form>
+            </aside>
+            <main class="acme-uianalyzer__main">
+                <div class="acme-uianalyzer__results" if:true={analysisResults}>
+                    <h2>Analysis Results</h2>
+                    <button class="acme-button_secondary" onclick={exportReport}>Export Report</button>
+                    <!-- Analysis results content here -->
                 </div>
-                <div class="acme-ui-analyzer__results">
-                    <h2 class="acme-heading acme-heading_medium">Analysis Results</h2>
-                    <template if:true={analysisResults}>
-                        <!-- Display analysis results -->
-                        <lightning-button label="Export" variant="success" onclick={handleExport} class="acme-button acme-button_success"></lightning-button>
-                        <lightning-button label="Save" variant="brand" onclick={handleSave} class="acme-button acme-button_primary"></lightning-button>
-                    </template>
-                </div>
-            </div>
+            </main>
+            <aside class="acme-uianalyzer__sidebar acme-uianalyzer__sidebar--right">
+                <!-- Details panel content here -->
+            </aside>
         </div>
-        <div class="acme-ui-analyzer__footer">
-            <p class="acme-text acme-text_small">Status: {analysisStatus}</p>
-        </div>
+        <footer class="acme-uianalyzer__footer">
+            <!-- Status and metadata content here -->
+        </footer>
     </div>
 </template>
