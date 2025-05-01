@@ -1,163 +1,104 @@
 <!-- personalDetailsForm.html -->
 <template>
-    <div class="root-container">
-        <div class="acme-form slds-p-around_medium">
-            <h1 class="acme-heading acme-heading_large slds-m-bottom_medium">Personal Details Form</h1>
-            
-            <div class="acme-form__section slds-m-bottom_medium">
-                <h2 class="acme-heading acme-heading_medium slds-m-bottom_small">Personal Information</h2>
-                
-                <lightning-combobox
-                    label="Title"
-                    name="title"
-                    value={title}
-                    placeholder="Select..."
-                    options={titleOptions}
-                    required
-                    onchange={handleInputChange}
-                ></lightning-combobox>
-                
-                <lightning-input
-                    type="text"
-                    label="First name"
-                    name="firstName"
-                    required
-                    onchange={handleInputChange}
-                ></lightning-input>
-                
-                <lightning-input
-                    type="text"
-                    label="Middle name"
-                    name="middleName"
-                    onchange={handleInputChange}
-                ></lightning-input>
-                
-                <lightning-input
-                    type="text"
-                    label="Last name"
-                    name="lastName"
-                    required
-                    onchange={handleInputChange}
-                ></lightning-input>
-                
-                <lightning-input
-                    type="date"
-                    label="Birthdate"
-                    name="birthdate"
-                    required
-                    onchange={handleInputChange}
-                ></lightning-input>
-                
-                <fieldset class="slds-form-element">
-                    <legend class="slds-form-element__legend slds-form-element__label">Gender</legend>
-                    <div class="slds-form-element__control">
-                        <div class="slds-radio_button-group">
-                            <template for:each={genderOptions} for:item="option">
-                                <span class="slds-button slds-radio_button" key={option.value}>
-                                    <input
-                                        type="radio"
-                                        name="gender"
-                                        id={option.value}
-                                        value={option.value}
-                                        onchange={handleInputChange}
-                                    />
-                                    <label class="slds-radio_button__label" for={option.value}>
-                                        <span class="slds-radio_faux">{option.label}</span>
-                                    </label>
-                                </span>
-                            </template>
-                        </div>
+    <div class="acme-personal-details-form">
+        <h1 class="acme-heading acme-heading_large">Personal Details Form</h1>
+        <form onsubmit={handleSubmit}>
+            <div class="acme-form-section">
+                <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
+                <div class="acme-form-field">
+                    <label for="title" class="acme-label">Title<span class="acme-required-indicator">*</span></label>
+                    <select id="title" class="acme-select" required onchange={handleInputChange}>
+                        <option value="">Select...</option>
+                        <option value="Mr">Mr</option>
+                        <option value="Mrs">Mrs</option>
+                        <option value="Ms">Ms</option>
+                        <option value="Dr">Dr</option>
+                    </select>
+                </div>
+                <div class="acme-form-field">
+                    <label for="firstName" class="acme-label">First name<span class="acme-required-indicator">*</span></label>
+                    <input type="text" id="firstName" class="acme-input" required onchange={handleInputChange}>
+                </div>
+                <div class="acme-form-field">
+                    <label for="middleName" class="acme-label">Middle name</label>
+                    <input type="text" id="middleName" class="acme-input" onchange={handleInputChange}>
+                </div>
+                <div class="acme-form-field">
+                    <label for="lastName" class="acme-label">Last name</label>
+                    <input type="text" id="lastName" class="acme-input" onchange={handleInputChange}>
+                </div>
+                <div class="acme-form-field">
+                    <label for="birthdate" class="acme-label">Birthdate<span class="acme-required-indicator">*</span></label>
+                    <input type="date" id="birthdate" class="acme-input" required onchange={handleInputChange}>
+                </div>
+                <div class="acme-form-field">
+                    <label class="acme-label">Gender<span class="acme-required-indicator">*</span></label>
+                    <div class="acme-radio-group">
+                        <input type="radio" id="male" name="gender" value="male" required onchange={handleInputChange}>
+                        <label for="male">Male</label>
+                        <input type="radio" id="female" name="gender" value="female" required onchange={handleInputChange}>
+                        <label for="female">Female</label>
+                        <input type="radio" id="other" name="gender" value="other" required onchange={handleInputChange}>
+                        <label for="other">Other</label>
                     </div>
-                </fieldset>
+                </div>
             </div>
-            
-            <div class="acme-form__section slds-m-bottom_medium">
-                <h2 class="acme-heading acme-heading_medium slds-m-bottom_small">Address</h2>
-                
-                <lightning-input
-                    type="text"
-                    label="Address Line 1"
-                    name="addressLine1"
-                    required
-                    onchange={handleInputChange}
-                ></lightning-input>
-                
-                <lightning-input
-                    type="text"
-                    label="Address Line 2"
-                    name="addressLine2"
-                    onchange={handleInputChange}
-                ></lightning-input>
-                
-                <lightning-input
-                    type="text"
-                    label="Suburb/City"
-                    name="city"
-                    required
-                    onchange={handleInputChange}
-                ></lightning-input>
-                
-                <lightning-combobox
-                    label="State"
-                    name="state"
-                    value={state}
-                    placeholder="Select..."
-                    options={stateOptions}
-                    required
-                    onchange={handleInputChange}
-                ></lightning-combobox>
-                
-                <lightning-input
-                    type="text"
-                    label="Postcode"
-                    name="postcode"
-                    pattern="[0-9]{4}"
-                    message-when-pattern-mismatch="Please enter a 4-digit code"
-                    required
-                    onchange={handleInputChange}
-                ></lightning-input>
-                
-                <lightning-combobox
-                    label="Country"
-                    name="country"
-                    value={country}
-                    placeholder="Select..."
-                    options={countryOptions}
-                    required
-                    onchange={handleInputChange}
-                ></lightning-combobox>
-                
-                <lightning-input
-                    type="date"
-                    label="Start Date"
-                    name="startDate"
-                    required
-                    onchange={handleInputChange}
-                ></lightning-input>
-                
-                <lightning-input
-                    type="date"
-                    label="End Date"
-                    name="endDate"
-                    required
-                    onchange={handleInputChange}
-                ></lightning-input>
+            <div class="acme-form-section">
+                <h2 class="acme-heading acme-heading_medium">Address</h2>
+                <div class="acme-form-field">
+                    <label for="addressLine1" class="acme-label">Address Line 1<span class="acme-required-indicator">*</span></label>
+                    <input type="text" id="addressLine1" class="acme-input" required onchange={handleInputChange}>
+                </div>
+                <div class="acme-form-field">
+                    <label for="addressLine2" class="acme-label">Address Line 2</label>
+                    <input type="text" id="addressLine2" class="acme-input" onchange={handleInputChange}>
+                </div>
+                <div class="acme-form-field">
+                    <label for="suburb" class="acme-label">Suburb/City<span class="acme-required-indicator">*</span></label>
+                    <input type="text" id="suburb" class="acme-input" required onchange={handleInputChange}>
+                </div>
+                <div class="acme-form-field">
+                    <label for="state" class="acme-label">State<span class="acme-required-indicator">*</span></label>
+                    <select id="state" class="acme-select" required onchange={handleInputChange}>
+                        <option value="">Select...</option>
+                        <option value="NSW">New South Wales</option>
+                        <option value="VIC">Victoria</option>
+                        <option value="QLD">Queensland</option>
+                        <option value="WA">Western Australia</option>
+                        <option value="SA">South Australia</option>
+                        <option value="TAS">Tasmania</option>
+                        <option value="ACT">Australian Capital Territory</option>
+                        <option value="NT">Northern Territory</option>
+                    </select>
+                </div>
+                <div class="acme-form-field">
+                    <label for="postcode" class="acme-label">Postcode<span class="acme-required-indicator">*</span></label>
+                    <input type="text" id="postcode" class="acme-input" required pattern="[0-9]{4}" onchange={handleInputChange}>
+                </div>
+                <div class="acme-form-field">
+                    <label for="country" class="acme-label">Country<span class="acme-required-indicator">*</span></label>
+                    <select id="country" class="acme-select" required onchange={handleInputChange}>
+                        <option value="Australia">Australia</option>
+                    </select>
+                </div>
             </div>
-            
-            <div class="acme-form__actions slds-grid slds-grid_align-spread">
-                <lightning-button
-                    label="Reset Form"
-                    onclick={handleReset}
-                    class="acme-button acme-button_secondary"
-                ></lightning-button>
-                <lightning-button
-                    label="Submit"
-                    onclick={handleSubmit}
-                    variant="brand"
-                    class="acme-button acme-button_primary"
-                    disabled={isFormInvalid}
-                ></lightning-button>
+            <div class="acme-form-section">
+                <div class="acme-form-field">
+                    <label for="startDate" class="acme-label">Start Date<span class="acme-required-indicator">*</span></label>
+                    <input type="date" id="startDate" class="acme-input" required onchange={handleInputChange}>
+                </div>
+                <div class="acme-form-field">
+                    <label for="endDate" class="acme-label">End Date<span class="acme-required-indicator">*</span></label>
+                    <input type="date" id="endDate" class="acme-input" required onchange={handleInputChange}>
+                </div>
             </div>
-        </div>
+            <div class="acme-form-error" if:true={errorMessage}>
+                <p>{errorMessage}</p>
+            </div>
+            <div class="acme-button-group">
+                <button type="submit" class="acme-button acme-button_primary" disabled={isSubmitting}>Submit</button>
+                <button type="button" class="acme-button acme-button_secondary" onclick={handleReset}>Reset Form</button>
+            </div>
+        </form>
     </div>
 </template>
