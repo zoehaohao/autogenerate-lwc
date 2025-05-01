@@ -6,84 +6,71 @@
     --acme-teal-color: #00A0B0;
     --acme-gold-color: #F2C94C;
     --acme-coral-color: #FF6B6B;
-    --acme-light-gray-color: #F5F7FA;
+    --acme-light-gray: #F5F7FA;
 }
 
 .acme-file-analyzer {
     font-family: 'Salesforce Sans', Arial, sans-serif;
     color: var(--acme-gray-color);
-    background-color: var(--acme-white-color);
-    padding: var(--lwc-spacingMedium, 1rem);
 }
 
 .acme-file-analyzer__header {
-    margin-bottom: var(--lwc-spacingMedium, 1rem);
-}
-
-.acme-heading_large {
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--acme-blue-color);
-}
-
-.acme-heading_medium {
-    font-size: 18px;
-    font-weight: bold;
-    color: var(--acme-gray-color);
+    background-color: var(--acme-blue-color);
+    color: var(--acme-white-color);
+    padding: 1rem;
+    margin-bottom: 1rem;
 }
 
 .acme-file-analyzer__content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--lwc-spacingMedium, 1rem);
+    grid-template-columns: 1fr 2fr;
+    gap: 1rem;
+    padding: 0 1rem;
 }
 
-.acme-file-analyzer__upload-zone,
-.acme-file-analyzer__config-panel,
-.acme-file-analyzer__actions,
-.acme-file-analyzer__results {
-    background-color: var(--acme-light-gray-color);
-    padding: var(--lwc-spacingMedium, 1rem);
-    border-radius: var(--lwc-borderRadiusMedium, 0.25rem);
+.acme-card {
+    background-color: var(--acme-white-color);
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    margin-bottom: 1rem;
 }
 
-.acme-button {
-    font-size: 14px;
-    padding: var(--lwc-spacingSmall, 0.75rem) var(--lwc-spacingMedium, 1rem);
-    margin-right: var(--lwc-spacingSmall, 0.75rem);
+.acme-heading {
+    margin-bottom: 1rem;
+}
+
+.acme-heading_large {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.acme-heading_medium {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.acme-file-analyzer__buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
 }
 
 .acme-button_primary {
-    background-color: var(--acme-blue-color);
-    border-color: var(--acme-blue-color);
-    color: var(--acme-white-color);
+    --sds-c-button-brand-color-background: var(--acme-blue-color);
+    --sds-c-button-brand-color-border: var(--acme-blue-color);
 }
 
-.acme-button_destructive {
-    background-color: var(--acme-coral-color);
-    border-color: var(--acme-coral-color);
-    color: var(--acme-white-color);
-}
-
-.acme-button_success {
-    background-color: var(--acme-teal-color);
-    border-color: var(--acme-teal-color);
-    color: var(--acme-white-color);
+.acme-button_secondary {
+    --sds-c-button-neutral-color-background: var(--acme-light-gray);
+    --sds-c-button-neutral-color-border: var(--acme-light-gray);
 }
 
 .acme-file-analyzer__footer {
-    margin-top: var(--lwc-spacingMedium, 1rem);
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: var(--acme-light-gray);
     text-align: center;
-}
-
-.acme-link {
-    color: var(--acme-blue-color);
-    text-decoration: none;
-    margin: 0 var(--lwc-spacingSmall, 0.75rem);
-}
-
-.acme-link:hover {
-    text-decoration: underline;
 }
 
 @media screen and (max-width: 768px) {

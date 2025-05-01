@@ -5,66 +5,81 @@
             <h1 class="acme-heading acme-heading_large">File Analyzer</h1>
         </div>
         <div class="acme-file-analyzer__content">
-            <div class="acme-file-analyzer__upload-zone">
-                <lightning-file-upload
-                    label="Upload Files"
-                    name="fileUploader"
-                    accept={acceptedFormats}
-                    record-id={recordId}
-                    onuploadfinished={handleUploadFinished}
-                    multiple
-                ></lightning-file-upload>
+            <div class="acme-file-analyzer__sidebar">
+                <div class="acme-card">
+                    <h2 class="acme-heading acme-heading_medium">Upload & Settings</h2>
+                    <lightning-file-upload
+                        label="Upload File"
+                        name="fileUploader"
+                        accept={acceptedFormats}
+                        record-id={recordId}
+                        onuploadfinished={handleUploadFinished}
+                        multiple="false"
+                    ></lightning-file-upload>
+                    <lightning-combobox
+                        name="analysisType"
+                        label="Analysis Type"
+                        value={analysisType}
+                        placeholder="Select Analysis Type"
+                        options={analysisOptions}
+                        onchange={handleAnalysisTypeChange}
+                        required
+                    ></lightning-combobox>
+                    <lightning-textarea
+                        name="description"
+                        label="Description"
+                        value={description}
+                        placeholder="Enter description (optional)"
+                        maxlength="250"
+                        onchange={handleDescriptionChange}
+                    ></lightning-textarea>
+                    <div class="acme-file-analyzer__buttons">
+                        <lightning-button
+                            label="Analyze"
+                            variant="brand"
+                            onclick={handleAnalyze}
+                            disabled={isAnalyzeDisabled}
+                            class="acme-button_primary"
+                        ></lightning-button>
+                        <lightning-button
+                            label="Cancel"
+                            onclick={handleCancel}
+                            class="acme-button_secondary"
+                        ></lightning-button>
+                        <lightning-button
+                            label="Clear"
+                            onclick={handleClear}
+                            class="acme-button_secondary"
+                        ></lightning-button>
+                    </div>
+                </div>
             </div>
-            <div class="acme-file-analyzer__config-panel">
-                <lightning-combobox
-                    name="analysisType"
-                    label="Analysis Type"
-                    value={analysisType}
-                    placeholder="Select type"
-                    options={analysisTypeOptions}
-                    onchange={handleAnalysisTypeChange}
-                    required
-                ></lightning-combobox>
-                <lightning-textarea
-                    name="description"
-                    label="Description"
-                    value={description}
-                    placeholder="Enter description"
-                    maxlength="250"
-                    onchange={handleDescriptionChange}
-                ></lightning-textarea>
-            </div>
-            <div class="acme-file-analyzer__actions">
-                <lightning-button
-                    label="Analyze"
-                    title="Start Analysis"
-                    onclick={handleAnalyze}
-                    class="acme-button acme-button_primary"
-                    disabled={isAnalyzeDisabled}
-                ></lightning-button>
-                <lightning-button
-                    label="Cancel"
-                    title="Cancel Analysis"
-                    onclick={handleCancel}
-                    class="acme-button acme-button_destructive"
-                    disabled={isCancelDisabled}
-                ></lightning-button>
-            </div>
-            <div if:true={showResults} class="acme-file-analyzer__results">
-                <h2 class="acme-heading acme-heading_medium">Analysis Results</h2>
-                <lightning-button
-                    label="Download"
-                    title="Download Results"
-                    onclick={handleDownload}
-                    class="acme-button acme-button_success"
-                    disabled={isDownloadDisabled}
-                ></lightning-button>
-                <!-- Results display area -->
+            <div class="acme-file-analyzer__main">
+                <div class="acme-card">
+                    <h2 class="acme-heading acme-heading_medium">Analysis Results</h2>
+                    <template if:true={isLoading}>
+                        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                    </template>
+                    <template if:true={analysisResults}>
+                        <div class="acme-file-analyzer__results">
+                            <!-- Display analysis results here -->
+                            <p>{analysisResults}</p>
+                        </div>
+                        <lightning-button
+                            label="Download Report"
+                            onclick={handleDownloadReport}
+                            class="acme-button_secondary"
+                        ></lightning-button>
+                    </template>
+                </div>
             </div>
         </div>
         <div class="acme-file-analyzer__footer">
-            <a href="/analysis-history" class="acme-link">View History</a>
-            <a href="/file-analyzer-help" class="acme-link" target="_blank">Help Guide</a>
+            <lightning-button-group>
+                <lightning-button label="History" onclick={handleHistory}></lightning-button>
+                <lightning-button label="Help" onclick={handleHelp}></lightning-button>
+                <lightning-button label="Settings" onclick={handleSettings}></lightning-button>
+            </lightning-button-group>
         </div>
     </div>
 </template>

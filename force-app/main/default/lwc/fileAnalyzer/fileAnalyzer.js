@@ -3,40 +3,31 @@ import { LightningElement, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class FileAnalyzer extends LightningElement {
-    @track files = [];
-    @track analysisType = 'Basic';
+    @track acceptedFormats = ['.pdf', '.doc', '.docx', '.txt'];
+    @track analysisType = '';
     @track description = '';
-    @track showResults = false;
-    @track isAnalyzing = false;
+    @track isLoading = false;
+    @track analysisResults = null;
+    @track fileUploadId = '';
 
-    get acceptedFormats() {
-        return ['.pdf', '.docx', '.doc', '.txt', '.xlsx', '.xls'];
-    }
-
-    get analysisTypeOptions() {
+    get analysisOptions() {
         return [
-            { label: 'Basic', value: 'Basic' },
-            { label: 'Advanced', value: 'Advanced' },
-            { label: 'Security', value: 'Security' }
+            { label: 'Content Summary', value: 'summary' },
+            { label: 'Sentiment Analysis', value: 'sentiment' },
+            { label: 'Keyword Extraction', value: 'keywords' }
         ];
     }
 
     get isAnalyzeDisabled() {
-        return this.files.length === 0 || this.isAnalyzing;
-    }
-
-    get isCancelDisabled() {
-        return !this.isAnalyzing;
-    }
-
-    get isDownloadDisabled() {
-        return !this.showResults;
+        return !this.fileUploadId || !this.analysisType;
     }
 
     handleUploadFinished(event) {
         const uploadedFiles = event.detail.files;
-        this.files = [...this.files, ...uploadedFiles];
-        this.showToast('Success', `${uploadedFiles.length} file(s) uploaded successfully`, 'success');
+        if (uploadedFiles.length > 0) {
+            this.fileUploadId = uploadedFiles[0].documentId;
+            this.showToast('Success', 'File uploaded successfully', 'success');
+        }
     }
 
     handleAnalysisTypeChange(event) {
@@ -48,29 +39,49 @@ export default class FileAnalyzer extends LightningElement {
     }
 
     handleAnalyze() {
-        if (this.files.length === 0) {
-            this.showToast('Error', 'Please upload at least one file', 'error');
-            return;
-        }
-        this.isAnalyzing = true;
-        // Simulating analysis process
+        if (this.isAnalyzeDisabled) return;
+        this.isLoading = true;
+        // Implement file analysis logic here
+        // This is a placeholder for the actual analysis
         setTimeout(() => {
-            this.isAnalyzing = false;
-            this.showResults = true;
-            this.showToast('Success', 'Analysis completed', 'success');
+            this.analysisResults = 'Analysis complete. This is a placeholder result.';
+            this.isLoading = false;
         }, 3000);
     }
 
     handleCancel() {
-        if (this.isAnalyzing) {
-            this.isAnalyzing = false;
-            this.showToast('Info', 'Analysis cancelled', 'info');
-        }
+        this.resetForm();
     }
 
-    handleDownload() {
-        // Implement download logic here
-        this.showToast('Success', 'Results downloaded', 'success');
+    handleClear() {
+        this.resetForm();
+    }
+
+    resetForm() {
+        this.fileUploadId = '';
+        this.analysisType = '';
+        this.description = '';
+        this.analysisResults = null;
+    }
+
+    handleDownloadReport() {
+        // Implement report download logic
+        this.showToast('Info', 'Download functionality not implemented', 'info');
+    }
+
+    handleHistory() {
+        // Implement history navigation
+        this.showToast('Info', 'History functionality not implemented', 'info');
+    }
+
+    handleHelp() {
+        // Implement help functionality
+        this.showToast('Info', 'Help functionality not implemented', 'info');
+    }
+
+    handleSettings() {
+        // Implement settings functionality
+        this.showToast('Info', 'Settings functionality not implemented', 'info');
     }
 
     showToast(title, message, variant) {
