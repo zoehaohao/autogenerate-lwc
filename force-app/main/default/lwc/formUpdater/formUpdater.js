@@ -11,27 +11,45 @@ export default class FormUpdater extends LightningElement {
         startDate: '',
         endDate: ''
     };
-
     @track errors = {};
+    @track errorMessage = '';
+    @track isFormValid = false;
 
     handleInputChange(event) {
         const { id, value } = event.target;
         this.formData[id] = value;
+        this.validateField(event);
     }
 
     validateField(event) {
         const { id, value } = event.target;
         this.errors[id] = '';
 
-        if (event.target.required && !value) {
-            this.errors[id] = `${id.charAt(0).toUpperCase() + id.slice(1)} is required`;
-        } else if (id.includes('Date')) {
-            if (!this.isValidDate(value)) {
-                this.errors[id] = 'Invalid date format';
+        switch (id) {
+            case 'firstName':
+            case 'lastName':
+                if (!value.trim()) {
+                    this.errors[id] = `${id.charAt(0).toUpperCase() + id.slice(1)} is required`;
+                }
+                break;
+            case 'birthdate':
+            case 'startDate':
+            case 'endDate':
+                if (!value) {
+                    this.errors[id] = `${id.charAt(0).toUpperCase() + id.slice(1)} is required`;
+                } else if (!this.isValidDate(value)) {
+                    this.errors[id] = 'Invalid date format';
+                }
+                break;
+        }
+
+        if (id === 'endDate' && this.formData.startDate) {
+            if (new Date(value) <= new Date(this.formData.startDate)) {
+                this.errors[id] = 'End Date must be after Start Date';
             }
         }
 
-        this.template.querySelector(`#${id}`).classList.toggle('acme-form-updater__input--error', !!this.errors[id]);
+        this.updateFormValidity();
     }
 
     isValidDate(dateString) {
@@ -39,18 +57,33 @@ export default class FormUpdater extends LightningElement {
         return regex.test(dateString) && !isNaN(Date.parse(dateString));
     }
 
+    updateFormValidity() {
+        this.isFormValid = Object.values(this.errors).every(error => !error) &&
+            ['firstName', 'lastName', 'birthdate', 'startDate', 'endDate'].every(field => this.formData[field]);
+        this.errorMessage = Object.values(this.errors).join('. ');
+    }
+
     handleSubmit() {
-        this.validateAllFields();
-        if (Object.values(this.errors).every(error => !error)) {
+        if (this.isFormValid) {
             console.log('Form submitted:', this.formData);
-        } else {
-            console.log('Form has errors:', this.errors);
         }
     }
 
-    validateAllFields() {
-        this.template.querySelectorAll('input, select').forEach(field => {
-            this.validateField({ target: field });
+    handleClear() {
+        this.template.querySelectorAll('input, select').forEach(element => {
+            element.value = '';
         });
+        this.formData = {
+            firstName: '',
+            lastName: '',
+            birthdate: '',
+            address: '',
+            state: '',
+            startDate: '',
+            endDate: ''
+        };
+        this.errors = {};
+        this.errorMessage = '';
+        this.isFormValid = false;
     }
 }
