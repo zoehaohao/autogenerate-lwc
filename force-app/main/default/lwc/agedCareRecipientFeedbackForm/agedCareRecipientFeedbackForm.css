@@ -1,0 +1,35 @@
+/* agedCareRecipientFeedbackForm.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-teal-color: #00A0B0;
+    --acme-gold-color: #F2C94C;
+    --acme-coral-color: #FF6B6B;
+    --acme-light-gray-color: #F5F7FA;
+}
+
+.acme-aged-care-feedback {
+    background-color: var(--acme-white-color);
+    color: var(--acme-gray-color);
+}
+
+.acme-heading {
+    color: var(--acme-blue-color);
+}
+
+.acme-button_primary {
+    background-color: var(--acme-blue-color);
+    border-color: var(--acme-blue-color);
+}
+
+.acme-button_primary:hover, .acme-button_primary:focus {
+    background-color: var(--acme-teal-color);
+    border-color: var(--acme-teal-color);
+}
+
+@media screen and (max-width: 768px) {
+    .acme-aged-care-feedback {
+        padding: var(--lwc-spacingSmall);
+    }
+}

@@ -1,0 +1,84 @@
+<!-- agedCareRecipientFeedbackForm.html -->
+<template>
+    <div class="acme-aged-care-feedback slds-p-around_medium">
+        <h1 class="acme-heading acme-heading_large slds-text-heading_large slds-m-bottom_medium">Aged Care Recipient Feedback Form</h1>
+        <lightning-messages></lightning-messages>
+        <form onsubmit={handleSubmit}>
+            <div class="slds-grid slds-wrap slds-gutters">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input 
+                        label="First Name" 
+                        name="firstName" 
+                        required 
+                        onchange={handleInputChange}
+                        class="required-field">
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input 
+                        label="Last Name" 
+                        name="lastName" 
+                        required 
+                        onchange={handleInputChange}
+                        class="required-field">
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input 
+                        type="email" 
+                        label="Email" 
+                        name="email" 
+                        required 
+                        onchange={handleInputChange}
+                        class="required-field">
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input 
+                        type="tel" 
+                        label="Phone" 
+                        name="phone" 
+                        required 
+                        onchange={handleInputChange}
+                        class="required-field">
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1">
+                    <lightning-textarea 
+                        label="Feedback" 
+                        name="feedback" 
+                        required 
+                        onchange={handleInputChange}
+                        class="required-field">
+                    </lightning-textarea>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-combobox
+                        label="Overall Experience"
+                        name="overallExperience"
+                        options={ratingOptions}
+                        required
+                        onchange={handleInputChange}
+                        class="required-field">
+                    </lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input 
+                        type="checkbox" 
+                        label="Would you recommend our services?" 
+                        name="wouldRecommend"
+                        onchange={handleInputChange}>
+                    </lightning-input>
+                </div>
+            </div>
+            <div class="slds-m-top_medium">
+                <lightning-button 
+                    variant="brand" 
+                    type="submit" 
+                    label="Submit Feedback" 
+                    class="acme-button_primary">
+                </lightning-button>
+            </div>
+        </form>
+    </div>
+</template>
