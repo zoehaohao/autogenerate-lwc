@@ -1,0 +1,59 @@
+/* agedCareVeteranFeedback.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-teal-color: #00A0B0;
+    --acme-gold-color: #F2C94C;
+    --acme-coral-color: #FF6B6B;
+    --acme-light-gray-color: #F5F7FA;
+}
+
+.acme-aged-care-veteran-feedback {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    color: var(--acme-gray-color);
+}
+
+.acme-form-section {
+    margin-bottom: var(--lwc-spacingLarge);
+}
+
+.required-field::before {
+    content: '*';
+    color: var(--acme-coral-color);
+    margin-right: var(--lwc-spacingXxSmall);
+}
+
+.acme-button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--lwc-spacingSmall);
+}
+
+.acme-button_primary {
+    --sds-c-button-brand-color-background: var(--acme-blue-color);
+    --sds-c-button-brand-color-border: var(--acme-blue-color);
+}
+
+.acme-button_primary:hover, .acme-button_primary:focus {
+    --sds-c-button-brand-color-background-hover: var(--acme-teal-color);
+    --sds-c-button-brand-color-border-hover: var(--acme-teal-color);
+}
+
+.acme-button_secondary {
+    --sds-c-button-neutral-color-background: var(--acme-light-gray-color);
+    --sds-c-button-neutral-color-border: var(--acme-gray-color);
+    --sds-c-button-text-color: var(--acme-gray-color);
+}
+
+.acme-button_secondary:hover, .acme-button_secondary:focus {
+    --sds-c-button-neutral-color-background-hover: var(--acme-gray-color);
+    --sds-c-button-neutral-color-border-hover: var(--acme-gray-color);
+    --sds-c-button-text-color-hover: var(--acme-white-color);
+}
+
+@media screen and (max-width: 768px) {
+    .acme-button-group {
+        flex-direction: column;
+    }
+}

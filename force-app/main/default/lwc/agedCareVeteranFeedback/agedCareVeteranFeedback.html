@@ -1,0 +1,48 @@
+<!-- agedCareVeteranFeedback.html -->
+<template>
+    <div class="acme-aged-care-veteran-feedback">
+        <lightning-card title="Aged Care Recipient Feedback Form">
+            <div class="slds-p-around_medium">
+                <!-- Section 1: General Information -->
+                <div class="acme-form-section">
+                    <lightning-input type="date" name="feedbackDate" label="Date" required class="required-field" value={formData.date} onchange={handleFieldChange}></lightning-input>
+                    <lightning-input type="text" name="providerName" label="Provider Name" required class="required-field" value={formData.providerName} readonly></lightning-input>
+                    <lightning-input type="text" name="outletName" label="Outlet Name" required class="required-field" value={formData.outletName} readonly></lightning-input>
+                    <lightning-input type="text" name="outletId" label="Outlet ID" required class="required-field" value={formData.outletId} readonly></lightning-input>
+                    <lightning-checkbox-group name="careType" label="Care Type" options={careTypeOptions} required class="required-field" value={formData.careType} onchange={handleFieldChange}></lightning-checkbox-group>
+                    <lightning-input type="text" name="respondentName" label="Respondent Name" max-length="100" value={formData.respondentName} onchange={handleFieldChange}></lightning-input>
+                    <lightning-input type="tel" name="respondentPhone" label="Respondent Phone" pattern="^(?:\+?61|0)[2-478](?:[ -]?[0-9]){8}$" value={formData.respondentPhone} onchange={handleFieldChange}></lightning-input>
+                    <lightning-radio-group name="respondentType" label="Respondent Type" options={respondentTypeOptions} required class="required-field" value={formData.respondentType} onchange={handleFieldChange}></lightning-radio-group>
+                </div>
+                
+                <!-- Section 2: Veteran Status -->
+                <div class="acme-form-section" if:true={showVeteranStatus}>
+                    <lightning-radio-group name="veteranStatus" label="Veteran Status" options={veteranStatusOptions} required class="required-field" value={formData.veteranStatus} onchange={handleFieldChange}></lightning-radio-group>
+                </div>
+                
+                <!-- Section 3: Provider Feedback -->
+                <div class="acme-form-section">
+                    <lightning-radio-group name="staffComfort" label="How comfortable are you with the staff?" options={comfortOptions} required class="required-field" value={formData.staffComfort} onchange={handleFieldChange}></lightning-radio-group>
+                    <lightning-radio-group name="staffMeetsNeeds" label="Do staff meet your needs?" options={yesNoOptions} required class="required-field" value={formData.staffMeetsNeeds} onchange={handleFieldChange}></lightning-radio-group>
+                    <lightning-radio-group name="providerRating" label="Overall Provider Rating" options={ratingOptions} required class="required-field" value={formData.providerRating} onchange={handleFieldChange}></lightning-radio-group>
+                    <lightning-textarea name="providerDetails" label="Provider Details" value={formData.providerDetails} onchange={handleFieldChange}></lightning-textarea>
+                </div>
+                
+                <!-- Section 4: Specialized Care -->
+                <div class="acme-form-section">
+                    <lightning-textarea name="specializedCareNeeds" label="Specialized Care Needs" value={formData.specializedCareNeeds} onchange={handleFieldChange}></lightning-textarea>
+                </div>
+                
+                <!-- Section 5: Additional Comments -->
+                <div class="acme-form-section">
+                    <lightning-textarea name="additionalComments" label="Additional Comments" value={formData.additionalComments} onchange={handleFieldChange}></lightning-textarea>
+                </div>
+                
+                <div class="acme-button-group">
+                    <lightning-button label="Save Draft" onclick={handleSaveDraft} class="acme-button acme-button_secondary"></lightning-button>
+                    <lightning-button label="Submit" onclick={handleSubmit} variant="brand" class="acme-button acme-button_primary"></lightning-button>
+                </div>
+            </div>
+        </lightning-card>
+    </div>
+</template>
