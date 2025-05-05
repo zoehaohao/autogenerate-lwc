@@ -28,6 +28,11 @@
     border-color: var(--acme-teal-color);
 }
 
+.required-field label::after {
+    content: " *";
+    color: var(--acme-coral-color);
+}
+
 @media screen and (max-width: 768px) {
     .acme-aged-care-feedback {
         padding: var(--lwc-spacingSmall);

@@ -7,8 +7,9 @@
             <div class="slds-grid slds-wrap slds-gutters">
                 <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
                     <lightning-input 
-                        label="First Name" 
-                        name="firstName" 
+                        type="date" 
+                        label="Date" 
+                        name="date" 
                         required 
                         onchange={handleInputChange}
                         class="required-field">
@@ -16,59 +17,129 @@
                 </div>
                 <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
                     <lightning-input 
-                        label="Last Name" 
-                        name="lastName" 
+                        label="Provider Name" 
+                        name="providerName" 
                         required 
-                        onchange={handleInputChange}
+                        value={providerName}
+                        readonly
                         class="required-field">
                     </lightning-input>
                 </div>
                 <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
                     <lightning-input 
-                        type="email" 
-                        label="Email" 
-                        name="email" 
+                        label="Outlet Name" 
+                        name="outletName" 
                         required 
+                        value={outletName}
+                        readonly
+                        class="required-field">
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input 
+                        label="Outlet ID" 
+                        name="outletId" 
+                        required 
+                        value={outletId}
+                        readonly
+                        class="required-field">
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1">
+                    <lightning-checkbox-group
+                        label="Type of Aged Care"
+                        name="typeOfAgedCare"
+                        options={typeOfAgedCareOptions}
+                        required
                         onchange={handleInputChange}
                         class="required-field">
+                    </lightning-checkbox-group>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input 
+                        label="Name of Respondent" 
+                        name="respondentName" 
+                        onchange={handleInputChange}>
                     </lightning-input>
                 </div>
                 <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
                     <lightning-input 
                         type="tel" 
-                        label="Phone" 
-                        name="phone" 
-                        required 
-                        onchange={handleInputChange}
-                        class="required-field">
+                        label="Respondent's Phone Number" 
+                        name="respondentPhone" 
+                        onchange={handleInputChange}>
                     </lightning-input>
                 </div>
                 <div class="slds-col slds-size_1-of-1">
-                    <lightning-textarea 
-                        label="Feedback" 
-                        name="feedback" 
-                        required 
-                        onchange={handleInputChange}
-                        class="required-field">
-                    </lightning-textarea>
-                </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                    <lightning-combobox
-                        label="Overall Experience"
-                        name="overallExperience"
-                        options={ratingOptions}
+                    <lightning-radio-group
+                        label="Are you"
+                        name="respondentType"
+                        options={respondentTypeOptions}
                         required
                         onchange={handleInputChange}
                         class="required-field">
-                    </lightning-combobox>
+                    </lightning-radio-group>
                 </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                    <lightning-input 
-                        type="checkbox" 
-                        label="Would you recommend our services?" 
-                        name="wouldRecommend"
+                <template if:true={showVeteranStatus}>
+                    <div class="slds-col slds-size_1-of-1">
+                        <lightning-combobox
+                            label={veteranStatusLabel}
+                            name="veteranStatus"
+                            options={veteranStatusOptions}
+                            onchange={handleInputChange}>
+                        </lightning-combobox>
+                    </div>
+                </template>
+                <template if:true={showComfortLevel}>
+                    <div class="slds-col slds-size_1-of-1">
+                        <lightning-radio-group
+                            label="How comfortable do you feel talking to staff about your care needs?"
+                            name="comfortLevel"
+                            options={comfortLevelOptions}
+                            onchange={handleInputChange}>
+                        </lightning-radio-group>
+                    </div>
+                </template>
+                <template if:true={showStaffMeetingNeeds}>
+                    <div class="slds-col slds-size_1-of-1">
+                        <lightning-radio-group
+                            label="Do staff meet your care needs?"
+                            name="staffMeetingNeeds"
+                            options={yesNoOptions}
+                            onchange={handleInputChange}>
+                        </lightning-radio-group>
+                    </div>
+                </template>
+                <template if:true={showSpecializedCare}>
+                    <div class="slds-col slds-size_1-of-1">
+                        <lightning-textarea
+                            label="What are your expectations for specialized care?"
+                            name="specializedCareExpectations"
+                            onchange={handleInputChange}>
+                        </lightning-textarea>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1">
+                        <lightning-radio-group
+                            label="How would you rate the provider's specialized care?"
+                            name="specializedCareRating"
+                            options={ratingOptions}
+                            onchange={handleInputChange}>
+                        </lightning-radio-group>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1">
+                        <lightning-textarea
+                            label="Please provide details about the provider's care"
+                            name="providerCareDetails"
+                            onchange={handleInputChange}>
+                        </lightning-textarea>
+                    </div>
+                </template>
+                <div class="slds-col slds-size_1-of-1">
+                    <lightning-textarea
+                        label="Additional Comments"
+                        name="additionalComments"
                         onchange={handleInputChange}>
-                    </lightning-input>
+                    </lightning-textarea>
                 </div>
             </div>
             <div class="slds-m-top_medium">
