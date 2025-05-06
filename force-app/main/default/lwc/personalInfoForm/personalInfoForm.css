@@ -1,53 +1,63 @@
 /* personalInfoForm.css */
-.root-container {
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-coral-color: #FF6B6B;
+    --acme-light-gray-color: #F5F7FA;
+    --acme-medium-gray-color: #E4E7EB;
+}
+
+.acme-personal-info-form {
     font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    max-width: 80%;
-    margin: 0 auto;
-    padding: var(--slds-c-card-spacing-block, 1rem);
 }
-.form-section {
-    margin-bottom: 1.5rem;
-}
-h2 {
+
+.acme-section-header {
     font-size: 18px;
-    color: var(--slds-c-button-brand-color-background, #0057B8);
-    margin-bottom: 1rem;
+    color: var(--acme-blue-color);
+    font-weight: 700;
+    margin-bottom: var(--slds-c-card-spacing-block-start, 0.75rem);
 }
-.form-field {
-    margin-bottom: 1rem;
-}
-label {
-    display: block;
+
+.slds-form-element__label {
     font-size: 14px;
-    color: var(--slds-c-input-text-color, #424A54);
-    margin-bottom: 0.25rem;
+    color: var(--acme-gray-color);
 }
-input, select {
-    width: 100%;
-    height: 32px;
-    padding: 8px;
-    border: 1px solid var(--slds-c-input-color-border, #E4E7EB);
+
+.slds-input,
+.slds-select {
+    height: 40px;
+    border: 1px solid var(--acme-medium-gray-color);
     border-radius: 4px;
+    padding: 8px 12px;
     font-size: 16px;
 }
-input:focus, select:focus {
-    outline: 2px solid var(--slds-c-button-brand-color-background, #0057B8);
-    border-color: var(--slds-c-button-brand-color-background, #0057B8);
+
+.slds-input:focus,
+.slds-select:focus {
+    outline: 2px solid var(--acme-blue-color);
+    border-color: var(--acme-blue-color);
 }
-.required {
-    color: var(--slds-c-input-required-color, #FF0000);
-    margin-left: 0.25rem;
+
+.slds-has-error .slds-input,
+.slds-has-error .slds-select {
+    border-color: var(--acme-coral-color);
 }
-.error-message {
-    color: var(--slds-c-input-error-color, #FF6B6B);
-    font-size: 12px;
-    margin-top: 0.25rem;
+
+.acme-button_primary {
+    background-color: var(--acme-blue-color);
+    border-color: var(--acme-blue-color);
+    color: var(--acme-white-color);
 }
-.button-container {
-    text-align: right;
+
+.acme-button_primary:hover,
+.acme-button_primary:focus {
+    background-color: #004A9E;
+    border-color: #004A9E;
 }
+
 @media (max-width: 768px) {
-    .root-container {
-        max-width: 100%;
+    .slds-medium-size_1-of-2 {
+        width: 100%;
     }
 }
