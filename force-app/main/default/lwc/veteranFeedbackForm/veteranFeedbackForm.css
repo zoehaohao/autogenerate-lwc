@@ -1,0 +1,84 @@
+/* veteranFeedbackForm.css */
+:host {
+    --acme-blue: #0057B8;
+    --acme-gray: #424A54;
+    --acme-white: #FFFFFF;
+    --acme-teal: #00A0B0;
+    --acme-gold: #F2C94C;
+    --acme-coral: #FF6B6B;
+    --acme-light-gray: #F5F7FA;
+    --acme-medium-gray: #E4E7EB;
+    --acme-dark-gray: #7B8794;
+}
+
+.root-container {
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: var(--acme-gray);
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--slds-c-card-spacing-block);
+}
+
+.acme-heading {
+    color: var(--acme-blue);
+    margin-bottom: var(--slds-c-card-spacing-block);
+}
+
+.acme-heading_large {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.acme-heading_medium {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.acme-card {
+    background-color: var(--acme-white);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(66, 74, 84, 0.1);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.acme-button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.acme-button_brand {
+    background-color: var(--acme-blue);
+    color: var(--acme-white);
+    border: none;
+}
+
+.acme-button_neutral {
+    background-color: var(--acme-white);
+    color: var(--acme-gray);
+    border: 1px solid var(--acme-medium-gray);
+}
+
+.error-message {
+    color: var(--acme-coral);
+    font-size: 14px;
+    margin-top: 16px;
+}
+
+@media (max-width: 768px) {
+    .root-container {
+        padding: var(--slds-c-card-spacing-block-small);
+    }
+
+    .acme-card {
+        padding: 16px;
+    }
+}
