@@ -1,0 +1,88 @@
+/* agedCareFormSurvey.css */
+:host {
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: var(--slds-c-input-text-color, #424A54);
+}
+.root-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--slds-c-card-spacing-block, 1.5rem);
+}
+.section {
+    margin-bottom: var(--slds-c-card-spacing-block, 1.5rem);
+}
+h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--slds-c-input-text-color, #424A54);
+    margin-bottom: 1rem;
+}
+.field {
+    margin-bottom: 1rem;
+}
+label {
+    display: block;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+}
+input[type="text"],
+input[type="tel"],
+input[type="date"],
+textarea,
+select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    border: 1px solid var(--slds-c-input-color-border, #E4E7EB);
+    border-radius: 4px;
+    background-color: var(--slds-c-input-color-background, #FFFFFF);
+}
+input[type="text"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
+    outline: 2px solid var(--slds-c-input-color-border-focus, #0057B8);
+    border-color: var(--slds-c-input-color-border-focus, #0057B8);
+}
+.required {
+    color: var(--slds-c-input-required-color, #FF6B6B);
+    margin-left: 0.25rem;
+}
+.checkbox-group,
+.radio-group {
+    display: flex;
+    flex-direction: column;
+}
+.checkbox,
+.radio {
+    margin-bottom: 0.5rem;
+}
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+.btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.btn-primary {
+    background-color: var(--slds-c-button-brand-color-background, #0057B8);
+    color: var(--slds-c-button-text-color, #FFFFFF);
+    border: none;
+}
+.btn-primary:hover {
+    background-color: var(--slds-c-button-brand-color-background-hover, #004A9E);
+}
+.btn-secondary {
+    background-color: var(--slds-c-button-neutral-color-background, #FFFFFF);
+    color: var(--slds-c-button-text-color, #0057B8);
+    border: 1px solid var(--slds-c-button-color-border, #0057B8);
+}
+.btn-secondary:hover {
+    background-color: var(--slds-c-button-neutral-color-background-hover, #F5F7FA);
+}
