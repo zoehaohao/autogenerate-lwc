@@ -27,14 +27,13 @@
                 <input type="text" id="address" class="acme-address-form__input" placeholder="Enter address">
             </div>
             <div class="acme-address-form__field">
-                <label for="city" class="acme-address-form__label">City/Town</label>
+                <label for="city" class="acme-address-form__label">City or Town</label>
                 <input type="text" id="city" class="acme-address-form__input" placeholder="Enter city">
             </div>
             <div class="acme-address-form__field">
                 <label for="state" class="acme-address-form__label">State</label>
                 <select id="state" class="acme-address-form__select">
                     <option value="">Choose a State</option>
-                    <!-- Add state options here -->
                 </select>
             </div>
             <div class="acme-address-form__field">
@@ -50,12 +49,9 @@
                 <input type="date" id="endDate" class="acme-address-form__input" required onblur={validateField}>
             </div>
         </div>
-        <div class="acme-address-form__actions">
+        <div class="acme-address-form__buttons">
             <button class="acme-button acme-button_secondary" onclick={handleClear}>Clear</button>
-            <button class="acme-button acme-button_primary" onclick={handleSubmit}>Submit</button>
-        </div>
-        <div class="acme-address-form__link">
-            <a href="#" onclick={handleCancel}>Cancel</a>
+            <button class="acme-button acme-button_primary" onclick={handleSubmit} disabled={!isFormValid}>Submit</button>
         </div>
     </div>
 </template>

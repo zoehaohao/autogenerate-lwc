@@ -1,70 +1,69 @@
 // addressForm.js
 import { LightningElement, track } from 'lwc';
-
 export default class AddressForm extends LightningElement {
     @track formData = {};
     @track errors = {};
-
+    @track isFormValid = false;
+    connectedCallback() {
+        this.initializeFormData();
+    }
+    initializeFormData() {
+        this.formData = {
+            firstName: '', middleName: '', lastName: '', birthdate: '',
+            address: '', city: '', state: '', zipCode: '',
+            startDate: '', endDate: ''
+        };
+    }
     validateField(event) {
         const field = event.target;
         const fieldName = field.id;
         const fieldValue = field.value;
-
         this.formData[fieldName] = fieldValue;
-
-        if (field.required && !fieldValue) {
-            this.errors[fieldName] = `${fieldName} is required`;
-        } else {
-            delete this.errors[fieldName];
+        this.errors[fieldName] = '';
+        switch(fieldName) {
+            case 'firstName':
+            case 'lastName':
+                if (!fieldValue.trim()) {
+                    this.errors[fieldName] = `${fieldName} is required`;
+                }
+                break;
+            case 'zipCode':
+                if (!/^\d{5}(-\d{4})?$/.test(fieldValue)) {
+                    this.errors[fieldName] = 'Invalid zip code';
+                }
+                break;
+            case 'birthdate':
+            case 'startDate':
+            case 'endDate':
+                if (!this.isValidDate(fieldValue)) {
+                    this.errors[fieldName] = 'Invalid date';
+                }
+                break;
         }
-
         if (fieldName === 'endDate' && this.formData.startDate) {
             if (new Date(fieldValue) <= new Date(this.formData.startDate)) {
                 this.errors[fieldName] = 'End Date must be after Start Date';
             }
         }
-
-        this.updateFieldValidation(field);
+        this.isFormValid = Object.values(this.errors).every(error => !error);
     }
-
-    updateFieldValidation(field) {
-        if (this.errors[field.id]) {
-            field.classList.add('acme-address-form__input_error');
-            field.setAttribute('aria-invalid', 'true');
-        } else {
-            field.classList.remove('acme-address-form__input_error');
-            field.removeAttribute('aria-invalid');
-        }
+    isValidDate(dateString) {
+        const regex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!regex.test(dateString)) return false;
+        const date = new Date(dateString);
+        return date instanceof Date && !isNaN(date);
     }
-
     handleSubmit() {
-        this.validateAllFields();
-        if (Object.keys(this.errors).length === 0) {
+        if (this.isFormValid) {
             console.log('Form submitted:', this.formData);
-        } else {
-            console.error('Form has errors:', this.errors);
         }
     }
-
-    validateAllFields() {
-        this.template.querySelectorAll('input, select').forEach(field => {
-            if (field.required && !field.value) {
-                this.errors[field.id] = `${field.id} is required`;
-                this.updateFieldValidation(field);
-            }
-        });
-    }
-
     handleClear() {
+        this.initializeFormData();
+        this.errors = {};
+        this.isFormValid = false;
         this.template.querySelectorAll('input, select').forEach(field => {
             field.value = '';
         });
-        this.formData = {};
-        this.errors = {};
-    }
-
-    handleCancel() {
-        // Implement navigation logic here
-        console.log('Form cancelled');
     }
 }
