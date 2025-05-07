@@ -1,0 +1,63 @@
+/* personalInfoForm.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-coral-color: #FF6B6B;
+}
+
+.root-container {
+    font-family: var(--lwc-fontFamily);
+}
+
+.form-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--lwc-spacingMedium);
+}
+
+.slds-form-element__label {
+    color: var(--acme-gray-color);
+    font-size: 14px;
+    text-align: right;
+}
+
+.error-message {
+    color: var(--acme-coral-color);
+    font-size: 12px;
+    margin-top: 0.25rem;
+}
+
+.error-summary {
+    color: var(--acme-coral-color);
+    background-color: rgba(255, 107, 107, 0.1);
+    padding: var(--lwc-spacingSmall);
+    border-radius: 4px;
+}
+
+.slds-input,
+.slds-select {
+    height: 40px;
+    border-color: #E4E7EB;
+}
+
+.slds-input:focus,
+.slds-select:focus {
+    border-color: var(--acme-blue-color);
+    box-shadow: 0 0 3px var(--acme-blue-color);
+}
+
+.slds-button_brand {
+    background-color: var(--acme-blue-color);
+    border-color: var(--acme-blue-color);
+}
+
+.slds-button_brand:hover:not(:disabled) {
+    background-color: #004A9E;
+    border-color: #004A9E;
+}
+
+@media (max-width: 768px) {
+    .slds-form-element__label {
+        text-align: left;
+    }
+}
