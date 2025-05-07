@@ -1,0 +1,62 @@
+<!-- formValidator.html -->
+<template>
+    <div class="root-container">
+        <lightning-card title="Form Validator" class="acme-card">
+            <div class="slds-p-around_medium">
+                <lightning-input 
+                    label="Name" 
+                    name="name" 
+                    required
+                    onchange={handleInputChange}
+                    class="slds-m-bottom_small"
+                ></lightning-input>
+                <lightning-input 
+                    type="email" 
+                    label="Email" 
+                    name="email" 
+                    required
+                    onchange={handleInputChange}
+                    class="slds-m-bottom_small"
+                ></lightning-input>
+                <lightning-input 
+                    type="tel" 
+                    label="Phone" 
+                    name="phone" 
+                    onchange={handleInputChange}
+                    class="slds-m-bottom_small"
+                ></lightning-input>
+                <lightning-input 
+                    type="number" 
+                    label="Age" 
+                    name="age" 
+                    min="18" 
+                    max="120"
+                    onchange={handleInputChange}
+                    class="slds-m-bottom_small"
+                ></lightning-input>
+                <lightning-textarea 
+                    label="Comments" 
+                    name="comments" 
+                    onchange={handleInputChange}
+                    class="slds-m-bottom_small"
+                ></lightning-textarea>
+                <lightning-button 
+                    label="Submit" 
+                    variant="brand" 
+                    onclick={handleSubmit} 
+                    class="slds-m-top_medium"
+                ></lightning-button>
+            </div>
+            <template if:true={errorMessage}>
+                <div class="slds-text-color_error slds-p-around_small">
+                    {errorMessage}
+                </div>
+            </template>
+            <template if:true={successMessage}>
+                <div class="slds-text-color_success slds-p-around_small">
+                    {successMessage}
+                </div>
+            </template>
+        </lightning-card>
+    </div>
+</template>
