@@ -1,0 +1,62 @@
+/* nameFormatter.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-teal-color: #00A0B0;
+    --acme-gold-color: #F2C94C;
+    --acme-coral-color: #FF6B6B;
+    --acme-light-gray-color: #F5F7FA;
+}
+
+.acme-name-formatter {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: var(--slds-c-card-spacing-block, 1rem);
+}
+
+.acme-input {
+    margin-bottom: var(--slds-c-card-spacing-block-small, 0.75rem);
+}
+
+.acme-button {
+    font-size: 0.875rem;
+    margin-right: var(--slds-c-button-spacing-inline-end, 0.5rem);
+}
+
+.acme-button_primary {
+    --slds-c-button-brand-color-background: var(--acme-blue-color);
+    --slds-c-button-brand-color-border: var(--acme-blue-color);
+}
+
+.acme-button_secondary {
+    --slds-c-button-neutral-color-background: var(--acme-light-gray-color);
+    --slds-c-button-neutral-color-border: var(--acme-gray-color);
+}
+
+.acme-text {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--acme-gray-color);
+}
+
+.acme-text_error {
+    color: var(--acme-coral-color);
+}
+
+.acme-link {
+    color: var(--acme-blue-color);
+    text-decoration: none;
+}
+
+.acme-icon {
+    --sds-c-icon-color-foreground: var(--acme-gray-color);
+    margin-right: 0.25rem;
+}
+
+@media screen and (max-width: 768px) {
+    .acme-name-formatter {
+        padding: var(--slds-c-card-spacing-block-small, 0.75rem);
+    }
+}

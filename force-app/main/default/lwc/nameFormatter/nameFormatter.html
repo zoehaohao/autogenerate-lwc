@@ -1,0 +1,55 @@
+<!-- nameFormatter.html -->
+<template>
+    <div class="acme-name-formatter">
+        <div class="acme-name-formatter__input-section">
+            <lightning-input 
+                label="First Name" 
+                type="text" 
+                required 
+                max-length="40" 
+                placeholder="Enter first name"
+                onchange={handleFirstNameChange}
+                class="acme-input"
+                pattern="[a-zA-Z-\s]+"
+                message-when-pattern-mismatch="Please enter letters only"
+            ></lightning-input>
+            <lightning-input 
+                label="Last Name" 
+                type="text" 
+                required 
+                max-length="80" 
+                placeholder="Enter last name"
+                onchange={handleLastNameChange}
+                class="acme-input"
+                pattern="[a-zA-Z-\s]+"
+                message-when-pattern-mismatch="Please enter letters only"
+            ></lightning-input>
+        </div>
+        <div class="acme-name-formatter__output-section">
+            <p if:true={formattedName} class="acme-text">Formatted Name: {formattedName}</p>
+        </div>
+        <div class="acme-name-formatter__controls">
+            <lightning-button 
+                label="Format" 
+                onclick={handleFormat} 
+                variant="brand" 
+                class="acme-button acme-button_primary"
+            ></lightning-button>
+            <lightning-button 
+                label="Clear" 
+                onclick={handleClear} 
+                variant="neutral" 
+                class="acme-button acme-button_secondary"
+            ></lightning-button>
+        </div>
+        <div class="acme-name-formatter__help">
+            <a href="#" onclick={showHelp} class="acme-link">
+                <lightning-icon icon-name="utility:help" size="x-small" alternative-text="Help" class="acme-icon"></lightning-icon>
+                Help
+            </a>
+        </div>
+        <div if:true={errorMessage} class="acme-name-formatter__error">
+            <p class="acme-text acme-text_error">{errorMessage}</p>
+        </div>
+    </div>
+</template>
