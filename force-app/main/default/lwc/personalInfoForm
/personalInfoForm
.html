@@ -4,65 +4,126 @@
         <div class="form-container">
             <div class="section personal-info">
                 <h2>Personal Information</h2>
-                <div class="form-group">
-                    <label for="firstName">First name <span class="required">*</span></label>
-                    <input type="text" id="firstName" required class={firstNameClass} value={firstName} onchange={handleFirstNameChange}/>
-                    <div if:true={firstNameError} class="error-message">{firstNameError}</div>
-                </div>
-                <div class="form-group">
-                    <label for="middleName">Middle name</label>
-                    <input type="text" id="middleName" value={middleName} onchange={handleMiddleNameChange}/>
-                </div>
-                <div class="form-group">
-                    <label for="lastName">Last name <span class="required">*</span></label>
-                    <input type="text" id="lastName" required class={lastNameClass} value={lastName} onchange={handleLastNameChange}/>
-                    <div if:true={lastNameError} class="error-message">{lastNameError}</div>
-                </div>
-                <div class="form-group">
-                    <label for="birthdate">Birthdate <span class="required">*</span></label>
-                    <input type="date" id="birthdate" required class={birthdateClass} value={birthdate} onchange={handleBirthdateChange}/>
-                    <div if:true={birthdateError} class="error-message">{birthdateError}</div>
+                <div class="field-group">
+                    <lightning-input 
+                        label="First Name" 
+                        required
+                        type="text"
+                        placeholder="Enter first name"
+                        onchange={handleInputChange}
+                        class="field"
+                        name="firstName">
+                    </lightning-input>
+
+                    <lightning-input 
+                        label="Middle Name"
+                        type="text"
+                        placeholder="Enter middle name"
+                        onchange={handleInputChange}
+                        class="field"
+                        name="middleName">
+                    </lightning-input>
+
+                    <lightning-input 
+                        label="Last Name"
+                        required
+                        type="text"
+                        placeholder="Enter last name"
+                        onchange={handleInputChange}
+                        class="field"
+                        name="lastName">
+                    </lightning-input>
+
+                    <lightning-input 
+                        label="Birthdate"
+                        required
+                        type="date"
+                        onchange={handleInputChange}
+                        class="field"
+                        name="birthdate">
+                    </lightning-input>
                 </div>
             </div>
+
             <div class="section address-info">
                 <h2>Address Information</h2>
-                <div class="form-group">
-                    <label for="address">Address</label>
-                    <input type="text" id="address" value={address} onchange={handleAddressChange}/>
-                </div>
-                <div class="form-group">
-                    <label for="city">City or Town</label>
-                    <input type="text" id="city" value={city} onchange={handleCityChange}/>
-                </div>
-                <div class="form-group">
-                    <label for="state">State</label>
-                    <select id="state" value={state} onchange={handleStateChange}>
-                        <option value="">Choose a State</option>
-                        <template for:each={stateOptions} for:item="option">
-                            <option key={option.value} value={option.value}>{option.label}</option>
-                        </template>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="zipCode">Zip code <span class="required">*</span></label>
-                    <input type="text" id="zipCode" required class={zipCodeClass} value={zipCode} onchange={handleZipCodeChange}/>
-                    <div if:true={zipCodeError} class="error-message">{zipCodeError}</div>
-                </div>
-                <div class="form-group">
-                    <label for="startDate">Start Date <span class="required">*</span></label>
-                    <input type="date" id="startDate" required class={startDateClass} value={startDate} onchange={handleStartDateChange}/>
-                    <div if:true={startDateError} class="error-message">{startDateError}</div>
-                </div>
-                <div class="form-group">
-                    <label for="endDate">End Date <span class="required">*</span></label>
-                    <input type="date" id="endDate" required class={endDateClass} value={endDate} onchange={handleEndDateChange}/>
-                    <div if:true={endDateError} class="error-message">{endDateError}</div>
+                <div class="field-group">
+                    <lightning-input 
+                        label="Address"
+                        type="text"
+                        placeholder="Enter address"
+                        onchange={handleInputChange}
+                        class="field"
+                        name="address">
+                    </lightning-input>
+
+                    <lightning-input 
+                        label="City or Town"
+                        type="text"
+                        placeholder="Enter city"
+                        onchange={handleInputChange}
+                        class="field"
+                        name="city">
+                    </lightning-input>
+
+                    <lightning-combobox
+                        label="State"
+                        placeholder="Choose a State"
+                        options={stateOptions}
+                        onchange={handleInputChange}
+                        class="field"
+                        name="state">
+                    </lightning-combobox>
+
+                    <lightning-input 
+                        label="Zip Code"
+                        required
+                        type="text"
+                        placeholder="Enter zip code"
+                        onchange={handleInputChange}
+                        class="field"
+                        name="zipCode">
+                    </lightning-input>
+
+                    <lightning-input 
+                        label="Start Date"
+                        required
+                        type="date"
+                        onchange={handleInputChange}
+                        class="field"
+                        name="startDate">
+                    </lightning-input>
+
+                    <lightning-input 
+                        label="End Date"
+                        required
+                        type="date"
+                        onchange={handleInputChange}
+                        class="field"
+                        name="endDate">
+                    </lightning-input>
                 </div>
             </div>
-            <div class="button-container">
-                <button class="slds-button slds-button_neutral" onclick={handleClear}>Clear</button>
-                <button class="slds-button slds-button_brand" onclick={handleSubmit}>Submit</button>
+
+            <div class="button-group">
+                <lightning-button 
+                    label="Clear"
+                    onclick={handleClear}
+                    variant="neutral"
+                    class="slds-m-right_x-small">
+                </lightning-button>
+                <lightning-button 
+                    label="Submit"
+                    onclick={handleSubmit}
+                    variant="brand">
+                </lightning-button>
             </div>
+
+            <template if:true={errorMessage}>
+                <div class="error-message">
+                    {errorMessage}
+                </div>
+            </template>
         </div>
     </div>
 </template>
