@@ -2,124 +2,178 @@
 import { LightningElement, track } from 'lwc';
 
 export default class PersonalInfoForm extends LightningElement {
-    @track formData = {
-        firstName: '',
-        middleName: '',
-        lastName: '',
-        birthdate: '',
-        address: '',
-        city: '',
-        state: '',
-        zipCode: '',
-        startDate: '',
-        endDate: ''
-    };
+    @track firstName = '';
+    @track middleName = '';
+    @track lastName = '';
+    @track birthdate = '';
+    @track address = '';
+    @track city = '';
+    @track state = '';
+    @track zipCode = '';
+    @track startDate = '';
+    @track endDate = '';
 
-    @track errors = {};
-    @track errorSummary = '';
-    
+    @track firstNameError = '';
+    @track lastNameError = '';
+    @track birthdateError = '';
+    @track zipCodeError = '';
+    @track startDateError = '';
+    @track endDateError = '';
+
     get stateOptions() {
         return [
-            { label: 'Alabama', value: 'AL' },
-            { label: 'Alaska', value: 'AK' }
+            { label: 'California', value: 'CA' },
+            { label: 'New York', value: 'NY' },
+            { label: 'Texas', value: 'TX' }
         ];
     }
 
-    get isSubmitDisabled() {
-        return Object.keys(this.errors).length > 0 || !this.isRequiredFieldsFilled();
+    get firstNameClass() {
+        return `slds-input ${this.firstNameError ? 'error' : ''}`;
     }
 
-    isRequiredFieldsFilled() {
-        return this.formData.firstName && 
-               this.formData.lastName && 
-               this.formData.birthdate && 
-               this.formData.zipCode &&
-               this.formData.startDate &&
-               this.formData.endDate;
+    get lastNameClass() {
+        return `slds-input ${this.lastNameError ? 'error' : ''}`;
     }
 
-    validateField(event) {
-        const field = event.target.dataset.field;
-        const value = event.target.value;
-        
-        this.errors[field] = '';
+    get birthdateClass() {
+        return `slds-input ${this.birthdateError ? 'error' : ''}`;
+    }
 
-        switch(field) {
-            case 'firstName':
-            case 'lastName':
-                if (!value) {
-                    this.errors[field] = `${field === 'firstName' ? 'First' : 'Last'} name is required`;
-                }
-                break;
-            
-            case 'birthdate':
-                if (!value) {
-                    this.errors[field] = 'Birthdate is required';
-                } else {
-                    const age = this.calculateAge(new Date(value));
-                    if (age < 18) {
-                        this.errors[field] = 'Must be 18 or older';
-                    }
-                }
-                break;
+    get zipCodeClass() {
+        return `slds-input ${this.zipCodeError ? 'error' : ''}`;
+    }
 
-            case 'zipCode':
-                if (!value) {
-                    this.errors[field] = 'Zip code is required';
-                } else if (!/^\d{5}$/.test(value)) {
-                    this.errors[field] = 'Enter a valid 5-digit zip code';
-                }
-                break;
+    get startDateClass() {
+        return `slds-input ${this.startDateError ? 'error' : ''}`;
+    }
 
-            case 'startDate':
-            case 'endDate':
-                if (!value) {
-                    this.errors[field] = `${field === 'startDate' ? 'Start' : 'End'} date is required`;
-                } else if (field === 'endDate' && this.formData.startDate && value <= this.formData.startDate) {
-                    this.errors[field] = 'End date must be after start date';
-                }
-                break;
+    get endDateClass() {
+        return `slds-input ${this.endDateError ? 'error' : ''}`;
+    }
+
+    handleFirstNameChange(event) {
+        this.firstName = event.target.value;
+        this.validateFirstName();
+    }
+
+    handleMiddleNameChange(event) {
+        this.middleName = event.target.value;
+    }
+
+    handleLastNameChange(event) {
+        this.lastName = event.target.value;
+        this.validateLastName();
+    }
+
+    handleBirthdateChange(event) {
+        this.birthdate = event.target.value;
+        this.validateBirthdate();
+    }
+
+    handleAddressChange(event) {
+        this.address = event.target.value;
+    }
+
+    handleCityChange(event) {
+        this.city = event.target.value;
+    }
+
+    handleStateChange(event) {
+        this.state = event.target.value;
+    }
+
+    handleZipCodeChange(event) {
+        this.zipCode = event.target.value;
+        this.validateZipCode();
+    }
+
+    handleStartDateChange(event) {
+        this.startDate = event.target.value;
+        this.validateDates();
+    }
+
+    handleEndDateChange(event) {
+        this.endDate = event.target.value;
+        this.validateDates();
+    }
+
+    validateFirstName() {
+        this.firstNameError = this.firstName ? '' : 'First name is required';
+    }
+
+    validateLastName() {
+        this.lastNameError = this.lastName ? '' : 'Last name is required';
+    }
+
+    validateBirthdate() {
+        this.birthdateError = this.birthdate ? '' : 'Birthdate is required';
+    }
+
+    validateZipCode() {
+        this.zipCodeError = this.zipCode ? '' : 'Zip code is required';
+    }
+
+    validateDates() {
+        if (!this.startDate) {
+            this.startDateError = 'Start date is required';
+        } else if (!this.endDate) {
+            this.endDateError = 'End date is required';
+        } else if (this.startDate > this.endDate) {
+            this.startDateError = 'Start date must be before end date';
+            this.endDateError = 'End date must be after start date';
+        } else {
+            this.startDateError = '';
+            this.endDateError = '';
         }
-
-        this.updateErrorSummary();
     }
 
-    calculateAge(birthDate) {
-        const today = new Date();
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const monthDiff = today.getMonth() - birthDate.getMonth();
-        
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
-        return age;
-    }
+    validateForm() {
+        this.validateFirstName();
+        this.validateLastName();
+        this.validateBirthdate();
+        this.validateZipCode();
+        this.validateDates();
 
-    updateErrorSummary() {
-        const errorMessages = Object.values(this.errors).filter(error => error);
-        this.errorSummary = errorMessages.length ? 'Please correct the following errors:' : '';
+        return !this.firstNameError && !this.lastNameError && !this.birthdateError && 
+               !this.zipCodeError && !this.startDateError && !this.endDateError;
     }
 
     handleSubmit() {
-        if (!this.isSubmitDisabled) {
-            console.log('Form submitted:', this.formData);
+        if (this.validateForm()) {
+            const formData = {
+                firstName: this.firstName,
+                middleName: this.middleName,
+                lastName: this.lastName,
+                birthdate: this.birthdate,
+                address: this.address,
+                city: this.city,
+                state: this.state,
+                zipCode: this.zipCode,
+                startDate: this.startDate,
+                endDate: this.endDate
+            };
+            console.log('Form submitted:', formData);
         }
     }
 
     handleClear() {
-        this.formData = {
-            firstName: '',
-            middleName: '',
-            lastName: '',
-            birthdate: '',
-            address: '',
-            city: '',
-            state: '',
-            zipCode: '',
-            startDate: '',
-            endDate: ''
-        };
-        this.errors = {};
-        this.errorSummary = '';
+        this.firstName = '';
+        this.middleName = '';
+        this.lastName = '';
+        this.birthdate = '';
+        this.address = '';
+        this.city = '';
+        this.state = '';
+        this.zipCode = '';
+        this.startDate = '';
+        this.endDate = '';
+        
+        this.firstNameError = '';
+        this.lastNameError = '';
+        this.birthdateError = '';
+        this.zipCodeError = '';
+        this.startDateError = '';
+        this.endDateError = '';
     }
 }
