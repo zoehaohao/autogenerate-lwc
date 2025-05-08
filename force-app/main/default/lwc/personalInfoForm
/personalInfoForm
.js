@@ -2,75 +2,90 @@
 import { LightningElement, track } from 'lwc';
 
 export default class PersonalInfoForm extends LightningElement {
-    @track formData = {
-        firstName: '',
-        middleName: '',
-        lastName: '',
-        birthdate: '',
-        address: '',
-        city: '',
-        state: '',
-        zipCode: '',
-        startDate: '',
-        endDate: ''
-    };
-
-    @track errorMessage = '';
-
+    @track errors = {};
+    @track errorSummary = '';
+    
     stateOptions = [
-        { label: 'Select State', value: '' },
         { label: 'California', value: 'CA' },
         { label: 'New York', value: 'NY' },
         { label: 'Texas', value: 'TX' }
     ];
 
-    handleInputChange(event) {
-        const { name, value } = event.target;
-        this.formData[name] = value;
-        this.errorMessage = '';
+    validateField(event) {
+        const field = event.target.dataset.field;
+        const value = event.target.value;
+        
+        this.errors[field] = '';
+
+        switch(field) {
+            case 'firstName':
+            case 'lastName':
+                if (!value.trim()) {
+                    this.errors[field] = `${field === 'firstName' ? 'First' : 'Last'} name is required`;
+                }
+                break;
+            case 'zipCode':
+                if (!value.trim()) {
+                    this.errors[field] = 'Zip code is required';
+                } else if (!/^\d{5}(-\d{4})?$/.test(value)) {
+                    this.errors[field] = 'Invalid zip code format';
+                }
+                break;
+            case 'startDate':
+            case 'endDate':
+                if (!value) {
+                    this.errors[field] = `${field === 'startDate' ? 'Start' : 'End'} date is required`;
+                } else if (field === 'endDate') {
+                    const startDate = this.template.querySelector('[data-field="startDate"]').value;
+                    if (startDate && value < startDate) {
+                        this.errors[field] = 'End date must be after start date';
+                    }
+                }
+                break;
+            case 'birthdate':
+                if (!value) {
+                    this.errors[field] = 'Birthdate is required';
+                }
+                break;
+        }
+        
+        this.updateErrorSummary();
+    }
+
+    updateErrorSummary() {
+        const errorMessages = Object.values(this.errors).filter(error => error);
+        this.errorSummary = errorMessages.length ? errorMessages.join('. ') : '';
+    }
+
+    handleStateChange(event) {
+        this.selectedState = event.target.value;
     }
 
     handleSubmit() {
-        if (this.validateForm()) {
-            console.log('Form submitted:', this.formData);
-            this.errorMessage = '';
+        const inputs = this.template.querySelectorAll('input[required], select[required]');
+        let isValid = true;
+
+        inputs.forEach(input => {
+            const field = input.dataset.field;
+            if (!input.value.trim()) {
+                this.errors[field] = `${field} is required`;
+                isValid = false;
+            }
+        });
+
+        this.updateErrorSummary();
+
+        if (isValid && !this.errorSummary) {
+            // Form submission logic here
+            console.log('Form submitted successfully');
         }
     }
 
     handleClear() {
-        this.formData = {
-            firstName: '',
-            middleName: '',
-            lastName: '',
-            birthdate: '',
-            address: '',
-            city: '',
-            state: '',
-            zipCode: '',
-            startDate: '',
-            endDate: ''
-        };
-        this.errorMessage = '';
-        const inputs = this.template.querySelectorAll('lightning-input, lightning-combobox');
-        inputs.forEach(input => input.value = '');
-    }
-
-    validateForm() {
-        const requiredFields = ['firstName', 'lastName', 'birthdate', 'zipCode', 'startDate', 'endDate'];
-        const missingFields = requiredFields.filter(field => !this.formData[field]);
-
-        if (missingFields.length) {
-            this.errorMessage = 'Please fill in all required fields';
-            return false;
-        }
-
-        if (this.formData.startDate && this.formData.endDate) {
-            if (new Date(this.formData.endDate) <= new Date(this.formData.startDate)) {
-                this.errorMessage = 'End Date must be after Start Date';
-                return false;
-            }
-        }
-
-        return true;
+        this.template.querySelectorAll('input, select').forEach(input => {
+            input.value = '';
+        });
+        this.errors = {};
+        this.errorSummary = '';
     }
 }

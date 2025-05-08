@@ -1,48 +1,53 @@
 /* personalInfoForm.css */
 .root-container {
-    padding: var(--slds-c-card-spacing-block);
-    max-width: 1024px;
-    margin: 0 auto;
+    padding: var(--slds-c-card-spacing-block, 1rem);
+    background: var(--acme-white-color, #FFFFFF);
 }
 
-.form-container {
-    background-color: #FFFFFF;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(66, 74, 84, 0.1);
-    padding: 24px;
-}
-
-.section {
-    margin-bottom: var(--slds-c-card-spacing-block);
-}
-
-h2 {
-    color: #0057B8;
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 16px;
-}
-
-.field-group {
+.form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    gap: var(--slds-c-card-spacing-block, 1rem);
 }
 
-.button-group {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 24px;
+.section-header {
+    color: var(--acme-blue-color, #0057B8);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
 }
 
 .error-message {
-    color: #FF6B6B;
-    margin-top: 16px;
-    text-align: center;
+    color: var(--acme-coral-color, #FF6B6B);
+    font-size: 12px;
+    margin-top: 0.25rem;
+}
+
+.error-summary {
+    color: var(--acme-coral-color, #FF6B6B);
+    background: #FFF3F3;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.slds-button_brand {
+    background-color: var(--acme-blue-color, #0057B8);
+    border-color: var(--acme-blue-color, #0057B8);
+}
+
+.slds-button_brand:hover {
+    background-color: var(--acme-blue-dark-color, #004A9E);
 }
 
 @media screen and (max-width: 768px) {
-    .field-group {
+    .form-grid {
         grid-template-columns: 1fr;
     }
 }

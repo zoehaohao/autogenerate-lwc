@@ -1,129 +1,120 @@
 <!-- personalInfoForm.html -->
 <template>
     <div class="root-container">
-        <div class="form-container">
-            <div class="section personal-info">
-                <h2>Personal Information</h2>
-                <div class="field-group">
-                    <lightning-input 
-                        label="First Name" 
-                        required
-                        type="text"
-                        placeholder="Enter first name"
-                        onchange={handleInputChange}
-                        class="field"
-                        name="firstName">
-                    </lightning-input>
+        <div if:true={errorSummary} class="error-summary slds-m-bottom_medium">
+            {errorSummary}
+        </div>
+        
+        <div class="form-grid">
+            <div class="personal-info slds-p-bottom_medium">
+                <h2 class="section-header">Personal Information</h2>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label">
+                        <abbr class="slds-required" title="required">*</abbr>First Name
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input type="text" class="slds-input" placeholder="Enter first name" 
+                               required onblur={validateField} data-field="firstName"/>
+                        <div if:true={errors.firstName} class="error-message">{errors.firstName}</div>
+                    </div>
+                </div>
 
-                    <lightning-input 
-                        label="Middle Name"
-                        type="text"
-                        placeholder="Enter middle name"
-                        onchange={handleInputChange}
-                        class="field"
-                        name="middleName">
-                    </lightning-input>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label">Middle Name</label>
+                    <div class="slds-form-element__control">
+                        <input type="text" class="slds-input" placeholder="Enter middle name"/>
+                    </div>
+                </div>
 
-                    <lightning-input 
-                        label="Last Name"
-                        required
-                        type="text"
-                        placeholder="Enter last name"
-                        onchange={handleInputChange}
-                        class="field"
-                        name="lastName">
-                    </lightning-input>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label">
+                        <abbr class="slds-required" title="required">*</abbr>Last Name
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input type="text" class="slds-input" placeholder="Enter last name" 
+                               required onblur={validateField} data-field="lastName"/>
+                        <div if:true={errors.lastName} class="error-message">{errors.lastName}</div>
+                    </div>
+                </div>
 
-                    <lightning-input 
-                        label="Birthdate"
-                        required
-                        type="date"
-                        onchange={handleInputChange}
-                        class="field"
-                        name="birthdate">
-                    </lightning-input>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label">
+                        <abbr class="slds-required" title="required">*</abbr>Birthdate
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input type="date" class="slds-input" required 
+                               onblur={validateField} data-field="birthdate"/>
+                        <div if:true={errors.birthdate} class="error-message">{errors.birthdate}</div>
+                    </div>
                 </div>
             </div>
 
-            <div class="section address-info">
-                <h2>Address Information</h2>
-                <div class="field-group">
-                    <lightning-input 
-                        label="Address"
-                        type="text"
-                        placeholder="Enter address"
-                        onchange={handleInputChange}
-                        class="field"
-                        name="address">
-                    </lightning-input>
+            <div class="address-info">
+                <h2 class="section-header">Address Information</h2>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label">Address</label>
+                    <div class="slds-form-element__control">
+                        <input type="text" class="slds-input" placeholder="Enter address"/>
+                    </div>
+                </div>
 
-                    <lightning-input 
-                        label="City or Town"
-                        type="text"
-                        placeholder="Enter city"
-                        onchange={handleInputChange}
-                        class="field"
-                        name="city">
-                    </lightning-input>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label">City or Town</label>
+                    <div class="slds-form-element__control">
+                        <input type="text" class="slds-input" placeholder="Enter city"/>
+                    </div>
+                </div>
 
-                    <lightning-combobox
-                        label="State"
-                        placeholder="Choose a State"
-                        options={stateOptions}
-                        onchange={handleInputChange}
-                        class="field"
-                        name="state">
-                    </lightning-combobox>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label">State</label>
+                    <div class="slds-form-element__control">
+                        <select class="slds-select" onchange={handleStateChange}>
+                            <option value="">Choose a State</option>
+                            <template for:each={stateOptions} for:item="state">
+                                <option key={state.value} value={state.value}>{state.label}</option>
+                            </template>
+                        </select>
+                    </div>
+                </div>
 
-                    <lightning-input 
-                        label="Zip Code"
-                        required
-                        type="text"
-                        placeholder="Enter zip code"
-                        onchange={handleInputChange}
-                        class="field"
-                        name="zipCode">
-                    </lightning-input>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label">
+                        <abbr class="slds-required" title="required">*</abbr>Zip Code
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input type="text" class="slds-input" placeholder="Enter zip code" 
+                               required onblur={validateField} data-field="zipCode"/>
+                        <div if:true={errors.zipCode} class="error-message">{errors.zipCode}</div>
+                    </div>
+                </div>
 
-                    <lightning-input 
-                        label="Start Date"
-                        required
-                        type="date"
-                        onchange={handleInputChange}
-                        class="field"
-                        name="startDate">
-                    </lightning-input>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label">
+                        <abbr class="slds-required" title="required">*</abbr>Start Date
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input type="date" class="slds-input" required 
+                               onblur={validateField} data-field="startDate"/>
+                        <div if:true={errors.startDate} class="error-message">{errors.startDate}</div>
+                    </div>
+                </div>
 
-                    <lightning-input 
-                        label="End Date"
-                        required
-                        type="date"
-                        onchange={handleInputChange}
-                        class="field"
-                        name="endDate">
-                    </lightning-input>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label">
+                        <abbr class="slds-required" title="required">*</abbr>End Date
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input type="date" class="slds-input" required 
+                               onblur={validateField} data-field="endDate"/>
+                        <div if:true={errors.endDate} class="error-message">{errors.endDate}</div>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <div class="button-group">
-                <lightning-button 
-                    label="Clear"
-                    onclick={handleClear}
-                    variant="neutral"
-                    class="slds-m-right_x-small">
-                </lightning-button>
-                <lightning-button 
-                    label="Submit"
-                    onclick={handleSubmit}
-                    variant="brand">
-                </lightning-button>
-            </div>
-
-            <template if:true={errorMessage}>
-                <div class="error-message">
-                    {errorMessage}
-                </div>
-            </template>
+        <div class="button-container">
+            <button class="slds-button slds-button_neutral" onclick={handleClear}>Clear</button>
+            <button class="slds-button slds-button_brand" onclick={handleSubmit}>Submit</button>
         </div>
     </div>
 </template>
