@@ -1,0 +1,74 @@
+/* exactFieldInventory.css */
+.root-container {
+    padding: var(--slds-c-card-spacing-block);
+    font-family: var(--slds-c-input-font-family, "Salesforce Sans");
+}
+
+.form-container {
+    max-width: 1024px;
+    margin: 0 auto;
+}
+
+.section {
+    margin-bottom: var(--slds-c-card-spacing-block-end);
+    padding: 1rem;
+    background: var(--slds-c-card-color-background, #ffffff);
+    border-radius: var(--slds-c-card-radius-border, 8px);
+    box-shadow: var(--slds-c-card-shadow);
+}
+
+h2 {
+    color: #0057B8;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.field-group {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    color: #424A54;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+}
+
+input, select {
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid #E4E7EB;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+input:focus, select:focus {
+    outline: 2px solid #0057B8;
+    border-color: transparent;
+}
+
+.required {
+    color: #FF6B6B;
+    margin-left: 0.25rem;
+}
+
+.error-message {
+    color: #FF6B6B;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+    .field-group {
+        width: 100%;
+    }
+}
