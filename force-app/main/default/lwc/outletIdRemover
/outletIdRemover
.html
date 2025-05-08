@@ -1,0 +1,74 @@
+<!-- outletIdRemover.html -->
+<template>
+    <div class="root-container">
+        <div class="two-column-layout">
+            <div class="list-view-container">
+                <lightning-card title="Outlet Records">
+                    <div class="slds-p-around_medium">
+                        <lightning-datatable
+                            key-field="id"
+                            data={outlets}
+                            columns={columns}
+                            selected-rows={selectedRows}
+                            onrowselection={handleRowSelection}>
+                        </lightning-datatable>
+                    </div>
+                </lightning-card>
+            </div>
+            
+            <div class="action-panel">
+                <lightning-card title="Remove Outlet IDs">
+                    <div class="slds-p-around_medium">
+                        <div class="selection-summary">
+                            <p>Selected Outlets: {selectedCount}</p>
+                        </div>
+                        
+                        <lightning-button
+                            label="Remove Selected IDs"
+                            variant="brand"
+                            onclick={handleRemoveClick}
+                            disabled={isRemoveDisabled}
+                            class="slds-m-top_medium">
+                        </lightning-button>
+
+                        <template if:true={showConfirmDialog}>
+                            <section role="dialog" class="slds-modal slds-fade-in-open">
+                                <div class="slds-modal__container">
+                                    <header class="slds-modal__header">
+                                        <h2>Confirm Removal</h2>
+                                    </header>
+                                    <div class="slds-modal__content slds-p-around_medium">
+                                        <p>Are you sure you want to remove {selectedCount} outlet IDs?</p>
+                                    </div>
+                                    <footer class="slds-modal__footer">
+                                        <lightning-button
+                                            label="Cancel"
+                                            onclick={handleCancelConfirm}
+                                            class="slds-m-right_x-small">
+                                        </lightning-button>
+                                        <lightning-button
+                                            label="Confirm"
+                                            variant="brand"
+                                            onclick={handleConfirmRemove}>
+                                        </lightning-button>
+                                    </footer>
+                                </div>
+                            </section>
+                            <div class="slds-backdrop slds-backdrop_open"></div>
+                        </template>
+
+                        <template if:true={showStatus}>
+                            <div class="status-container slds-m-top_medium">
+                                <div class="slds-notify_container">
+                                    <div class={statusClass} role="alert">
+                                        <span class="status-message">{statusMessage}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </lightning-card>
+            </div>
+        </div>
+    </div>
+</template>
