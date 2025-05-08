@@ -1,0 +1,38 @@
+/* veteranAgedCareFeedback.css */
+:host {
+    --slds-c-button-brand-color-background: #0057B8;
+    --slds-c-button-brand-color-background-hover: #004A9E;
+    --slds-c-button-brand-color-background-active: #004491;
+    --slds-c-button-brand-text-color: #FFFFFF;
+    --slds-c-input-color-border: #E4E7EB;
+    --slds-c-input-color-border-focus: #0057B8;
+    --slds-c-input-text-color: #424A54;
+    --slds-c-input-shadow-focus: 0 0 3px #0057B8;
+}
+
+.root-container {
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.slds-form-element__label {
+    font-size: 14px;
+    color: #424A54;
+}
+
+lightning-input, lightning-textarea, lightning-checkbox-group, lightning-radio-group {
+    --slds-c-input-spacing-horizontal-start: 12px;
+    --slds-c-input-spacing-horizontal-end: 12px;
+    --slds-c-input-radius-border: 4px;
+}
+
+lightning-button {
+    --slds-c-button-radius-border: 4px;
+}
+
+@media (max-width: 768px) {
+    .slds-form-element {
+        margin-bottom: 1rem;
+    }
+}
