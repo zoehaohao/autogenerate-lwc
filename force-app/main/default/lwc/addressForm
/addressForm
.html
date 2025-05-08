@@ -1,0 +1,73 @@
+<!-- addressForm.html -->
+<template>
+    <div class="root-container">
+        <div class="form-container">
+            <div class="section personal-info">
+                <h2>Personal Information</h2>
+                <div class="form-grid">
+                    <div class="form-element">
+                        <label class="required">First Name</label>
+                        <input type="text" required placeholder="Enter first name" value={firstName} onchange={handleFirstNameChange} class={firstNameClass}/>
+                        <div if:true={firstNameError} class="error-message">{firstNameError}</div>
+                    </div>
+                    <div class="form-element">
+                        <label>Middle Name</label>
+                        <input type="text" placeholder="Enter middle name" value={middleName} onchange={handleMiddleNameChange}/>
+                    </div>
+                    <div class="form-element">
+                        <label class="required">Last Name</label>
+                        <input type="text" required placeholder="Enter last name" value={lastName} onchange={handleLastNameChange} class={lastNameClass}/>
+                        <div if:true={lastNameError} class="error-message">{lastNameError}</div>
+                    </div>
+                    <div class="form-element">
+                        <label class="required">Birthdate</label>
+                        <input type="date" required value={birthdate} onchange={handleBirthdateChange} class={birthdateClass}/>
+                        <div if:true={birthdateError} class="error-message">{birthdateError}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section address-info">
+                <h2>Address Information</h2>
+                <div class="form-grid">
+                    <div class="form-element">
+                        <label>Address</label>
+                        <input type="text" placeholder="Enter address" value={address} onchange={handleAddressChange}/>
+                    </div>
+                    <div class="form-element">
+                        <label>City/Town</label>
+                        <input type="text" placeholder="Enter city" value={city} onchange={handleCityChange}/>
+                    </div>
+                    <div class="form-element">
+                        <label>State</label>
+                        <select value={state} onchange={handleStateChange}>
+                            <option value="">Choose a State</option>
+                            <template for:each={stateOptions} for:item="state">
+                                <option key={state.value} value={state.value}>{state.label}</option>
+                            </template>
+                        </select>
+                    </div>
+                    <div class="form-element">
+                        <label class="required">Zip Code</label>
+                        <input type="text" required placeholder="Enter zip code" value={zipCode} onchange={handleZipCodeChange} class={zipCodeClass}/>
+                        <div if:true={zipCodeError} class="error-message">{zipCodeError}</div>
+                    </div>
+                    <div class="form-element">
+                        <label class="required">Start Date</label>
+                        <input type="date" required value={startDate} onchange={handleStartDateChange} class={startDateClass}/>
+                        <div if:true={startDateError} class="error-message">{startDateError}</div>
+                    </div>
+                    <div class="form-element">
+                        <label class="required">End Date</label>
+                        <input type="date" required value={endDate} onchange={handleEndDateChange} class={endDateClass}/>
+                        <div if:true={endDateError} class="error-message">{endDateError}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button class="submit-button" onclick={handleSubmit}>Submit</button>
+            </div>
+        </div>
+    </div>
+</template>
