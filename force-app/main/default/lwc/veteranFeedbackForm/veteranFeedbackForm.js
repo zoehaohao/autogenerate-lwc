@@ -1,99 +1,87 @@
 // veteranFeedbackForm.js
 import { LightningElement, track } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class VeteranFeedbackForm extends LightningElement {
-    @track typeOfAgedCareOptions = [
+    @track providerName = 'Default Provider';
+    @track outletName = 'Default Outlet';
+    @track outletId = 'DEF123';
+    @track showVeteranQuestions = false;
+
+    typeOfAgedCareOptions = [
         { label: 'Residential Care', value: 'residential' },
         { label: 'Home Care', value: 'home' },
         { label: 'Respite Care', value: 'respite' }
     ];
 
-    @track respondentStatusOptions = [
+    roleOptions = [
         { label: 'Veteran', value: 'veteran' },
-        { label: 'Representative', value: 'representative' }
+        { label: 'War widow/er', value: 'warWidow' },
+        { label: 'Family member', value: 'family' },
+        { label: 'Friend', value: 'friend' },
+        { label: 'Carer', value: 'carer' }
     ];
 
-    @track veteranStatusOptions = [
-        { label: 'Gold Card Holder', value: 'gold' },
-        { label: 'White Card Holder', value: 'white' }
-    ];
-
-    @track comfortOptions = [
+    yesNoOptions = [
         { label: 'Yes', value: 'yes' },
         { label: 'No', value: 'no' }
     ];
 
-    @track meetingNeedsOptions = [
-        { label: 'Very Well', value: 'veryWell' },
-        { label: 'Well', value: 'well' },
-        { label: 'Not Well', value: 'notWell' }
+    dvaCardOptions = [
+        { label: 'Gold', value: 'gold' },
+        { label: 'White', value: 'white' },
+        { label: 'Orange', value: 'orange' }
     ];
 
-    @track careRatingOptions = [
-        { label: 'Excellent', value: 'excellent' },
-        { label: 'Good', value: 'good' },
-        { label: 'Fair', value: 'fair' },
-        { label: 'Poor', value: 'poor' }
+    comfortLevelOptions = [
+        { label: 'Very comfortable', value: 'veryComfortable' },
+        { label: 'Comfortable', value: 'comfortable' },
+        { label: 'Neutral', value: 'neutral' },
+        { label: 'Uncomfortable', value: 'uncomfortable' },
+        { label: 'Very uncomfortable', value: 'veryUncomfortable' }
     ];
 
-    @track errorMessage = '';
-    @track isVeteran = false;
-    @track isStaffComfortYes = false;
-    @track isVeteranStatusRequired = false;
-
-    handleSubmit() {
-        if (this.validateForm()) {
-            // Form submission logic here
-            console.log('Form submitted successfully');
-        }
+    handleVeteranStatusChange(event) {
+        this.showVeteranQuestions = event.detail.value === 'yes';
     }
 
-    handleReset() {
-        this.template.querySelectorAll('lightning-input, lightning-checkbox-group, lightning-radio-group, lightning-textarea').forEach(element => {
-            element.value = null;
-        });
-        this.errorMessage = '';
-        this.isVeteran = false;
-        this.isStaffComfortYes = false;
-        this.isVeteranStatusRequired = false;
+    handleSubmit(event) {
+        event.preventDefault();
+        if (this.validateForm()) {
+            this.submitForm();
+        }
     }
 
     validateForm() {
-        let isValid = true;
-        let errorMessages = [];
+        const allValid = [...this.template.querySelectorAll('lightning-input, lightning-radio-group, lightning-checkbox-group, lightning-textarea')]
+            .reduce((validSoFar, inputField) => {
+                inputField.reportValidity();
+                return validSoFar && inputField.checkValidity();
+            }, true);
 
-        this.template.querySelectorAll('lightning-input, lightning-checkbox-group, lightning-radio-group, lightning-textarea').forEach(element => {
-            if (element.required && !element.value) {
-                isValid = false;
-                errorMessages.push(`${element.label} is required`);
-            }
-        });
-
-        const phoneInput = this.template.querySelector('lightning-input[type="tel"]');
-        if (phoneInput.value && !this.isValidPhoneNumber(phoneInput.value)) {
-            isValid = false;
-            errorMessages.push('Invalid phone number format');
+        if (!allValid) {
+            this.showToast('Error', 'Please fill in all required fields.', 'error');
         }
 
-        if (!isValid) {
-            this.errorMessage = errorMessages.join('. ');
-        } else {
-            this.errorMessage = '';
-        }
-
-        return isValid;
+        return allValid;
     }
 
-    isValidPhoneNumber(phone) {
-        return /^\d{10}$/.test(phone);
+    submitForm() {
+        this.showToast('Success', 'Form submitted successfully!', 'success');
     }
 
-    handleRespondentStatusChange(event) {
-        this.isVeteran = event.detail.value === 'veteran';
-        this.isVeteranStatusRequired = this.isVeteran;
+    handleClearForm() {
+        this.template.querySelector('form').reset();
+        this.showVeteranQuestions = false;
     }
 
-    handleStaffComfortChange(event) {
-        this.isStaffComfortYes = event.detail.value === 'yes';
+    showToast(title, message, variant) {
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: title,
+                message: message,
+                variant: variant,
+            }),
+        );
     }
 }

@@ -1,84 +1,50 @@
 /* veteranFeedbackForm.css */
-:host {
-    --acme-blue: #0057B8;
-    --acme-gray: #424A54;
-    --acme-white: #FFFFFF;
-    --acme-teal: #00A0B0;
-    --acme-gold: #F2C94C;
-    --acme-coral: #FF6B6B;
-    --acme-light-gray: #F5F7FA;
-    --acme-medium-gray: #E4E7EB;
-    --acme-dark-gray: #7B8794;
-}
-
 .root-container {
-    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    color: var(--acme-gray);
+    font-family: "Salesforce Sans", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     max-width: 800px;
     margin: 0 auto;
-    padding: var(--slds-c-card-spacing-block);
+    padding: 2rem;
+    background-color: var(--slds-c-card-color-background, #FFFFFF);
+    color: var(--slds-c-input-text-color, #333333);
 }
 
-.acme-heading {
-    color: var(--acme-blue);
-    margin-bottom: var(--slds-c-card-spacing-block);
+.form-section {
+    margin-bottom: var(--slds-c-card-spacing-block-end, 2rem);
 }
 
-.acme-heading_large {
-    font-size: 32px;
-    font-weight: 700;
+lightning-input,
+lightning-textarea,
+lightning-radio-group,
+lightning-checkbox-group {
+    margin-bottom: var(--slds-c-input-spacing-block-end, 1rem);
 }
 
-.acme-heading_medium {
-    font-size: 24px;
-    font-weight: 700;
-}
-
-.acme-card {
-    background-color: var(--acme-white);
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(66, 74, 84, 0.1);
-    padding: 24px;
-    margin-bottom: 24px;
+lightning-input .slds-input,
+lightning-textarea .slds-textarea {
+    height: var(--slds-c-input-height, 48px);
+    padding: var(--slds-c-input-spacing-horizontal, 12px);
+    border-radius: var(--slds-c-input-radius-border, 4px);
+    border: var(--slds-c-input-sizing-border, 1px solid #E0E0E0);
 }
 
 .button-container {
     display: flex;
-    justify-content: flex-end;
-    gap: 16px;
-    margin-top: 24px;
+    justify-content: flex-start;
+    margin-top: var(--slds-c-button-spacing-block-start, 1rem);
 }
 
-.acme-button {
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-weight: 600;
+lightning-button.slds-button_brand {
+    background-color: var(--slds-c-button-brand-color-background, #0057B8);
+    border-color: var(--slds-c-button-brand-color-border, #0057B8);
 }
 
-.acme-button_brand {
-    background-color: var(--acme-blue);
-    color: var(--acme-white);
-    border: none;
-}
-
-.acme-button_neutral {
-    background-color: var(--acme-white);
-    color: var(--acme-gray);
-    border: 1px solid var(--acme-medium-gray);
-}
-
-.error-message {
-    color: var(--acme-coral);
-    font-size: 14px;
-    margin-top: 16px;
+lightning-button.slds-button_neutral {
+    color: var(--slds-c-button-text-color, #424A54);
+    border-color: var(--slds-c-button-color-border, #E4E7EB);
 }
 
 @media (max-width: 768px) {
     .root-container {
-        padding: var(--slds-c-card-spacing-block-small);
-    }
-
-    .acme-card {
-        padding: 16px;
+        padding: 1rem;
     }
 }

@@ -1,60 +1,53 @@
 <!-- veteranFeedbackForm.html -->
 <template>
     <div class="root-container">
-        <h1 class="acme-heading acme-heading_large">Veteran Feedback Form</h1>
-        
-        <div class="acme-card">
-            <h2 class="acme-heading acme-heading_medium">Introduction and Privacy Notice</h2>
-            <p>Your feedback is important to us. This form is for veterans or their representatives to provide feedback about aged care services.</p>
-        </div>
+        <form onsubmit={handleSubmit}>
+            <div class="form-section">
+                <lightning-input type="date" label="Date" required></lightning-input>
+                <lightning-input type="text" label="Provider name" value={providerName} required></lightning-input>
+                <lightning-input type="text" label="Outlet name" value={outletName} required></lightning-input>
+                <lightning-input type="text" label="Outlet ID" value={outletId} required></lightning-input>
+            </div>
 
-        <div class="acme-card">
-            <h2 class="acme-heading acme-heading_medium">Feedback Questions - Veterans</h2>
-            <lightning-input type="date" label="Date" required></lightning-input>
-            <lightning-input type="text" label="Provider name" required></lightning-input>
-            <lightning-input type="text" label="Outlet name" required></lightning-input>
-            <lightning-input type="text" label="Outlet ID" required></lightning-input>
-            
-            <lightning-checkbox-group name="typeOfAgedCare" label="Type of aged care" options={typeOfAgedCareOptions} required></lightning-checkbox-group>
-        </div>
+            <div class="form-section">
+                <lightning-checkbox-group name="typeOfAgedCare" label="Type of aged care" options={typeOfAgedCareOptions} required></lightning-checkbox-group>
+            </div>
 
-        <div class="acme-card">
-            <h2 class="acme-heading acme-heading_medium">Contact Information</h2>
-            <lightning-input type="text" label="Name of respondent"></lightning-input>
-            <lightning-input type="tel" label="Respondent's phone number" pattern="[0-9]{10}"></lightning-input>
-        </div>
+            <div class="form-section">
+                <lightning-input type="text" label="Name of respondent (optional)"></lightning-input>
+                <lightning-input type="tel" label="Respondent's phone number (optional)"></lightning-input>
+            </div>
 
-        <div class="acme-card">
-            <h2 class="acme-heading acme-heading_medium">Recipient/Representative Status</h2>
-            <lightning-radio-group name="respondentStatus" label="Are you:" options={respondentStatusOptions} required></lightning-radio-group>
-        </div>
+            <div class="form-section">
+                <lightning-radio-group name="role" label="Are you:" options={roleOptions} required></lightning-radio-group>
+            </div>
 
-        <div class="acme-card">
-            <h2 class="acme-heading acme-heading_medium">Veteran Status</h2>
-            <lightning-radio-group name="veteranStatus" label="Veteran status (9a/9b)" options={veteranStatusOptions} required={isVeteranStatusRequired}></lightning-radio-group>
-        </div>
+            <div class="form-section">
+                <lightning-radio-group name="veteranStatus" label="Are you a veteran or war widow/er?" options={yesNoOptions} required onchange={handleVeteranStatusChange}></lightning-radio-group>
+                <template if:true={showVeteranQuestions}>
+                    <lightning-radio-group name="dvaCare" label="Are you receiving DVA funded care?" options={yesNoOptions} required></lightning-radio-group>
+                    <lightning-radio-group name="dvaCard" label="Do you have a DVA card?" options={dvaCardOptions} required></lightning-radio-group>
+                </template>
+            </div>
 
-        <div class="acme-card">
-            <h2 class="acme-heading acme-heading_medium">Evaluation of Provider's Veteran Care</h2>
-            <lightning-radio-group name="staffComfort" label="Comfort with staff (10a)" options={comfortOptions} required={isVeteran}></lightning-radio-group>
-            <lightning-radio-group name="staffMeetingNeeds" label="Staff meeting needs (10b)" options={meetingNeedsOptions} required={isStaffComfortYes}></lightning-radio-group>
-            <lightning-textarea name="specializedCareOpinion" label="Specialized care opinion (11a)" required={isVeteran}></lightning-textarea>
-            <lightning-radio-group name="providerCareRating" label="Provider care rating (11b)" options={careRatingOptions} required={isVeteran}></lightning-radio-group>
-            <lightning-textarea name="providerCareDetails" label="Provider care details (11c)" required={isVeteran}></lightning-textarea>
-        </div>
+            <div class="form-section">
+                <lightning-radio-group name="comfortLevel" label="How comfortable do you feel asking questions about your care and services?" options={comfortLevelOptions} required></lightning-radio-group>
+            </div>
 
-        <div class="acme-card">
-            <h2 class="acme-heading acme-heading_medium">Open-ended Feedback</h2>
-            <lightning-textarea name="additionalComments" label="Additional comments (12)"></lightning-textarea>
-        </div>
+            <div class="form-section">
+                <lightning-textarea name="careNeeds" label="What are your care needs?" required></lightning-textarea>
+                <lightning-radio-group name="careNeedsMet" label="Are your care needs being met?" options={yesNoOptions} required></lightning-radio-group>
+                <lightning-textarea name="unmetNeeds" label="If no, what needs are not being met?"></lightning-textarea>
+            </div>
 
-        <div class="button-container">
-            <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="acme-button acme-button_brand"></lightning-button>
-            <lightning-button label="Reset" variant="neutral" onclick={handleReset} class="acme-button acme-button_neutral"></lightning-button>
-        </div>
+            <div class="form-section">
+                <lightning-textarea name="additionalComments" label="Additional comments"></lightning-textarea>
+            </div>
 
-        <template if:true={errorMessage}>
-            <div class="error-message">{errorMessage}</div>
-        </template>
+            <div class="button-container">
+                <lightning-button variant="brand" type="submit" label="Submit" class="slds-m-right_x-small"></lightning-button>
+                <lightning-button variant="neutral" label="Clear Form" onclick={handleClearForm}></lightning-button>
+            </div>
+        </form>
     </div>
 </template>
