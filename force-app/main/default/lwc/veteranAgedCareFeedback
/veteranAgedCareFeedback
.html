@@ -1,0 +1,138 @@
+<!-- veteranAgedCareFeedback.html -->
+<template>
+    <div class="root-container">
+        <div class="form-section">
+            <h2>Veteran Aged Care Feedback Form</h2>
+            
+            <div class="field-group">
+                <lightning-input type="date" 
+                    label="Date" 
+                    required
+                    value={formData.date}
+                    onchange={handleDateChange}
+                    class="field">
+                </lightning-input>
+            </div>
+
+            <div class="field-group">
+                <lightning-input type="text"
+                    label="Provider name"
+                    required
+                    value={formData.providerName}
+                    onchange={handleInputChange}
+                    name="providerName"
+                    class="field">
+                </lightning-input>
+            </div>
+
+            <div class="field-group">
+                <lightning-input type="text"
+                    label="Outlet name"
+                    required
+                    value={formData.outletName}
+                    onchange={handleInputChange}
+                    name="outletName"
+                    class="field">
+                </lightning-input>
+            </div>
+
+            <div class="field-group">
+                <lightning-input type="text"
+                    label="Outlet ID"
+                    required
+                    value={formData.outletId}
+                    onchange={handleInputChange}
+                    name="outletId"
+                    class="field">
+                </lightning-input>
+            </div>
+
+            <div class="field-group">
+                <lightning-checkbox-group name="careType"
+                    label="Type of aged care"
+                    options={careTypeOptions}
+                    value={formData.careType}
+                    required
+                    onchange={handleCheckboxChange}>
+                </lightning-checkbox-group>
+            </div>
+
+            <div class="field-group">
+                <lightning-input type="text"
+                    label="Name of respondent"
+                    value={formData.respondentName}
+                    onchange={handleInputChange}
+                    name="respondentName"
+                    class="field">
+                </lightning-input>
+            </div>
+
+            <div class="field-group">
+                <lightning-input type="tel"
+                    label="Phone number"
+                    value={formData.phoneNumber}
+                    onchange={handlePhoneChange}
+                    name="phoneNumber"
+                    pattern="[0-9]{10}"
+                    message-when-pattern-mismatch="Please enter a valid 10-digit phone number"
+                    class="field">
+                </lightning-input>
+            </div>
+
+            <div class="field-group">
+                <lightning-radio-group name="respondentType"
+                    label="Are you"
+                    options={respondentTypeOptions}
+                    value={formData.respondentType}
+                    required
+                    onchange={handleRadioChange}>
+                </lightning-radio-group>
+            </div>
+
+            <template if:true={showVeteranStatus}>
+                <div class="field-group">
+                    <lightning-radio-group name="veteranStatus"
+                        label="Veteran status"
+                        options={veteranStatusOptions}
+                        value={formData.veteranStatus}
+                        required
+                        onchange={handleRadioChange}>
+                    </lightning-radio-group>
+                </div>
+            </template>
+
+            <template if:true={showComfortLevel}>
+                <div class="field-group">
+                    <lightning-radio-group name="comfortLevel"
+                        label="Comfort level"
+                        options={comfortLevelOptions}
+                        value={formData.comfortLevel}
+                        required
+                        onchange={handleRadioChange}>
+                    </lightning-radio-group>
+                </div>
+            </template>
+
+            <div class="button-group">
+                <lightning-button 
+                    label="Submit"
+                    variant="brand"
+                    onclick={handleSubmit}
+                    disabled={isSubmitDisabled}>
+                </lightning-button>
+                <lightning-button 
+                    label="Clear"
+                    variant="neutral"
+                    onclick={handleClear}
+                    class="slds-m-left_x-small">
+                </lightning-button>
+            </div>
+
+            <template if:true={errorMessage}>
+                <div class="error-message">
+                    {errorMessage}
+                </div>
+            </template>
+        </div>
+    </div>
+</template>
