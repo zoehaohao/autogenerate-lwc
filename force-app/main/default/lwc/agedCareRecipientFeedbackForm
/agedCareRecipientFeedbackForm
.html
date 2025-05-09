@@ -1,0 +1,151 @@
+<!-- agedCareRecipientFeedbackForm.html -->
+<template>
+    <div class="root-container">
+        <div class="form-container">
+            <h1 class="form-title">Aged Care Recipient Feedback Form</h1>
+            
+            <div class="form-section">
+                <h2>Provider and Outlet Details</h2>
+                <div class="field-group">
+                    <lightning-input type="date" 
+                        label="Date" 
+                        required
+                        class="field"
+                        onchange={handleDateChange}>
+                    </lightning-input>
+
+                    <lightning-input type="text" 
+                        label="Provider name" 
+                        required
+                        value={providerName}
+                        readonly
+                        class="field">
+                    </lightning-input>
+
+                    <lightning-input type="text" 
+                        label="Outlet name" 
+                        required
+                        value={outletName}
+                        readonly
+                        class="field">
+                    </lightning-input>
+
+                    <lightning-input type="text" 
+                        label="Outlet ID" 
+                        required
+                        value={outletId}
+                        readonly
+                        class="field">
+                    </lightning-input>
+
+                    <fieldset class="slds-form-element">
+                        <legend class="slds-form-element__legend">Type of aged care</legend>
+                        <div class="slds-form-element__control">
+                            <template for:each={careTypes} for:item="type">
+                                <div key={type.value} class="slds-checkbox">
+                                    <lightning-input type="checkbox"
+                                        label={type.label}
+                                        value={type.value}
+                                        onchange={handleCareTypeChange}>
+                                    </lightning-input>
+                                </div>
+                            </template>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Respondent Information</h2>
+                <div class="field-group">
+                    <lightning-input type="text"
+                        label="Name of respondent"
+                        class="field"
+                        onchange={handleRespondentNameChange}>
+                    </lightning-input>
+
+                    <lightning-input type="tel"
+                        label="Respondent's phone number"
+                        pattern="[0-9]{10}"
+                        message-when-pattern-mismatch="Please enter a valid Australian phone number"
+                        class="field"
+                        onchange={handlePhoneChange}>
+                    </lightning-input>
+
+                    <fieldset class="slds-form-element">
+                        <legend class="slds-form-element__legend slds-form-element__label">Are you</legend>
+                        <div class="slds-form-element__control">
+                            <template for:each={respondentTypes} for:item="type">
+                                <div key={type.value} class="slds-radio">
+                                    <lightning-radio-group name="respondentType"
+                                        options={respondentTypes}
+                                        value={selectedRespondentType}
+                                        required
+                                        onchange={handleRespondentTypeChange}>
+                                    </lightning-radio-group>
+                                </div>
+                            </template>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <template if:true={showVeteranQuestions}>
+                <div class="form-section">
+                    <h2>Veteran Status</h2>
+                    <div class="field-group">
+                        <lightning-radio-group name="veteranStatus"
+                            label="Veteran Status Questions"
+                            options={veteranStatusOptions}
+                            value={selectedVeteranStatus}
+                            required
+                            onchange={handleVeteranStatusChange}>
+                        </lightning-radio-group>
+                    </div>
+                </div>
+            </template>
+
+            <template if:true={showComfortQuestions}>
+                <div class="form-section">
+                    <h2>Comfort Level Assessment</h2>
+                    <div class="field-group">
+                        <lightning-radio-group name="comfortLevel"
+                            label="Comfort Level Questions"
+                            options={comfortLevelOptions}
+                            value={selectedComfortLevel}
+                            required
+                            onchange={handleComfortLevelChange}>
+                        </lightning-radio-group>
+
+                        <lightning-textarea name="feedback"
+                            label="Additional Feedback"
+                            required={isVeteran}
+                            class="field"
+                            onchange={handleFeedbackChange}>
+                        </lightning-textarea>
+                    </div>
+                </div>
+            </template>
+
+            <div class="button-group">
+                <lightning-button 
+                    label="Clear"
+                    onclick={handleClear}
+                    class="slds-m-right_x-small">
+                </lightning-button>
+                <lightning-button 
+                    label="Submit"
+                    variant="brand"
+                    disabled={isSubmitDisabled}
+                    onclick={handleSubmit}>
+                </lightning-button>
+            </div>
+
+            <template if:true={errorMessage}>
+                <div class="error-message">
+                    {errorMessage}
+                </div>
+            </template>
+        </div>
+    </div>
+</template>
