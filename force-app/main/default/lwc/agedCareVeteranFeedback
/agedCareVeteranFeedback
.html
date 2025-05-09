@@ -1,0 +1,64 @@
+<!-- agedCareVeteranFeedback.html -->
+<template>
+    <div class="root-container">
+        <div class="form-container">
+            <template if:true={errorMessages}>
+                <div class="error-summary" role="alert">
+                    <lightning-icon icon-name="utility:error" size="small" variant="error"></lightning-icon>
+                    <ul>
+                        <template for:each={errorMessages} for:item="error">
+                            <li key={error}>{error}</li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
+
+            <div class="section provider-info">
+                <h2>Provider Information</h2>
+                <lightning-input type="date" label="Date" required value={currentDate} onchange={handleDateChange}></lightning-input>
+                <lightning-input type="text" label="Provider name" required value={providerName} readonly></lightning-input>
+                <lightning-input type="text" label="Outlet name" required value={outletName} readonly></lightning-input>
+                <lightning-input type="text" label="Outlet ID" required value={outletId} readonly></lightning-input>
+                <lightning-checkbox-group name="careType" label="Type of aged care" options={careTypeOptions} required onchange={handleCareTypeChange}></lightning-checkbox-group>
+            </div>
+
+            <div class="section respondent-details">
+                <h2>Respondent Details</h2>
+                <lightning-input type="text" label="Respondent name" placeholder="Enter your name" onchange={handleNameChange}></lightning-input>
+                <lightning-input type="tel" label="Phone number" placeholder="Enter phone number" pattern="^\({0,1}((0|\+61)(2|4|3|7|8)){0,1}\){0,1}(\ |-){0,1}[0-9]{2}(\ |-){0,1}[0-9]{2}(\ |-){0,1}[0-9]{3}$" onchange={handlePhoneChange}></lightning-input>
+                <lightning-radio-group name="respondentType" label="Are you" options={respondentTypeOptions} required onchange={handleRespondentTypeChange}></lightning-radio-group>
+            </div>
+
+            <template if:true={showVeteranSection}>
+                <div class="section veteran-status">
+                    <h2>Veteran Status</h2>
+                    <lightning-radio-group name="veteranStatus" label="Veteran status" options={veteranStatusOptions} required={isVeteranRequired} onchange={handleVeteranStatusChange}></lightning-radio-group>
+                </div>
+            </template>
+
+            <template if:true={showCareExperience}>
+                <div class="section care-experience">
+                    <h2>Care Experience</h2>
+                    <lightning-radio-group name="comfortLevel" label="Comfort level" options={comfortLevelOptions} required onchange={handleComfortLevelChange}></lightning-radio-group>
+                    <lightning-radio-group name="staffResponse" label="Staff response" options={staffResponseOptions} required onchange={handleStaffResponseChange}></lightning-radio-group>
+                </div>
+            </template>
+
+            <template if:true={showSpecializedCare}>
+                <div class="section specialized-care">
+                    <h2>Specialized Care Feedback</h2>
+                    <lightning-textarea name="specializedCare" label="Specialized care" placeholder="Your thoughts..." required onchange={handleSpecializedCareChange}></lightning-textarea>
+                    <lightning-radio-group name="providerRating" label="Provider rating" options={providerRatingOptions} required onchange={handleProviderRatingChange}></lightning-radio-group>
+                    <lightning-textarea name="providerFeedback" label="Provider feedback" placeholder="Your feedback..." required onchange={handleProviderFeedbackChange}></lightning-textarea>
+                    <lightning-textarea name="additionalComments" label="Additional comments" placeholder="Any other feedback..." onchange={handleAdditionalCommentsChange}></lightning-textarea>
+                </div>
+            </template>
+
+            <div class="button-container">
+                <lightning-button label="Save Draft" variant="neutral" onclick={handleSaveDraft}></lightning-button>
+                <lightning-button label="Submit" variant="brand" onclick={handleSubmit} disabled={isSubmitDisabled}></lightning-button>
+                <lightning-button label="Clear" variant="destructive" onclick={handleClear}></lightning-button>
+            </div>
+        </div>
+    </div>
+</template>
