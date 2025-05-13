@@ -1,0 +1,53 @@
+<!-- veteransFeedbackForm.html -->
+<template>
+    <div class="acme-veteransfeedbackform">
+        <h2 class="acme-heading acme-heading_medium">Veterans Feedback Form</h2>
+        <div class="acme-card">
+            <div class="acme-card__body">
+                <lightning-input 
+                    type="text" 
+                    label="Name" 
+                    required
+                    class="acme-input"
+                    onchange={handleInputChange}
+                    data-field="name">
+                </lightning-input>
+                <lightning-input 
+                    type="email" 
+                    label="Email" 
+                    required
+                    class="acme-input"
+                    onchange={handleInputChange}
+                    data-field="email">
+                </lightning-input>
+                <lightning-combobox
+                    label="Service Branch"
+                    options={serviceBranchOptions}
+                    required
+                    class="acme-input"
+                    onchange={handleInputChange}
+                    data-field="serviceBranch">
+                </lightning-combobox>
+                <lightning-textarea 
+                    label="Feedback" 
+                    required
+                    class="acme-input"
+                    onchange={handleInputChange}
+                    data-field="feedback">
+                </lightning-textarea>
+                <lightning-button 
+                    label="Submit" 
+                    variant="brand" 
+                    onclick={handleSubmit}
+                    class="acme-button_primary">
+                </lightning-button>
+            </div>
+        </div>
+        <template if:true={errorMessage}>
+            <div class="acme-error-message">{errorMessage}</div>
+        </template>
+        <template if:true={successMessage}>
+            <div class="acme-success-message">{successMessage}</div>
+        </template>
+    </div>
+</template>
