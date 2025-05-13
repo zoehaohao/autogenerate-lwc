@@ -2,92 +2,101 @@
 import { LightningElement, track } from 'lwc';
 
 export default class VeteranFeedbackForm extends LightningElement {
-    @track currentDate = new Date().toISOString().split('T')[0];
-    @track providerName = 'Outlet representative to enter provider name';
-    @track outletName = 'Outlet representative to enter outlet name';
-    @track outletId = 'Outlet representative to enter outlet ID';
-    @track showHomeCareServices = false;
-    @track showVeteranStatusError = false;
+    @track currentDate = new Date().toLocaleDateString('en-AU');
+    @track providerName = 'Sample Provider';
+    @track outletName = 'Sample Outlet';
+    @track outletId = 'OUT123';
     @track isVeteran = false;
-    @track showStaffMeetNeeds = false;
-    @track veteranStatusLabel = 'Are you a veteran?';
+    @track isVeteranStatusRequired = false;
+    @track isFormValid = false;
 
     typeOfAgedCareOptions = [
-        { label: 'Residential aged care', value: 'residential' },
-        { label: 'Home-based aged care', value: 'home-based' }
+        { label: 'Residential Care', value: 'residential' },
+        { label: 'Home Care', value: 'home' },
+        { label: 'Respite Care', value: 'respite' }
     ];
 
     respondentTypeOptions = [
-        { label: 'An aged care recipient', value: 'recipient' },
-        { label: 'A family member of an aged care recipient', value: 'family' },
-        { label: 'A friend or other personal representative of an aged care recipient', value: 'representative' },
-        { label: 'An aged care advocate, navigator or member of a community organisation who is responding with or on behalf of an aged care recipient', value: 'advocate' }
+        { label: 'Aged care recipient', value: 'recipient' },
+        { label: 'Family member', value: 'family' },
+        { label: 'Friend/personal representative', value: 'friend' },
+        { label: 'Aged care advocate', value: 'advocate' },
+        { label: 'Community organization member', value: 'community' }
     ];
 
     veteranStatusOptions = [
-        { label: 'Yes', value: 'yes' },
-        { label: 'No', value: 'no' }
+        { label: 'Veteran', value: 'veteran' },
+        { label: 'War widow/widower', value: 'widow' },
+        { label: 'Dependent', value: 'dependent' }
     ];
 
-    comfortOptions = [
-        { label: 'Yes', value: 'yes' },
-        { label: 'No', value: 'no' },
-        { label: 'Unsure', value: 'unsure' }
+    ratingOptions = [
+        { label: 'Very Poor', value: '1' },
+        { label: 'Poor', value: '2' },
+        { label: 'Fair', value: '3' },
+        { label: 'Good', value: '4' },
+        { label: 'Excellent', value: '5' }
     ];
 
-    handleTypeOfAgedCareChange(event) {
-        this.showHomeCareServices = event.detail.value.includes('home-based');
-    }
-
-    handleRespondentTypeChange(event) {
-        const respondentType = event.detail.value;
-        this.veteranStatusLabel = respondentType === 'recipient' 
-            ? 'Are you a veteran?' 
-            : 'Is the aged care recipient a veteran?';
-    }
-
-    handleVeteranStatusChange(event) {
-        const isVeteran = event.detail.value === 'yes';
-        this.showVeteranStatusError = !isVeteran;
-        this.isVeteran = isVeteran;
-    }
-
-    handleComfortChange(event) {
-        this.showStaffMeetNeeds = event.detail.value === 'yes';
+    connectedCallback() {
+        this.validateForm();
+        setInterval(() => this.autoSaveDraft(), 300000);
     }
 
     handleSubmit() {
         if (this.validateForm()) {
-            // Implement form submission logic here
+            // Submit form logic
             console.log('Form submitted');
-        } else {
-            console.log('Form validation failed');
         }
     }
 
     handleClear() {
-        this.template.querySelector('form').reset();
-        this.showHomeCareServices = false;
-        this.showVeteranStatusError = false;
+        // Clear form logic
+        this.template.querySelectorAll('lightning-input, lightning-checkbox-group, lightning-radio-group, lightning-textarea').forEach(element => {
+            element.value = null;
+        });
         this.isVeteran = false;
-        this.showStaffMeetNeeds = false;
+        this.isVeteranStatusRequired = false;
+        this.validateForm();
+    }
+
+    handleSaveDraft() {
+        // Save draft logic
+        console.log('Draft saved');
+    }
+
+    autoSaveDraft() {
+        // Auto-save draft logic
+        console.log('Auto-saved draft');
     }
 
     validateForm() {
         let isValid = true;
-        this.template.querySelectorAll('lightning-input, lightning-radio-group, lightning-checkbox-group, lightning-textarea').forEach(element => {
-            if (element.reportValidity && !element.reportValidity()) {
+        this.template.querySelectorAll('lightning-input, lightning-checkbox-group, lightning-radio-group, lightning-textarea').forEach(element => {
+            if (element.required && !element.value) {
                 isValid = false;
             }
         });
+
+        if (this.isVeteran) {
+            this.template.querySelectorAll('[data-id="veteran-question"]').forEach(element => {
+                if (!element.value) {
+                    isValid = false;
+                }
+            });
+        }
+
+        this.isFormValid = isValid;
         return isValid;
     }
 
-    openHelpGuide() {
-        // Implement help guide modal logic
+    handleRespondentTypeChange(event) {
+        const selectedValue = event.detail.value;
+        this.isVeteranStatusRequired = ['recipient', 'family'].includes(selectedValue);
     }
 
-    openPrivacyPolicy() {
-        // Implement privacy policy page opening logic
+    handleVeteranStatusChange(event) {
+        this.isVeteran = event.detail.value === 'veteran';
+        this.validateForm();
     }
 }

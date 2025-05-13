@@ -3,9 +3,6 @@
     --acme-blue-color: #0057B8;
     --acme-gray-color: #424A54;
     --acme-white-color: #FFFFFF;
-    --acme-teal-color: #00A0B0;
-    --acme-gold-color: #F2C94C;
-    --acme-coral-color: #FF6B6B;
     --acme-light-gray-color: #F5F7FA;
     --acme-medium-gray-color: #E4E7EB;
     --acme-dark-gray-color: #7B8794;
@@ -13,57 +10,56 @@
 
 .root-container {
     font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    max-width: 800px;
+    max-width: 960px;
     margin: 0 auto;
     padding: var(--slds-c-card-spacing-block, 1rem);
+    background-color: var(--acme-white-color);
+    color: var(--acme-gray-color);
 }
 
-.acme-heading-1 {
+.form-title {
     font-size: 2rem;
     font-weight: 700;
     color: var(--acme-blue-color);
     margin-bottom: 1.5rem;
 }
 
-.acme-form-section {
+.section {
     margin-bottom: 1.5rem;
 }
 
-.acme-form-buttons {
+.section h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--acme-gray-color);
+    margin-bottom: 1rem;
+}
+
+lightning-input,
+lightning-checkbox-group,
+lightning-radio-group,
+lightning-textarea {
+    margin-bottom: 1rem;
+}
+
+.button-container {
     display: flex;
     justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 2rem;
+    margin-top: 1.5rem;
 }
 
-.acme-button_primary {
-    --slds-c-button-brand-color-background: var(--acme-blue-color);
-    --slds-c-button-brand-color-border: var(--acme-blue-color);
+.links-container {
+    margin-top: 1rem;
+    text-align: center;
 }
 
-.acme-button_secondary {
-    --slds-c-button-neutral-color-background: var(--acme-light-gray-color);
-    --slds-c-button-neutral-color-border: var(--acme-medium-gray-color);
-}
-
-.acme-error-message {
-    color: var(--acme-coral-color);
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-}
-
-.acme-form-links {
-    margin-top: 2rem;
-    display: flex;
-    justify-content: space-between;
-}
-
-.acme-link {
+.links-container a {
     color: var(--acme-blue-color);
     text-decoration: none;
+    margin: 0 0.5rem;
 }
 
-.acme-link:hover {
+.links-container a:hover {
     text-decoration: underline;
 }
 
@@ -72,7 +68,11 @@
         padding: 0.5rem;
     }
 
-    .acme-form-buttons {
+    .button-container {
         flex-direction: column;
+    }
+
+    .button-container lightning-button {
+        margin-bottom: 0.5rem;
     }
 }
