@@ -3,47 +3,78 @@
     --acme-blue-color: #0057B8;
     --acme-gray-color: #424A54;
     --acme-white-color: #FFFFFF;
-    --acme-error-color: #c23934;
+    --acme-teal-color: #00A0B0;
+    --acme-coral-color: #FF6B6B;
 }
 
 .acme-name-field-remover {
-    font-family: 'Salesforce Sans', Arial, sans-serif;
-    color: var(--acme-gray-color);
-}
-
-.acme-name-field-remover__form {
-    max-width: 400px;
+    background-color: var(--acme-white-color);
+    border-radius: var(--slds-c-card-radius-border, 0.25rem);
+    box-shadow: var(--slds-c-card-shadow);
+    padding: var(--slds-c-card-spacing-block, 1rem);
+    max-width: 70%;
     margin: 0 auto;
 }
 
-.acme-name-field-remover__input {
-    margin-bottom: var(--slds-c-input-spacing-block-end, 0.75rem);
+.acme-heading_medium {
+    font-size: 1.25rem;
+    color: var(--acme-gray-color);
+    margin-bottom: 1rem;
 }
 
-.acme-name-field-remover__buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: var(--slds-c-button-spacing-block-start, 1rem);
+.acme-input {
+    margin-bottom: 1rem;
 }
 
-.acme-name-field-remover__button {
-    font-size: 0.875rem;
+.acme-button {
+    margin-right: 0.5rem;
 }
 
-.acme-name-field-remover__button_submit {
+.acme-button_primary {
     --slds-c-button-brand-color-background: var(--acme-blue-color);
     --slds-c-button-brand-color-border: var(--acme-blue-color);
 }
 
-.acme-name-field-remover__button_submit:hover,
-.acme-name-field-remover__button_submit:focus {
-    --slds-c-button-brand-color-background-hover: #004A9E;
-    --slds-c-button-brand-color-border-hover: #004A9E;
+.acme-button_neutral {
+    --slds-c-button-neutral-color-background: var(--acme-white-color);
+    --slds-c-button-neutral-color-border: var(--acme-gray-color);
+}
+
+.acme-error-text {
+    color: var(--acme-coral-color);
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.acme-success-text {
+    color: var(--acme-teal-color);
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+}
+
+.acme-icon {
+    margin-right: 0.25rem;
+}
+
+.acme-icon_error {
+    --slds-c-icon-color-foreground: var(--acme-coral-color);
+}
+
+.acme-icon_success {
+    --slds-c-icon-color-foreground: var(--acme-teal-color);
 }
 
 @media screen and (max-width: 768px) {
-    .acme-name-field-remover__form {
+    .acme-name-field-remover {
+        max-width: 90%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .acme-name-field-remover {
         max-width: 100%;
-        padding: 0 1rem;
     }
 }

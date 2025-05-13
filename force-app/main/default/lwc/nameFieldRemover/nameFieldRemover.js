@@ -4,37 +4,48 @@ import { LightningElement, track } from 'lwc';
 export default class NameFieldRemover extends LightningElement {
     @track firstName = '';
     @track lastName = '';
-    @track isSubmitDisabled = true;
+    @track errorMessages = [];
+    @track showSuccessMessage = false;
 
-    handleInputChange(event) {
-        const { name, value } = event.target;
-        this[name] = value;
-        this.validateForm();
+    get isSubmitDisabled() {
+        return !this.firstName || !this.lastName || this.hasErrors;
     }
 
-    validateForm() {
-        const inputs = this.template.querySelectorAll('lightning-input');
-        const allValid = [...inputs].every(input => input.reportValidity());
-        this.isSubmitDisabled = !allValid;
+    get hasErrors() {
+        return this.errorMessages.length > 0;
     }
 
-    handleSubmit() {
-        if (!this.isSubmitDisabled) {
-            const submitEvent = new CustomEvent('submit', {
-                detail: { firstName: this.firstName, lastName: this.lastName }
-            });
-            this.dispatchEvent(submitEvent);
+    validateField(event) {
+        const field = event.target;
+        const fieldName = field.name;
+        const value = field.value;
+        const isValid = field.checkValidity();
+
+        if (!isValid) {
+            this.errorMessages = [...this.errorMessages, `${fieldName}: ${field.validationMessage}`];
+        } else {
+            this[fieldName] = value;
+            this.errorMessages = this.errorMessages.filter(error => !error.startsWith(fieldName));
         }
     }
 
-    handleClear() {
+    handleSubmit() {
+        if (this.isSubmitDisabled) return;
+
+        this.showSuccessMessage = true;
+        setTimeout(() => {
+            this.showSuccessMessage = false;
+        }, 3000);
+
+        this.handleReset();
+    }
+
+    handleReset() {
+        this.template.querySelectorAll('lightning-input').forEach(input => {
+            input.value = '';
+        });
         this.firstName = '';
         this.lastName = '';
-        this.isSubmitDisabled = true;
-        const inputs = this.template.querySelectorAll('lightning-input');
-        inputs.forEach(input => {
-            input.value = '';
-            input.reportValidity();
-        });
+        this.errorMessages = [];
     }
 }

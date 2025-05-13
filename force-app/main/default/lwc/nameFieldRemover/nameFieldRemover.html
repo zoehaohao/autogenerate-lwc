@@ -1,44 +1,75 @@
 <!-- nameFieldRemover.html -->
 <template>
     <div class="acme-name-field-remover">
+        <div class="acme-name-field-remover__header">
+            <h2 class="acme-heading acme-heading_medium">Name Field Component</h2>
+        </div>
         <div class="acme-name-field-remover__form">
             <lightning-input
                 label="First Name"
                 name="firstName"
                 type="text"
                 required
+                minlength="2"
+                maxlength="40"
+                pattern="[A-Za-z]+"
+                message-when-pattern-mismatch="Please enter only letters"
                 placeholder="Enter first name"
-                pattern="[A-Za-z]{2,50}"
-                message-when-pattern-mismatch="Please enter 2-50 letters only"
-                onchange={handleInputChange}
-                class="acme-name-field-remover__input"
+                onblur={validateField}
+                class="acme-input"
             ></lightning-input>
             <lightning-input
                 label="Last Name"
                 name="lastName"
                 type="text"
                 required
+                minlength="2"
+                maxlength="80"
+                pattern="[A-Za-z]+"
+                message-when-pattern-mismatch="Please enter only letters"
                 placeholder="Enter last name"
-                pattern="[A-Za-z]{2,50}"
-                message-when-pattern-mismatch="Please enter 2-50 letters only"
-                onchange={handleInputChange}
-                class="acme-name-field-remover__input"
+                onblur={validateField}
+                class="acme-input"
             ></lightning-input>
-            <div class="acme-name-field-remover__buttons">
-                <lightning-button
-                    label="Submit"
-                    variant="brand"
-                    onclick={handleSubmit}
-                    class="acme-name-field-remover__button acme-name-field-remover__button_submit"
-                    disabled={isSubmitDisabled}
-                ></lightning-button>
-                <lightning-button
-                    label="Clear"
-                    variant="neutral"
-                    onclick={handleClear}
-                    class="acme-name-field-remover__button acme-name-field-remover__button_clear"
-                ></lightning-button>
-            </div>
+        </div>
+        <div class="acme-name-field-remover__actions">
+            <lightning-button
+                label="Save"
+                variant="brand"
+                onclick={handleSubmit}
+                disabled={isSubmitDisabled}
+                class="acme-button acme-button_primary"
+            ></lightning-button>
+            <lightning-button
+                label="Reset"
+                variant="neutral"
+                onclick={handleReset}
+                class="acme-button acme-button_neutral"
+            ></lightning-button>
+        </div>
+        <div if:true={hasErrors} class="acme-name-field-remover__errors">
+            <template for:each={errorMessages} for:item="error">
+                <p key={error} class="acme-error-text">
+                    <lightning-icon
+                        icon-name="utility:error"
+                        alternative-text="Error"
+                        size="x-small"
+                        class="acme-icon acme-icon_error"
+                    ></lightning-icon>
+                    {error}
+                </p>
+            </template>
+        </div>
+        <div if:true={showSuccessMessage} class="acme-name-field-remover__success">
+            <p class="acme-success-text">
+                <lightning-icon
+                    icon-name="utility:success"
+                    alternative-text="Success"
+                    size="x-small"
+                    class="acme-icon acme-icon_success"
+                ></lightning-icon>
+                Form submitted successfully!
+            </p>
         </div>
     </div>
 </template>
