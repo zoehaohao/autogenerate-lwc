@@ -5,74 +5,86 @@
     --acme-white-color: #FFFFFF;
     --acme-light-gray-color: #F5F7FA;
     --acme-medium-gray-color: #E4E7EB;
-    --acme-dark-gray-color: #7B8794;
+    --acme-coral-color: #FF6B6B;
 }
 
-.root-container {
+.acme-veteranfeedbackform {
     font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    max-width: 960px;
+    color: var(--acme-gray-color);
+    max-width: 60%;
     margin: 0 auto;
-    padding: var(--slds-c-card-spacing-block, 1rem);
-    background-color: var(--acme-white-color);
-    color: var(--acme-gray-color);
 }
 
-.form-title {
-    font-size: 2rem;
-    font-weight: 700;
+.acme-veteranfeedbackform__title {
+    font-size: 32px;
     color: var(--acme-blue-color);
-    margin-bottom: 1.5rem;
-}
-
-.section {
-    margin-bottom: 1.5rem;
-}
-
-.section h2 {
-    font-size: 1.5rem;
     font-weight: 700;
-    color: var(--acme-gray-color);
-    margin-bottom: 1rem;
+    margin-bottom: 24px;
 }
 
-lightning-input,
-lightning-checkbox-group,
-lightning-radio-group,
-lightning-textarea {
-    margin-bottom: 1rem;
+.acme-veteranfeedbackform__container {
+    background-color: var(--acme-white-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(66, 74, 84, 0.1);
+    padding: 24px;
 }
 
-.button-container {
+.acme-veteranfeedbackform__section {
+    margin-bottom: 24px;
+}
+
+.acme-veteranfeedbackform__section h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.acme-veteranfeedbackform__buttons {
     display: flex;
-    justify-content: flex-end;
-    margin-top: 1.5rem;
+    justify-content: flex-start;
+    gap: 16px;
+    margin-top: 24px;
 }
 
-.links-container {
-    margin-top: 1rem;
-    text-align: center;
+.acme-button_primary {
+    --slds-c-button-brand-color-background: var(--acme-blue-color);
+    --slds-c-button-brand-color-border: var(--acme-blue-color);
 }
 
-.links-container a {
+.acme-button_primary:hover, .acme-button_primary:focus {
+    --slds-c-button-brand-color-background-hover: #004A9E;
+    --slds-c-button-brand-color-border-hover: #004A9E;
+}
+
+.acme-button_secondary {
+    --slds-c-button-neutral-color-background: var(--acme-medium-gray-color);
+    --slds-c-button-neutral-color-border: var(--acme-medium-gray-color);
+}
+
+.acme-veteranfeedbackform__links {
+    margin-top: 16px;
+    font-size: 14px;
+}
+
+.acme-veteranfeedbackform__links a {
     color: var(--acme-blue-color);
     text-decoration: none;
-    margin: 0 0.5rem;
+    margin-right: 16px;
 }
 
-.links-container a:hover {
+.acme-veteranfeedbackform__links a:hover {
     text-decoration: underline;
 }
 
-@media screen and (max-width: 768px) {
-    .root-container {
-        padding: 0.5rem;
+@media (max-width: 1024px) {
+    .acme-veteranfeedbackform {
+        max-width: 80%;
     }
+}
 
-    .button-container {
-        flex-direction: column;
-    }
-
-    .button-container lightning-button {
-        margin-bottom: 0.5rem;
+@media (max-width: 768px) {
+    .acme-veteranfeedbackform {
+        max-width: 100%;
+        padding: 0 16px;
     }
 }

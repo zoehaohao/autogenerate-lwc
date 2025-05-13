@@ -2,13 +2,9 @@
 import { LightningElement, track } from 'lwc';
 
 export default class VeteranFeedbackForm extends LightningElement {
-    @track currentDate = new Date().toLocaleDateString('en-AU');
-    @track providerName = 'Sample Provider';
-    @track outletName = 'Sample Outlet';
-    @track outletId = 'OUT123';
-    @track isVeteran = false;
-    @track isVeteranStatusRequired = false;
-    @track isFormValid = false;
+    @track currentDate = new Date().toISOString().slice(0, 10);
+    @track showVeteranStatus = false;
+    @track showSpecializedCareDescription = false;
 
     typeOfAgedCareOptions = [
         { label: 'Residential Care', value: 'residential' },
@@ -19,84 +15,66 @@ export default class VeteranFeedbackForm extends LightningElement {
     respondentTypeOptions = [
         { label: 'Aged care recipient', value: 'recipient' },
         { label: 'Family member', value: 'family' },
-        { label: 'Friend/personal representative', value: 'friend' },
-        { label: 'Aged care advocate', value: 'advocate' },
-        { label: 'Community organization member', value: 'community' }
+        { label: 'Friend/Representative', value: 'representative' },
+        { label: 'Aged care advocate', value: 'advocate' }
     ];
 
     veteranStatusOptions = [
         { label: 'Veteran', value: 'veteran' },
-        { label: 'War widow/widower', value: 'widow' },
-        { label: 'Dependent', value: 'dependent' }
+        { label: 'War widow/widower', value: 'widow' }
     ];
 
-    ratingOptions = [
-        { label: 'Very Poor', value: '1' },
-        { label: 'Poor', value: '2' },
-        { label: 'Fair', value: '3' },
-        { label: 'Good', value: '4' },
-        { label: 'Excellent', value: '5' }
+    comfortOptions = [
+        { label: 'Very comfortable', value: 'very_comfortable' },
+        { label: 'Comfortable', value: 'comfortable' },
+        { label: 'Neutral', value: 'neutral' },
+        { label: 'Uncomfortable', value: 'uncomfortable' },
+        { label: 'Very uncomfortable', value: 'very_uncomfortable' }
     ];
 
-    connectedCallback() {
-        this.validateForm();
-        setInterval(() => this.autoSaveDraft(), 300000);
+    meetingNeedsOptions = [
+        { label: 'Yes', value: 'yes' },
+        { label: 'No', value: 'no' },
+        { label: 'Partially', value: 'partially' }
+    ];
+
+    careAssessmentOptions = [
+        { label: 'Excellent', value: 'excellent' },
+        { label: 'Good', value: 'good' },
+        { label: 'Fair', value: 'fair' },
+        { label: 'Poor', value: 'poor' }
+    ];
+
+    handleRespondentTypeChange(event) {
+        const selectedType = event.detail.value;
+        this.showVeteranStatus = ['recipient', 'family'].includes(selectedType);
     }
 
-    handleSubmit() {
-        if (this.validateForm()) {
-            // Submit form logic
-            console.log('Form submitted');
+    handleStaffMeetingNeedsChange(event) {
+        this.showSpecializedCareDescription = event.detail.value === 'yes';
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+        const fields = event.detail.fields;
+        if (this.validateForm(fields)) {
+            this.template.querySelector('lightning-record-edit-form').submit(fields);
         }
     }
 
-    handleClear() {
-        // Clear form logic
-        this.template.querySelectorAll('lightning-input, lightning-checkbox-group, lightning-radio-group, lightning-textarea').forEach(element => {
-            element.value = null;
-        });
-        this.isVeteran = false;
-        this.isVeteranStatusRequired = false;
-        this.validateForm();
-    }
-
-    handleSaveDraft() {
-        // Save draft logic
-        console.log('Draft saved');
-    }
-
-    autoSaveDraft() {
-        // Auto-save draft logic
-        console.log('Auto-saved draft');
-    }
-
-    validateForm() {
+    validateForm(fields) {
         let isValid = true;
-        this.template.querySelectorAll('lightning-input, lightning-checkbox-group, lightning-radio-group, lightning-textarea').forEach(element => {
-            if (element.required && !element.value) {
+        this.template.querySelectorAll('lightning-input, lightning-textarea, lightning-radio-group, lightning-checkbox-group').forEach(element => {
+            if (!element.reportValidity()) {
                 isValid = false;
             }
         });
-
-        if (this.isVeteran) {
-            this.template.querySelectorAll('[data-id="veteran-question"]').forEach(element => {
-                if (!element.value) {
-                    isValid = false;
-                }
-            });
-        }
-
-        this.isFormValid = isValid;
         return isValid;
     }
 
-    handleRespondentTypeChange(event) {
-        const selectedValue = event.detail.value;
-        this.isVeteranStatusRequired = ['recipient', 'family'].includes(selectedValue);
-    }
-
-    handleVeteranStatusChange(event) {
-        this.isVeteran = event.detail.value === 'veteran';
-        this.validateForm();
+    handleClear() {
+        this.template.querySelector('lightning-record-edit-form').reset();
+        this.showVeteranStatus = false;
+        this.showSpecializedCareDescription = false;
     }
 }
