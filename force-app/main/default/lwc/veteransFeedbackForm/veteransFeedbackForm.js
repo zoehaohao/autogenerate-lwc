@@ -3,20 +3,21 @@ import { LightningElement, track } from 'lwc';
 
 export default class VeteransFeedbackForm extends LightningElement {
     @track formData = {
-        name: '',
-        email: '',
-        serviceBranch: '',
+        providerName: '',
+        outletName: '',
+        outletId: '',
+        agedCareType: '',
+        respondentName: '',
+        respondentPhone: '',
         feedback: ''
     };
     @track errorMessage = '';
     @track successMessage = '';
 
-    serviceBranchOptions = [
-        { label: 'Army', value: 'army' },
-        { label: 'Navy', value: 'navy' },
-        { label: 'Air Force', value: 'airForce' },
-        { label: 'Marines', value: 'marines' },
-        { label: 'Coast Guard', value: 'coastGuard' }
+    agedCareTypeOptions = [
+        { label: 'Residential', value: 'residential' },
+        { label: 'Home Care', value: 'homeCare' },
+        { label: 'Flexible Care', value: 'flexibleCare' }
     ];
 
     handleInputChange(event) {
@@ -34,37 +35,41 @@ export default class VeteransFeedbackForm extends LightningElement {
         this.errorMessage = '';
         let isValid = true;
 
-        if (!this.formData.name.trim()) {
-            this.errorMessage = 'Name is required.';
-            isValid = false;
-        } else if (!this.formData.email.trim()) {
-            this.errorMessage = 'Email is required.';
-            isValid = false;
-        } else if (!this.isValidEmail(this.formData.email)) {
-            this.errorMessage = 'Please enter a valid email address.';
-            isValid = false;
-        } else if (!this.formData.serviceBranch) {
-            this.errorMessage = 'Service Branch is required.';
-            isValid = false;
-        } else if (!this.formData.feedback.trim()) {
-            this.errorMessage = 'Feedback is required.';
+        Object.entries(this.formData).forEach(([key, value]) => {
+            if (!value.trim()) {
+                this.errorMessage = `${key.charAt(0).toUpperCase() + key.slice(1)} is required.`;
+                isValid = false;
+            }
+        });
+
+        if (isValid && !this.isValidPhone(this.formData.respondentPhone)) {
+            this.errorMessage = 'Please enter a valid phone number.';
             isValid = false;
         }
 
         return isValid;
     }
 
-    isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
+    isValidPhone(phone) {
+        const phoneRegex = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/;
+        return phoneRegex.test(phone);
     }
 
     submitForm() {
+        // Here you would typically make an API call to submit the form data
+        console.log('Form submitted:', this.formData);
         this.successMessage = 'Thank you for your feedback!';
+        this.resetForm();
+    }
+
+    resetForm() {
         this.formData = {
-            name: '',
-            email: '',
-            serviceBranch: '',
+            providerName: '',
+            outletName: '',
+            outletId: '',
+            agedCareType: '',
+            respondentName: '',
+            respondentPhone: '',
             feedback: ''
         };
         this.template.querySelectorAll('lightning-input, lightning-combobox, lightning-textarea').forEach(element => {

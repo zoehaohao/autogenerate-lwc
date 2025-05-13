@@ -6,28 +6,52 @@
             <div class="acme-card__body">
                 <lightning-input 
                     type="text" 
-                    label="Name" 
+                    label="Provider name" 
                     required
                     class="acme-input"
                     onchange={handleInputChange}
-                    data-field="name">
+                    data-field="providerName">
                 </lightning-input>
                 <lightning-input 
-                    type="email" 
-                    label="Email" 
+                    type="text" 
+                    label="Outlet name" 
                     required
                     class="acme-input"
                     onchange={handleInputChange}
-                    data-field="email">
+                    data-field="outletName">
+                </lightning-input>
+                <lightning-input 
+                    type="text" 
+                    label="Outlet ID" 
+                    required
+                    class="acme-input"
+                    onchange={handleInputChange}
+                    data-field="outletId">
                 </lightning-input>
                 <lightning-combobox
-                    label="Service Branch"
-                    options={serviceBranchOptions}
+                    label="Type of aged care"
+                    options={agedCareTypeOptions}
                     required
                     class="acme-input"
                     onchange={handleInputChange}
-                    data-field="serviceBranch">
+                    data-field="agedCareType">
                 </lightning-combobox>
+                <lightning-input 
+                    type="text" 
+                    label="Name of respondent" 
+                    required
+                    class="acme-input"
+                    onchange={handleInputChange}
+                    data-field="respondentName">
+                </lightning-input>
+                <lightning-input 
+                    type="tel" 
+                    label="Respondent's phone" 
+                    required
+                    class="acme-input"
+                    onchange={handleInputChange}
+                    data-field="respondentPhone">
+                </lightning-input>
                 <lightning-textarea 
                     label="Feedback" 
                     required
