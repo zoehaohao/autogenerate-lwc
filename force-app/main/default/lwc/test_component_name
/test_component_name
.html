@@ -1,0 +1,127 @@
+<!-- veteransFeedbackForm.html -->
+<template>
+    <div class="root-container">
+        <div class="slds-p-around_medium">
+            <div class="button-group-top slds-grid slds-grid_align-end">
+                <lightning-button label="Print" onclick={handlePrint} class="slds-m-right_x-small"></lightning-button>
+                <lightning-button label="Email Form" onclick={handleEmail}></lightning-button>
+            </div>
+
+            <div class="form-section">
+                <lightning-input type="date" 
+                    label="Date" 
+                    required
+                    max={today}
+                    onchange={handleDateChange}></lightning-input>
+
+                <lightning-input type="text" 
+                    label="Provider Name" 
+                    required
+                    maxlength="100"
+                    onchange={handleInputChange}></lightning-input>
+
+                <lightning-input type="text" 
+                    label="Outlet Name" 
+                    required
+                    maxlength="100"
+                    onchange={handleInputChange}></lightning-input>
+
+                <lightning-input type="text" 
+                    label="Outlet ID" 
+                    required
+                    pattern="[A-Za-z0-9]+"
+                    onchange={handleInputChange}></lightning-input>
+
+                <lightning-radio-group
+                    label="Type of Care"
+                    required
+                    options={careTypeOptions}
+                    onchange={handleCareTypeChange}></lightning-radio-group>
+
+                <template if:true={isHomeBasedCare}>
+                    <lightning-textarea
+                        label="Home Services"
+                        required
+                        placeholder="List services received"
+                        onchange={handleInputChange}></lightning-textarea>
+                </template>
+
+                <lightning-input type="text"
+                    label="Respondent Name"
+                    maxlength="100"
+                    placeholder="Your name"
+                    onchange={handleInputChange}></lightning-input>
+
+                <lightning-input type="tel"
+                    label="Phone Number"
+                    pattern="^\({0,1}((0|\+61)(2|4|3|7|8)){0,1}\){0,1}(\ |-){0,1}[0-9]{2}(\ |-){0,1}[0-9]{2}(\ |-){0,1}[0-9]{1}(\ |-){0,1}[0-9]{3}$"
+                    placeholder="Your contact number"
+                    onchange={handlePhoneChange}></lightning-input>
+
+                <lightning-radio-group
+                    label="Respondent Type"
+                    required
+                    options={respondentTypeOptions}
+                    onchange={handleInputChange}></lightning-radio-group>
+
+                <lightning-radio-group
+                    label="Veteran Status"
+                    required
+                    options={veteranStatusOptions}
+                    onchange={handleInputChange}></lightning-radio-group>
+
+                <lightning-radio-group
+                    label="Comfort Level"
+                    required
+                    options={comfortLevelOptions}
+                    onchange={handleComfortLevelChange}></lightning-radio-group>
+
+                <template if:true={showNeedsMet}>
+                    <lightning-radio-group
+                        label="Needs Met"
+                        required
+                        options={needsMetOptions}
+                        onchange={handleInputChange}></lightning-radio-group>
+                </template>
+
+                <lightning-textarea
+                    label="Special Care Needs"
+                    required
+                    minlength="10"
+                    placeholder="Describe needed services"
+                    onchange={handleInputChange}></lightning-textarea>
+
+                <lightning-radio-group
+                    label="Provider Assessment"
+                    required
+                    options={providerAssessmentOptions}
+                    onchange={handleInputChange}></lightning-radio-group>
+
+                <lightning-textarea
+                    label="Provider Feedback"
+                    required
+                    minlength="10"
+                    placeholder="Describe your experience"
+                    onchange={handleInputChange}></lightning-textarea>
+
+                <lightning-textarea
+                    label="Additional Comments"
+                    maxlength="1000"
+                    placeholder="Any other feedback"
+                    onchange={handleInputChange}></lightning-textarea>
+            </div>
+
+            <div class="button-group-bottom slds-grid slds-grid_align-spread slds-m-top_medium">
+                <div>
+                    <lightning-button label="Save Draft" onclick={handleSaveDraft} class="slds-m-right_x-small"></lightning-button>
+                    <lightning-button label="Clear Form" variant="destructive" onclick={handleClearForm}></lightning-button>
+                </div>
+                <lightning-button label="Submit" variant="brand" onclick={handleSubmit} disabled={isSubmitDisabled}></lightning-button>
+            </div>
+
+            <template if:true={errorMessage}>
+                <div class="error-message slds-m-top_small">{errorMessage}</div>
+            </template>
+        </div>
+    </div>
+</template>

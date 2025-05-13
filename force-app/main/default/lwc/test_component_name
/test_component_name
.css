@@ -1,0 +1,32 @@
+/* veteransFeedbackForm.css */
+.root-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: var(--lwc-fontFamily);
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--slds-c-card-spacing-block-start, 1.5rem);
+}
+
+.button-group-top {
+    margin-bottom: var(--slds-c-card-spacing-block-start, 1.5rem);
+}
+
+.button-group-bottom {
+    border-top: 1px solid var(--slds-c-button-color-border);
+    padding-top: var(--slds-c-card-spacing-block-start, 1.5rem);
+}
+
+.error-message {
+    color: var(--slds-c-button-destructive-color-background, #BA0517);
+    font-size: var(--slds-c-input-text-font-size-small, 0.875rem);
+}
+
+@media screen and (max-width: 768px) {
+    .root-container {
+        padding: 0.5rem;
+    }
+}
