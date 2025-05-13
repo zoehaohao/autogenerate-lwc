@@ -1,50 +1,78 @@
 /* veteranFeedbackForm.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-teal-color: #00A0B0;
+    --acme-gold-color: #F2C94C;
+    --acme-coral-color: #FF6B6B;
+    --acme-light-gray-color: #F5F7FA;
+    --acme-medium-gray-color: #E4E7EB;
+    --acme-dark-gray-color: #7B8794;
+}
+
 .root-container {
-    font-family: "Salesforce Sans", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     max-width: 800px;
     margin: 0 auto;
-    padding: 2rem;
-    background-color: var(--slds-c-card-color-background, #FFFFFF);
-    color: var(--slds-c-input-text-color, #333333);
+    padding: var(--slds-c-card-spacing-block, 1rem);
 }
 
-.form-section {
-    margin-bottom: var(--slds-c-card-spacing-block-end, 2rem);
+.acme-heading-1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--acme-blue-color);
+    margin-bottom: 1.5rem;
 }
 
-lightning-input,
-lightning-textarea,
-lightning-radio-group,
-lightning-checkbox-group {
-    margin-bottom: var(--slds-c-input-spacing-block-end, 1rem);
+.acme-form-section {
+    margin-bottom: 1.5rem;
 }
 
-lightning-input .slds-input,
-lightning-textarea .slds-textarea {
-    height: var(--slds-c-input-height, 48px);
-    padding: var(--slds-c-input-spacing-horizontal, 12px);
-    border-radius: var(--slds-c-input-radius-border, 4px);
-    border: var(--slds-c-input-sizing-border, 1px solid #E0E0E0);
-}
-
-.button-container {
+.acme-form-buttons {
     display: flex;
-    justify-content: flex-start;
-    margin-top: var(--slds-c-button-spacing-block-start, 1rem);
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
 }
 
-lightning-button.slds-button_brand {
-    background-color: var(--slds-c-button-brand-color-background, #0057B8);
-    border-color: var(--slds-c-button-brand-color-border, #0057B8);
+.acme-button_primary {
+    --slds-c-button-brand-color-background: var(--acme-blue-color);
+    --slds-c-button-brand-color-border: var(--acme-blue-color);
 }
 
-lightning-button.slds-button_neutral {
-    color: var(--slds-c-button-text-color, #424A54);
-    border-color: var(--slds-c-button-color-border, #E4E7EB);
+.acme-button_secondary {
+    --slds-c-button-neutral-color-background: var(--acme-light-gray-color);
+    --slds-c-button-neutral-color-border: var(--acme-medium-gray-color);
 }
 
-@media (max-width: 768px) {
+.acme-error-message {
+    color: var(--acme-coral-color);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+.acme-form-links {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.acme-link {
+    color: var(--acme-blue-color);
+    text-decoration: none;
+}
+
+.acme-link:hover {
+    text-decoration: underline;
+}
+
+@media screen and (max-width: 768px) {
     .root-container {
-        padding: 1rem;
+        padding: 0.5rem;
+    }
+
+    .acme-form-buttons {
+        flex-direction: column;
     }
 }
