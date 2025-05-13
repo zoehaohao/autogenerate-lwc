@@ -1,73 +1,71 @@
 <!-- personalInfoForm.html -->
 <template>
-    <div class="root-container">
-        <div class="form-container">
-            <h2 class="section-header">Personal Information</h2>
-            <div class="form-row">
-                <div class="form-field">
-                    <label for="firstName">First Name<span class="required">*</span></label>
-                    <input type="text" id="firstName" required placeholder="Enter first name" onchange={handleInputChange}>
-                    <div if:true={errors.firstName} class="error-message">{errors.firstName}</div>
-                </div>
-                <div class="form-field">
-                    <label for="middleName">Middle Name</label>
-                    <input type="text" id="middleName" placeholder="Enter middle name" onchange={handleInputChange}>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-field">
-                    <label for="lastName">Last Name<span class="required">*</span></label>
-                    <input type="text" id="lastName" required placeholder="Enter last name" onchange={handleInputChange}>
-                    <div if:true={errors.lastName} class="error-message">{errors.lastName}</div>
-                </div>
-                <div class="form-field">
-                    <label for="birthdate">Birthdate<span class="required">*</span></label>
-                    <input type="date" id="birthdate" required placeholder="MM/DD/YYYY" onchange={handleInputChange}>
-                    <div if:true={errors.birthdate} class="error-message">{errors.birthdate}</div>
-                </div>
-            </div>
-            <h2 class="section-header">Address Information</h2>
-            <div class="form-row">
-                <div class="form-field">
-                    <label for="address">Address</label>
-                    <input type="text" id="address" placeholder="Enter address" onchange={handleInputChange}>
-                </div>
-                <div class="form-field">
-                    <label for="city">City/Town</label>
-                    <input type="text" id="city" placeholder="Enter city" onchange={handleInputChange}>
+    <div class="acme-personal-info-form">
+        <div class="acme-personal-info-form__header">
+            <h2 class="acme-heading acme-heading_medium">Personal Information Form</h2>
+        </div>
+        <div class="acme-personal-info-form__body">
+            <div class="acme-personal-info-form__section">
+                <h3 class="acme-heading acme-heading_small">Personal Information</h3>
+                <div class="acme-personal-info-form__grid">
+                    <div class="acme-personal-info-form__field">
+                        <label for="firstName" class="acme-label">First Name<span class="acme-required">*</span></label>
+                        <input type="text" id="firstName" class="acme-input" required placeholder="Enter first name" onblur={validateField}>
+                    </div>
+                    <div class="acme-personal-info-form__field">
+                        <label for="middleName" class="acme-label">Middle Name</label>
+                        <input type="text" id="middleName" class="acme-input" placeholder="Enter middle name">
+                    </div>
+                    <div class="acme-personal-info-form__field">
+                        <label for="lastName" class="acme-label">Last Name<span class="acme-required">*</span></label>
+                        <input type="text" id="lastName" class="acme-input" required placeholder="Enter last name" onblur={validateField}>
+                    </div>
+                    <div class="acme-personal-info-form__field">
+                        <label for="birthdate" class="acme-label">Birthdate<span class="acme-required">*</span></label>
+                        <input type="date" id="birthdate" class="acme-input" required onblur={validateField}>
+                    </div>
                 </div>
             </div>
-            <div class="form-row">
-                <div class="form-field">
-                    <label for="state">State</label>
-                    <select id="state" onchange={handleInputChange}>
-                        <option value="">Choose a State</option>
-                        <template for:each={stateOptions} for:item="state">
-                            <option key={state.value} value={state.value}>{state.label}</option>
-                        </template>
-                    </select>
-                </div>
-                <div class="form-field">
-                    <label for="zipCode">Zip Code<span class="required">*</span></label>
-                    <input type="text" id="zipCode" required placeholder="Enter zip code" onchange={handleInputChange}>
-                    <div if:true={errors.zipCode} class="error-message">{errors.zipCode}</div>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-field">
-                    <label for="startDate">Start Date<span class="required">*</span></label>
-                    <input type="date" id="startDate" required placeholder="MM/DD/YYYY" onchange={handleInputChange}>
-                    <div if:true={errors.startDate} class="error-message">{errors.startDate}</div>
-                </div>
-                <div class="form-field">
-                    <label for="endDate">End Date<span class="required">*</span></label>
-                    <input type="date" id="endDate" required placeholder="MM/DD/YYYY" onchange={handleInputChange}>
-                    <div if:true={errors.endDate} class="error-message">{errors.endDate}</div>
+            <div class="acme-personal-info-form__section">
+                <h3 class="acme-heading acme-heading_small">Address Information</h3>
+                <div class="acme-personal-info-form__grid">
+                    <div class="acme-personal-info-form__field">
+                        <label for="address" class="acme-label">Address</label>
+                        <input type="text" id="address" class="acme-input" placeholder="Enter address">
+                    </div>
+                    <div class="acme-personal-info-form__field">
+                        <label for="city" class="acme-label">City/Town</label>
+                        <input type="text" id="city" class="acme-input" placeholder="Enter city">
+                    </div>
+                    <div class="acme-personal-info-form__field">
+                        <label for="state" class="acme-label">State</label>
+                        <select id="state" class="acme-select">
+                            <option value="">Choose a State</option>
+                            <!-- Add state options here -->
+                        </select>
+                    </div>
+                    <div class="acme-personal-info-form__field">
+                        <label for="zipCode" class="acme-label">Zip Code<span class="acme-required">*</span></label>
+                        <input type="text" id="zipCode" class="acme-input" required placeholder="Enter zip code" onblur={validateField}>
+                    </div>
                 </div>
             </div>
-            <div class="button-container">
-                <button class="submit-button" onclick={handleSubmit} disabled={!isFormValid}>Submit</button>
+            <div class="acme-personal-info-form__section">
+                <div class="acme-personal-info-form__grid">
+                    <div class="acme-personal-info-form__field">
+                        <label for="startDate" class="acme-label">Start Date<span class="acme-required">*</span></label>
+                        <input type="date" id="startDate" class="acme-input" required onblur={validateField}>
+                    </div>
+                    <div class="acme-personal-info-form__field">
+                        <label for="endDate" class="acme-label">End Date<span class="acme-required">*</span></label>
+                        <input type="date" id="endDate" class="acme-input" required onblur={validateField}>
+                    </div>
+                </div>
             </div>
+        </div>
+        <div class="acme-personal-info-form__footer">
+            <button class="acme-button acme-button_secondary" onclick={handleClear}>Clear</button>
+            <button class="acme-button acme-button_primary" onclick={handleSubmit}>Submit</button>
         </div>
     </div>
 </template>

@@ -4,41 +4,50 @@ import { LightningElement, track } from 'lwc';
 export default class PersonalInfoForm extends LightningElement {
     @track formData = {};
     @track errors = {};
-    @track isFormValid = false;
 
-    stateOptions = [
-        { label: 'Alabama', value: 'AL' },
-        { label: 'Alaska', value: 'AK' },
-        // Add more states here
-    ];
-
-    handleInputChange(event) {
-        const { id, value } = event.target;
-        this.formData[id] = value;
-        this.validateField(id, value);
-        this.checkFormValidity();
+    handleSubmit() {
+        if (this.validateForm()) {
+            console.log('Form submitted:', this.formData);
+        }
     }
 
-    validateField(fieldName, value) {
+    handleClear() {
+        this.template.querySelectorAll('input, select').forEach(element => {
+            element.value = '';
+        });
+        this.formData = {};
+        this.errors = {};
+    }
+
+    validateField(event) {
+        const field = event.target;
+        const fieldName = field.id;
+        const value = field.value;
+
+        this.formData[fieldName] = value;
         this.errors[fieldName] = '';
 
         switch (fieldName) {
             case 'firstName':
             case 'lastName':
                 if (!value.trim()) {
-                    this.errors[fieldName] = `${fieldName === 'firstName' ? 'First' : 'Last'} Name is required`;
+                    this.errors[fieldName] = `${fieldName} is required`;
                 }
                 break;
             case 'birthdate':
-            case 'startDate':
-            case 'endDate':
-                if (!this.isValidDate(value)) {
-                    this.errors[fieldName] = 'Invalid date format';
+                if (!this.isValidDate(value) || !this.isOver18(value)) {
+                    this.errors[fieldName] = 'Must be a valid date and age 18 or older';
                 }
                 break;
             case 'zipCode':
-                if (!/^\d{5}(\d{4})?$/.test(value)) {
-                    this.errors[fieldName] = 'Zip Code must be 5 or 9 digits';
+                if (!/^\d{5}$/.test(value)) {
+                    this.errors[fieldName] = 'Must be a 5-digit number';
+                }
+                break;
+            case 'startDate':
+            case 'endDate':
+                if (!this.isValidDate(value)) {
+                    this.errors[fieldName] = 'Must be a valid date';
                 }
                 break;
         }
@@ -48,34 +57,34 @@ export default class PersonalInfoForm extends LightningElement {
                 this.errors[fieldName] = 'End Date must be after Start Date';
             }
         }
+
+        field.classList.toggle('acme-input_error', !!this.errors[fieldName]);
+    }
+
+    validateForm() {
+        let isValid = true;
+        this.template.querySelectorAll('input[required], select[required]').forEach(field => {
+            if (!field.value.trim()) {
+                this.errors[field.id] = `${field.id} is required`;
+                field.classList.add('acme-input_error');
+                isValid = false;
+            }
+        });
+        return isValid && Object.values(this.errors).every(error => !error);
     }
 
     isValidDate(dateString) {
-        const regex = /^\d{4}-\d{2}-\d{2}$/;
-        if (!regex.test(dateString)) return false;
-        const date = new Date(dateString);
-        return date instanceof Date && !isNaN(date);
+        return !isNaN(new Date(dateString).getTime());
     }
 
-    checkFormValidity() {
-        const requiredFields = ['firstName', 'lastName', 'birthdate', 'zipCode', 'startDate', 'endDate'];
-        this.isFormValid = requiredFields.every(field => this.formData[field] && !this.errors[field]);
-    }
-
-    handleSubmit() {
-        if (this.isFormValid) {
-            console.log('Form submitted:', this.formData);
-            // Add logic to handle form submission
-            this.resetForm();
+    isOver18(dateString) {
+        const birthDate = new Date(dateString);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
         }
-    }
-
-    resetForm() {
-        this.formData = {};
-        this.errors = {};
-        this.isFormValid = false;
-        this.template.querySelectorAll('input, select').forEach(element => {
-            element.value = '';
-        });
+        return age >= 18;
     }
 }
