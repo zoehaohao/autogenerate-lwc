@@ -4,11 +4,19 @@ import { LightningElement, track } from 'lwc';
 export default class PersonalInfoForm extends LightningElement {
     @track formData = {};
     @track errors = {};
+    @track isFormValid = false;
+
+    stateOptions = [
+        { label: 'Alabama', value: 'AL' },
+        { label: 'Alaska', value: 'AK' },
+        // Add more states here
+    ];
 
     handleInputChange(event) {
         const { id, value } = event.target;
         this.formData[id] = value;
         this.validateField(id, value);
+        this.checkFormValidity();
     }
 
     validateField(fieldName, value) {
@@ -29,10 +37,16 @@ export default class PersonalInfoForm extends LightningElement {
                 }
                 break;
             case 'zipCode':
-                if (!/^\d{5}(-\d{4})?$/.test(value)) {
-                    this.errors[fieldName] = 'Invalid Zip Code format';
+                if (!/^\d{5}(\d{4})?$/.test(value)) {
+                    this.errors[fieldName] = 'Zip Code must be 5 or 9 digits';
                 }
                 break;
+        }
+
+        if (fieldName === 'endDate' && this.formData.startDate) {
+            if (new Date(value) <= new Date(this.formData.startDate)) {
+                this.errors[fieldName] = 'End Date must be after Start Date';
+            }
         }
     }
 
@@ -43,24 +57,25 @@ export default class PersonalInfoForm extends LightningElement {
         return date instanceof Date && !isNaN(date);
     }
 
+    checkFormValidity() {
+        const requiredFields = ['firstName', 'lastName', 'birthdate', 'zipCode', 'startDate', 'endDate'];
+        this.isFormValid = requiredFields.every(field => this.formData[field] && !this.errors[field]);
+    }
+
     handleSubmit() {
-        const allFields = this.template.querySelectorAll('.slds-input, .slds-select');
-        let isValid = true;
-
-        allFields.forEach(field => {
-            const fieldName = field.id;
-            const value = field.value;
-            this.validateField(fieldName, value);
-            if (this.errors[fieldName]) {
-                isValid = false;
-            }
-        });
-
-        if (isValid) {
+        if (this.isFormValid) {
             console.log('Form submitted:', this.formData);
             // Add logic to handle form submission
-        } else {
-            console.error('Form has errors:', this.errors);
+            this.resetForm();
         }
+    }
+
+    resetForm() {
+        this.formData = {};
+        this.errors = {};
+        this.isFormValid = false;
+        this.template.querySelectorAll('input, select').forEach(element => {
+            element.value = '';
+        });
     }
 }

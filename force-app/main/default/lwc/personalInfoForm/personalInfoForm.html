@@ -1,99 +1,73 @@
 <!-- personalInfoForm.html -->
 <template>
-    <div class="acme-personal-info-form root-container">
-        <div class="slds-grid slds-wrap">
-            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                <h2 class="acme-section-header">Personal Information</h2>
-                <div class="slds-form-element">
-                    <label class="slds-form-element__label" for="firstName">
-                        <abbr class="slds-required" title="required">*</abbr> First Name
-                    </label>
-                    <div class="slds-form-element__control">
-                        <input type="text" id="firstName" class="slds-input" required onchange={handleInputChange} />
-                    </div>
+    <div class="root-container">
+        <div class="form-container">
+            <h2 class="section-header">Personal Information</h2>
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="firstName">First Name<span class="required">*</span></label>
+                    <input type="text" id="firstName" required placeholder="Enter first name" onchange={handleInputChange}>
+                    <div if:true={errors.firstName} class="error-message">{errors.firstName}</div>
                 </div>
-                <div class="slds-form-element">
-                    <label class="slds-form-element__label" for="middleName">Middle Name</label>
-                    <div class="slds-form-element__control">
-                        <input type="text" id="middleName" class="slds-input" onchange={handleInputChange} />
-                    </div>
-                </div>
-                <div class="slds-form-element">
-                    <label class="slds-form-element__label" for="lastName">
-                        <abbr class="slds-required" title="required">*</abbr> Last Name
-                    </label>
-                    <div class="slds-form-element__control">
-                        <input type="text" id="lastName" class="slds-input" required onchange={handleInputChange} />
-                    </div>
-                </div>
-                <div class="slds-form-element">
-                    <label class="slds-form-element__label" for="birthdate">
-                        <abbr class="slds-required" title="required">*</abbr> Birthdate
-                    </label>
-                    <div class="slds-form-element__control">
-                        <input type="date" id="birthdate" class="slds-input" required onchange={handleInputChange} />
-                    </div>
+                <div class="form-field">
+                    <label for="middleName">Middle Name</label>
+                    <input type="text" id="middleName" placeholder="Enter middle name" onchange={handleInputChange}>
                 </div>
             </div>
-            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                <h2 class="acme-section-header">Address</h2>
-                <div class="slds-form-element">
-                    <label class="slds-form-element__label" for="address">Address</label>
-                    <div class="slds-form-element__control">
-                        <input type="text" id="address" class="slds-input" onchange={handleInputChange} />
-                    </div>
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="lastName">Last Name<span class="required">*</span></label>
+                    <input type="text" id="lastName" required placeholder="Enter last name" onchange={handleInputChange}>
+                    <div if:true={errors.lastName} class="error-message">{errors.lastName}</div>
                 </div>
-                <div class="slds-form-element">
-                    <label class="slds-form-element__label" for="city">City or Town</label>
-                    <div class="slds-form-element__control">
-                        <input type="text" id="city" class="slds-input" onchange={handleInputChange} />
-                    </div>
-                </div>
-                <div class="slds-form-element">
-                    <label class="slds-form-element__label" for="state">State</label>
-                    <div class="slds-form-element__control">
-                        <div class="slds-select_container">
-                            <select id="state" class="slds-select" onchange={handleInputChange}>
-                                <option value="">Choose a State</option>
-                                <!-- Add state options here -->
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="slds-form-element">
-                    <label class="slds-form-element__label" for="zipCode">
-                        <abbr class="slds-required" title="required">*</abbr> Zip Code
-                    </label>
-                    <div class="slds-form-element__control">
-                        <input type="text" id="zipCode" class="slds-input" required onchange={handleInputChange} />
-                    </div>
+                <div class="form-field">
+                    <label for="birthdate">Birthdate<span class="required">*</span></label>
+                    <input type="date" id="birthdate" required placeholder="MM/DD/YYYY" onchange={handleInputChange}>
+                    <div if:true={errors.birthdate} class="error-message">{errors.birthdate}</div>
                 </div>
             </div>
-        </div>
-        <div class="slds-grid slds-wrap">
-            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                <div class="slds-form-element">
-                    <label class="slds-form-element__label" for="startDate">
-                        <abbr class="slds-required" title="required">*</abbr> Start Date
-                    </label>
-                    <div class="slds-form-element__control">
-                        <input type="date" id="startDate" class="slds-input" required onchange={handleInputChange} />
-                    </div>
+            <h2 class="section-header">Address Information</h2>
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" placeholder="Enter address" onchange={handleInputChange}>
+                </div>
+                <div class="form-field">
+                    <label for="city">City/Town</label>
+                    <input type="text" id="city" placeholder="Enter city" onchange={handleInputChange}>
                 </div>
             </div>
-            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                <div class="slds-form-element">
-                    <label class="slds-form-element__label" for="endDate">
-                        <abbr class="slds-required" title="required">*</abbr> End Date
-                    </label>
-                    <div class="slds-form-element__control">
-                        <input type="date" id="endDate" class="slds-input" required onchange={handleInputChange} />
-                    </div>
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="state">State</label>
+                    <select id="state" onchange={handleInputChange}>
+                        <option value="">Choose a State</option>
+                        <template for:each={stateOptions} for:item="state">
+                            <option key={state.value} value={state.value}>{state.label}</option>
+                        </template>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="zipCode">Zip Code<span class="required">*</span></label>
+                    <input type="text" id="zipCode" required placeholder="Enter zip code" onchange={handleInputChange}>
+                    <div if:true={errors.zipCode} class="error-message">{errors.zipCode}</div>
                 </div>
             </div>
-        </div>
-        <div class="slds-m-top_medium">
-            <button class="slds-button slds-button_brand acme-button_primary" onclick={handleSubmit}>Submit</button>
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="startDate">Start Date<span class="required">*</span></label>
+                    <input type="date" id="startDate" required placeholder="MM/DD/YYYY" onchange={handleInputChange}>
+                    <div if:true={errors.startDate} class="error-message">{errors.startDate}</div>
+                </div>
+                <div class="form-field">
+                    <label for="endDate">End Date<span class="required">*</span></label>
+                    <input type="date" id="endDate" required placeholder="MM/DD/YYYY" onchange={handleInputChange}>
+                    <div if:true={errors.endDate} class="error-message">{errors.endDate}</div>
+                </div>
+            </div>
+            <div class="button-container">
+                <button class="submit-button" onclick={handleSubmit} disabled={!isFormValid}>Submit</button>
+            </div>
         </div>
     </div>
 </template>
