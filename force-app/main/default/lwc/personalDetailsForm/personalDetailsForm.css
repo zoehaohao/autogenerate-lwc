@@ -1,101 +1,56 @@
 /* personalDetailsForm.css */
 :host {
-    --acme-blue-color: #0057B8;
-    --acme-gray-color: #424A54;
-    --acme-white-color: #FFFFFF;
-    --acme-teal-color: #00A0B0;
-    --acme-gold-color: #F2C94C;
-    --acme-coral-color: #FF6B6B;
-    --acme-light-gray-color: #F5F7FA;
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
-
-.acme-personal-details-form {
-    font-family: Arial, sans-serif;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: var(--slds-c-card-spacing-block, 1rem);
+.root-container {
+    background-color: var(--acme-white-color, #FFFFFF);
+    border-radius: var(--acme-radius-medium, 8px);
+    box-shadow: var(--acme-shadow-soft, 0 2px 8px rgba(66, 74, 84, 0.1));
+    padding: var(--acme-space-md, 24px);
 }
-
 .acme-heading {
-    color: var(--acme-blue-color);
-    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
+    color: var(--acme-blue-color, #0057B8);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: var(--acme-space-md, 24px);
 }
-
-.acme-heading_large {
-    font-size: var(--slds-c-input-text-font-size, 1.5rem);
+.slds-input, .slds-select {
+    border: 1px solid var(--acme-medium-gray-color, #E4E7EB);
+    border-radius: 4px;
+    height: 40px;
+    padding: 8px 12px;
 }
-
-.acme-heading_medium {
-    font-size: var(--slds-c-input-text-font-size, 1.25rem);
+.slds-input:focus, .slds-select:focus {
+    border-color: var(--acme-blue-color, #0057B8);
+    box-shadow: 0 0 0 2px var(--acme-blue-color, #0057B8);
 }
-
-.acme-form-section {
-    margin-bottom: var(--slds-c-card-spacing-block, 1.5rem);
-}
-
-.acme-form-field {
-    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
-}
-
-.acme-label {
-    display: block;
-    margin-bottom: 0.25rem;
-    color: var(--acme-gray-color);
-}
-
-.acme-input,
-.acme-select {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid var(--acme-gray-color);
-    border-radius: var(--slds-c-input-radius-border, 0.25rem);
-}
-
-.acme-radio-group {
-    display: flex;
-    gap: 1rem;
-}
-
-.acme-required-indicator {
-    color: var(--acme-coral-color);
-    margin-left: 0.25rem;
-}
-
-.acme-button-group {
-    display: flex;
-    justify-content: flex-start;
-    gap: 1rem;
-    margin-top: var(--slds-c-card-spacing-block, 1.5rem);
-}
-
-.acme-button {
-    padding: 0.5rem 1rem;
+.slds-button_brand {
+    background-color: var(--acme-blue-color, #0057B8);
     border: none;
-    border-radius: var(--slds-c-button-radius-border, 0.25rem);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
 }
-
-.acme-button_primary {
-    background-color: var(--acme-blue-color);
-    color: var(--acme-white-color);
+.slds-button_brand:hover {
+    background-color: var(--acme-blue-dark-color, #004A9E);
 }
-
-.acme-button_primary:hover {
-    background-color: var(--acme-teal-color);
+.slds-button_neutral {
+    color: var(--acme-gray-color, #424A54);
+    border: 1px solid var(--acme-medium-gray-color, #E4E7EB);
 }
-
-.acme-button_secondary {
-    background-color: var(--acme-light-gray-color);
-    color: var(--acme-gray-color);
+.slds-button_neutral:hover {
+    background-color: var(--acme-light-gray-color, #F5F7FA);
 }
-
-.acme-button_secondary:hover {
-    background-color: var(--acme-gray-color);
-    color: var(--acme-white-color);
+.slds-form-element__label {
+    font-size: 14px;
+    color: var(--acme-gray-color, #424A54);
 }
-
-.acme-form-error {
-    color: var(--acme-coral-color);
-    margin-top: var(--slds-c-card-spacing-block, 1rem);
+.slds-required {
+    color: var(--acme-coral-color, #FF6B6B);
+}
+.slds-text-color_error {
+    color: var(--acme-coral-color, #FF6B6B);
+    font-size: 12px;
+}
+@media (max-width: 768px) {
+    .slds-medium-size_1-of-2 {
+        width: 100%;
+    }
 }

@@ -1,77 +1,65 @@
 // personalDetailsForm.js
 import { LightningElement, track } from 'lwc';
-
 export default class PersonalDetailsForm extends LightningElement {
-    @track formData = {};
     @track errorMessage = '';
-    @track isSubmitting = false;
-
-    handleInputChange(event) {
-        const { id, value } = event.target;
-        this.formData[id] = value;
-        this.validateField(id, value);
-    }
-
-    validateField(id, value) {
-        switch (id) {
-            case 'postcode':
-                if (!/^\d{4}$/.test(value)) {
-                    this.errorMessage = 'Postcode must be 4 digits';
-                } else {
-                    this.errorMessage = '';
-                }
-                break;
-            case 'endDate':
-                const startDate = new Date(this.formData.startDate);
-                const endDate = new Date(value);
-                if (endDate <= startDate) {
-                    this.errorMessage = 'End Date must be after Start Date';
-                } else {
-                    this.errorMessage = '';
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    handleSubmit(event) {
-        event.preventDefault();
-        this.isSubmitting = true;
-        this.errorMessage = '';
-
-        if (this.validateForm()) {
-            console.log('Form submitted:', this.formData);
-            this.isSubmitting = false;
-        } else {
-            this.isSubmitting = false;
-        }
-    }
-
-    validateForm() {
-        const requiredFields = ['title', 'firstName', 'birthdate', 'gender', 'addressLine1', 'suburb', 'state', 'postcode', 'country', 'startDate', 'endDate'];
+    @track formData = {};
+    validateField(event) {
+        const field = event.target;
+        const fieldName = field.id;
+        const fieldValue = field.value;
         let isValid = true;
-
-        requiredFields.forEach(field => {
-            if (!this.formData[field]) {
-                this.errorMessage += `${field} is required. `;
-                isValid = false;
-            }
-        });
-
-        if (this.formData.endDate && this.formData.startDate) {
-            const startDate = new Date(this.formData.startDate);
-            const endDate = new Date(this.formData.endDate);
-            if (endDate <= startDate) {
-                this.errorMessage += 'End Date must be after Start Date. ';
-                isValid = false;
-            }
+        switch (fieldName) {
+            case 'firstName':
+            case 'lastName':
+                isValid = fieldValue.trim() !== '';
+                break;
+            case 'birthdate':
+                isValid = this.validateAge(fieldValue);
+                break;
+            case 'zipCode':
+                isValid = /^\d{5}(-\d{4})?$/.test(fieldValue);
+                break;
+            case 'startDate':
+            case 'endDate':
+                isValid = this.validateDateRange();
+                break;
         }
-
-        return isValid;
+        field.setCustomValidity(isValid ? '' : `Invalid ${fieldName}`);
+        field.reportValidity();
+        this.formData[fieldName] = fieldValue;
     }
-
-    handleReset() {
+    validateAge(birthdate) {
+        const today = new Date();
+        const birthDate = new Date(birthdate);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age >= 18;
+    }
+    validateDateRange() {
+        const startDate = this.template.querySelector('#startDate').value;
+        const endDate = this.template.querySelector('#endDate').value;
+        if (startDate && endDate) {
+            return new Date(endDate) > new Date(startDate);
+        }
+        return true;
+    }
+    handleSubmit() {
+        const allValid = [...this.template.querySelectorAll('input')]
+            .reduce((validSoFar, inputField) => {
+                inputField.reportValidity();
+                return validSoFar && inputField.checkValidity();
+            }, true);
+        if (allValid) {
+            this.errorMessage = '';
+            console.log('Form submitted:', this.formData);
+        } else {
+            this.errorMessage = 'Please fill all required fields correctly.';
+        }
+    }
+    handleClear() {
         this.template.querySelector('form').reset();
         this.formData = {};
         this.errorMessage = '';
