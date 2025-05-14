@@ -1,155 +1,91 @@
 <!-- agedCareRecipientFeedbackForm.html -->
 <template>
-    <div class="acme-aged-care-feedback slds-p-around_medium">
-        <h1 class="acme-heading acme-heading_large slds-text-heading_large slds-m-bottom_medium">Aged Care Recipient Feedback Form</h1>
-        <lightning-messages></lightning-messages>
-        <form onsubmit={handleSubmit}>
-            <div class="slds-grid slds-wrap slds-gutters">
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                    <lightning-input 
-                        type="date" 
-                        label="Date" 
-                        name="date" 
-                        required 
-                        onchange={handleInputChange}
-                        class="required-field">
-                    </lightning-input>
-                </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                    <lightning-input 
-                        label="Provider Name" 
-                        name="providerName" 
-                        required 
-                        value={providerName}
-                        readonly
-                        class="required-field">
-                    </lightning-input>
-                </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                    <lightning-input 
-                        label="Outlet Name" 
-                        name="outletName" 
-                        required 
-                        value={outletName}
-                        readonly
-                        class="required-field">
-                    </lightning-input>
-                </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                    <lightning-input 
-                        label="Outlet ID" 
-                        name="outletId" 
-                        required 
-                        value={outletId}
-                        readonly
-                        class="required-field">
-                    </lightning-input>
-                </div>
-                <div class="slds-col slds-size_1-of-1">
-                    <lightning-checkbox-group
-                        label="Type of Aged Care"
-                        name="typeOfAgedCare"
-                        options={typeOfAgedCareOptions}
-                        required
-                        onchange={handleInputChange}
-                        class="required-field">
-                    </lightning-checkbox-group>
-                </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                    <lightning-input 
-                        label="Name of Respondent" 
-                        name="respondentName" 
-                        onchange={handleInputChange}>
-                    </lightning-input>
-                </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                    <lightning-input 
-                        type="tel" 
-                        label="Respondent's Phone Number" 
-                        name="respondentPhone" 
-                        onchange={handleInputChange}>
-                    </lightning-input>
-                </div>
-                <div class="slds-col slds-size_1-of-1">
-                    <lightning-radio-group
-                        label="Are you"
-                        name="respondentType"
-                        options={respondentTypeOptions}
-                        required
-                        onchange={handleInputChange}
-                        class="required-field">
-                    </lightning-radio-group>
-                </div>
-                <template if:true={showVeteranStatus}>
-                    <div class="slds-col slds-size_1-of-1">
-                        <lightning-combobox
-                            label={veteranStatusLabel}
-                            name="veteranStatus"
-                            options={veteranStatusOptions}
-                            onchange={handleInputChange}>
-                        </lightning-combobox>
+    <div class="root-container">
+        <div class="slds-card">
+            <div class="slds-card__header slds-grid">
+                <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                    <div class="slds-media__body">
+                        <h2 class="slds-card__header-title">
+                            <span class="slds-text-heading_medium">Aged Care Recipient Feedback Form</span>
+                        </h2>
                     </div>
-                </template>
-                <template if:true={showComfortLevel}>
-                    <div class="slds-col slds-size_1-of-1">
-                        <lightning-radio-group
-                            label="How comfortable do you feel talking to staff about your care needs?"
-                            name="comfortLevel"
-                            options={comfortLevelOptions}
-                            onchange={handleInputChange}>
-                        </lightning-radio-group>
-                    </div>
-                </template>
-                <template if:true={showStaffMeetingNeeds}>
-                    <div class="slds-col slds-size_1-of-1">
-                        <lightning-radio-group
-                            label="Do staff meet your care needs?"
-                            name="staffMeetingNeeds"
-                            options={yesNoOptions}
-                            onchange={handleInputChange}>
-                        </lightning-radio-group>
-                    </div>
-                </template>
-                <template if:true={showSpecializedCare}>
-                    <div class="slds-col slds-size_1-of-1">
-                        <lightning-textarea
-                            label="What are your expectations for specialized care?"
-                            name="specializedCareExpectations"
-                            onchange={handleInputChange}>
-                        </lightning-textarea>
-                    </div>
-                    <div class="slds-col slds-size_1-of-1">
-                        <lightning-radio-group
-                            label="How would you rate the provider's specialized care?"
-                            name="specializedCareRating"
-                            options={ratingOptions}
-                            onchange={handleInputChange}>
-                        </lightning-radio-group>
-                    </div>
-                    <div class="slds-col slds-size_1-of-1">
-                        <lightning-textarea
-                            label="Please provide details about the provider's care"
-                            name="providerCareDetails"
-                            onchange={handleInputChange}>
-                        </lightning-textarea>
-                    </div>
-                </template>
-                <div class="slds-col slds-size_1-of-1">
-                    <lightning-textarea
-                        label="Additional Comments"
-                        name="additionalComments"
-                        onchange={handleInputChange}>
-                    </lightning-textarea>
-                </div>
+                </header>
             </div>
-            <div class="slds-m-top_medium">
-                <lightning-button 
-                    variant="brand" 
-                    type="submit" 
-                    label="Submit Feedback" 
-                    class="acme-button_primary">
-                </lightning-button>
+            <div class="slds-card__body slds-card__body_inner">
+                <form class="slds-form" onsubmit={handleSubmit}>
+                    <div class="slds-form-element slds-m-bottom_medium">
+                        <label class="slds-form-element__label" for="name">
+                            <abbr class="slds-required" title="required">*</abbr> Name
+                        </label>
+                        <div class="slds-form-element__control">
+                            <input type="text" id="name" class="slds-input" required onchange={handleInputChange} />
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-bottom_medium">
+                        <label class="slds-form-element__label" for="email">
+                            <abbr class="slds-required" title="required">*</abbr> Email
+                        </label>
+                        <div class="slds-form-element__control">
+                            <input type="email" id="email" class="slds-input" required onchange={handleInputChange} />
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-bottom_medium">
+                        <label class="slds-form-element__label" for="phone">Phone</label>
+                        <div class="slds-form-element__control">
+                            <input type="tel" id="phone" class="slds-input" onchange={handleInputChange} />
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-bottom_medium">
+                        <label class="slds-form-element__label" for="feedbackType">
+                            <abbr class="slds-required" title="required">*</abbr> Feedback Type
+                        </label>
+                        <div class="slds-form-element__control">
+                            <div class="slds-select_container">
+                                <select id="feedbackType" class="slds-select" required onchange={handleInputChange}>
+                                    <option value="">Select an option</option>
+                                    <option value="compliment">Compliment</option>
+                                    <option value="complaint">Complaint</option>
+                                    <option value="suggestion">Suggestion</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-bottom_medium">
+                        <label class="slds-form-element__label" for="feedback">
+                            <abbr class="slds-required" title="required">*</abbr> Feedback
+                        </label>
+                        <div class="slds-form-element__control">
+                            <textarea id="feedback" class="slds-textarea" required onchange={handleInputChange}></textarea>
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-bottom_medium">
+                        <div class="slds-form-element__control">
+                            <div class="slds-checkbox">
+                                <input type="checkbox" id="followUp" name="followUp" onchange={handleInputChange} />
+                                <label class="slds-checkbox__label" for="followUp">
+                                    <span class="slds-checkbox_faux"></span>
+                                    <span class="slds-form-element__label">Request follow-up</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <button class="slds-button slds-button_brand" type="submit" disabled={isSubmitDisabled}>Submit Feedback</button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
+        <template if:true={showSuccessMessage}>
+            <div class="slds-notify slds-notify_alert slds-alert_success" role="alert">
+                <span class="slds-assistive-text">Success</span>
+                <h2>Thank you for your feedback! We appreciate your input.</h2>
+            </div>
+        </template>
+        <template if:true={errorMessage}>
+            <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                <span class="slds-assistive-text">Error</span>
+                <h2>{errorMessage}</h2>
+            </div>
+        </template>
     </div>
 </template>
