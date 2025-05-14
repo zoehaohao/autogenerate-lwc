@@ -1,69 +1,71 @@
 // addressForm.js
 import { LightningElement, track } from 'lwc';
+
 export default class AddressForm extends LightningElement {
     @track formData = {};
-    @track errors = {};
-    @track isFormValid = false;
-    connectedCallback() {
-        this.initializeFormData();
+    @track errorMessage = '';
+
+    handleInputChange(event) {
+        const { id, value } = event.target;
+        this.formData[id] = value;
+        this.validateField(id, value);
     }
-    initializeFormData() {
-        this.formData = {
-            firstName: '', middleName: '', lastName: '', birthdate: '',
-            address: '', city: '', state: '', zipCode: '',
-            startDate: '', endDate: ''
-        };
-    }
-    validateField(event) {
-        const field = event.target;
-        const fieldName = field.id;
-        const fieldValue = field.value;
-        this.formData[fieldName] = fieldValue;
-        this.errors[fieldName] = '';
-        switch(fieldName) {
-            case 'firstName':
-            case 'lastName':
-                if (!fieldValue.trim()) {
-                    this.errors[fieldName] = `${fieldName} is required`;
-                }
-                break;
+
+    validateField(fieldName, value) {
+        switch (fieldName) {
             case 'zipCode':
-                if (!/^\d{5}(-\d{4})?$/.test(fieldValue)) {
-                    this.errors[fieldName] = 'Invalid zip code';
+                if (!/^\d{5}(-\d{4})?$/.test(value)) {
+                    this.errorMessage = 'Invalid zip code format';
+                } else {
+                    this.errorMessage = '';
                 }
                 break;
-            case 'birthdate':
             case 'startDate':
             case 'endDate':
-                if (!this.isValidDate(fieldValue)) {
-                    this.errors[fieldName] = 'Invalid date';
+                if (this.formData.startDate && this.formData.endDate) {
+                    if (new Date(this.formData.startDate) > new Date(this.formData.endDate)) {
+                        this.errorMessage = 'End date must be after start date';
+                    } else {
+                        this.errorMessage = '';
+                    }
                 }
                 break;
+            default:
+                break;
         }
-        if (fieldName === 'endDate' && this.formData.startDate) {
-            if (new Date(fieldValue) <= new Date(this.formData.startDate)) {
-                this.errors[fieldName] = 'End Date must be after Start Date';
-            }
-        }
-        this.isFormValid = Object.values(this.errors).every(error => !error);
     }
-    isValidDate(dateString) {
-        const regex = /^\d{4}-\d{2}-\d{2}$/;
-        if (!regex.test(dateString)) return false;
-        const date = new Date(dateString);
-        return date instanceof Date && !isNaN(date);
-    }
+
     handleSubmit() {
-        if (this.isFormValid) {
+        if (this.validateForm()) {
             console.log('Form submitted:', this.formData);
+            this.errorMessage = '';
+        } else {
+            this.errorMessage = 'Please fill all required fields correctly';
         }
     }
-    handleClear() {
-        this.initializeFormData();
-        this.errors = {};
-        this.isFormValid = false;
-        this.template.querySelectorAll('input, select').forEach(field => {
-            field.value = '';
+
+    handleReset() {
+        this.template.querySelectorAll('input, select').forEach(element => {
+            element.value = '';
         });
+        this.formData = {};
+        this.errorMessage = '';
+    }
+
+    validateForm() {
+        const requiredFields = ['firstName', 'lastName', 'birthdate', 'zipCode', 'startDate', 'endDate'];
+        let isValid = true;
+
+        requiredFields.forEach(field => {
+            const input = this.template.querySelector(`[id="${field}"]`);
+            if (!input.value) {
+                isValid = false;
+                input.classList.add('slds-has-error');
+            } else {
+                input.classList.remove('slds-has-error');
+            }
+        });
+
+        return isValid && !this.errorMessage;
     }
 }
