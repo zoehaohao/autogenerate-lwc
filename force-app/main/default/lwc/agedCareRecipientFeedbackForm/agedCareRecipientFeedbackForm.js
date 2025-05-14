@@ -1,63 +1,35 @@
-// agedCareRecipientFeedbackForm.js
-import { LightningElement, track } from 'lwc';
-
-export default class AgedCareRecipientFeedbackForm extends LightningElement {
-    @track formData = {
-        name: '',
-        email: '',
-        phone: '',
-        feedbackType: '',
-        feedback: '',
-        followUp: false
-    };
-
-    @track showSuccessMessage = false;
-    @track errorMessage = '';
-    @track isSubmitDisabled = true;
-
-    handleInputChange(event) {
-        const field = event.target.id;
-        const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-        this.formData[field] = value;
-        this.validateForm();
-    }
-
-    validateForm() {
-        const { name, email, feedbackType, feedback } = this.formData;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const isValid = name.trim() !== '' &&
-                        email.trim() !== '' &&
-                        emailRegex.test(email) &&
-                        feedbackType !== '' &&
-                        feedback.trim() !== '';
-        this.isSubmitDisabled = !isValid;
-    }
-
-    handleSubmit(event) {
-        event.preventDefault();
-        if (this.isSubmitDisabled) return;
-
-        this.errorMessage = '';
-        this.showSuccessMessage = false;
-
-        console.log('Form submitted:', this.formData);
-        this.showSuccessMessage = true;
-        this.resetForm();
+// agedCareRecipientFeedbackForm.js (continued)
+    validatePhoneNumber() {
+        const phoneRegex = /^(\+61|0)[2-478](?:[ -]?[0-9]){8}$/;
+        if (this.formData.respondentPhone && !phoneRegex.test(this.formData.respondentPhone)) {
+            this.errorMessage = 'Please enter a valid Australian phone number.';
+            return false;
+        }
+        return true;
     }
 
     resetForm() {
         this.formData = {
-            name: '',
-            email: '',
-            phone: '',
-            feedbackType: '',
-            feedback: '',
-            followUp: false
+            careType: [],
+            respondentName: '',
+            respondentPhone: '',
+            role: '',
+            veteranStatus: '',
+            comfortLevel: '',
+            staffMeetsNeeds: '',
+            specializedCare: '',
+            providerOffersSpecializedCare: '',
+            specializedCareDetails: '',
+            additionalComments: ''
         };
+        this.showVeteranStatus = false;
+        this.showVeteranFeedback = false;
+        this.isSubmitDisabled = true;
         this.template.querySelectorAll('input, select, textarea').forEach(element => {
             element.value = '';
+            if (element.type === 'checkbox' || element.type === 'radio') {
+                element.checked = false;
+            }
         });
-        this.template.querySelector('input[type="checkbox"]').checked = false;
-        this.isSubmitDisabled = true;
     }
 }

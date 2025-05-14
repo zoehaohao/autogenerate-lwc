@@ -14,7 +14,7 @@
 .root-container {
     font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     color: var(--acme-gray);
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
 }
 
@@ -84,6 +84,18 @@
 
 .slds-notify_alert {
     margin-top: 1rem;
+}
+
+.slds-radio_button-group,
+.slds-checkbox_button-group {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.slds-radio_button,
+.slds-checkbox_button {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 @media screen and (max-width: 768px) {
