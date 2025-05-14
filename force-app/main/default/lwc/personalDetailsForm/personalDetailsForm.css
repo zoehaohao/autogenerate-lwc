@@ -2,114 +2,73 @@
 :host {
     --acme-blue-color: #0057B8;
     --acme-gray-color: #424A54;
-    --acme-white-color: #FFFFFF;
-    --acme-teal-color: #00A0B0;
-    --acme-gold-color: #F2C94C;
     --acme-coral-color: #FF6B6B;
-    --acme-light-gray-color: #F5F7FA;
 }
 
-.acme-personal-details-form {
-    font-family: Arial, Helvetica, sans-serif;
-    max-width: 800px;
+.root-container {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    color: var(--acme-gray-color);
+    max-width: 1200px;
     margin: 0 auto;
     padding: var(--slds-c-card-spacing-block, 1rem);
 }
 
 .acme-heading {
+    font-size: 18px;
+    font-weight: 600;
     color: var(--acme-blue-color);
-    font-size: 20px;
-    margin-bottom: 1rem;
+    margin-bottom: 16px;
 }
 
-.acme-personal-details-form__grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-}
-
-.acme-personal-details-form__field {
-    display: flex;
-    flex-direction: column;
-}
-
-.acme-label {
+.slds-form-element__label {
     font-size: 14px;
-    color: var(--acme-gray-color);
-    margin-bottom: 0.25rem;
     text-align: right;
 }
 
-.acme-input,
-.acme-select {
+.slds-input,
+.slds-select {
     font-size: 16px;
-    padding: 0.5rem;
-    border: 1px solid var(--acme-light-gray-color);
-    border-radius: 4px;
 }
 
-.acme-required {
+.slds-required {
     color: var(--acme-coral-color);
-    margin-left: 0.25rem;
 }
 
-.acme-personal-details-form__actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 1rem;
-    gap: 0.5rem;
+.error-message {
+    color: var(--acme-coral-color);
+    font-size: 12px;
 }
 
 .acme-button {
-    font-size: 16px;
-    padding: 0.5rem 1rem;
+    padding: 8px 16px;
     border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s;
+    font-size: 16px;
+    font-weight: 600;
+    transition: opacity 0.3s ease;
+}
+
+.acme-button:hover {
+    opacity: 0.8;
 }
 
 .acme-button_primary {
     background-color: var(--acme-blue-color);
-    color: var(--acme-white-color);
+    color: #FFFFFF;
     border: none;
 }
 
-.acme-button_primary:hover {
-    background-color: var(--acme-teal-color);
-}
-
 .acme-button_secondary {
-    background-color: var(--acme-white-color);
+    background-color: #FFFFFF;
     color: var(--acme-blue-color);
     border: 1px solid var(--acme-blue-color);
 }
 
-.acme-button_secondary:hover {
-    background-color: var(--acme-light-gray-color);
-}
-
-.acme-personal-details-form__error {
-    color: var(--acme-coral-color);
-    font-size: 12px;
-    margin-top: 1rem;
-}
-
-.acme-personal-details-form__help {
-    margin-top: 1rem;
-    text-align: right;
-}
-
-.acme-link {
-    color: var(--acme-blue-color);
-    text-decoration: none;
-}
-
-.acme-link:hover {
-    text-decoration: underline;
-}
-
 @media screen and (max-width: 768px) {
-    .acme-personal-details-form__grid {
-        grid-template-columns: 1fr;
+    .acme-form {
+        flex-direction: column;
+    }
+
+    .slds-medium-size_1-of-2 {
+        width: 100%;
     }
 }
