@@ -1,75 +1,85 @@
 <!-- nameFieldRemover.html -->
 <template>
-    <div class="acme-name-field-remover">
-        <div class="acme-name-field-remover__header">
-            <h2 class="acme-heading acme-heading_medium">Name Field Component</h2>
+    <div class="acme-name-field-remover slds-p-around_medium">
+        <div class="slds-grid slds-gutters slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                <div class="slds-form-element">
+                    <h2 class="slds-text-heading_medium slds-m-bottom_small">Personal Information</h2>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="firstName">
+                            <abbr class="slds-required" title="required">*</abbr> First Name
+                        </label>
+                        <div class="slds-form-element__control">
+                            <input type="text" id="firstName" class="slds-input" required onchange={handleInputChange} />
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-top_small">
+                        <label class="slds-form-element__label" for="lastName">
+                            <abbr class="slds-required" title="required">*</abbr> Last Name
+                        </label>
+                        <div class="slds-form-element__control">
+                            <input type="text" id="lastName" class="slds-input" required onchange={handleInputChange} />
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-top_small">
+                        <label class="slds-form-element__label" for="age">
+                            <abbr class="slds-required" title="required">*</abbr> Age
+                        </label>
+                        <div class="slds-form-element__control">
+                            <input type="number" id="age" class="slds-input" required min="18" onchange={handleInputChange} />
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-top_small">
+                        <label class="slds-form-element__label" for="birthDate">
+                            <abbr class="slds-required" title="required">*</abbr> Birth Date
+                        </label>
+                        <div class="slds-form-element__control">
+                            <input type="date" id="birthDate" class="slds-input" required onchange={handleInputChange} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                <div class="slds-form-element">
+                    <h2 class="slds-text-heading_medium slds-m-bottom_small">Address</h2>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="street">
+                            <abbr class="slds-required" title="required">*</abbr> Street
+                        </label>
+                        <div class="slds-form-element__control">
+                            <input type="text" id="street" class="slds-input" required onchange={handleInputChange} />
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-top_small">
+                        <label class="slds-form-element__label" for="city">
+                            <abbr class="slds-required" title="required">*</abbr> City
+                        </label>
+                        <div class="slds-form-element__control">
+                            <input type="text" id="city" class="slds-input" required onchange={handleInputChange} />
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-top_small">
+                        <label class="slds-form-element__label" for="state">
+                            <abbr class="slds-required" title="required">*</abbr> State
+                        </label>
+                        <div class="slds-form-element__control">
+                            <input type="text" id="state" class="slds-input" required onchange={handleInputChange} />
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-top_small">
+                        <label class="slds-form-element__label" for="zipCode">
+                            <abbr class="slds-required" title="required">*</abbr> Zip Code
+                        </label>
+                        <div class="slds-form-element__control">
+                            <input type="text" id="zipCode" class="slds-input" required pattern="^\d{5}(-\d{4})?$" onchange={handleInputChange} />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="acme-name-field-remover__form">
-            <lightning-input
-                label="First Name"
-                name="firstName"
-                type="text"
-                required
-                minlength="2"
-                maxlength="40"
-                pattern="[A-Za-z]+"
-                message-when-pattern-mismatch="Please enter only letters"
-                placeholder="Enter first name"
-                onblur={validateField}
-                class="acme-input"
-            ></lightning-input>
-            <lightning-input
-                label="Last Name"
-                name="lastName"
-                type="text"
-                required
-                minlength="2"
-                maxlength="80"
-                pattern="[A-Za-z]+"
-                message-when-pattern-mismatch="Please enter only letters"
-                placeholder="Enter last name"
-                onblur={validateField}
-                class="acme-input"
-            ></lightning-input>
+        <div class="slds-m-top_medium">
+            <button class="slds-button slds-button_brand acme-button_primary" onclick={handleSubmit}>Submit</button>
         </div>
-        <div class="acme-name-field-remover__actions">
-            <lightning-button
-                label="Save"
-                variant="brand"
-                onclick={handleSubmit}
-                disabled={isSubmitDisabled}
-                class="acme-button acme-button_primary"
-            ></lightning-button>
-            <lightning-button
-                label="Reset"
-                variant="neutral"
-                onclick={handleReset}
-                class="acme-button acme-button_neutral"
-            ></lightning-button>
-        </div>
-        <div if:true={hasErrors} class="acme-name-field-remover__errors">
-            <template for:each={errorMessages} for:item="error">
-                <p key={error} class="acme-error-text">
-                    <lightning-icon
-                        icon-name="utility:error"
-                        alternative-text="Error"
-                        size="x-small"
-                        class="acme-icon acme-icon_error"
-                    ></lightning-icon>
-                    {error}
-                </p>
-            </template>
-        </div>
-        <div if:true={showSuccessMessage} class="acme-name-field-remover__success">
-            <p class="acme-success-text">
-                <lightning-icon
-                    icon-name="utility:success"
-                    alternative-text="Success"
-                    size="x-small"
-                    class="acme-icon acme-icon_success"
-                ></lightning-icon>
-                Form submitted successfully!
-            </p>
-        </div>
+        <div if:true={errorMessage} class="slds-text-color_error slds-m-top_small">{errorMessage}</div>
     </div>
 </template>

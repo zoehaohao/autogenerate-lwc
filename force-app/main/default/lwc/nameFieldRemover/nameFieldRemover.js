@@ -2,50 +2,62 @@
 import { LightningElement, track } from 'lwc';
 
 export default class NameFieldRemover extends LightningElement {
-    @track firstName = '';
-    @track lastName = '';
-    @track errorMessages = [];
-    @track showSuccessMessage = false;
+    @track formData = {};
+    @track errorMessage = '';
 
-    get isSubmitDisabled() {
-        return !this.firstName || !this.lastName || this.hasErrors;
+    handleInputChange(event) {
+        const { id, value } = event.target;
+        this.formData[id] = value;
+        this.validateField(id, value);
     }
 
-    get hasErrors() {
-        return this.errorMessages.length > 0;
-    }
-
-    validateField(event) {
-        const field = event.target;
-        const fieldName = field.name;
-        const value = field.value;
-        const isValid = field.checkValidity();
-
-        if (!isValid) {
-            this.errorMessages = [...this.errorMessages, `${fieldName}: ${field.validationMessage}`];
-        } else {
-            this[fieldName] = value;
-            this.errorMessages = this.errorMessages.filter(error => !error.startsWith(fieldName));
+    validateField(fieldName, value) {
+        switch (fieldName) {
+            case 'age':
+                if (parseInt(value) < 18) {
+                    this.errorMessage = 'Age must be 18 or older.';
+                    return false;
+                }
+                break;
+            case 'zipCode':
+                if (!/^\d{5}(-\d{4})?$/.test(value)) {
+                    this.errorMessage = 'Invalid zip code format.';
+                    return false;
+                }
+                break;
+            case 'birthDate':
+                const birthDate = new Date(value);
+                const today = new Date();
+                if (birthDate > today) {
+                    this.errorMessage = 'Birth date cannot be in the future.';
+                    return false;
+                }
+                break;
         }
+        this.errorMessage = '';
+        return true;
+    }
+
+    validateForm() {
+        const inputs = this.template.querySelectorAll('input');
+        let isValid = true;
+        inputs.forEach(input => {
+            if (!input.checkValidity()) {
+                input.reportValidity();
+                isValid = false;
+            } else {
+                isValid = this.validateField(input.id, input.value) && isValid;
+            }
+        });
+        return isValid;
     }
 
     handleSubmit() {
-        if (this.isSubmitDisabled) return;
-
-        this.showSuccessMessage = true;
-        setTimeout(() => {
-            this.showSuccessMessage = false;
-        }, 3000);
-
-        this.handleReset();
-    }
-
-    handleReset() {
-        this.template.querySelectorAll('lightning-input').forEach(input => {
-            input.value = '';
-        });
-        this.firstName = '';
-        this.lastName = '';
-        this.errorMessages = [];
+        if (this.validateForm()) {
+            console.log('Form submitted:', this.formData);
+            // Add logic to handle form submission
+        } else {
+            this.errorMessage = 'Please correct the errors in the form.';
+        }
     }
 }
