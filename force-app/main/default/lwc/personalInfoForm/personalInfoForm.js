@@ -1,90 +1,91 @@
 // personalInfoForm.js
 import { LightningElement, track } from 'lwc';
+import { NavigationMixin } from 'lightning/navigation';
 
-export default class PersonalInfoForm extends LightningElement {
+export default class PersonalInfoForm extends NavigationMixin(LightningElement) {
     @track formData = {};
     @track errors = {};
-
-    handleSubmit() {
-        if (this.validateForm()) {
-            console.log('Form submitted:', this.formData);
-        }
-    }
-
-    handleClear() {
-        this.template.querySelectorAll('input, select').forEach(element => {
-            element.value = '';
-        });
-        this.formData = {};
-        this.errors = {};
-    }
 
     validateField(event) {
         const field = event.target;
         const fieldName = field.id;
-        const value = field.value;
+        const fieldValue = field.value;
 
-        this.formData[fieldName] = value;
+        this.formData[fieldName] = fieldValue;
         this.errors[fieldName] = '';
 
         switch (fieldName) {
             case 'firstName':
             case 'lastName':
-                if (!value.trim()) {
-                    this.errors[fieldName] = `${fieldName} is required`;
+                if (!fieldValue.trim()) {
+                    this.errors[fieldName] = `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
                 }
                 break;
             case 'birthdate':
-                if (!this.isValidDate(value) || !this.isOver18(value)) {
-                    this.errors[fieldName] = 'Must be a valid date and age 18 or older';
+                if (!fieldValue) {
+                    this.errors[fieldName] = 'Birthdate is required';
+                } else if (new Date(fieldValue) >= new Date()) {
+                    this.errors[fieldName] = 'Birthdate must be in the past';
                 }
                 break;
             case 'zipCode':
-                if (!/^\d{5}$/.test(value)) {
-                    this.errors[fieldName] = 'Must be a 5-digit number';
+                if (!fieldValue) {
+                    this.errors[fieldName] = 'Zip Code is required';
+                } else if (!/^\d{5}(-\d{4})?$/.test(fieldValue)) {
+                    this.errors[fieldName] = 'Invalid Zip Code format';
                 }
                 break;
             case 'startDate':
             case 'endDate':
-                if (!this.isValidDate(value)) {
-                    this.errors[fieldName] = 'Must be a valid date';
+                if (!fieldValue) {
+                    this.errors[fieldName] = `${fieldName === 'startDate' ? 'Start' : 'End'} Date is required`;
                 }
                 break;
         }
 
-        if (fieldName === 'endDate' && this.formData.startDate) {
-            if (new Date(value) <= new Date(this.formData.startDate)) {
-                this.errors[fieldName] = 'End Date must be after Start Date';
-            }
-        }
-
-        field.classList.toggle('acme-input_error', !!this.errors[fieldName]);
+        field.setCustomValidity(this.errors[fieldName]);
+        field.reportValidity();
     }
 
-    validateForm() {
-        let isValid = true;
-        this.template.querySelectorAll('input[required], select[required]').forEach(field => {
-            if (!field.value.trim()) {
-                this.errors[field.id] = `${field.id} is required`;
-                field.classList.add('acme-input_error');
-                isValid = false;
+    validateDates() {
+        const startDate = this.template.querySelector('#startDate').value;
+        const endDate = this.template.querySelector('#endDate').value;
+
+        if (startDate && endDate && new Date(endDate) <= new Date(startDate)) {
+            this.errors.endDate = 'End Date must be after Start Date';
+            this.template.querySelector('#endDate').setCustomValidity(this.errors.endDate);
+        } else {
+            this.errors.endDate = '';
+            this.template.querySelector('#endDate').setCustomValidity('');
+        }
+        this.template.querySelector('#endDate').reportValidity();
+    }
+
+    handleSubmit() {
+        this.template.querySelectorAll('input, select').forEach(field => this.validateField({ target: field }));
+        this.validateDates();
+
+        if (Object.values(this.errors).every(error => !error)) {
+            console.log('Form submitted:', this.formData);
+        }
+    }
+
+    handleClear() {
+        this.template.querySelectorAll('input, select').forEach(field => {
+            field.value = '';
+            field.setCustomValidity('');
+            field.reportValidity();
+        });
+        this.formData = {};
+        this.errors = {};
+    }
+
+    handleCancel() {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__webPage',
+            attributes: {
+                url: '/dashboard'
             }
         });
-        return isValid && Object.values(this.errors).every(error => !error);
-    }
-
-    isValidDate(dateString) {
-        return !isNaN(new Date(dateString).getTime());
-    }
-
-    isOver18(dateString) {
-        const birthDate = new Date(dateString);
-        const today = new Date();
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const monthDiff = today.getMonth() - birthDate.getMonth();
-        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
-        return age >= 18;
     }
 }
