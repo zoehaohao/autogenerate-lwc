@@ -4,14 +4,40 @@ import { LightningElement, track } from 'lwc';
 export default class MyPersonalForm extends LightningElement {
     @track formData = {
         firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        birthdate: ''
+        middleName: '',
+        familyName: '',
+        birthdate: '',
+        address: '',
+        cityTown: '',
+        state: '',
+        zipCode: '',
+        startDate: '',
+        endDate: ''
     };
     @track errorMessage = '';
     @track successMessage = '';
     @track isSubmitDisabled = true;
+
+    usStates = [
+        { value: 'AL', label: 'Alabama' },
+        { value: 'AK', label: 'Alaska' },
+        // ... (other states)
+        { value: 'WY', label: 'Wyoming' }
+    ];
+
+    connectedCallback() {
+        this.populateStateOptions();
+    }
+
+    populateStateOptions() {
+        const stateSelect = this.template.querySelector('[name="state"]');
+        this.usStates.forEach(state => {
+            const option = document.createElement('option');
+            option.value = state.value;
+            option.textContent = state.label;
+            stateSelect.appendChild(option);
+        });
+    }
 
     handleInputChange(event) {
         const { name, value } = event.target;
@@ -23,19 +49,7 @@ export default class MyPersonalForm extends LightningElement {
         this.errorMessage = '';
         this.isSubmitDisabled = false;
 
-        if (!this.formData.firstName || !this.formData.lastName || !this.formData.email || !this.formData.birthdate) {
-            this.isSubmitDisabled = true;
-            return;
-        }
-
-        if (!this.validateEmail(this.formData.email)) {
-            this.errorMessage = 'Please enter a valid email address.';
-            this.isSubmitDisabled = true;
-            return;
-        }
-
-        if (this.formData.phone && !this.validatePhone(this.formData.phone)) {
-            this.errorMessage = 'Please enter a valid phone number.';
+        if (!this.formData.firstName || !this.formData.familyName || !this.formData.birthdate || !this.formData.zipCode || !this.formData.startDate || !this.formData.endDate) {
             this.isSubmitDisabled = true;
             return;
         }
@@ -45,14 +59,18 @@ export default class MyPersonalForm extends LightningElement {
             this.isSubmitDisabled = true;
             return;
         }
-    }
 
-    validateEmail(email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
+        if (!this.validateZipCode(this.formData.zipCode)) {
+            this.errorMessage = 'Please enter a valid 5-digit zip code.';
+            this.isSubmitDisabled = true;
+            return;
+        }
 
-    validatePhone(phone) {
-        return /^\+?[1-9]\d{1,14}$/.test(phone);
+        if (!this.validateDateRange(this.formData.startDate, this.formData.endDate)) {
+            this.errorMessage = 'End Date must be after Start Date.';
+            this.isSubmitDisabled = true;
+            return;
+        }
     }
 
     validateAge(birthdate) {
@@ -66,26 +84,41 @@ export default class MyPersonalForm extends LightningElement {
         return age >= 18;
     }
 
+    validateZipCode(zipCode) {
+        return /^\d{5}$/.test(zipCode);
+    }
+
+    validateDateRange(startDate, endDate) {
+        return new Date(endDate) > new Date(startDate);
+    }
+
     handleSubmit(event) {
         event.preventDefault();
         if (!this.isSubmitDisabled) {
             this.successMessage = 'Form submitted successfully!';
             this.errorMessage = '';
-            this.resetForm();
+            console.log('Form data:', this.formData);
         }
     }
 
-    resetForm() {
+    handleClear() {
         this.formData = {
             firstName: '',
-            lastName: '',
-            email: '',
-            phone: '',
-            birthdate: ''
+            middleName: '',
+            familyName: '',
+            birthdate: '',
+            address: '',
+            cityTown: '',
+            state: '',
+            zipCode: '',
+            startDate: '',
+            endDate: ''
         };
-        this.template.querySelectorAll('input').forEach(input => {
+        this.errorMessage = '';
+        this.successMessage = '';
+        this.isSubmitDisabled = true;
+        this.template.querySelectorAll('input, select').forEach(input => {
             input.value = '';
         });
-        this.isSubmitDisabled = true;
     }
 }

@@ -11,29 +11,48 @@
     --acme-dark-gray-color: #7B8794;
 }
 
-.root-container {
+.acme-personal-form {
     font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     color: var(--acme-gray-color);
     background-color: var(--acme-light-gray-color);
-    padding: var(--slds-c-card-spacing-block, 1rem);
+    padding: 1.5rem;
 }
 
 .acme-card {
     background-color: var(--acme-white-color);
-    border-radius: var(--slds-c-card-radius-border, 0.25rem);
-    box-shadow: var(--slds-c-card-shadow, 0 2px 2px 0 rgba(0, 0, 0, 0.1));
-    padding: var(--slds-c-card-spacing-block, 1.5rem);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(66, 74, 84, 0.1);
+    padding: 1.5rem;
 }
 
 .acme-heading {
     color: var(--acme-blue-color);
-    font-size: 1.5rem;
-    font-weight: 700;
     margin-bottom: 1rem;
 }
 
+.acme-heading_medium {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.acme-heading_small {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.acme-form__section {
+    margin-bottom: 2rem;
+}
+
+.acme-form__row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -0.75rem;
+}
+
 .acme-form__field {
-    margin-bottom: 1rem;
+    flex: 1 0 calc(50% - 1.5rem);
+    margin: 0 0.75rem 1rem;
 }
 
 .acme-form__label {
@@ -47,24 +66,33 @@
     margin-left: 0.25rem;
 }
 
-.acme-form__input {
+.acme-form__input,
+.acme-form__select {
     width: 100%;
-    padding: 0.5rem;
+    padding: 0.5rem 0.75rem;
     border: 1px solid var(--acme-medium-gray-color);
-    border-radius: 0.25rem;
+    border-radius: 4px;
     font-size: 1rem;
+    height: 40px;
 }
 
-.acme-form__input:focus {
+.acme-form__input:focus,
+.acme-form__select:focus {
     outline: none;
     border-color: var(--acme-blue-color);
-    box-shadow: 0 0 0 1px var(--acme-blue-color);
+    box-shadow: 0 0 0 2px var(--acme-blue-color);
+}
+
+.acme-form__actions {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 1.5rem;
 }
 
 .acme-button {
     padding: 0.5rem 1rem;
     font-size: 1rem;
-    border-radius: 0.25rem;
+    border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
@@ -73,6 +101,7 @@
     background-color: var(--acme-blue-color);
     color: var(--acme-white-color);
     border: none;
+    margin-right: 1rem;
 }
 
 .acme-button_primary:hover:not(:disabled) {
@@ -84,20 +113,30 @@
     cursor: not-allowed;
 }
 
+.acme-button_secondary {
+    background-color: var(--acme-white-color);
+    color: var(--acme-blue-color);
+    border: 1px solid var(--acme-blue-color);
+}
+
+.acme-button_secondary:hover {
+    background-color: var(--acme-light-gray-color);
+}
+
 .acme-form__error {
     color: var(--acme-coral-color);
     font-size: 0.875rem;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
 }
 
 .acme-form__success {
     color: var(--acme-teal-color);
     font-size: 0.875rem;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
 }
 
 @media screen and (max-width: 768px) {
-    .acme-card {
-        padding: var(--slds-c-card-spacing-block, 1rem);
+    .acme-form__field {
+        flex: 1 0 100%;
     }
 }

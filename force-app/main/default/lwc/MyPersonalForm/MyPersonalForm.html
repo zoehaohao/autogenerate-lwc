@@ -1,38 +1,78 @@
 <!-- MyPersonalForm.html -->
 <template>
-    <div class="root-container">
+    <div class="acme-personal-form">
         <div class="acme-card">
             <h2 class="acme-heading acme-heading_medium">Personal Information Form</h2>
             <form class="acme-form" onsubmit={handleSubmit}>
-                <div class="acme-form__field">
-                    <label for="firstName" class="acme-form__label">First Name<span class="acme-form__required">*</span></label>
-                    <input type="text" id="firstName" name="firstName" required class="acme-form__input" onchange={handleInputChange}>
+                <div class="acme-form__section">
+                    <h3 class="acme-heading acme-heading_small">Personal Information</h3>
+                    <div class="acme-form__row">
+                        <div class="acme-form__field">
+                            <label for="firstName" class="acme-form__label">First Name<span class="acme-form__required">*</span></label>
+                            <input type="text" id="firstName" name="firstName" required class="acme-form__input" onchange={handleInputChange}>
+                        </div>
+                        <div class="acme-form__field">
+                            <label for="middleName" class="acme-form__label">Middle Name</label>
+                            <input type="text" id="middleName" name="middleName" class="acme-form__input" onchange={handleInputChange}>
+                        </div>
+                    </div>
+                    <div class="acme-form__row">
+                        <div class="acme-form__field">
+                            <label for="familyName" class="acme-form__label">Family Name<span class="acme-form__required">*</span></label>
+                            <input type="text" id="familyName" name="familyName" required class="acme-form__input" onchange={handleInputChange}>
+                        </div>
+                        <div class="acme-form__field">
+                            <label for="birthdate" class="acme-form__label">Birthdate<span class="acme-form__required">*</span></label>
+                            <input type="date" id="birthdate" name="birthdate" required class="acme-form__input" onchange={handleInputChange}>
+                        </div>
+                    </div>
                 </div>
-                <div class="acme-form__field">
-                    <label for="lastName" class="acme-form__label">Last Name<span class="acme-form__required">*</span></label>
-                    <input type="text" id="lastName" name="lastName" required class="acme-form__input" onchange={handleInputChange}>
-                </div>
-                <div class="acme-form__field">
-                    <label for="email" class="acme-form__label">Email<span class="acme-form__required">*</span></label>
-                    <input type="email" id="email" name="email" required class="acme-form__input" onchange={handleInputChange}>
-                </div>
-                <div class="acme-form__field">
-                    <label for="phone" class="acme-form__label">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" class="acme-form__input" onchange={handleInputChange}>
-                </div>
-                <div class="acme-form__field">
-                    <label for="birthdate" class="acme-form__label">Date of Birth<span class="acme-form__required">*</span></label>
-                    <input type="date" id="birthdate" name="birthdate" required class="acme-form__input" onchange={handleInputChange}>
+                <div class="acme-form__section">
+                    <h3 class="acme-heading acme-heading_small">Address</h3>
+                    <div class="acme-form__row">
+                        <div class="acme-form__field">
+                            <label for="address" class="acme-form__label">Address</label>
+                            <input type="text" id="address" name="address" class="acme-form__input" onchange={handleInputChange}>
+                        </div>
+                        <div class="acme-form__field">
+                            <label for="cityTown" class="acme-form__label">City or Town</label>
+                            <input type="text" id="cityTown" name="cityTown" class="acme-form__input" onchange={handleInputChange}>
+                        </div>
+                    </div>
+                    <div class="acme-form__row">
+                        <div class="acme-form__field">
+                            <label for="state" class="acme-form__label">State</label>
+                            <select id="state" name="state" class="acme-form__select" onchange={handleInputChange}>
+                                <option value="">Select a state</option>
+                                <!-- US states options will be populated in JS -->
+                            </select>
+                        </div>
+                        <div class="acme-form__field">
+                            <label for="zipCode" class="acme-form__label">Zip Code<span class="acme-form__required">*</span></label>
+                            <input type="text" id="zipCode" name="zipCode" required pattern="[0-9]{5}" class="acme-form__input" onchange={handleInputChange}>
+                        </div>
+                    </div>
+                    <div class="acme-form__row">
+                        <div class="acme-form__field">
+                            <label for="startDate" class="acme-form__label">Start Date<span class="acme-form__required">*</span></label>
+                            <input type="date" id="startDate" name="startDate" required class="acme-form__input" onchange={handleInputChange}>
+                        </div>
+                        <div class="acme-form__field">
+                            <label for="endDate" class="acme-form__label">End Date<span class="acme-form__required">*</span></label>
+                            <input type="date" id="endDate" name="endDate" required class="acme-form__input" onchange={handleInputChange}>
+                        </div>
+                    </div>
                 </div>
                 <div class="acme-form__actions">
                     <button type="submit" class="acme-button acme-button_primary" disabled={isSubmitDisabled}>Submit</button>
+                    <button type="button" class="acme-button acme-button_secondary" onclick={handleClear}>Clear</button>
                 </div>
             </form>
             <template if:true={errorMessage}>
-                <div class="acme-form__error">{errorMessage}</div>
+                <div class="acme-form__error" role="alert">{errorMessage}</div>
             </template>
             <template if:true={successMessage}>
-                <div class="acme-form__success">{successMessage}</div>
+                <div class="acme-form__success" role="alert">{successMessage}</div>
             </template>
         </div>
     </div>
