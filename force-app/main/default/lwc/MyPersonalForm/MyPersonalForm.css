@@ -1,0 +1,103 @@
+/* MyPersonalForm.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-teal-color: #00A0B0;
+    --acme-gold-color: #F2C94C;
+    --acme-coral-color: #FF6B6B;
+    --acme-light-gray-color: #F5F7FA;
+    --acme-medium-gray-color: #E4E7EB;
+    --acme-dark-gray-color: #7B8794;
+}
+
+.root-container {
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: var(--acme-gray-color);
+    background-color: var(--acme-light-gray-color);
+    padding: var(--slds-c-card-spacing-block, 1rem);
+}
+
+.acme-card {
+    background-color: var(--acme-white-color);
+    border-radius: var(--slds-c-card-radius-border, 0.25rem);
+    box-shadow: var(--slds-c-card-shadow, 0 2px 2px 0 rgba(0, 0, 0, 0.1));
+    padding: var(--slds-c-card-spacing-block, 1.5rem);
+}
+
+.acme-heading {
+    color: var(--acme-blue-color);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.acme-form__field {
+    margin-bottom: 1rem;
+}
+
+.acme-form__label {
+    display: block;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+}
+
+.acme-form__required {
+    color: var(--acme-coral-color);
+    margin-left: 0.25rem;
+}
+
+.acme-form__input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--acme-medium-gray-color);
+    border-radius: 0.25rem;
+    font-size: 1rem;
+}
+
+.acme-form__input:focus {
+    outline: none;
+    border-color: var(--acme-blue-color);
+    box-shadow: 0 0 0 1px var(--acme-blue-color);
+}
+
+.acme-button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.acme-button_primary {
+    background-color: var(--acme-blue-color);
+    color: var(--acme-white-color);
+    border: none;
+}
+
+.acme-button_primary:hover:not(:disabled) {
+    background-color: var(--acme-teal-color);
+}
+
+.acme-button_primary:disabled {
+    background-color: var(--acme-medium-gray-color);
+    cursor: not-allowed;
+}
+
+.acme-form__error {
+    color: var(--acme-coral-color);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+.acme-form__success {
+    color: var(--acme-teal-color);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+@media screen and (max-width: 768px) {
+    .acme-card {
+        padding: var(--slds-c-card-spacing-block, 1rem);
+    }
+}
