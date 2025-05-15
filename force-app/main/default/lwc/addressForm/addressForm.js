@@ -4,68 +4,83 @@ import { LightningElement, track } from 'lwc';
 export default class AddressForm extends LightningElement {
     @track formData = {};
     @track errorMessage = '';
-
-    handleInputChange(event) {
-        const { id, value } = event.target;
-        this.formData[id] = value;
-        this.validateField(id, value);
-    }
-
-    validateField(fieldName, value) {
-        switch (fieldName) {
-            case 'zipCode':
-                if (!/^\d{5}(-\d{4})?$/.test(value)) {
-                    this.errorMessage = 'Invalid zip code format';
-                } else {
-                    this.errorMessage = '';
-                }
-                break;
-            case 'startDate':
-            case 'endDate':
-                if (this.formData.startDate && this.formData.endDate) {
-                    if (new Date(this.formData.startDate) > new Date(this.formData.endDate)) {
-                        this.errorMessage = 'End date must be after start date';
-                    } else {
-                        this.errorMessage = '';
-                    }
-                }
-                break;
-            default:
-                break;
-        }
-    }
+    @track isFormValid = false;
 
     handleSubmit() {
         if (this.validateForm()) {
             console.log('Form submitted:', this.formData);
             this.errorMessage = '';
         } else {
-            this.errorMessage = 'Please fill all required fields correctly';
+            this.errorMessage = 'Please correct the errors before submitting.';
         }
     }
 
-    handleReset() {
+    handleClear() {
         this.template.querySelectorAll('input, select').forEach(element => {
             element.value = '';
         });
         this.formData = {};
         this.errorMessage = '';
+        this.isFormValid = false;
+    }
+
+    validateField(event) {
+        const field = event.target;
+        const fieldName = field.id;
+        const fieldValue = field.value.trim();
+
+        this.formData[fieldName] = fieldValue;
+
+        switch (fieldName) {
+            case 'firstName':
+            case 'lastName':
+                if (!fieldValue) {
+                    field.setCustomValidity(`${fieldName} is required`);
+                } else {
+                    field.setCustomValidity('');
+                }
+                break;
+            case 'zipCode':
+                if (!/^\d{5}(\d{4})?$/.test(fieldValue)) {
+                    field.setCustomValidity('Invalid zip code format');
+                } else {
+                    field.setCustomValidity('');
+                }
+                break;
+            case 'birthdate':
+            case 'startDate':
+            case 'endDate':
+                if (!this.isValidDate(fieldValue)) {
+                    field.setCustomValidity('Invalid date format');
+                } else {
+                    field.setCustomValidity('');
+                }
+                break;
+        }
+
+        field.reportValidity();
+        this.validateForm();
     }
 
     validateForm() {
-        const requiredFields = ['firstName', 'lastName', 'birthdate', 'zipCode', 'startDate', 'endDate'];
-        let isValid = true;
+        const allValid = [...this.template.querySelectorAll('input, select')]
+            .reduce((validSoFar, inputField) => {
+                inputField.reportValidity();
+                return validSoFar && inputField.checkValidity();
+            }, true);
 
-        requiredFields.forEach(field => {
-            const input = this.template.querySelector(`[id="${field}"]`);
-            if (!input.value) {
-                isValid = false;
-                input.classList.add('slds-has-error');
-            } else {
-                input.classList.remove('slds-has-error');
+        if (allValid && this.formData.startDate && this.formData.endDate) {
+            if (new Date(this.formData.endDate) <= new Date(this.formData.startDate)) {
+                this.errorMessage = 'End Date must be after Start Date';
+                allValid = false;
             }
-        });
+        }
 
-        return isValid && !this.errorMessage;
+        this.isFormValid = allValid;
+        return allValid;
+    }
+
+    isValidDate(dateString) {
+        return !isNaN(new Date(dateString).getTime());
     }
 }
