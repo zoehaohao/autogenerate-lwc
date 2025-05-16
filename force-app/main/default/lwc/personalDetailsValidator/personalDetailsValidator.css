@@ -1,0 +1,80 @@
+/* personalDetailsValidator.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-error-color: #c23934;
+    --acme-success-color: #04844b;
+}
+
+.acme-personal-details-validator {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    padding: var(--slds-c-card-spacing-block, 1rem);
+}
+
+.acme-heading_large {
+    font-size: 1.25rem;
+    color: var(--acme-gray-color);
+    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
+}
+
+.acme-form {
+    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
+}
+
+.acme-input {
+    margin-bottom: 0.5rem;
+}
+
+.acme-error-message {
+    color: var(--acme-error-color);
+    font-size: 0.8125rem;
+    display: flex;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+
+.acme-icon_error {
+    --sds-c-icon-color-foreground: var(--acme-error-color);
+    margin-right: 0.25rem;
+}
+
+.acme-button-group {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.acme-button {
+    margin: 0 0.5rem;
+}
+
+.acme-button_primary {
+    --slds-c-button-brand-color-background: var(--acme-blue-color);
+    --slds-c-button-brand-color-border: var(--acme-blue-color);
+}
+
+.acme-button_secondary {
+    --slds-c-button-neutral-color-background: var(--acme-gray-color);
+    --slds-c-button-neutral-color-border: var(--acme-gray-color);
+}
+
+.acme-help-link {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.acme-help-link a {
+    color: var(--acme-blue-color);
+    text-decoration: none;
+}
+
+@media screen and (max-width: 768px) {
+    .acme-button-group {
+        flex-direction: column;
+    }
+
+    .acme-button {
+        margin: 0.5rem 0;
+    }
+}

@@ -1,0 +1,50 @@
+<!-- personalDetailsValidator.html -->
+<template>
+    <div class="acme-personal-details-validator">
+        <h1 class="acme-heading acme-heading_large">Personal Details Validator</h1>
+        <div class="acme-form">
+            <lightning-input 
+                type="date" 
+                label="Date of Birth" 
+                name="dateOfBirth" 
+                required
+                placeholder="YYYY-MM-DD"
+                onblur={handleInputBlur}
+                class="acme-input">
+            </lightning-input>
+            <lightning-input 
+                type="date" 
+                label="Start Date" 
+                name="startDate" 
+                required
+                placeholder="YYYY-MM-DD"
+                onblur={handleInputBlur}
+                class="acme-input">
+            </lightning-input>
+            <lightning-input 
+                type="date" 
+                label="End Date" 
+                name="endDate" 
+                required
+                placeholder="YYYY-MM-DD"
+                onblur={handleInputBlur}
+                class="acme-input">
+            </lightning-input>
+        </div>
+        <div class="acme-error-messages">
+            <template if:true={errorMessage}>
+                <div class="acme-error-message">
+                    <lightning-icon icon-name="utility:error" alternative-text="Error" size="x-small" class="acme-icon acme-icon_error"></lightning-icon>
+                    <span>{errorMessage}</span>
+                </div>
+            </template>
+        </div>
+        <div class="acme-button-group">
+            <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="acme-button acme-button_primary"></lightning-button>
+            <lightning-button label="Reset" variant="neutral" onclick={handleReset} class="acme-button acme-button_secondary"></lightning-button>
+        </div>
+        <div class="acme-help-link">
+            <a href="#" onclick={handleHelpClick}>Help</a>
+        </div>
+    </div>
+</template>
