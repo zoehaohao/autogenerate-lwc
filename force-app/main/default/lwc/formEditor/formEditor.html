@@ -1,0 +1,54 @@
+<!-- formEditor.html -->
+<template>
+    <div class="acme-form-editor">
+        <div class="acme-form-editor__container slds-grid slds-wrap">
+            <div class="acme-form-editor__section slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
+                <h2 class="acme-form-editor__section-header">Personal Information</h2>
+                <div class="acme-form-editor__field">
+                    <label for="firstName" class="acme-form-editor__label">First Name<span class="acme-form-editor__required">*</span></label>
+                    <input type="text" id="firstName" class="acme-form-editor__input" required placeholder="Enter first name" onchange={handleInputChange}>
+                </div>
+                <div class="acme-form-editor__field">
+                    <label for="middleName" class="acme-form-editor__label">Middle Name</label>
+                    <input type="text" id="middleName" class="acme-form-editor__input" placeholder="Enter middle name" onchange={handleInputChange}>
+                </div>
+                <div class="acme-form-editor__field">
+                    <label for="lastName" class="acme-form-editor__label">Last Name<span class="acme-form-editor__required">*</span></label>
+                    <input type="text" id="lastName" class="acme-form-editor__input" required placeholder="Enter last name" onchange={handleInputChange}>
+                </div>
+            </div>
+            <div class="acme-form-editor__section slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
+                <h2 class="acme-form-editor__section-header">Address Information</h2>
+                <div class="acme-form-editor__field">
+                    <label for="address" class="acme-form-editor__label">Address</label>
+                    <input type="text" id="address" class="acme-form-editor__input" placeholder="Enter address" onchange={handleInputChange}>
+                </div>
+                <div class="acme-form-editor__field">
+                    <label for="city" class="acme-form-editor__label">City or Town</label>
+                    <input type="text" id="city" class="acme-form-editor__input" placeholder="Enter city" onchange={handleInputChange}>
+                </div>
+                <div class="acme-form-editor__field">
+                    <label for="state" class="acme-form-editor__label">State</label>
+                    <select id="state" class="acme-form-editor__select" onchange={handleInputChange}>
+                        <option value="">Choose a State</option>
+                        <option value="AL">Alabama</option>
+                        <option value="AK">Alaska</option>
+                        <!-- Add other states here -->
+                    </select>
+                </div>
+                <div class="acme-form-editor__field">
+                    <label for="zipCode" class="acme-form-editor__label">Zip Code<span class="acme-form-editor__required">*</span></label>
+                    <input type="text" id="zipCode" class="acme-form-editor__input" required placeholder="Enter zip code" onchange={handleInputChange}>
+                </div>
+            </div>
+        </div>
+        <div class="acme-form-editor__actions">
+            <button class="acme-button_secondary" onclick={handleClear}>Clear</button>
+            <button class="acme-button_primary" onclick={handleSubmit}>Submit</button>
+        </div>
+        <div class="acme-form-editor__help">
+            <a href="/help" target="_blank">Form Help</a>
+        </div>
+        <div if:true={errorMessage} class="acme-form-editor__error">{errorMessage}</div>
+    </div>
+</template>
