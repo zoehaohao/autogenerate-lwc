@@ -1,91 +1,78 @@
 // personalInfoForm.js
 import { LightningElement, track } from 'lwc';
-import { NavigationMixin } from 'lightning/navigation';
 
-export default class PersonalInfoForm extends NavigationMixin(LightningElement) {
-    @track formData = {};
-    @track errors = {};
+export default class PersonalInfoForm extends LightningElement {
+    @track errorMessage = '';
 
     validateField(event) {
         const field = event.target;
         const fieldName = field.id;
         const fieldValue = field.value;
 
-        this.formData[fieldName] = fieldValue;
-        this.errors[fieldName] = '';
-
         switch (fieldName) {
             case 'firstName':
             case 'lastName':
                 if (!fieldValue.trim()) {
-                    this.errors[fieldName] = `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
+                    this.setFieldError(field, `${fieldName} is required`);
+                } else {
+                    this.clearFieldError(field);
                 }
                 break;
             case 'birthdate':
-                if (!fieldValue) {
-                    this.errors[fieldName] = 'Birthdate is required';
-                } else if (new Date(fieldValue) >= new Date()) {
-                    this.errors[fieldName] = 'Birthdate must be in the past';
+            case 'startDate':
+            case 'endDate':
+                if (!this.isValidDate(fieldValue)) {
+                    this.setFieldError(field, `Invalid date format`);
+                } else {
+                    this.clearFieldError(field);
                 }
                 break;
             case 'zipCode':
-                if (!fieldValue) {
-                    this.errors[fieldName] = 'Zip Code is required';
-                } else if (!/^\d{5}(-\d{4})?$/.test(fieldValue)) {
-                    this.errors[fieldName] = 'Invalid Zip Code format';
-                }
-                break;
-            case 'startDate':
-            case 'endDate':
-                if (!fieldValue) {
-                    this.errors[fieldName] = `${fieldName === 'startDate' ? 'Start' : 'End'} Date is required`;
+                if (!/^\d{5}(-\d{4})?$/.test(fieldValue)) {
+                    this.setFieldError(field, 'Invalid zip code format');
+                } else {
+                    this.clearFieldError(field);
                 }
                 break;
         }
 
-        field.setCustomValidity(this.errors[fieldName]);
+        if (fieldName === 'endDate') {
+            const startDate = this.template.querySelector('#startDate').value;
+            if (new Date(fieldValue) <= new Date(startDate)) {
+                this.setFieldError(field, 'End Date must be after Start Date');
+            }
+        }
+    }
+
+    isValidDate(dateString) {
+        const regex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!regex.test(dateString)) return false;
+        const date = new Date(dateString);
+        return date instanceof Date && !isNaN(date);
+    }
+
+    setFieldError(field, message) {
+        field.setCustomValidity(message);
         field.reportValidity();
     }
 
-    validateDates() {
-        const startDate = this.template.querySelector('#startDate').value;
-        const endDate = this.template.querySelector('#endDate').value;
-
-        if (startDate && endDate && new Date(endDate) <= new Date(startDate)) {
-            this.errors.endDate = 'End Date must be after Start Date';
-            this.template.querySelector('#endDate').setCustomValidity(this.errors.endDate);
-        } else {
-            this.errors.endDate = '';
-            this.template.querySelector('#endDate').setCustomValidity('');
-        }
-        this.template.querySelector('#endDate').reportValidity();
+    clearFieldError(field) {
+        field.setCustomValidity('');
+        field.reportValidity();
     }
 
     handleSubmit() {
-        this.template.querySelectorAll('input, select').forEach(field => this.validateField({ target: field }));
-        this.validateDates();
+        const isValid = [...this.template.querySelectorAll('input, select')].reduce((valid, field) => {
+            this.validateField({ target: field });
+            return valid && field.checkValidity();
+        }, true);
 
-        if (Object.values(this.errors).every(error => !error)) {
-            console.log('Form submitted:', this.formData);
+        if (isValid) {
+            this.errorMessage = '';
+            // Implement form submission logic here
+            console.log('Form submitted successfully');
+        } else {
+            this.errorMessage = 'Please correct the errors in the form.';
         }
-    }
-
-    handleClear() {
-        this.template.querySelectorAll('input, select').forEach(field => {
-            field.value = '';
-            field.setCustomValidity('');
-            field.reportValidity();
-        });
-        this.formData = {};
-        this.errors = {};
-    }
-
-    handleCancel() {
-        this[NavigationMixin.Navigate]({
-            type: 'standard__webPage',
-            attributes: {
-                url: '/dashboard'
-            }
-        });
     }
 }
