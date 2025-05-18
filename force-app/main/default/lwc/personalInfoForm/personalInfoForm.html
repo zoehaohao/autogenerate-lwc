@@ -1,111 +1,59 @@
 <!-- personalInfoForm.html -->
 <template>
     <div class="root-container">
-        <div class="slds-grid slds-wrap slds-gutters">
-            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
-                <lightning-input
-                    label="Last Name"
-                    required
-                    class="required-field"
-                    onchange={handleLastNameChange}
-                    value={lastName}
-                ></lightning-input>
+        <div class="form-container">
+            <h2 class="section-header">Personal Information</h2>
+            <div class="form-field">
+                <label for="firstName">First Name<span class="required">*</span></label>
+                <input type="text" id="firstName" required placeholder="Enter first name" onblur={validateField}>
             </div>
-            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
-                <lightning-input
-                    label="Email"
-                    type="email"
-                    required
-                    class="required-field"
-                    onchange={handleEmailChange}
-                    value={email}
-                ></lightning-input>
+            <div class="form-field">
+                <label for="middleName">Middle Name</label>
+                <input type="text" id="middleName" placeholder="Enter middle name">
             </div>
-            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
-                <lightning-input
-                    label="Phone"
-                    type="tel"
-                    required
-                    class="required-field"
-                    onchange={handlePhoneChange}
-                    value={phone}
-                ></lightning-input>
+            <div class="form-field">
+                <label for="lastName">Last Name<span class="required">*</span></label>
+                <input type="text" id="lastName" required placeholder="Enter last name" onblur={validateField}>
             </div>
-            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
-                <lightning-input
-                    label="Date of Birth"
-                    type="date"
-                    required
-                    class="required-field"
-                    onchange={handleDateOfBirthChange}
-                    value={dateOfBirth}
-                ></lightning-input>
+            <div class="form-field">
+                <label for="birthdate">Birthdate<span class="required">*</span></label>
+                <input type="date" id="birthdate" required onchange={validateField}>
             </div>
-            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
-                <lightning-combobox
-                    label="Gender"
-                    options={genderOptions}
-                    value={gender}
-                    onchange={handleGenderChange}
-                ></lightning-combobox>
+
+            <h2 class="section-header">Address</h2>
+            <div class="form-field">
+                <label for="address">Address</label>
+                <input type="text" id="address" placeholder="Enter address">
             </div>
-            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
-                <lightning-input
-                    label="Address"
-                    required
-                    class="required-field"
-                    onchange={handleAddressChange}
-                    value={address}
-                ></lightning-input>
+            <div class="form-field">
+                <label for="city">City/Town</label>
+                <input type="text" id="city" placeholder="Enter city">
             </div>
-            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
-                <lightning-input
-                    label="City"
-                    required
-                    class="required-field"
-                    onchange={handleCityChange}
-                    value={city}
-                ></lightning-input>
+            <div class="form-field">
+                <label for="state">State</label>
+                <select id="state">
+                    <option value="">Choose a State</option>
+                    <!-- Add state options here -->
+                </select>
             </div>
-            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
-                <lightning-input
-                    label="State"
-                    required
-                    class="required-field"
-                    onchange={handleStateChange}
-                    value={state}
-                ></lightning-input>
+            <div class="form-field">
+                <label for="zipCode">Zip Code<span class="required">*</span></label>
+                <input type="text" id="zipCode" required placeholder="Enter zip code" onblur={validateField}>
             </div>
-            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
-                <lightning-input
-                    label="Zip Code"
-                    required
-                    class="required-field"
-                    onchange={handleZipCodeChange}
-                    value={zipCode}
-                ></lightning-input>
+            <div class="form-field">
+                <label for="startDate">Start Date<span class="required">*</span></label>
+                <input type="date" id="startDate" required onchange={validateField}>
             </div>
-            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
-                <lightning-input
-                    label="Social Security Number"
-                    type="password"
-                    required
-                    class="required-field"
-                    onchange={handleSsnChange}
-                    value={ssn}
-                ></lightning-input>
+            <div class="form-field">
+                <label for="endDate">End Date<span class="required">*</span></label>
+                <input type="date" id="endDate" required onchange={validateField}>
             </div>
+
+            <div class="button-container">
+                <button class="btn-secondary" onclick={handleClear}>Clear</button>
+                <button class="btn-primary" onclick={handleSubmit}>Submit</button>
+            </div>
+            <a href="#" onclick={handleCancel} class="cancel-link">Cancel</a>
         </div>
-        <div class="slds-m-top_medium">
-            <lightning-button
-                label="Submit"
-                variant="brand"
-                onclick={handleSubmit}
-                class="acme-button_primary"
-            ></lightning-button>
-        </div>
-        <template if:true={errorMessage}>
-            <div class="slds-text-color_error slds-m-top_small">{errorMessage}</div>
-        </template>
     </div>
 </template>

@@ -2,106 +2,109 @@
 import { LightningElement, track } from 'lwc';
 
 export default class PersonalInfoForm extends LightningElement {
-    @track lastName = '';
-    @track email = '';
-    @track phone = '';
-    @track dateOfBirth = '';
-    @track gender = '';
-    @track address = '';
-    @track city = '';
-    @track state = '';
-    @track zipCode = '';
-    @track ssn = '';
-    @track errorMessage = '';
-
-    genderOptions = [
-        { label: 'Male', value: 'Male' },
-        { label: 'Female', value: 'Female' },
-        { label: 'Other', value: 'Other' },
-        { label: 'Prefer not to say', value: 'Prefer not to say' }
-    ];
-
-    handleLastNameChange(event) {
-        this.lastName = event.target.value;
-    }
-
-    handleEmailChange(event) {
-        this.email = event.target.value;
-    }
-
-    handlePhoneChange(event) {
-        this.phone = event.target.value;
-    }
-
-    handleDateOfBirthChange(event) {
-        this.dateOfBirth = event.target.value;
-    }
-
-    handleGenderChange(event) {
-        this.gender = event.target.value;
-    }
-
-    handleAddressChange(event) {
-        this.address = event.target.value;
-    }
-
-    handleCityChange(event) {
-        this.city = event.target.value;
-    }
-
-    handleStateChange(event) {
-        this.state = event.target.value;
-    }
-
-    handleZipCodeChange(event) {
-        this.zipCode = event.target.value;
-    }
-
-    handleSsnChange(event) {
-        this.ssn = event.target.value;
-    }
+    @track formData = {};
+    @track errors = {};
 
     handleSubmit() {
         if (this.validateForm()) {
-            console.log('Form submitted successfully');
-            this.errorMessage = '';
-        } else {
-            this.errorMessage = 'Please fill in all required fields correctly.';
+            console.log('Form submitted:', this.formData);
+            // Add logic to handle form submission
         }
+    }
+
+    handleClear() {
+        this.template.querySelectorAll('input, select').forEach(element => {
+            element.value = '';
+        });
+        this.formData = {};
+        this.errors = {};
+    }
+
+    handleCancel() {
+        // Add logic to return to previous page
+    }
+
+    validateField(event) {
+        const field = event.target;
+        const fieldName = field.id;
+        const value = field.value;
+
+        this.formData[fieldName] = value;
+        this.errors[fieldName] = '';
+
+        switch (fieldName) {
+            case 'firstName':
+            case 'lastName':
+                if (!value.trim()) {
+                    this.errors[fieldName] = `${fieldName} is required`;
+                }
+                break;
+            case 'zipCode':
+                if (!value.trim()) {
+                    this.errors[fieldName] = 'Zip Code is required';
+                } else if (!/^\d{5}(-\d{4})?$/.test(value)) {
+                    this.errors[fieldName] = 'Invalid Zip Code format';
+                }
+                break;
+            case 'birthdate':
+            case 'startDate':
+            case 'endDate':
+                if (!value) {
+                    this.errors[fieldName] = `${fieldName} is required`;
+                }
+                break;
+        }
+
+        if (fieldName === 'endDate' && this.formData.startDate) {
+            if (new Date(value) <= new Date(this.formData.startDate)) {
+                this.errors[fieldName] = 'End Date must be after Start Date';
+            }
+        }
+
+        this.updateFieldValidation(field, this.errors[fieldName]);
     }
 
     validateForm() {
-        const allValid = [
-            ...this.template.querySelectorAll('lightning-input'),
-            ...this.template.querySelectorAll('lightning-combobox')
-        ].reduce((validSoFar, inputField) => {
-            inputField.reportValidity();
-            return validSoFar && inputField.checkValidity();
-        }, true);
+        let isValid = true;
+        this.template.querySelectorAll('input, select').forEach(field => {
+            if (field.required && !field.value.trim()) {
+                this.errors[field.id] = `${field.id} is required`;
+                this.updateFieldValidation(field, this.errors[field.id]);
+                isValid = false;
+            }
+        });
 
-        if (allValid) {
-            return this.validateEmail() && this.validatePhone() && this.validateSSN() && this.validateZipCode();
+        if (this.formData.startDate && this.formData.endDate) {
+            if (new Date(this.formData.endDate) <= new Date(this.formData.startDate)) {
+                this.errors.endDate = 'End Date must be after Start Date';
+                this.updateFieldValidation(this.template.querySelector('#endDate'), this.errors.endDate);
+                isValid = false;
+            }
         }
-        return false;
+
+        return isValid;
     }
 
-    validateEmail() {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(this.email);
-    }
-
-    validatePhone() {
-        const phoneRegex = /^\d{10}$/;
-        return phoneRegex.test(this.phone.replace(/\D/g, ''));
-    }
-
-    validateSSN() {
-        const ssnRegex = /^\d{9}$/;
-        return ssnRegex.test(this.ssn.replace(/\D/g, ''));
-    }
-
-    validateZipCode() {
-        const zipCodeRegex = /^\d{5}(-\d{4})?$/;
-        return zipCodeRegex.test(this.zipCode);
+    updateFieldValidation(field, errorMessage) {
+        if (errorMessage) {
+            field.classList.add('error');
+            field.setAttribute('aria-invalid', 'true');
+            const errorElement = field.parentElement.querySelector('.error-message');
+            if (errorElement) {
+                errorElement.textContent = errorMessage;
+            } else {
+                const errorSpan = document.createElement('span');
+                errorSpan.className = 'error-message';
+                errorSpan.textContent = errorMessage;
+                field.parentElement.appendChild(errorSpan);
+            }
+        } else {
+            field.classList.remove('error');
+            field.setAttribute('aria-invalid', 'false');
+            const errorElement = field.parentElement.querySelector('.error-message');
+            if (errorElement) {
+                errorElement.remove();
+            }
+        }
     }
 }

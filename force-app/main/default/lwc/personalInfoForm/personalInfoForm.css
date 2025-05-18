@@ -1,37 +1,117 @@
 /* personalInfoForm.css */
-:host {
-    --acme-blue-color: #0057B8;
-    --acme-blue-dark-color: #004A9E;
-    --acme-gray-color: #424A54;
-    --acme-light-gray-color: #F5F7FA;
-    --acme-medium-gray-color: #E4E7EB;
-}
-
 .root-container {
     font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    padding: var(--slds-c-card-spacing-block, 1rem);
-    background-color: var(--acme-light-gray-color);
+    max-width: 60%;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.form-container {
+    background-color: var(--slds-c-card-color-background, #FFFFFF);
     border-radius: 8px;
+    box-shadow: var(--slds-c-card-shadow, 0 2px 8px rgba(66, 74, 84, 0.1));
+    padding: var(--slds-c-card-spacing-block, 24px);
 }
 
-.required-field label::after {
-    content: " *";
-    color: rgb(194, 57, 52);
+.section-header {
+    color: var(--slds-c-section-title-color-text, #0057B8);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 1rem;
 }
 
-lightning-input, lightning-combobox {
-    margin-bottom: 0.5rem;
+.form-field {
+    margin-bottom: 1rem;
 }
 
-.acme-button_primary {
-    --slds-c-button-brand-color-background: var(--acme-blue-color);
-    --slds-c-button-brand-color-border: var(--acme-blue-color);
-    --slds-c-button-brand-color-background-hover: var(--acme-blue-dark-color);
-    --slds-c-button-brand-color-border-hover: var(--acme-blue-dark-color);
+label {
+    display: block;
+    font-size: 14px;
+    color: var(--slds-c-input-text-color, #424A54);
+    margin-bottom: 0.25rem;
 }
 
-@media screen and (max-width: 768px) {
+input, select {
+    width: 100%;
+    height: 40px;
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 1px solid var(--slds-c-input-color-border, #E4E7EB);
+    border-radius: 4px;
+    background-color: var(--slds-c-input-color-background, #FFFFFF);
+}
+
+input:focus, select:focus {
+    outline: 2px solid var(--slds-c-input-shadow-focus, #0057B8);
+    border-color: var(--slds-c-input-color-border-focus, #0057B8);
+}
+
+.required {
+    color: var(--slds-c-input-required-color, #FF0000);
+    margin-left: 0.25rem;
+}
+
+.error {
+    border-color: var(--slds-c-input-color-border-error, #FF6B6B) !important;
+}
+
+.error-message {
+    color: var(--slds-c-input-text-color-error, #FF6B6B);
+    font-size: 12px;
+    margin-top: 0.25rem;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--slds-c-button-brand-color-background, #0057B8);
+    color: var(--slds-c-button-text-color, #FFFFFF);
+    border: none;
+    margin-left: 1rem;
+}
+
+.btn-primary:hover {
+    background-color: var(--slds-c-button-brand-color-background-hover, #004A9E);
+}
+
+.btn-secondary {
+    background-color: var(--slds-c-button-neutral-color-background, #FFFFFF);
+    color: var(--slds-c-button-text-color, #0057B8);
+    border: 1px solid var(--slds-c-button-color-border, #0057B8);
+}
+
+.btn-secondary:hover {
+    background-color: var(--slds-c-button-neutral-color-background-hover, rgba(0, 87, 184, 0.1));
+}
+
+.cancel-link {
+    display: inline-block;
+    margin-top: 1rem;
+    color: var(--slds-c-link-text-color, #0057B8);
+    text-decoration: none;
+}
+
+@media (max-width: 1024px) {
     .root-container {
-        padding: 0.5rem;
+        max-width: 80%;
+    }
+}
+
+@media (max-width: 768px) {
+    .root-container {
+        max-width: 100%;
+        padding: 1rem;
     }
 }
