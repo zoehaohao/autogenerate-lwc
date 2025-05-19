@@ -1,117 +1,144 @@
 /* personalInfoForm.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-coral-color: #FF6B6B;
+    --acme-light-gray-color: #F5F7FA;
+    --acme-medium-gray-color: #E4E7EB;
+}
+
 .root-container {
     font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    max-width: 60%;
+    max-width: 800px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 24px;
+}
+
+h2 {
+    font-size: 18px;
+    color: var(--acme-blue-color);
+    margin-bottom: 16px;
 }
 
 .form-container {
-    background-color: var(--slds-c-card-color-background, #FFFFFF);
+    background-color: var(--acme-white-color);
     border-radius: 8px;
-    box-shadow: var(--slds-c-card-shadow, 0 2px 8px rgba(66, 74, 84, 0.1));
-    padding: var(--slds-c-card-spacing-block, 24px);
+    box-shadow: 0 2px 8px rgba(66, 74, 84, 0.1);
+    padding: 24px;
 }
 
-.section-header {
-    color: var(--slds-c-section-title-color-text, #0057B8);
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 1rem;
+.section {
+    margin-bottom: 24px;
 }
 
-.form-field {
-    margin-bottom: 1rem;
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
 }
 
 label {
-    display: block;
     font-size: 14px;
-    color: var(--slds-c-input-text-color, #424A54);
-    margin-bottom: 0.25rem;
+    color: var(--acme-gray-color);
+    flex: 0 0 30%;
+    text-align: right;
+    padding-right: 16px;
 }
 
 input, select {
-    width: 100%;
+    flex: 0 0 65%;
     height: 40px;
     padding: 8px 12px;
     font-size: 16px;
-    border: 1px solid var(--slds-c-input-color-border, #E4E7EB);
+    border: 1px solid var(--acme-medium-gray-color);
     border-radius: 4px;
-    background-color: var(--slds-c-input-color-background, #FFFFFF);
+    background-color: var(--acme-white-color);
 }
 
 input:focus, select:focus {
-    outline: 2px solid var(--slds-c-input-shadow-focus, #0057B8);
-    border-color: var(--slds-c-input-color-border-focus, #0057B8);
+    outline: 2px solid var(--acme-blue-color);
+    border-color: var(--acme-blue-color);
 }
 
 .required {
-    color: var(--slds-c-input-required-color, #FF0000);
-    margin-left: 0.25rem;
+    color: var(--acme-coral-color);
+    margin-left: 4px;
 }
 
-.error {
-    border-color: var(--slds-c-input-color-border-error, #FF6B6B) !important;
+.error-summary {
+    background-color: var(--acme-light-gray-color);
+    border: 1px solid var(--acme-coral-color);
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 16px;
 }
 
-.error-message {
-    color: var(--slds-c-input-text-color-error, #FF6B6B);
+.error-summary p {
+    color: var(--acme-coral-color);
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.error-summary ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.error-summary li {
+    color: var(--acme-coral-color);
     font-size: 12px;
-    margin-top: 0.25rem;
 }
 
 .button-container {
     display: flex;
     justify-content: flex-end;
-    margin-top: 1.5rem;
+    gap: 16px;
 }
 
-.btn-primary, .btn-secondary {
+.acme-button_primary, .acme-button_secondary {
     padding: 8px 16px;
-    border-radius: 4px;
     font-size: 16px;
+    border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.btn-primary {
-    background-color: var(--slds-c-button-brand-color-background, #0057B8);
-    color: var(--slds-c-button-text-color, #FFFFFF);
+.acme-button_primary {
+    background-color: var(--acme-blue-color);
+    color: var(--acme-white-color);
     border: none;
-    margin-left: 1rem;
 }
 
-.btn-primary:hover {
-    background-color: var(--slds-c-button-brand-color-background-hover, #004A9E);
+.acme-button_primary:hover {
+    background-color: #004A9E;
 }
 
-.btn-secondary {
-    background-color: var(--slds-c-button-neutral-color-background, #FFFFFF);
-    color: var(--slds-c-button-text-color, #0057B8);
-    border: 1px solid var(--slds-c-button-color-border, #0057B8);
+.acme-button_secondary {
+    background-color: var(--acme-white-color);
+    color: var(--acme-blue-color);
+    border: 1px solid var(--acme-blue-color);
 }
 
-.btn-secondary:hover {
-    background-color: var(--slds-c-button-neutral-color-background-hover, rgba(0, 87, 184, 0.1));
+.acme-button_secondary:hover {
+    background-color: var(--acme-light-gray-color);
 }
 
-.cancel-link {
-    display: inline-block;
-    margin-top: 1rem;
-    color: var(--slds-c-link-text-color, #0057B8);
-    text-decoration: none;
-}
-
-@media (max-width: 1024px) {
-    .root-container {
-        max-width: 80%;
+@media screen and (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        align-items: flex-start;
     }
-}
 
-@media (max-width: 768px) {
-    .root-container {
-        max-width: 100%;
-        padding: 1rem;
+    label {
+        flex: 0 0 100%;
+        text-align: left;
+        margin-bottom: 8px;
+    }
+
+    input, select {
+        flex: 0 0 100%;
+        width: 100%;
     }
 }
