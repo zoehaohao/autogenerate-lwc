@@ -1,0 +1,63 @@
+<!-- formFieldsLayout.html -->
+<template>
+    <div class="acme-form-fields-layout">
+        <div class="acme-form-fields-layout__container">
+            <div class="acme-form-fields-layout__section">
+                <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
+                <div class="acme-form-fields-layout__field">
+                    <label for="firstName" class="acme-form-fields-layout__label">First Name<span class="acme-form-fields-layout__required">*</span></label>
+                    <input type="text" id="firstName" class="acme-form-fields-layout__input" required placeholder="Enter first name" onblur={validateField}>
+                </div>
+                <div class="acme-form-fields-layout__field">
+                    <label for="middleName" class="acme-form-fields-layout__label">Middle Name</label>
+                    <input type="text" id="middleName" class="acme-form-fields-layout__input" placeholder="Enter middle name">
+                </div>
+                <div class="acme-form-fields-layout__field">
+                    <label for="lastName" class="acme-form-fields-layout__label">Last Name<span class="acme-form-fields-layout__required">*</span></label>
+                    <input type="text" id="lastName" class="acme-form-fields-layout__input" required placeholder="Enter last name" onblur={validateField}>
+                </div>
+                <div class="acme-form-fields-layout__field">
+                    <label for="birthdate" class="acme-form-fields-layout__label">Birthdate<span class="acme-form-fields-layout__required">*</span></label>
+                    <input type="date" id="birthdate" class="acme-form-fields-layout__input" required onblur={validateField}>
+                </div>
+            </div>
+            <div class="acme-form-fields-layout__section">
+                <h2 class="acme-heading acme-heading_medium">Address</h2>
+                <div class="acme-form-fields-layout__field">
+                    <label for="address" class="acme-form-fields-layout__label">Address</label>
+                    <input type="text" id="address" class="acme-form-fields-layout__input" placeholder="Enter address">
+                </div>
+                <div class="acme-form-fields-layout__field">
+                    <label for="city" class="acme-form-fields-layout__label">City/Town</label>
+                    <input type="text" id="city" class="acme-form-fields-layout__input" placeholder="Enter city">
+                </div>
+                <div class="acme-form-fields-layout__field">
+                    <label for="state" class="acme-form-fields-layout__label">State</label>
+                    <select id="state" class="acme-form-fields-layout__input">
+                        <option value="">Choose a State</option>
+                        <!-- Add state options here -->
+                    </select>
+                </div>
+                <div class="acme-form-fields-layout__field">
+                    <label for="zipCode" class="acme-form-fields-layout__label">Zip Code<span class="acme-form-fields-layout__required">*</span></label>
+                    <input type="text" id="zipCode" class="acme-form-fields-layout__input" required placeholder="Enter zip code" pattern="^\d{5}(-\d{4})?$" onblur={validateField}>
+                </div>
+                <div class="acme-form-fields-layout__field">
+                    <label for="startDate" class="acme-form-fields-layout__label">Start Date<span class="acme-form-fields-layout__required">*</span></label>
+                    <input type="date" id="startDate" class="acme-form-fields-layout__input" required onblur={validateField}>
+                </div>
+                <div class="acme-form-fields-layout__field">
+                    <label for="endDate" class="acme-form-fields-layout__label">End Date<span class="acme-form-fields-layout__required">*</span></label>
+                    <input type="date" id="endDate" class="acme-form-fields-layout__input" required onblur={validateField}>
+                </div>
+            </div>
+        </div>
+        <div class="acme-form-fields-layout__actions">
+            <button class="acme-button acme-button_secondary" onclick={handleClear}>Clear</button>
+            <button class="acme-button acme-button_primary" onclick={handleSubmit}>Submit</button>
+        </div>
+        <div class="acme-form-fields-layout__help">
+            <a href="/help" target="_blank" class="acme-link">Form Help</a>
+        </div>
+    </div>
+</template>
