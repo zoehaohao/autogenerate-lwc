@@ -1,0 +1,62 @@
+/* fileManagementWizard.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-teal-color: #00A0B0;
+    --acme-gold-color: #F2C94C;
+    --acme-coral-color: #FF6B6B;
+    --acme-light-gray-color: #F5F7FA;
+}
+
+.acme-file-wizard {
+    background-color: var(--acme-white-color);
+    border-radius: var(--slds-c-card-radius-border, 0.25rem);
+    box-shadow: var(--slds-c-card-shadow);
+    padding: var(--slds-c-card-spacing-block, 1rem);
+}
+
+.acme-file-wizard__progress {
+    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
+}
+
+.acme-file-wizard__content {
+    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
+}
+
+.acme-heading {
+    color: var(--acme-blue-color);
+    font-weight: bold;
+}
+
+.acme-heading_medium {
+    font-size: var(--slds-c-input-text-font-size, 1rem);
+    margin-bottom: var(--slds-c-card-spacing-block, 0.5rem);
+}
+
+.acme-file-wizard__pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--slds-c-card-spacing-block, 1rem);
+}
+
+.acme-file-wizard__actions {
+    margin-top: var(--slds-c-card-spacing-block, 1rem);
+    text-align: right;
+}
+
+@media screen and (max-width: 768px) {
+    .acme-file-wizard {
+        padding: var(--slds-c-card-spacing-block, 0.5rem);
+    }
+
+    .acme-file-wizard__pagination {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .acme-file-wizard__pagination p {
+        margin-top: var(--slds-c-card-spacing-block, 0.5rem);
+    }
+}
