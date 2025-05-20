@@ -3,83 +3,63 @@ import { LightningElement, track } from 'lwc';
 
 export default class PersonalInfoForm extends LightningElement {
     @track formData = {};
-    @track errorMessages = [];
-    @track hasErrors = false;
+    @track errors = {};
+    stateOptions = [
+        { label: 'Choose a State', value: '' },
+        { label: 'California', value: 'CA' },
+        { label: 'New York', value: 'NY' },
+        { label: 'Texas', value: 'TX' }
+    ];
 
     handleInputChange(event) {
-        const { id, value } = event.target;
-        this.formData[id] = value;
-        this.validateField(id, value);
+        const { name, value } = event.target;
+        this.formData[name] = value;
+        this.validateField(name, value);
     }
 
-    validateField(fieldName, value) {
-        let errors = [];
-
-        switch (fieldName) {
+    validateField(name, value) {
+        this.errors[name] = '';
+        switch (name) {
             case 'firstName':
             case 'lastName':
+            case 'zipCode':
                 if (!value.trim()) {
-                    errors.push(`${fieldName} is required`);
+                    this.errors[name] = `${name} is required`;
                 }
                 break;
             case 'birthdate':
             case 'startDate':
             case 'endDate':
-                if (!value) {
-                    errors.push(`${fieldName} is required`);
-                } else if (!this.isValidDate(value)) {
-                    errors.push(`${fieldName} is not a valid date`);
-                }
-                break;
-            case 'zipCode':
-                if (!value.trim()) {
-                    errors.push('Zip Code is required');
-                } else if (!/^\d+$/.test(value)) {
-                    errors.push('Zip Code must be numeric');
+                if (!this.isValidDate(value)) {
+                    this.errors[name] = 'Invalid date format';
                 }
                 break;
         }
-
-        if (fieldName === 'endDate' && this.formData.startDate) {
-            if (new Date(value) <= new Date(this.formData.startDate)) {
-                errors.push('End Date must be after Start Date');
-            }
-        }
-
-        this.updateErrorMessages(fieldName, errors);
     }
 
     isValidDate(dateString) {
-        const date = new Date(dateString);
-        return !isNaN(date.getTime());
-    }
-
-    updateErrorMessages(fieldName, errors) {
-        this.errorMessages = this.errorMessages.filter(error => !error.startsWith(fieldName));
-        this.errorMessages = [...this.errorMessages, ...errors];
-        this.hasErrors = this.errorMessages.length > 0;
+        const regex = /^\d{4}-\d{2}-\d{2}$/;
+        return regex.test(dateString) && !isNaN(Date.parse(dateString));
     }
 
     handleSubmit() {
-        this.validateAllFields();
-        if (!this.hasErrors) {
+        const allFields = this.template.querySelectorAll('lightning-input, lightning-combobox');
+        let isValid = true;
+
+        allFields.forEach(field => {
+            const { name, value } = field;
+            this.validateField(name, value);
+            if (this.errors[name]) {
+                isValid = false;
+                field.setCustomValidity(this.errors[name]);
+            } else {
+                field.setCustomValidity('');
+            }
+            field.reportValidity();
+        });
+
+        if (isValid) {
             console.log('Form submitted:', this.formData);
-            // Add logic to handle form submission
         }
-    }
-
-    validateAllFields() {
-        Object.entries(this.formData).forEach(([fieldName, value]) => {
-            this.validateField(fieldName, value);
-        });
-    }
-
-    handleClear() {
-        this.template.querySelectorAll('input, select').forEach(element => {
-            element.value = '';
-        });
-        this.formData = {};
-        this.errorMessages = [];
-        this.hasErrors = false;
     }
 }
