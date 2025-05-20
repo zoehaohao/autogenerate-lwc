@@ -1,0 +1,65 @@
+/* formGenerator.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-light-gray-color: #F5F7FA;
+}
+
+.root-container {
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.acme-card {
+    background-color: var(--acme-white-color);
+    border-radius: var(--slds-c-card-radius-border, 0.25rem);
+    box-shadow: var(--slds-c-card-shadow);
+    padding: var(--slds-c-card-spacing-block, 1rem);
+    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
+}
+
+.acme-heading {
+    color: var(--acme-gray-color);
+    font-weight: 700;
+}
+
+.acme-heading_large {
+    font-size: 32px;
+    margin-bottom: 1rem;
+}
+
+.acme-heading_medium {
+    font-size: 24px;
+    margin-bottom: 0.75rem;
+}
+
+.acme-section {
+    margin-bottom: 1.5rem;
+}
+
+.acme-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+}
+
+.acme-button_primary {
+    --slds-c-button-brand-color-background: var(--acme-blue-color);
+    --slds-c-button-brand-color-border: var(--acme-blue-color);
+}
+
+.acme-button_secondary {
+    --slds-c-button-color-background: var(--acme-light-gray-color);
+    --slds-c-button-color-border: var(--acme-gray-color);
+}
+
+@media screen and (max-width: 768px) {
+    .acme-navigation {
+        flex-direction: column;
+    }
+
+    .acme-navigation lightning-button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
