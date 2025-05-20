@@ -1,28 +1,98 @@
 <!-- personalInfoForm.html -->
 <template>
-    <div class="acme-personal-info-form">
-        <div class="acme-personal-info-form__section">
-            <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
-            <div class="acme-personal-info-form__fields">
-                <lightning-input label="First Name" type="text" required placeholder="Enter first name" name="firstName" onblur={handleInputChange}></lightning-input>
-                <lightning-input label="Middle Name" type="text" placeholder="Enter middle name" name="middleName" onblur={handleInputChange}></lightning-input>
-                <lightning-input label="Last Name" type="text" required placeholder="Enter last name" name="lastName" onblur={handleInputChange}></lightning-input>
-                <lightning-input label="Birthdate" type="date" required placeholder="MM/DD/YYYY" name="birthdate" onblur={handleInputChange}></lightning-input>
+    <div class="acme-personal-info-form slds-p-around_medium">
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-size_1-of-2">
+                <div class="slds-form-element slds-m-bottom_small">
+                    <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
+                    <div class="slds-form-element slds-m-top_small">
+                        <label class="slds-form-element__label" for="firstName">
+                            <abbr class="slds-required" title="required">*</abbr> First Name
+                        </label>
+                        <div class="slds-form-element__control">
+                            <input type="text" id="firstName" class="slds-input" required placeholder="Enter first name" onblur={validateField} />
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-top_small">
+                        <label class="slds-form-element__label" for="middleName">Middle Name</label>
+                        <div class="slds-form-element__control">
+                            <input type="text" id="middleName" class="slds-input" placeholder="Enter middle name" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-top_small">
+                        <label class="slds-form-element__label" for="lastName">
+                            <abbr class="slds-required" title="required">*</abbr> Last Name
+                        </label>
+                        <div class="slds-form-element__control">
+                            <input type="text" id="lastName" class="slds-input" required placeholder="Enter last name" onblur={validateField} />
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-top_small">
+                        <label class="slds-form-element__label" for="birthdate">
+                            <abbr class="slds-required" title="required">*</abbr> Birthdate
+                        </label>
+                        <div class="slds-form-element__control">
+                            <input type="date" id="birthdate" class="slds-input" required onblur={validateField} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <div class="slds-form-element slds-m-bottom_small">
+                    <h2 class="acme-heading acme-heading_medium">Address</h2>
+                    <div class="slds-form-element slds-m-top_small">
+                        <label class="slds-form-element__label" for="address">Address</label>
+                        <div class="slds-form-element__control">
+                            <input type="text" id="address" class="slds-input" placeholder="Enter address" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-top_small">
+                        <label class="slds-form-element__label" for="city">City/Town</label>
+                        <div class="slds-form-element__control">
+                            <input type="text" id="city" class="slds-input" placeholder="Enter city/town" />
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-top_small">
+                        <label class="slds-form-element__label" for="state">State</label>
+                        <div class="slds-form-element__control">
+                            <div class="slds-select_container">
+                                <select id="state" class="slds-select">
+                                    <option value="">Choose a State</option>
+                                    <!-- Add state options here -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-top_small">
+                        <label class="slds-form-element__label" for="zipCode">
+                            <abbr class="slds-required" title="required">*</abbr> Zip Code
+                        </label>
+                        <div class="slds-form-element__control">
+                            <input type="text" id="zipCode" class="slds-input" required placeholder="Enter zip code" onblur={validateField} />
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-top_small">
+                        <label class="slds-form-element__label" for="startDate">
+                            <abbr class="slds-required" title="required">*</abbr> Start Date
+                        </label>
+                        <div class="slds-form-element__control">
+                            <input type="date" id="startDate" class="slds-input" required onblur={validateField} />
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-m-top_small">
+                        <label class="slds-form-element__label" for="endDate">
+                            <abbr class="slds-required" title="required">*</abbr> End Date
+                        </label>
+                        <div class="slds-form-element__control">
+                            <input type="date" id="endDate" class="slds-input" required onblur={validateField} />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="acme-personal-info-form__section">
-            <h2 class="acme-heading acme-heading_medium">Address</h2>
-            <div class="acme-personal-info-form__fields">
-                <lightning-input label="Address" type="text" placeholder="Enter address" name="address" onblur={handleInputChange}></lightning-input>
-                <lightning-input label="City/Town" type="text" placeholder="Enter city" name="city" onblur={handleInputChange}></lightning-input>
-                <lightning-combobox label="State" placeholder="Choose a State" options={stateOptions} name="state" onchange={handleInputChange}></lightning-combobox>
-                <lightning-input label="Zip Code" type="text" required placeholder="Enter zip code" name="zipCode" onblur={handleInputChange}></lightning-input>
-                <lightning-input label="Start Date" type="date" required placeholder="MM/DD/YYYY" name="startDate" onblur={handleInputChange}></lightning-input>
-                <lightning-input label="End Date" type="date" required placeholder="MM/DD/YYYY" name="endDate" onblur={handleInputChange}></lightning-input>
-            </div>
-        </div>
-        <div class="acme-personal-info-form__footer">
-            <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="acme-button_primary"></lightning-button>
+        <div class="slds-m-top_medium slds-text-align_right">
+            <lightning-button label="Clear" title="Clear" onclick={handleClear} class="slds-m-right_x-small"></lightning-button>
+            <lightning-button label="Submit" title="Submit" variant="brand" onclick={handleSubmit} disabled={!isFormValid}></lightning-button>
         </div>
     </div>
 </template>

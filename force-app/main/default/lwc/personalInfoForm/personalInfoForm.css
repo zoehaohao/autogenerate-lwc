@@ -2,45 +2,48 @@
 :host {
     --acme-blue-color: #0057B8;
     --acme-gray-color: #424A54;
-    --acme-white-color: #FFFFFF;
-    --acme-light-gray-color: #F5F7FA;
+    --acme-error-color: #FF6B6B;
 }
 
 .acme-personal-info-form {
-    font-family: sans-serif;
-    color: var(--acme-gray-color);
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.acme-personal-info-form__section {
-    margin-bottom: var(--lwc-spacingMedium);
+    font-family: 'Salesforce Sans', Arial, sans-serif;
 }
 
 .acme-heading {
-    font-size: 18px;
-    font-weight: 600;
     color: var(--acme-blue-color);
-    margin-bottom: var(--lwc-spacingSmall);
+    font-weight: 700;
 }
 
-.acme-personal-info-form__fields {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--lwc-spacingSmall);
+.acme-heading_medium {
+    font-size: 20px;
+    margin-bottom: 16px;
 }
 
-.acme-button_primary {
-    --sds-c-button-brand-color-background: var(--acme-blue-color);
-    --sds-c-button-text-color: var(--acme-white-color);
+.slds-form-element__label {
+    color: var(--acme-gray-color);
+    font-size: 14px;
 }
 
-.acme-button_primary:hover, .acme-button_primary:focus {
-    --sds-c-button-brand-color-background-hover: #004A9E;
+.slds-input,
+.slds-select {
+    font-size: 16px;
+}
+
+.slds-required {
+    color: var(--acme-error-color);
+}
+
+.slds-has-error .slds-form-element__help {
+    color: var(--acme-error-color);
+    font-size: 12px;
 }
 
 @media screen and (max-width: 768px) {
-    .acme-personal-info-form__fields {
-        grid-template-columns: 1fr;
+    .slds-grid {
+        display: block;
+    }
+
+    .slds-col {
+        width: 100%;
     }
 }
