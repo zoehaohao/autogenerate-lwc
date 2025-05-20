@@ -1,0 +1,47 @@
+<!-- formBuilder.html -->
+<template>
+    <div class="acme-form-builder slds-grid slds-gutters">
+        <div class="slds-col slds-size_1-of-4 progress-panel">
+            <!-- Progress Tracker -->
+            <div class="progress-bar"></div>
+        </div>
+        <div class="slds-col slds-size_3-of-4 main-content">
+            <div class="slds-card">
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">Form Builder</h2>
+                        </div>
+                    </header>
+                    <div class="slds-no-flex">
+                        <lightning-button label="Save Progress" title="Save Progress" onclick={handleSaveProgress} class="slds-m-left_x-small"></lightning-button>
+                    </div>
+                </div>
+                <div class="slds-card__body slds-card__body_inner">
+                    <lightning-accordion allow-multiple-sections-open>
+                        <lightning-accordion-section name="section1" label="Current home care recipients status">
+                            <lightning-radio-group name="homecare" label="Current home care recipients status" options={homecareOptions} required onchange={handleRadioChange} class="slds-m-bottom_medium"></lightning-radio-group>
+                        </lightning-accordion-section>
+                        <lightning-accordion-section name="section2" label="Business improvement strategy">
+                            <lightning-radio-group name="strategy" label="Business improvement strategy" options={strategyOptions} required onchange={handleRadioChange} class="slds-m-bottom_medium"></lightning-radio-group>
+                        </lightning-accordion-section>
+                        <lightning-accordion-section name="section3" label="Board changes">
+                            <lightning-radio-group name="board" label="Board changes" options={boardOptions} required onchange={handleRadioChange} class="slds-m-bottom_medium"></lightning-radio-group>
+                        </lightning-accordion-section>
+                        <lightning-accordion-section name="section4" label="Staffing difficulties">
+                            <lightning-radio-group name="staffing" label="Staffing difficulties" options={staffingOptions} required onchange={handleRadioChange} class="slds-m-bottom_medium"></lightning-radio-group>
+                        </lightning-accordion-section>
+                        <lightning-accordion-section name="section5" label="Business structure">
+                            <lightning-combobox name="structure" label="Business structure" options={structureOptions} required onchange={handlePicklistChange} class="slds-m-bottom_medium"></lightning-combobox>
+                        </lightning-accordion-section>
+                    </lightning-accordion>
+                </div>
+                <footer class="slds-card__footer">
+                    <lightning-button label="Previous" title="Previous" onclick={handlePrevious} class="slds-m-right_x-small"></lightning-button>
+                    <lightning-button label="Next" title="Next" onclick={handleNext} variant="brand"></lightning-button>
+                    <lightning-button label="Submit" title="Submit" onclick={handleSubmit} variant="brand" class="slds-m-left_x-small" disabled={isSubmitDisabled}></lightning-button>
+                </footer>
+            </div>
+        </div>
+    </div>
+</template>
