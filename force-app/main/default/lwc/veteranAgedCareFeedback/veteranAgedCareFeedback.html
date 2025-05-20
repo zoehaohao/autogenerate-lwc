@@ -1,114 +1,34 @@
 <!-- veteranAgedCareFeedback.html -->
 <template>
-    <div class="root-container">
-        <lightning-card title="Aged Care Feedback Form">
-            <div class="slds-p-around_medium">
-                <template if:true={errorMessage}>
-                    <div class="slds-text-color_error slds-m-bottom_small">{errorMessage}</div>
-                </template>
-                
-                <div class="slds-form">
-                    <div class="slds-form-element slds-m-bottom_small">
-                        <label class="slds-form-element__label" for="date">Date</label>
-                        <div class="slds-form-element__control">
-                            <lightning-input type="date" id="date" name="date" onchange={handleInputChange}></lightning-input>
-                        </div>
-                    </div>
-                    
-                    <div class="slds-form-element slds-m-bottom_small">
-                        <label class="slds-form-element__label" for="providerName">Provider name</label>
-                        <div class="slds-form-element__control">
-                            <lightning-input type="text" id="providerName" name="providerName" placeholder="Outlet representative to enter provider name" onchange={handleInputChange}></lightning-input>
-                        </div>
-                    </div>
-                    
-                    <div class="slds-form-element slds-m-bottom_small">
-                        <label class="slds-form-element__label" for="outletName">Outlet name</label>
-                        <div class="slds-form-element__control">
-                            <lightning-input type="text" id="outletName" name="outletName" placeholder="Outlet representative to enter outlet name" onchange={handleInputChange}></lightning-input>
-                        </div>
-                    </div>
-                    
-                    <div class="slds-form-element slds-m-bottom_small">
-                        <label class="slds-form-element__label" for="outletId">Outlet ID</label>
-                        <div class="slds-form-element__control">
-                            <lightning-input type="text" id="outletId" name="outletId" placeholder="Outlet representative to enter outlet ID" onchange={handleInputChange}></lightning-input>
-                        </div>
-                    </div>
-                    
-                    <div class="slds-form-element slds-m-bottom_small">
-                        <label class="slds-form-element__label">Type of aged care</label>
-                        <div class="slds-form-element__control">
-                            <lightning-checkbox-group name="typeOfAgedCare" options={typeOfAgedCareOptions} onchange={handleInputChange}></lightning-checkbox-group>
-                        </div>
-                    </div>
-                    
-                    <div class="slds-form-element slds-m-bottom_small">
-                        <label class="slds-form-element__label" for="respondentName">Name of respondent</label>
-                        <div class="slds-form-element__control">
-                            <lightning-input type="text" id="respondentName" name="respondentName" onchange={handleInputChange}></lightning-input>
-                        </div>
-                    </div>
-                    
-                    <div class="slds-form-element slds-m-bottom_small">
-                        <label class="slds-form-element__label" for="respondentPhone">Respondent's phone number</label>
-                        <div class="slds-form-element__control">
-                            <lightning-input type="tel" id="respondentPhone" name="respondentPhone" onchange={handleInputChange}></lightning-input>
-                        </div>
-                    </div>
-                    
-                    <div class="slds-form-element slds-m-bottom_small">
-                        <label class="slds-form-element__label">Respondent type</label>
-                        <div class="slds-form-element__control">
-                            <lightning-radio-group name="respondentType" options={respondentTypeOptions} onchange={handleInputChange}></lightning-radio-group>
-                        </div>
-                    </div>
-                    
-                    <template if:true={showVeteranStatus}>
-                        <div class="slds-form-element slds-m-bottom_small">
-                            <label class="slds-form-element__label">Veteran status</label>
-                            <div class="slds-form-element__control">
-                                <lightning-radio-group name="veteranStatus" options={veteranStatusOptions} onchange={handleInputChange} required></lightning-radio-group>
-                            </div>
-                        </div>
-                    </template>
-                    
-                    <div class="slds-form-element slds-m-bottom_small">
-                        <label class="slds-form-element__label">Comfort level</label>
-                        <div class="slds-form-element__control">
-                            <lightning-radio-group name="comfortLevel" options={comfortLevelOptions} onchange={handleInputChange}></lightning-radio-group>
-                        </div>
-                    </div>
-                    
-                    <template if:true={showProviderMeetingNeeds}>
-                        <div class="slds-form-element slds-m-bottom_small">
-                            <label class="slds-form-element__label">Provider meeting needs</label>
-                            <div class="slds-form-element__control">
-                                <lightning-radio-group name="providerMeetingNeeds" options={providerMeetingNeedsOptions} onchange={handleInputChange} required></lightning-radio-group>
-                            </div>
-                        </div>
-                    </template>
-                    
-                    <div class="slds-form-element slds-m-bottom_small">
-                        <label class="slds-form-element__label" for="veteranCareExpectations">Veteran care expectations</label>
-                        <div class="slds-form-element__control">
-                            <lightning-textarea id="veteranCareExpectations" name="veteranCareExpectations" onchange={handleInputChange}></lightning-textarea>
-                        </div>
-                    </div>
-                    
-                    <div class="slds-form-element slds-m-bottom_small">
-                        <label class="slds-form-element__label" for="additionalComments">Additional comments</label>
-                        <div class="slds-form-element__control">
-                            <lightning-textarea id="additionalComments" name="additionalComments" onchange={handleInputChange}></lightning-textarea>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="slds-grid slds-grid_align-center slds-m-top_medium">
-                    <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="slds-m-right_x-small"></lightning-button>
-                    <lightning-button label="Clear" variant="neutral" onclick={handleClear}></lightning-button>
-                </div>
-            </div>
-        </lightning-card>
+    <div class="acme-veteran-feedback">
+        <div class="acme-veteran-feedback__header">
+            <h1 class="acme-heading acme-heading_large">Veteran Aged Care Feedback Form</h1>
+        </div>
+        <div class="acme-veteran-feedback__form">
+            <lightning-input type="date" name="date" label="Date" required class="acme-input"></lightning-input>
+            <lightning-input type="text" name="providerName" label="Provider name" required maxlength="100" class="acme-input"></lightning-input>
+            <lightning-input type="text" name="outletName" label="Outlet name" required maxlength="100" class="acme-input"></lightning-input>
+            <lightning-input type="text" name="outletId" label="Outlet ID" required pattern="[a-zA-Z0-9]+" class="acme-input"></lightning-input>
+            <lightning-radio-group name="careType" label="Type of aged care" options={careTypeOptions} required class="acme-radio-group"></lightning-radio-group>
+            <lightning-input type="text" name="respondentName" label="Name of respondent" maxlength="100" class="acme-input"></lightning-input>
+            <lightning-input type="tel" name="respondentPhone" label="Respondent's phone" pattern="[0-9]{10}" class="acme-input"></lightning-input>
+            <lightning-radio-group name="respondentType" label="Are you" options={respondentTypeOptions} required onchange={handleRespondentTypeChange} class="acme-radio-group"></lightning-radio-group>
+            <template if:true={showVeteranStatus}>
+                <lightning-radio-group name="veteranStatus" label={veteranStatusLabel} options={veteranStatusOptions} required class="acme-radio-group"></lightning-radio-group>
+            </template>
+            <lightning-radio-group name="comfortTalkingToStaff" label="Comfort talking to staff" options={comfortOptions} required onchange={handleComfortChange} class="acme-radio-group"></lightning-radio-group>
+            <template if:true={showStaffMeetingNeeds}>
+                <lightning-radio-group name="staffMeetingNeeds" label="Staff meeting needs" options={yesNoOptions} required class="acme-radio-group"></lightning-radio-group>
+            </template>
+            <lightning-textarea name="specializedCareThoughts" label="Specialized care thoughts" required maxlength="1000" class="acme-textarea"></lightning-textarea>
+            <lightning-radio-group name="providerSpecializedCare" label="Provider specialized care" options={yesNoOptions} required class="acme-radio-group"></lightning-radio-group>
+            <lightning-textarea name="providerCareDetails" label="Provider care details" required maxlength="1000" class="acme-textarea"></lightning-textarea>
+            <lightning-textarea name="additionalComments" label="Additional comments" maxlength="1000" class="acme-textarea"></lightning-textarea>
+        </div>
+        <div class="acme-veteran-feedback__footer">
+            <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="acme-button acme-button_primary"></lightning-button>
+            <lightning-button label="Clear" onclick={handleClear} class="acme-button acme-button_secondary"></lightning-button>
+            <lightning-button label="Save Draft" onclick={handleSaveDraft} class="acme-button acme-button_secondary"></lightning-button>
+        </div>
     </div>
 </template>

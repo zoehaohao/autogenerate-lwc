@@ -2,20 +2,18 @@
 import { LightningElement, track } from 'lwc';
 
 export default class VeteranAgedCareFeedback extends LightningElement {
-    @track formData = {};
-    @track errorMessage = '';
     @track showVeteranStatus = false;
-    @track showProviderMeetingNeeds = false;
+    @track showStaffMeetingNeeds = false;
+    @track veteranStatusLabel = '';
 
-    typeOfAgedCareOptions = [
-        { label: 'Home Care', value: 'homeCare' },
-        { label: 'Residential Care', value: 'residentialCare' },
-        { label: 'Respite Care', value: 'respiteCare' },
-        { label: 'Transition Care', value: 'transitionCare' }
+    careTypeOptions = [
+        { label: 'Residential Care', value: 'residential' },
+        { label: 'Home Care', value: 'home' },
+        { label: 'Respite Care', value: 'respite' }
     ];
 
     respondentTypeOptions = [
-        { label: 'Aged care recipient (veteran)', value: 'veteran' },
+        { label: 'Aged care recipient', value: 'recipient' },
         { label: 'Family member', value: 'family' },
         { label: 'Friend/personal representative', value: 'friend' },
         { label: 'Aged care advocate/navigator', value: 'advocate' }
@@ -23,94 +21,62 @@ export default class VeteranAgedCareFeedback extends LightningElement {
 
     veteranStatusOptions = [
         { label: 'Veteran', value: 'veteran' },
-        { label: 'War widow/widower', value: 'warWidow' }
+        { label: 'War widow/widower', value: 'widow' },
+        { label: 'Dependent', value: 'dependent' }
     ];
 
-    comfortLevelOptions = [
+    comfortOptions = [
         { label: 'Yes', value: 'yes' },
         { label: 'No', value: 'no' },
-        { label: 'Unsure', value: 'unsure' }
+        { label: 'Sometimes', value: 'sometimes' }
     ];
 
-    providerMeetingNeedsOptions = [
+    yesNoOptions = [
         { label: 'Yes', value: 'yes' },
-        { label: 'No', value: 'no' },
-        { label: 'Partially', value: 'partially' }
+        { label: 'No', value: 'no' }
     ];
 
-    handleInputChange(event) {
-        const { name, value } = event.target;
-        this.formData[name] = value;
+    handleRespondentTypeChange(event) {
+        const respondentType = event.detail.value;
+        this.showVeteranStatus = true;
+        this.veteranStatusLabel = respondentType === 'recipient' ? 'Veteran status (recipient)' : 'Veteran status (on behalf)';
+    }
 
-        if (name === 'respondentType') {
-            this.showVeteranStatus = value !== 'veteran';
-        }
-
-        if (name === 'comfortLevel') {
-            this.showProviderMeetingNeeds = value === 'yes';
-        }
+    handleComfortChange(event) {
+        this.showStaffMeetingNeeds = event.detail.value === 'yes';
     }
 
     handleSubmit() {
         if (this.validateForm()) {
-            console.log('Form submitted:', this.formData);
-            this.errorMessage = '';
+            // Implement form submission logic here
+            console.log('Form submitted');
+        } else {
+            // Show error message
+            console.log('Form has errors');
         }
     }
 
     handleClear() {
-        this.formData = {};
-        this.errorMessage = '';
-        this.showVeteranStatus = false;
-        this.showProviderMeetingNeeds = false;
-        this.template.querySelectorAll('lightning-input, lightning-textarea, lightning-checkbox-group, lightning-radio-group').forEach(element => {
+        this.template.querySelectorAll('lightning-input, lightning-radio-group, lightning-textarea').forEach(element => {
             element.value = null;
-            if (element.type === 'checkbox-group') {
-                element.value = [];
-            }
         });
+        this.showVeteranStatus = false;
+        this.showStaffMeetingNeeds = false;
+    }
+
+    handleSaveDraft() {
+        // Implement draft saving logic here
+        console.log('Draft saved');
     }
 
     validateForm() {
         let isValid = true;
-        let errorMessages = [];
-
-        if (this.formData.date && !this.isValidDate(this.formData.date)) {
-            errorMessages.push('Please enter a valid date.');
-            isValid = false;
-        }
-
-        if (this.formData.respondentPhone && !this.isValidPhoneNumber(this.formData.respondentPhone)) {
-            errorMessages.push('Please enter a valid phone number.');
-            isValid = false;
-        }
-
-        if (this.showVeteranStatus && !this.formData.veteranStatus) {
-            errorMessages.push('Veteran status is required.');
-            isValid = false;
-        }
-
-        if (this.showProviderMeetingNeeds && !this.formData.providerMeetingNeeds) {
-            errorMessages.push('Provider meeting needs is required.');
-            isValid = false;
-        }
-
-        if (!this.formData.typeOfAgedCare || this.formData.typeOfAgedCare.length === 0) {
-            errorMessages.push('Please select at least one type of aged care.');
-            isValid = false;
-        }
-
-        this.errorMessage = errorMessages.join(' ');
+        this.template.querySelectorAll('lightning-input, lightning-radio-group, lightning-textarea').forEach(element => {
+            if (element.required && !element.value) {
+                element.reportValidity();
+                isValid = false;
+            }
+        });
         return isValid;
-    }
-
-    isValidDate(dateString) {
-        const regex = /^\d{4}-\d{2}-\d{2}$/;
-        return regex.test(dateString) && !isNaN(Date.parse(dateString));
-    }
-
-    isValidPhoneNumber(phoneNumber) {
-        const regex = /^[\d\s()+-]+$/;
-        return regex.test(phoneNumber);
     }
 }

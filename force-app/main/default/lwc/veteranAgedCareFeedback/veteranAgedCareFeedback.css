@@ -1,38 +1,52 @@
 /* veteranAgedCareFeedback.css */
 :host {
-    --slds-c-button-brand-color-background: #0057B8;
-    --slds-c-button-brand-color-background-hover: #004A9E;
-    --slds-c-button-brand-color-background-active: #004491;
-    --slds-c-button-brand-text-color: #FFFFFF;
-    --slds-c-input-color-border: #E4E7EB;
-    --slds-c-input-color-border-focus: #0057B8;
-    --slds-c-input-text-color: #424A54;
-    --slds-c-input-shadow-focus: 0 0 3px #0057B8;
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-teal-color: #00A0B0;
+    --acme-gold-color: #F2C94C;
+    --acme-coral-color: #FF6B6B;
+    --acme-light-gray-color: #F5F7FA;
 }
 
-.root-container {
-    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+.acme-veteran-feedback {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
     max-width: 800px;
     margin: 0 auto;
+    padding: var(--acme-space-md, 1rem);
 }
 
-.slds-form-element__label {
-    font-size: 14px;
-    color: #424A54;
+.acme-veteran-feedback__header {
+    margin-bottom: var(--acme-space-lg, 2rem);
 }
 
-lightning-input, lightning-textarea, lightning-checkbox-group, lightning-radio-group {
-    --slds-c-input-spacing-horizontal-start: 12px;
-    --slds-c-input-spacing-horizontal-end: 12px;
-    --slds-c-input-radius-border: 4px;
+.acme-heading_large {
+    font-size: 24px;
+    color: var(--acme-blue-color);
 }
 
-lightning-button {
-    --slds-c-button-radius-border: 4px;
+.acme-input,
+.acme-radio-group,
+.acme-textarea {
+    margin-bottom: var(--acme-space-md, 1rem);
 }
 
-@media (max-width: 768px) {
-    .slds-form-element {
-        margin-bottom: 1rem;
+.acme-button {
+    margin-right: var(--acme-space-sm, 0.5rem);
+}
+
+.acme-button_primary {
+    --sds-c-button-brand-color-background: var(--acme-blue-color);
+    --sds-c-button-brand-color-border: var(--acme-blue-color);
+}
+
+.acme-button_secondary {
+    --sds-c-button-neutral-color-background: var(--acme-gray-color);
+    --sds-c-button-neutral-color-border: var(--acme-gray-color);
+}
+
+@media screen and (max-width: 768px) {
+    .acme-veteran-feedback {
+        padding: var(--acme-space-sm, 0.5rem);
     }
 }
