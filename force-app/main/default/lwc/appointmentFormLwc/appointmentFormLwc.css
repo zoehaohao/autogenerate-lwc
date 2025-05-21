@@ -1,0 +1,27 @@
+/* personalDetailsForm.css */
+:host {
+    --slds-c-button-brand-color-background: #2a5c8d;
+    --slds-c-button-brand-color-border: #2a5c8d;
+    --slds-c-button-brand-color-border-focus: #2a5c8d;
+    --slds-c-button-brand-color-border-hover: #2a5c8d;
+}
+
+.slds-box {
+    background-color: #f4f6f9;
+    border: 1px solid #dddbda;
+    border-radius: 4px;
+    padding: 16px;
+}
+
+.slds-form-element__help {
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.slds-text-color_error {
+    color: #c23934;
+}
+
+lightning-textarea {
+    min-height: 120px;
+}
