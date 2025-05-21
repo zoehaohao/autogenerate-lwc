@@ -1,0 +1,51 @@
+/* dateRangeValidator.css */
+.acme-date-range-validator {
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+.acme-date-range-validator__field {
+    margin-bottom: var(--acme-space-md, 16px);
+}
+.acme-date-range-validator__input {
+    --slds-c-input-color-border: var(--acme-gray-color, #424A54);
+}
+.acme-date-range-validator__input_error {
+    --slds-c-input-color-border: var(--acme-coral-color, #FF6B6B);
+}
+.acme-date-range-validator__error {
+    display: flex;
+    align-items: center;
+    margin-top: var(--acme-space-xs, 4px);
+    color: var(--acme-coral-color, #FF6B6B);
+    font-size: 0.8125rem;
+}
+.acme-date-range-validator__error-icon {
+    --sds-c-icon-color-foreground: var(--acme-coral-color, #FF6B6B);
+    margin-right: var(--acme-space-xs, 4px);
+}
+.acme-date-range-validator__actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: var(--acme-space-sm, 8px);
+}
+.acme-date-range-validator__submit {
+    --slds-c-button-brand-color-background: var(--acme-blue-color, #0057B8);
+    --slds-c-button-brand-color-border: var(--acme-blue-color, #0057B8);
+}
+.acme-date-range-validator__submit:hover,
+.acme-date-range-validator__submit:focus {
+    --slds-c-button-brand-color-background-hover: var(--acme-blue-dark-color, #004A9E);
+    --slds-c-button-brand-color-border-hover: var(--acme-blue-dark-color, #004A9E);
+}
+.acme-date-range-validator__clear {
+    --slds-c-button-neutral-color-background: var(--acme-light-gray-color, #F5F7FA);
+    --slds-c-button-neutral-color-border: var(--acme-medium-gray-color, #E4E7EB);
+}
+@media screen and (max-width: 480px) {
+    .acme-date-range-validator__actions {
+        flex-direction: column;
+    }
+    .acme-date-range-validator__submit,
+    .acme-date-range-validator__clear {
+        width: 100%;
+    }
+}
