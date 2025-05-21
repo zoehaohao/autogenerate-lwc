@@ -1,70 +1,36 @@
 <!-- personalDetailsForm.html -->
 <template>
-    <div class="root-container">
-        <div class="acme-card">
-            <div class="acme-card__header">
-                <h2 class="acme-heading acme-heading_medium">Personal Details Form</h2>
-            </div>
-            <div class="acme-card__body">
-                <div class="form-grid">
-                    <div class="form-section">
-                        <h3 class="section-header">Personal Information</h3>
-                        <div class="field">
-                            <label for="firstName" class="field-label">First Name<span class="required">*</span></label>
-                            <input type="text" id="firstName" required placeholder="Enter first name" class="field-input" onblur={validateField}/>
-                        </div>
-                        <div class="field">
-                            <label for="middleName" class="field-label">Middle Name</label>
-                            <input type="text" id="middleName" placeholder="Enter middle name" class="field-input"/>
-                        </div>
-                        <div class="field">
-                            <label for="lastName" class="field-label">Last Name<span class="required">*</span></label>
-                            <input type="text" id="lastName" required placeholder="Enter last name" class="field-input" onblur={validateField}/>
-                        </div>
-                        <div class="field">
-                            <label for="birthdate" class="field-label">Birthdate<span class="required">*</span></label>
-                            <input type="date" id="birthdate" required placeholder="MM/DD/YYYY" class="field-input" onblur={validateField}/>
-                        </div>
-                    </div>
-                    <div class="form-section">
-                        <h3 class="section-header">Address Information</h3>
-                        <div class="field">
-                            <label for="address" class="field-label">Address</label>
-                            <input type="text" id="address" placeholder="Enter address" class="field-input"/>
-                        </div>
-                        <div class="field">
-                            <label for="city" class="field-label">City/Town</label>
-                            <input type="text" id="city" placeholder="Enter city" class="field-input"/>
-                        </div>
-                        <div class="field">
-                            <label for="state" class="field-label">State</label>
-                            <select id="state" class="field-input">
-                                <option value="">Choose a State</option>
-                                <!-- Add state options here -->
-                            </select>
-                        </div>
-                        <div class="field">
-                            <label for="zipCode" class="field-label">Zip Code<span class="required">*</span></label>
-                            <input type="text" id="zipCode" required placeholder="Enter zip code" class="field-input" onblur={validateField}/>
-                        </div>
-                    </div>
-                </div>
-                <div class="date-range">
-                    <div class="field">
-                        <label for="startDate" class="field-label">Start Date<span class="required">*</span></label>
-                        <input type="date" id="startDate" required placeholder="MM/DD/YYYY" class="field-input" onblur={validateField}/>
-                    </div>
-                    <div class="field">
-                        <label for="endDate" class="field-label">End Date<span class="required">*</span></label>
-                        <input type="date" id="endDate" required placeholder="MM/DD/YYYY" class="field-input" onblur={validateField}/>
-                    </div>
-                </div>
-                <div if:true={errorMessage} class="error-message">{errorMessage}</div>
-            </div>
-            <div class="acme-card__footer">
-                <lightning-button label="Clear" onclick={handleClear} class="acme-button acme-button_secondary"></lightning-button>
-                <lightning-button label="Submit" onclick={handleSubmit} disabled={isFormInvalid} class="acme-button acme-button_primary"></lightning-button>
+    <div class="acme-personal-details-form">
+        <div class="acme-personal-details-form__section">
+            <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
+            <div class="acme-personal-details-form__fields">
+                <lightning-input label="First Name" type="text" required placeholder="Enter first name" onblur={handleInputChange} class="acme-input"></lightning-input>
+                <lightning-input label="Middle Name" type="text" placeholder="Enter middle name" onblur={handleInputChange} class="acme-input"></lightning-input>
+                <lightning-input label="Last Name" type="text" required placeholder="Enter last name" onblur={handleInputChange} class="acme-input"></lightning-input>
+                <lightning-input label="Birthdate" type="date" required placeholder="MM/DD/YYYY" onblur={handleInputChange} class="acme-input"></lightning-input>
             </div>
         </div>
+        <div class="acme-personal-details-form__section">
+            <h2 class="acme-heading acme-heading_medium">Address</h2>
+            <div class="acme-personal-details-form__fields">
+                <lightning-input label="Address" type="text" placeholder="Enter address" onblur={handleInputChange} class="acme-input"></lightning-input>
+                <lightning-input label="City/Town" type="text" placeholder="Enter city" onblur={handleInputChange} class="acme-input"></lightning-input>
+                <lightning-combobox label="State" placeholder="Choose a State" options={stateOptions} onchange={handleInputChange} class="acme-input"></lightning-combobox>
+                <lightning-input label="Zip Code" type="text" required placeholder="Enter zip code" onblur={handleInputChange} class="acme-input"></lightning-input>
+            </div>
+        </div>
+        <div class="acme-personal-details-form__section">
+            <div class="acme-personal-details-form__fields">
+                <lightning-input label="Start Date" type="date" required placeholder="MM/DD/YYYY" onblur={handleInputChange} class="acme-input"></lightning-input>
+                <lightning-input label="End Date" type="date" required placeholder="MM/DD/YYYY" onblur={handleInputChange} class="acme-input"></lightning-input>
+            </div>
+        </div>
+        <div class="acme-personal-details-form__buttons">
+            <lightning-button label="Submit" variant="brand" onclick={handleSubmit} class="acme-button acme-button_primary"></lightning-button>
+            <lightning-button label="Clear" onclick={handleClear} class="acme-button acme-button_secondary"></lightning-button>
+        </div>
+        <template if:true={errorMessage}>
+            <div class="acme-personal-details-form__error">{errorMessage}</div>
+        </template>
     </div>
 </template>
