@@ -1,92 +1,70 @@
 <!-- personalDetailsForm.html -->
 <template>
     <div class="root-container">
-        <div class="acme-form slds-grid slds-wrap">
-            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-right_medium">
-                <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
-                <div class="slds-form-element slds-m-bottom_small">
-                    <label class="slds-form-element__label" for="firstName">
-                        <abbr class="slds-required" title="required">*</abbr> First Name
-                    </label>
-                    <div class="slds-form-element__control">
-                        <input type="text" id="firstName" class="slds-input" placeholder="Enter first name" required onblur={validateField} />
-                    </div>
-                </div>
-                <div class="slds-form-element slds-m-bottom_small">
-                    <label class="slds-form-element__label" for="middleName">Middle Name</label>
-                    <div class="slds-form-element__control">
-                        <input type="text" id="middleName" class="slds-input" placeholder="Enter middle name" onblur={validateField} />
-                    </div>
-                </div>
-                <div class="slds-form-element slds-m-bottom_small">
-                    <label class="slds-form-element__label" for="lastName">
-                        <abbr class="slds-required" title="required">*</abbr> Last Name
-                    </label>
-                    <div class="slds-form-element__control">
-                        <input type="text" id="lastName" class="slds-input" placeholder="Enter last name" required onblur={validateField} />
-                    </div>
-                </div>
-                <div class="slds-form-element slds-m-bottom_small">
-                    <label class="slds-form-element__label" for="birthdate">
-                        <abbr class="slds-required" title="required">*</abbr> Birthdate
-                    </label>
-                    <div class="slds-form-element__control">
-                        <input type="date" id="birthdate" class="slds-input" required onblur={validateField} />
-                    </div>
-                </div>
+        <div class="acme-card">
+            <div class="acme-card__header">
+                <h2 class="acme-heading acme-heading_medium">Personal Details Form</h2>
             </div>
-            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                <h2 class="acme-heading acme-heading_medium">Address</h2>
-                <div class="slds-form-element slds-m-bottom_small">
-                    <label class="slds-form-element__label" for="address">Address</label>
-                    <div class="slds-form-element__control">
-                        <input type="text" id="address" class="slds-input" placeholder="Enter address" onblur={validateField} />
+            <div class="acme-card__body">
+                <div class="form-grid">
+                    <div class="form-section">
+                        <h3 class="section-header">Personal Information</h3>
+                        <div class="field">
+                            <label for="firstName" class="field-label">First Name<span class="required">*</span></label>
+                            <input type="text" id="firstName" required placeholder="Enter first name" class="field-input" onblur={validateField}/>
+                        </div>
+                        <div class="field">
+                            <label for="middleName" class="field-label">Middle Name</label>
+                            <input type="text" id="middleName" placeholder="Enter middle name" class="field-input"/>
+                        </div>
+                        <div class="field">
+                            <label for="lastName" class="field-label">Last Name<span class="required">*</span></label>
+                            <input type="text" id="lastName" required placeholder="Enter last name" class="field-input" onblur={validateField}/>
+                        </div>
+                        <div class="field">
+                            <label for="birthdate" class="field-label">Birthdate<span class="required">*</span></label>
+                            <input type="date" id="birthdate" required placeholder="MM/DD/YYYY" class="field-input" onblur={validateField}/>
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <h3 class="section-header">Address Information</h3>
+                        <div class="field">
+                            <label for="address" class="field-label">Address</label>
+                            <input type="text" id="address" placeholder="Enter address" class="field-input"/>
+                        </div>
+                        <div class="field">
+                            <label for="city" class="field-label">City/Town</label>
+                            <input type="text" id="city" placeholder="Enter city" class="field-input"/>
+                        </div>
+                        <div class="field">
+                            <label for="state" class="field-label">State</label>
+                            <select id="state" class="field-input">
+                                <option value="">Choose a State</option>
+                                <!-- Add state options here -->
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="zipCode" class="field-label">Zip Code<span class="required">*</span></label>
+                            <input type="text" id="zipCode" required placeholder="Enter zip code" class="field-input" onblur={validateField}/>
+                        </div>
                     </div>
                 </div>
-                <div class="slds-form-element slds-m-bottom_small">
-                    <label class="slds-form-element__label" for="city">City or Town</label>
-                    <div class="slds-form-element__control">
-                        <input type="text" id="city" class="slds-input" placeholder="Enter city" onblur={validateField} />
+                <div class="date-range">
+                    <div class="field">
+                        <label for="startDate" class="field-label">Start Date<span class="required">*</span></label>
+                        <input type="date" id="startDate" required placeholder="MM/DD/YYYY" class="field-input" onblur={validateField}/>
+                    </div>
+                    <div class="field">
+                        <label for="endDate" class="field-label">End Date<span class="required">*</span></label>
+                        <input type="date" id="endDate" required placeholder="MM/DD/YYYY" class="field-input" onblur={validateField}/>
                     </div>
                 </div>
-                <div class="slds-form-element slds-m-bottom_small">
-                    <label class="slds-form-element__label" for="state">State</label>
-                    <div class="slds-form-element__control">
-                        <select id="state" class="slds-select" onblur={validateField}>
-                            <option value="">Choose a State</option>
-                            <!-- Add state options here -->
-                        </select>
-                    </div>
-                </div>
-                <div class="slds-form-element slds-m-bottom_small">
-                    <label class="slds-form-element__label" for="zipCode">
-                        <abbr class="slds-required" title="required">*</abbr> Zip Code
-                    </label>
-                    <div class="slds-form-element__control">
-                        <input type="text" id="zipCode" class="slds-input" placeholder="Enter zip code" required onblur={validateField} />
-                    </div>
-                </div>
-                <div class="slds-form-element slds-m-bottom_small">
-                    <label class="slds-form-element__label" for="startDate">
-                        <abbr class="slds-required" title="required">*</abbr> Start Date
-                    </label>
-                    <div class="slds-form-element__control">
-                        <input type="date" id="startDate" class="slds-input" required onblur={validateField} />
-                    </div>
-                </div>
-                <div class="slds-form-element slds-m-bottom_small">
-                    <label class="slds-form-element__label" for="endDate">
-                        <abbr class="slds-required" title="required">*</abbr> End Date
-                    </label>
-                    <div class="slds-form-element__control">
-                        <input type="date" id="endDate" class="slds-input" required onblur={validateField} />
-                    </div>
-                </div>
+                <div if:true={errorMessage} class="error-message">{errorMessage}</div>
             </div>
-        </div>
-        <div class="slds-grid slds-grid_align-end slds-m-top_medium">
-            <button class="acme-button acme-button_secondary slds-m-right_small" onclick={handleClear}>Clear</button>
-            <button class="acme-button acme-button_primary" onclick={handleSubmit}>Submit</button>
+            <div class="acme-card__footer">
+                <lightning-button label="Clear" onclick={handleClear} class="acme-button acme-button_secondary"></lightning-button>
+                <lightning-button label="Submit" onclick={handleSubmit} disabled={isFormInvalid} class="acme-button acme-button_primary"></lightning-button>
+            </div>
         </div>
     </div>
 </template>

@@ -3,107 +3,112 @@ import { LightningElement, track } from 'lwc';
 
 export default class PersonalDetailsForm extends LightningElement {
     @track formData = {};
-    @track errors = {};
+    @track errorMessage = '';
+    @track isFormInvalid = true;
+
+    connectedCallback() {
+        this.initializeForm();
+    }
+
+    initializeForm() {
+        this.formData = {
+            firstName: '',
+            middleName: '',
+            lastName: '',
+            birthdate: '',
+            address: '',
+            city: '',
+            state: '',
+            zipCode: '',
+            startDate: '',
+            endDate: ''
+        };
+    }
 
     validateField(event) {
         const field = event.target;
         const fieldName = field.id;
-        const value = field.value;
-        let isValid = true;
-        let errorMessage = '';
+        const fieldValue = field.value;
+
+        this.formData[fieldName] = fieldValue;
 
         switch (fieldName) {
             case 'firstName':
             case 'lastName':
-                isValid = /^[a-zA-Z]+$/.test(value);
-                errorMessage = isValid ? '' : 'Only letters are allowed';
-                break;
-            case 'middleName':
-                isValid = value === '' || /^[a-zA-Z]+$/.test(value);
-                errorMessage = isValid ? '' : 'Only letters are allowed';
+                if (!fieldValue.trim()) {
+                    this.setFieldError(field, `${fieldName} is required`);
+                } else {
+                    this.clearFieldError(field);
+                }
                 break;
             case 'birthdate':
-                const birthDate = new Date(value);
-                const today = new Date();
-                const age = today.getFullYear() - birthDate.getFullYear();
-                isValid = age >= 18 && birthDate <= today;
-                errorMessage = isValid ? '' : 'Must be 18 or older and not a future date';
-                break;
-            case 'city':
-                isValid = value === '' || /^[a-zA-Z\s]+$/.test(value);
-                errorMessage = isValid ? '' : 'Only letters and spaces are allowed';
+                if (!this.isValidDate(fieldValue)) {
+                    this.setFieldError(field, 'Invalid date format');
+                } else {
+                    this.clearFieldError(field);
+                }
                 break;
             case 'zipCode':
-                isValid = /^\d{5}(-\d{4})?$/.test(value);
-                errorMessage = isValid ? '' : 'Invalid zip code format';
+                if (!/^\d{5}$/.test(fieldValue)) {
+                    this.setFieldError(field, 'Invalid zip code format');
+                } else {
+                    this.clearFieldError(field);
+                }
                 break;
             case 'startDate':
-                const startDate = new Date(value);
-                isValid = startDate >= new Date();
-                errorMessage = isValid ? '' : 'Start date cannot be in the past';
-                break;
             case 'endDate':
-                const endDate = new Date(value);
-                const startDateValue = this.template.querySelector('#startDate').value;
-                if (startDateValue) {
-                    const startDate = new Date(startDateValue);
-                    const oneYearLater = new Date(startDate);
-                    oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
-                    isValid = endDate > startDate && endDate <= oneYearLater;
-                    errorMessage = isValid ? '' : 'End date must be after start date and within 1 year';
+                if (!this.isValidDate(fieldValue)) {
+                    this.setFieldError(field, 'Invalid date format');
+                } else if (this.formData.startDate && this.formData.endDate) {
+                    if (new Date(this.formData.startDate) >= new Date(this.formData.endDate)) {
+                        this.setFieldError(field, 'End date must be after start date');
+                    } else {
+                        this.clearFieldError(field);
+                    }
+                } else {
+                    this.clearFieldError(field);
                 }
                 break;
         }
 
-        this.formData[fieldName] = value;
-        if (!isValid) {
-            this.errors[fieldName] = errorMessage;
-        } else {
-            delete this.errors[fieldName];
-        }
-        this.updateFieldValidation(field, isValid, errorMessage);
+        this.isFormInvalid = this.checkFormValidity();
     }
 
-    updateFieldValidation(field, isValid, errorMessage) {
-        if (!isValid) {
-            field.classList.add('slds-has-error');
-            const errorElement = field.parentElement.querySelector('.error-message');
-            if (errorElement) {
-                errorElement.textContent = errorMessage;
-            } else {
-                const errorDiv = document.createElement('div');
-                errorDiv.className = 'slds-form-element__help error-message';
-                errorDiv.textContent = errorMessage;
-                field.parentElement.appendChild(errorDiv);
-            }
-        } else {
-            field.classList.remove('slds-has-error');
-            const errorElement = field.parentElement.querySelector('.error-message');
-            if (errorElement) {
-                errorElement.remove();
-            }
-        }
+    isValidDate(dateString) {
+        return !isNaN(new Date(dateString).getTime());
+    }
+
+    setFieldError(field, message) {
+        field.setCustomValidity(message);
+        field.reportValidity();
+    }
+
+    clearFieldError(field) {
+        field.setCustomValidity('');
+        field.reportValidity();
+    }
+
+    checkFormValidity() {
+        const form = this.template.querySelector('form');
+        return !form.checkValidity();
     }
 
     handleSubmit() {
-        this.template.querySelectorAll('input, select').forEach(field => this.validateField({ target: field }));
-        if (Object.keys(this.errors).length === 0) {
-            console.log('Form submitted:', this.formData);
+        if (this.checkFormValidity()) {
+            this.errorMessage = 'Please fill in all required fields correctly.';
         } else {
-            console.log('Form has errors:', this.errors);
+            this.errorMessage = '';
+            console.log('Form submitted:', this.formData);
         }
     }
 
     handleClear() {
+        this.initializeForm();
+        this.errorMessage = '';
         this.template.querySelectorAll('input, select').forEach(field => {
             field.value = '';
-            field.classList.remove('slds-has-error');
-            const errorElement = field.parentElement.querySelector('.error-message');
-            if (errorElement) {
-                errorElement.remove();
-            }
+            this.clearFieldError(field);
         });
-        this.formData = {};
-        this.errors = {};
+        this.isFormInvalid = true;
     }
 }
