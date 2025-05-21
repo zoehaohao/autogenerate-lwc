@@ -1,27 +1,56 @@
-/* personalDetailsForm.css */
+/* appointmentFormLwc.css */
 :host {
-    --slds-c-button-brand-color-background: #2a5c8d;
-    --slds-c-button-brand-color-border: #2a5c8d;
-    --slds-c-button-brand-color-border-focus: #2a5c8d;
-    --slds-c-button-brand-color-border-hover: #2a5c8d;
+    --slds-c-form-element-spacing-horizontal: 0.75rem;
+    --slds-c-form-element-spacing-vertical: 0.75rem;
 }
 
-.slds-box {
-    background-color: #f4f6f9;
-    border: 1px solid #dddbda;
-    border-radius: 4px;
-    padding: 16px;
+.slds-form-element__control_hint .slds-input,
+.slds-form-element__control_hint .slds-textarea {
+    color: var(--slds-g-color-neutral-base-30, #939393);
 }
 
 .slds-form-element__help {
-    font-size: 12px;
-    margin-top: 4px;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
 }
 
-.slds-text-color_error {
-    color: #c23934;
+.slds-radio_faux,
+.slds-checkbox_faux {
+    margin-right: 0.5rem;
 }
 
-lightning-textarea {
-    min-height: 120px;
+.slds-radio__label,
+.slds-checkbox__label {
+    display: inline-flex;
+    align-items: center;
+}
+
+.slds-box {
+    background-color: var(--slds-g-color-neutral-base-100, #ffffff);
+    border: 1px solid var(--slds-g-color-border-base-1, #dadada);
+    border-radius: 0.25rem;
+    padding: 1rem;
+}
+
+.slds-box_x-small {
+    padding: 0.5rem;
+}
+
+.slds-m-around_x-small {
+    margin: 0.5rem;
+}
+
+.slds-m-vertical_medium {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.slds-m-vertical_small {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.slds-list_dotted {
+    list-style-type: disc;
+    padding-left: 1.5rem;
 }

@@ -1,12 +1,11 @@
-<!-- personalDetailsForm.html -->
+<!-- appointmentFormLwc.html -->
 <template>
     <div class="slds-box slds-box_x-small slds-m-around_x-small">
         <h1 class="slds-text-heading_medium slds-m-bottom_small">Aged Care Recipient Feedback Form</h1>
         <p>Your provider wants to promote itself as a specialised aged care provider.</p>
         <p>Older Australians are a diverse group of people with a wide range of care needs. While all aged care providers must be respectful and responsive to the background and life experiences of the people they support, some aged care providers go beyond this and 'specialise' in caring for one or more groups that have special aged care needs.</p>
         <p>People can search for providers with these specialisations by using the 'Find a provider' tool on the My Aged Care website.</p>
-
-        <div class="slds-box slds-box_x-small slds-m-vertical_medium slds-text-body_small">
+        <div class="slds-box slds-box_x-small slds-m-vertical_medium">
             <p>Your feedback will be private, and you can choose to remain anonymous or use a pseudonym.</p>
             <p>Your personal information is protected by law, including the Privacy Act 1988 and the Australian Privacy Principles, and is being collected by the Australian Government Department of Health and Aged Care for the primary purpose of verifying the eligibility of aged care providers against the criteria set out in the Specialisation Verification Framework to ensure that aged care provider profiles on My Aged Care reflect information, which is accurate and relevant, for the purposes of providing aged care recipients and their representatives with specialised healthcare services. Your personal information may also be used and disclosed for other purposes such as delivering and evaluating the initiative and for statistical, performance, policy development and research purposes.</p>
             <p>The department will not disclose your personal information to any overseas recipients.</p>
@@ -17,111 +16,244 @@
         </div>
 
         <div class="slds-box slds-box_x-small slds-m-vertical_medium">
-            <lightning-input type="date" label="1. Date" name="date" onchange={handleDateChange}></lightning-input>
-            <lightning-input type="text" label="2. Provider name" name="providerName" placeholder="Outlet representative to enter provider name" onchange={handleProviderNameChange}></lightning-input>
-            <lightning-input type="text" label="3. Outlet name" name="outletName" placeholder="Outlet representative to enter outlet name" onchange={handleOutletNameChange}></lightning-input>
-            <lightning-input type="text" label="4. Outlet ID" name="outletId" placeholder="Outlet representative to enter outlet ID" onchange={handleOutletIdChange}></lightning-input>
-
-            <div class="slds-form-element">
-                <legend class="slds-form-element__legend slds-form-element__label">5. Type of aged care</legend>
-                <div class="slds-form-element__control">
-                    <span class="slds-radio">
-                        <input type="radio" id="residential" name="careType" value="residential" onchange={handleCareTypeChange} />
-                        <label class="slds-radio__label" for="residential">
-                            <span class="slds-radio_faux"></span>
-                            <span class="slds-form-element__label">residential aged care</span>
-                        </label>
-                    </span>
-                    <span class="slds-radio">
-                        <input type="radio" id="home-based" name="careType" value="home-based" onchange={handleCareTypeChange} />
-                        <label class="slds-radio__label" for="home-based">
-                            <span class="slds-radio_faux"></span>
-                            <span class="slds-form-element__label">home-based aged care</span>
-                        </label>
-                    </span>
+            <h2 class="slds-text-heading_small slds-m-bottom_small">Feedback questions – Veterans</h2>
+            <div class="slds-form slds-form_stacked">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="date">1. Date</label>
+                    <div class="slds-form-element__control">
+                        <input type="date" id="date" class="slds-input" required>
+                    </div>
                 </div>
-            </div>
-
-            <template if:true={showHomeBasedServices}>
-                <lightning-textarea name="homeBasedServices" label="If you selected home-based care, what services do you receive from your provider?" onchange={handleHomeBasedServicesChange}></lightning-textarea>
-            </template>
-
-            <lightning-input type="text" label="6. Name of respondent (optional)" name="respondentName" onchange={handleRespondentNameChange}></lightning-input>
-            <lightning-input type="tel" label="7. Respondent's phone number (optional)" name="respondentPhone" help-message="(We ask for this in case we need to clarify anything with you.)" onchange={handleRespondentPhoneChange}></lightning-input>
-
-            <div class="slds-form-element">
-                <legend class="slds-form-element__legend slds-form-element__label">8. Are you:</legend>
-                <div class="slds-form-element__control">
-                    <span class="slds-checkbox">
-                        <input type="checkbox" id="recipient" name="role" value="recipient" onchange={handleRoleChange} />
-                        <label class="slds-checkbox__label" for="recipient">
-                            <span class="slds-checkbox_faux"></span>
-                            <span class="slds-form-element__label">an aged care recipient</span>
-                        </label>
-                    </span>
-                    <span class="slds-checkbox">
-                        <input type="checkbox" id="family-member" name="role" value="family-member" onchange={handleRoleChange} />
-                        <label class="slds-checkbox__label" for="family-member">
-                            <span class="slds-checkbox_faux"></span>
-                            <span class="slds-form-element__label">a family member of an aged care recipient</span>
-                        </label>
-                    </span>
-                    <span class="slds-checkbox">
-                        <input type="checkbox" id="representative" name="role" value="representative" onchange={handleRoleChange} />
-                        <label class="slds-checkbox__label" for="representative">
-                            <span class="slds-checkbox_faux"></span>
-                            <span class="slds-form-element__label">a friend or other personal representative of an aged care recipient</span>
-                        </label>
-                    </span>
-                    <span class="slds-checkbox">
-                        <input type="checkbox" id="advocate" name="role" value="advocate" onchange={handleRoleChange} />
-                        <label class="slds-checkbox__label" for="advocate">
-                            <span class="slds-checkbox_faux"></span>
-                            <span class="slds-form-element__label">an aged care advocate, navigator or member of a community organisation who is responding with or on behalf of an aged care recipient</span>
-                        </label>
-                    </span>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="providerName">2. Provider name</label>
+                    <div class="slds-form-element__control slds-form-element__control_hint">
+                        <input type="text" id="providerName" class="slds-input" placeholder="Outlet representative to enter provider name" required>
+                    </div>
                 </div>
-            </div>
-
-            <div class="slds-form-element">
-                <legend class="slds-form-element__legend slds-form-element__label">9a. If you are an aged care recipient, are you a veteran?</legend>
-                <div class="slds-form-element__control">
-                    <p class="slds-form-element__help">For the purposes of this form, the term 'veteran' includes anyone who has served in the Australian Defence Force.</p>
-                    <span class="slds-radio">
-                        <input type="radio" id="veteran-yes" name="isVeteran" value="yes" onchange={handleIsVeteranChange} />
-                        <label class="slds-radio__label" for="veteran-yes">
-                            <span class="slds-radio_faux"></span>
-                            <span class="slds-form-element__label">Yes</span>
-                        </label>
-                    </span>
-                    <span class="slds-radio">
-                        <input type="radio" id="veteran-no" name="isVeteran" value="no" onchange={handleIsVeteranChange} />
-                        <label class="slds-radio__label" for="veteran-no">
-                            <span class="slds-radio_faux"></span>
-                            <span class="slds-form-element__label">No</span>
-                        </label>
-                    </span>
-                    <p class="slds-form-element__help slds-text-color_error" if:true={showNonVeteranWarning}>If 'no', please do not use this form to provide feedback, as you do not meet requirements for this criterion under the Specialisation Verification Framework.</p>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="outletName">3. Outlet name</label>
+                    <div class="slds-form-element__control slds-form-element__control_hint">
+                        <input type="text" id="outletName" class="slds-input" placeholder="Outlet representative to enter outlet name" required>
+                    </div>
                 </div>
-            </div>
-
-            <div class="slds-form-element">
-                <legend class="slds-form-element__legend slds-form-element__label">9b. If you are responding on behalf of an aged care recipient, is the recipient a veteran?</legend>
-                <div class="slds-form-element__control">
-                    <span class="slds-radio">
-                        <input type="radio" id="recipient-veteran-yes" name="isRecipientVeteran" value="yes" onchange={handleIsRecipientVeteranChange} />
-                        <label class="slds-radio__label" for="recipient-veteran-yes">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="outletId">4. Outlet ID</label>
+                    <div class="slds-form-element__control slds-form-element__control_hint">
+                        <input type="text" id="outletId" class="slds-input" placeholder="Outlet representative to enter outlet ID" required>
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <legend class="slds-form-element__label">5. Type of aged care</legend>
+                    <div class="slds-form-element__control">
+                        <div class="slds-checkbox">
+                            <input type="checkbox" id="residential" value="residential" name="careType">
+                            <label class="slds-checkbox__label" for="residential">
+                                <span class="slds-checkbox_faux"></span>
+                                <span class="slds-form-element__label">residential aged care</span>
+                            </label>
+                        </div>
+                        <div class="slds-checkbox">
+                            <input type="checkbox" id="homebased" value="homebased" name="careType">
+                            <label class="slds-checkbox__label" for="homebased">
+                                <span class="slds-checkbox_faux"></span>
+                                <span class="slds-form-element__label">home-based aged care</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="slds-form-element__help" if:true={isHomeBasedSelected}>If you selected home-based care, what services do you receive from your provider?</div>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="respondentName">6. Name of respondent (optional)</label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="respondentName" class="slds-input">
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="respondentPhone">7. Respondent's phone number (optional)</label>
+                    <div class="slds-form-element__control slds-form-element__control_hint">
+                        <input type="tel" id="respondentPhone" class="slds-input" placeholder="(We ask for this in case we need to clarify anything with you.)">
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <legend class="slds-form-element__label">8. Are you:</legend>
+                    <div class="slds-form-element__control">
+                        <div class="slds-checkbox">
+                            <input type="checkbox" id="recipient" value="recipient" name="respondentType">
+                            <label class="slds-checkbox__label" for="recipient">
+                                <span class="slds-checkbox_faux"></span>
+                                <span class="slds-form-element__label">an aged care recipient</span>
+                            </label>
+                        </div>
+                        <div class="slds-checkbox">
+                            <input type="checkbox" id="familyMember" value="familyMember" name="respondentType">
+                            <label class="slds-checkbox__label" for="familyMember">
+                                <span class="slds-checkbox_faux"></span>
+                                <span class="slds-form-element__label">a family member of an aged care recipient</span>
+                            </label>
+                        </div>
+                        <div class="slds-checkbox">
+                            <input type="checkbox" id="personalRep" value="personalRep" name="respondentType">
+                            <label class="slds-checkbox__label" for="personalRep">
+                                <span class="slds-checkbox_faux"></span>
+                                <span class="slds-form-element__label">a friend or other personal representative of an aged care recipient</span>
+                            </label>
+                        </div>
+                        <div class="slds-checkbox">
+                            <input type="checkbox" id="advocate" value="advocate" name="respondentType">
+                            <label class="slds-checkbox__label" for="advocate">
+                                <span class="slds-checkbox_faux"></span>
+                                <span class="slds-form-element__label">an aged care advocate, navigator or member of a community organisation who is responding with or on behalf of an aged care recipient</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element" if:true={isRecipientSelected}>
+                    <legend class="slds-form-element__label">9a. If you are an aged care recipient, are you a veteran?</legend>
+                    <div class="slds-form-element__control">
+                        <div class="slds-radio">
                             <span class="slds-radio_faux"></span>
-                            <span class="slds-form-element__label">Yes</span>
-                        </label>
-                    </span>
-                    <span class="slds-radio">
-                        <input type="radio" id="recipient-veteran-no" name="isRecipientVeteran" value="no" onchange={handleIsRecipientVeteranChange} />
-                        <label class="slds-radio__label" for="recipient-veteran-no">
+                            <input type="radio" id="veteranYes" value="yes" name="isVeteran">
+                            <label class="slds-radio__label" for="veteranYes">
+                                <span class="slds-radio_faux"></span>
+                                <span class="slds-form-element__label">Yes</span>
+                            </label>
+                        </div>
+                        <div class="slds-radio">
                             <span class="slds-radio_faux"></span>
-                            <span class="slds-form-element__label">No</span>
-                        </label>
-                    </span>
+                            <input type="radio" id="veteranNo" value="no" name="isVeteran">
+                            <label class="slds-radio__label" for="veteranNo">
+                                <span class="slds-radio_faux"></span>
+                                <span class="slds-form-element__label">No</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="slds-form-element__help" if:true={isVeteranNo}>If 'no', please do not use this form to provide feedback, as you do not meet requirements for this criterion under the Specialisation Verification Framework.</div>
+                </div>
+                <div class="slds-form-element" if:true={isRepresentativeSelected}>
+                    <legend class="slds-form-element__label">9b. If you are responding on behalf of an aged care recipient, is the recipient a veteran?</legend>
+                    <div class="slds-form-element__control">
+                        <div class="slds-radio">
+                            <span class="slds-radio_faux"></span>
+                            <input type="radio" id="recipientVeteranYes" value="yes" name="isRecipientVeteran">
+                            <label class="slds-radio__label" for="recipientVeteranYes">
+                                <span class="slds-radio_faux"></span>
+                                <span class="slds-form-element__label">Yes</span>
+                            </label>
+                        </div>
+                        <div class="slds-radio">
+                            <span class="slds-radio_faux"></span>
+                            <input type="radio" id="recipientVeteranNo" value="no" name="isRecipientVeteran">
+                            <label class="slds-radio__label" for="recipientVeteranNo">
+                                <span class="slds-radio_faux"></span>
+                                <span class="slds-form-element__label">No</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <legend class="slds-form-element__label">10a. Do you feel comfortable talking to staff at your provider about your specific aged care needs as a veteran?</legend>
+                    <div class="slds-form-element__control">
+                        <div class="slds-radio">
+                            <span class="slds-radio_faux"></span>
+                            <input type="radio" id="comfortable-no" value="no" name="comfortable">
+                            <label class="slds-radio__label" for="comfortable-no">
+                                <span class="slds-radio_faux"></span>
+                                <span class="slds-form-element__label">No</span>
+                            </label>
+                        </div>
+                        <div class="slds-radio">
+                            <span class="slds-radio_faux"></span>
+                            <input type="radio" id="comfortable-unsure" value="unsure" name="comfortable">
+                            <label class="slds-radio__label" for="comfortable-unsure">
+                                <span class="slds-radio_faux"></span>
+                                <span class="slds-form-element__label">Unsure</span>
+                            </label>
+                        </div>
+                        <div class="slds-radio">
+                            <span class="slds-radio_faux"></span>
+                            <input type="radio" id="comfortable-yes" value="yes" name="comfortable">
+                            <label class="slds-radio__label" for="comfortable-yes">
+                                <span class="slds-radio_faux"></span>
+                                <span class="slds-form-element__label">Yes</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element" if:true={isComfortableYes}>
+                    <legend class="slds-form-element__label">10b. If you answered Yes to question 10a, do you feel that staff at your provider meet, or try to meet, those needs?</legend>
+                    <div class="slds-form-element__control">
+                        <div class="slds-radio">
+                            <span class="slds-radio_faux"></span>
+                            <input type="radio" id="meetNeeds-no" value="no" name="meetNeeds">
+                            <label class="slds-radio__label" for="meetNeeds-no">
+                                <span class="slds-radio_faux"></span>
+                                <span class="slds-form-element__label">No</span>
+                            </label>
+                        </div>
+                        <div class="slds-radio">
+                            <span class="slds-radio_faux"></span>
+                            <input type="radio" id="meetNeeds-unsure" value="unsure" name="meetNeeds">
+                            <label class="slds-radio__label" for="meetNeeds-unsure">
+                                <span class="slds-radio_faux"></span>
+                                <span class="slds-form-element__label">Unsure</span>
+                            </label>
+                        </div>
+                        <div class="slds-radio">
+                            <span class="slds-radio_faux"></span>
+                            <input type="radio" id="meetNeeds-yes" value="yes" name="meetNeeds">
+                            <label class="slds-radio__label" for="meetNeeds-yes">
+                                <span class="slds-radio_faux"></span>
+                                <span class="slds-form-element__label">Yes</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="specialisedCare">11a. Some aged care providers specialise in caring for veterans. What do you think these aged care services should provide or consider when caring for veterans?</label>
+                    <div class="slds-form-element__control slds-form-element__control_hint">
+                        <textareaid="specialisedCare" class="slds-textarea" placeholder="Please describe what is important to you as a veteran. This could include, for example, facilitating access to DVA-funded supports or participation in commemorative ceremonies and events."></textarea>
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <legend class="slds-form-element__label">11b. Do you feel that your provider provides the specialised care that you have described in question 11a?</legend>
+                    <div class="slds-form-element__control">
+                        <div class="slds-radio">
+                            <span class="slds-radio_faux"></span>
+                            <input type="radio" id="providesSpecialisedCare-no" value="no" name="providesSpecialisedCare">
+                            <label class="slds-radio__label" for="providesSpecialisedCare-no">
+                                <span class="slds-radio_faux"></span>
+                                <span class="slds-form-element__label">No</span>
+                            </label>
+                        </div>
+                        <div class="slds-radio">
+                            <span class="slds-radio_faux"></span>
+                            <input type="radio" id="providesSpecialisedCare-unsure" value="unsure" name="providesSpecialisedCare">
+                            <label class="slds-radio__label" for="providesSpecialisedCare-unsure">
+                                <span class="slds-radio_faux"></span>
+                                <span class="slds-form-element__label">Unsure</span>
+                            </label>
+                        </div>
+                        <div class="slds-radio">
+                            <span class="slds-radio_faux"></span>
+                            <input type="radio" id="providesSpecialisedCare-yes" value="yes" name="providesSpecialisedCare">
+                            <label class="slds-radio__label" for="providesSpecialisedCare-yes">
+                                <span class="slds-radio_faux"></span>
+                                <span class="slds-form-element__label">Yes</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="howProviderMeetsNeeds">11c. In what ways does your provider do this or not do this?</label>
+                    <div class="slds-form-element__control">
+                        <textarea id="howProviderMeetsNeeds" class="slds-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="otherComments">12. Do you have any other comments about your provider's ability to meet the aged care needs of veterans?</label>
+                    <div class="slds-form-element__control">
+                        <textarea id="otherComments" class="slds-textarea"></textarea>
+                    </div>
                 </div>
             </div>
         </div>
@@ -131,8 +263,7 @@
             <p>Your aged care provider has submitted an application to nominate itself as a specialised aged care provider for Veterans.</p>
             <p>To support their application for specialisation, your provider wants to use feedback (opinions and reported experiences) from aged care recipients who identify as being part of this group.</p>
             <p>If you belong to this group, the Department of Health and Aged Care (the department) invites you to share with us your experienced of receiving this specialised care from your provider.</p>
-
-            <h3 class="slds-text-heading_small slds-m-vertical_medium">How to give your feedback</h3>
+            <h3 class="slds-text-heading_small slds-m-vertical_small">How to give your feedback</h3>
             <p>Choose the way to give your feedback that best suits you.</p>
             <p>If you have received this form as an email attachment, you can do any of the following:</p>
             <ul class="slds-list_dotted">
@@ -142,50 +273,21 @@
                 <li>Print the document, fill in the relevant fields and mail it to us at the address below.</li>
             </ul>
             <p>If you have received this form in hard copy, please fill in the relevant fields by hand and mail it to us at:</p>
-            <p>My Aged Care Provider Specialisation Verification, Mail Drop Point 765<br/>
-            Market and Workforce Division, Dementia, Diversity and Design Branch,<br/>
-            Diversity and Inclusion Section<br/>
-            PO BOX 9848<br/>
+            <p>My Aged Care Provider Specialisation Verification, Mail Drop Point 765<br>
+            Market and Workforce Division, Dementia, Diversity and Design Branch,<br>
+            Diversity and Inclusion Section<br>
+            PO BOX 9848<br>
             Canberra ACT 2601</p>
             <p>If you prefer to give your feedback by phone, please let us know by emailing <a href="mailto:macspecialisation@health.gov.au">macspecialisation@health.gov.au</a>. One of our team members will be in touch to coordinate a suitable time to go through the questions with you and record your responses.</p>
-
-            <div class="slds-box slds-box_x-small slds-m-vertical_medium slds-text-body_small">
+            <div class="slds-box slds-box_x-small slds-m-vertical_medium">
                 <p>Do you need an interpreter?</p>
                 <p>If you need an interpreter, please email us to let us know your preferred language and a suitable time for us to call you. We will then arrange an interpreter at no cost to you and phone you back.</p>
             </div>
         </div>
 
-        <div class="slds-box slds-box_x-small slds-m-vertical_medium">
-            <h3 class="slds-text-heading_small slds-m-bottom_small">Please answer the following questions.</h3>
-            <p>(If you are a family member, friend or other representative of the aged care recipient, please answer these questions from their perspective/on their behalf)</p>
-
-            <div class="slds-form-element">
-                <legend class="slds-form-element__legend slds-form-element__label">10a. Do you feel comfortable talking to staff at your provider about your specific aged care needs as a veteran?</legend>
-                <div class="slds-form-element__control">
-                    <span class="slds-radio">
-                        <input type="radio" id="comfortable-no" name="isComfortable" value="no" onchange={handleIsComfortableChange} />
-                        <label class="slds-radio__label" for="comfortable-no">
-                            <span class="slds-radio_faux"></span>
-                            <span class="slds-form-element__label">No</span>
-                        </label>
-                    </span>
-                    <span class="slds-radio">
-                        <input type="radio" id="comfortable-unsure" name="isComfortable" value="unsure" onchange={handleIsComfortableChange} />
-                        <label class="slds-radio__label" for="comfortable-unsure">
-                            <span class="slds-radio_faux"></span>
-                            <span class="slds-form-element__label">Unsure</span>
-                        </label>
-                    </span>
-                    <span class="slds-radio">
-                        <input type="radio" id="comfortable-yes" name="isComfortable" value="yes" onchange={handleIsComfortableChange} />
-                        <label class="slds-radio__label" for="comfortable-yes">
-                            <span class="slds-radio_faux"></span>
-                            <span class="slds-form-element__label">Yes</span>
-                        </label>
-                    </span>
-                </div>
-            </div>
-
-            <div class="slds-form-element">
-                <legend class="slds-form-element__legend slds-form-element__label">10b. If you answered Yes to question 10a, do you feel that staff at your provider meet, or try to meet, those needs?</legend>
-                <div class="Apologies for the truncated response. Here's the continuation:
+        <div class="slds-m-around_medium">
+            <lightning-button variant="brand" type="submit" label="Submit" onclick={handleSubmit} disabled={isSubmitting}></lightning-button>
+            <lightning-spinner if:true={isSubmitting} alternative-text="Processing..." variant="brand"></lightning-spinner>
+        </div>
+    </div>
+</template>
