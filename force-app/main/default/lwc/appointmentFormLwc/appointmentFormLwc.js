@@ -1,92 +1,73 @@
-// personalDetailsForm.js
+// appointmentFormLwc.js
 import { LightningElement, track } from 'lwc';
 
-export default class PersonalDetailsForm extends LightningElement {
-    @track date = '';
-    @track providerName = '';
-    @track outletName = '';
-    @track outletId = '';
-    @track careType = '';
-    @track homeBasedServices = '';
-    @track respondentName = '';
-    @track respondentPhone = '';
-    @track role = [];
-    @track isVeteran = '';
-    @track isRecipientVeteran = '';
-    @track isComfortable = '';
-    @track doesMeetNeeds = '';
-    @track veteranServices = '';
-    @track doesProvideCare = '';
-    @track providerFeedback = '';
-    @track otherComments = '';
+export default class AppointmentFormLwc extends LightningElement {
+    @track showHomeBasedServices = false;
+    @track showNonVeteranError = false;
+    @track isLoading = false;
 
-    handleCareTypeChange(event) {
-        this.careType = event.target.value;
+    handleTypeOfCareChange(event) {
+        const isHomeBasedChecked = event.target.value === 'home-based';
+        this.showHomeBasedServices = isHomeBasedChecked;
     }
 
-    handleRoleChange(event) {
-        const selectedValues = Array.from(event.target.selectedOptions, option => option.value);
-        this.role = selectedValues;
-    }
-
-    handleVeteranChange(event) {
-        this.isVeteran = event.target.value;
-    }
-
-    handleRecipientVeteranChange(event) {
-        this.isRecipientVeteran = event.target.value;
-    }
-
-    handleComfortableChange(event) {
-        this.isComfortable = event.target.value;
-    }
-
-    handleMeetNeedsChange(event) {
-        this.doesMeetNeeds = event.target.value;
-    }
-
-    handleVeteranServicesChange(event) {
-        this.veteranServices = event.target.value;
-    }
-
-    handleProvidesCareChange(event) {
-        this.doesProvideCare = event.target.value;
-    }
-
-    handleProviderFeedbackChange(event) {
-        this.providerFeedback = event.target.value;
-    }
-
-    handleOtherCommentsChange(event) {
-        this.otherComments = event.target.value;
+    handleIsVeteranChange(event) {
+        const isNotVeteran = event.detail.value === 'no';
+        this.showNonVeteranError = isNotVeteran;
     }
 
     handleSubmit(event) {
         event.preventDefault();
-        // Implement form submission logic here
-        // e.g., validate form data, make API calls, etc.
-        console.log('Form submitted:', this.formData);
+        this.isLoading = true;
+
+        // Show loading spinner
+        // ...
+
+        // Validate form data
+        const isValid = this.validateForm();
+        if (isValid) {
+            // Submit form data
+            this.submitFormData()
+                .then(() => {
+                    // Handle success
+                    this.showToast('Success', 'Feedback submitted successfully', 'success');
+                })
+                .catch(error => {
+                    // Handle error
+                    this.showToast('Error', error.message, 'error');
+                })
+                .finally(() => {
+                    this.isLoading = false;
+                    // Hide loading spinner
+                });
+        } else {
+            this.isLoading = false;
+            // Hide loading spinner
+        }
     }
 
-    get formData() {
-        return {
-            date: this.date,
-            providerName: this.providerName,
-            outletName: this.outletName,
-            outletId: this.outletId,
-            careType: this.careType,
-            homeBasedServices: this.homeBasedServices,
-            respondentName: this.respondentName,
-            respondentPhone: this.respondentPhone,
-            role: this.role,
-            isVeteran: this.isVeteran,
-            isRecipientVeteran: this.isRecipientVeteran,
-            isComfortable: this.isComfortable,
-            doesMeetNeeds: this.doesMeetNeeds,
-            veteranServices: this.veteranServices,
-            doesProvideCare: this.doesProvideCare,
-            providerFeedback: this.providerFeedback,
-            otherComments: this.otherComments
-        };
+    validateForm() {
+        let isValid = true;
+        this.errors = {};
+
+        // Implement validation logic for required fields, formats, etc.
+        // ...
+
+        return isValid;
+    }
+
+    async submitFormData() {
+        // Implement logic to submit form data to server
+        // ...
+    }
+
+    handleCancel(event) {
+        // Reset form or navigate away
+        // ...
+    }
+
+    showToast(title, message, variant) {
+        // Implement logic to show toast notifications
+        // ...
     }
 }
