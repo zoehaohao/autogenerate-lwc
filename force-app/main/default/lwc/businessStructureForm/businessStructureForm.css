@@ -1,0 +1,21 @@
+/* businessStructureForm.css */
+.root-container {
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: var(--slds-c-card-spacing-block, 1rem);
+}
+
+.warning-icon {
+    --sds-c-icon-color-foreground: var(--slds-c-icon-color-foreground, #FF6B6B);
+}
+
+.slds-form-element {
+    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
+}
+
+@media (max-width: 768px) {
+    .root-container {
+        padding: var(--slds-c-card-spacing-block, 0.5rem);
+    }
+}
