@@ -2,130 +2,57 @@
 :host {
     --acme-blue-color: #0057B8;
     --acme-gray-color: #424A54;
-    --acme-white-color: #FFFFFF;
-    --acme-teal-color: #00A0B0;
-    --acme-gold-color: #F2C94C;
-    --acme-coral-color: #FF6B6B;
     --acme-light-gray-color: #F5F7FA;
+    --acme-medium-gray-color: #E4E7EB;
+    --acme-coral-color: #FF6B6B;
 }
 
 .acme-personal-info-form {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: var(--slds-c-card-spacing-block, 1rem);
-}
-
-.acme-heading {
-    color: var(--acme-blue-color);
-    margin-bottom: 1rem;
-}
-
-.acme-heading_large {
-    font-size: 24px;
-}
-
-.acme-heading_medium {
-    font-size: 18px;
-}
-
-.acme-form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
-
-.acme-form-field {
-    margin-bottom: 1rem;
-}
-
-.acme-label {
-    display: block;
-    font-size: 14px;
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     color: var(--acme-gray-color);
-    margin-bottom: 0.25rem;
 }
 
-.acme-input,
-.acme-select {
-    width: 100%;
-    padding: 0.5rem;
-    font-size: 16px;
-    border: 1px solid var(--acme-light-gray-color);
+.slds-text-heading_medium {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--acme-blue-color);
+}
+
+.slds-form-element__label {
+    font-size: 0.875rem;
+    text-align: right;
+}
+
+.slds-input,
+.slds-select {
+    height: 40px;
+    border: 1px solid var(--acme-medium-gray-color);
     border-radius: 4px;
 }
 
-.acme-input:focus,
-.acme-select:focus {
+.slds-input:focus,
+.slds-select:focus {
     border-color: var(--acme-blue-color);
-    outline: none;
+    box-shadow: 0 0 3px var(--acme-blue-color);
 }
 
-.acme-input_error {
+.slds-button_brand {
+    background-color: var(--acme-blue-color);
+    border-color: var(--acme-blue-color);
+}
+
+.slds-button_brand:hover,
+.slds-button_brand:focus {
+    background-color: #004A9E;
+    border-color: #004A9E;
+}
+
+.slds-has-error .slds-input {
     border-color: var(--acme-coral-color);
 }
 
-.acme-required {
-    color: var(--acme-coral-color);
-    margin-left: 0.25rem;
-}
-
-.acme-form-actions {
-    margin-top: 1rem;
-    display: flex;
-    justify-content: flex-start;
-    gap: 1rem;
-}
-
-.acme-button {
-    padding: 0.5rem 1rem;
-    font-size: 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.acme-button_primary {
-    background-color: var(--acme-blue-color);
-    color: var(--acme-white-color);
-    border: none;
-}
-
-.acme-button_primary:hover {
-    background-color: #004A9E;
-}
-
-.acme-button_secondary {
-    background-color: var(--acme-white-color);
-    color: var(--acme-blue-color);
-    border: 1px solid var(--acme-blue-color);
-}
-
-.acme-button_secondary:hover {
-    background-color: var(--acme-light-gray-color);
-}
-
-.acme-error-message {
-    color: var(--acme-coral-color);
-    font-size: 12px;
-    margin-top: 1rem;
-}
-
-.acme-form-help {
-    margin-top: 1rem;
-}
-
-.acme-link {
-    color: var(--acme-blue-color);
-    text-decoration: none;
-}
-
-.acme-link:hover {
-    text-decoration: underline;
-}
-
-@media screen and (max-width: 768px) {
-    .acme-form-grid {
-        grid-template-columns: 1fr;
+@media (max-width: 768px) {
+    .slds-medium-size_1-of-2 {
+        width: 100%;
     }
 }
