@@ -1,0 +1,39 @@
+/* formWithTooltips.css */
+:host {
+    --slds-c-icon-color-background: var(--slds-c-icon-color-background, #b0adab);
+    --slds-c-icon-color-border: var(--slds-c-icon-color-border, #dddbda);
+}
+
+.slds-box {
+    border-radius: 4px;
+    border: 1px solid var(--slds-c-icon-color-border);
+    background-color: var(--slds-c-icon-color-background);
+}
+
+.slds-section__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.slds-form-element__icon {
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.slds-form-element__help {
+    font-size: 12px;
+    color: var(--slds-c-icon-color-border);
+}
+
+lightning-dual-listbox {
+    margin-top: 12px;
+}
+
+lightning-checkbox-group {
+    margin-top: 8px;
+}
+
+lightning-textarea {
+    margin-top: 8px;
+}
