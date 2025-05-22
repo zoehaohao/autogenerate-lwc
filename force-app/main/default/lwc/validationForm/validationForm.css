@@ -1,0 +1,94 @@
+/* validationForm.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-teal-color: #00A0B0;
+    --acme-gold-color: #F2C94C;
+    --acme-coral-color: #FF6B6B;
+    --acme-light-gray-color: #F5F7FA;
+}
+
+.acme-validation-form {
+    font-family: Arial, sans-serif;
+    color: var(--acme-gray-color);
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.acme-validation-form__section {
+    margin-bottom: 2rem;
+}
+
+.acme-heading {
+    color: var(--acme-blue-color);
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.acme-heading_medium {
+    font-size: 1.5rem;
+}
+
+.acme-input {
+    margin-bottom: 1rem;
+}
+
+.acme-validation-form__buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.acme-button {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.acme-button_primary {
+    background-color: var(--acme-blue-color);
+    border-color: var(--acme-blue-color);
+    color: var(--acme-white-color);
+}
+
+.acme-button_primary:hover, .acme-button_primary:focus {
+    background-color: #004A9E;
+    border-color: #004A9E;
+}
+
+.acme-button_secondary {
+    background-color: var(--acme-white-color);
+    border-color: var(--acme-gray-color);
+    color: var(--acme-gray-color);
+}
+
+.acme-button_secondary:hover, .acme-button_secondary:focus {
+    background-color: var(--acme-light-gray-color);
+}
+
+.acme-validation-form__error {
+    color: var(--acme-coral-color);
+    font-size: 0.875rem;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    border: 1px solid var(--acme-coral-color);
+    border-radius: 4px;
+    background-color: rgba(255, 107, 107, 0.1);
+}
+
+@media screen and (max-width: 768px) {
+    .acme-validation-form {
+        padding: 0.5rem;
+    }
+
+    .acme-validation-form__buttons {
+        flex-direction: column;
+    }
+
+    .acme-button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}

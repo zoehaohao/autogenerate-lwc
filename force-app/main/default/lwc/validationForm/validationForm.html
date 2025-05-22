@@ -1,0 +1,49 @@
+<!-- validationForm.html -->
+<template>
+    <div class="acme-validation-form">
+        <div class="acme-validation-form__section">
+            <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
+            <lightning-combobox name="title" label="Title" value={title} options={titleOptions} onchange={handleInputChange} class="acme-input"></lightning-combobox>
+            <lightning-input type="text" name="firstName" label="First Name" required onchange={handleInputChange} class="acme-input"></lightning-input>
+            <lightning-input type="text" name="middleName" label="Middle Name" onchange={handleInputChange} class="acme-input"></lightning-input>
+            <lightning-input type="text" name="lastName" label="Last Name" onchange={handleInputChange} class="acme-input"></lightning-input>
+            <lightning-input type="date" name="birthdate" label="Birthdate" required onchange={handleInputChange} class="acme-input"></lightning-input>
+            <fieldset class="slds-form-element">
+                <legend class="slds-form-element__legend slds-form-element__label">Gender</legend>
+                <div class="slds-form-element__control">
+                    <div class="slds-radio_button-group">
+                        <template for:each={genderOptions} for:item="option">
+                            <span class="slds-button slds-radio_button" key={option.value}>
+                                <input type="radio" name="gender" id={option.value} value={option.value} onchange={handleInputChange} />
+                                <label class="slds-radio_button__label" for={option.value}>
+                                    <span class="slds-radio_faux">{option.label}</span>
+                                </label>
+                            </span>
+                        </template>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="acme-validation-form__section">
+            <h2 class="acme-heading acme-heading_medium">Address</h2>
+            <lightning-input type="text" name="addressLine1" label="Address Line 1" required onchange={handleInputChange} class="acme-input"></lightning-input>
+            <lightning-input type="text" name="addressLine2" label="Address Line 2" onchange={handleInputChange} class="acme-input"></lightning-input>
+            <lightning-input type="text" name="suburb" label="Suburb/City" required onchange={handleInputChange} class="acme-input"></lightning-input>
+            <lightning-combobox name="state" label="State" required value={state} options={stateOptions} onchange={handleInputChange} class="acme-input"></lightning-combobox>
+            <lightning-input type="text" name="postcode" label="Postcode" required pattern="[0-9]{4}" message-when-pattern-mismatch="Please enter a 4-digit postcode" onchange={handleInputChange} class="acme-input"></lightning-input>
+            <lightning-combobox name="country" label="Country" required value={country} options={countryOptions} onchange={handleInputChange} class="acme-input"></lightning-combobox>
+        </div>
+        <div class="acme-validation-form__section">
+            <h2 class="acme-heading acme-heading_medium">Date</h2>
+            <lightning-input type="date" name="startDate" label="Start Date" onchange={handleInputChange} class="acme-input"></lightning-input>
+            <lightning-input type="date" name="endDate" label="End Date" onchange={handleInputChange} class="acme-input"></lightning-input>
+        </div>
+        <div class="acme-validation-form__buttons">
+            <lightning-button variant="brand" label="Submit" title="Submit" onclick={handleSubmit} class="acme-button acme-button_primary"></lightning-button>
+            <lightning-button variant="neutral" label="Reset" title="Reset" onclick={handleReset} class="acme-button acme-button_secondary"></lightning-button>
+        </div>
+        <template if:true={errorMessage}>
+            <div class="acme-validation-form__error">{errorMessage}</div>
+        </template>
+    </div>
+</template>
