@@ -1,62 +1,67 @@
 <!-- formValidator.html -->
 <template>
-    <div class="root-container">
-        <lightning-card title="Form Validator" class="acme-card">
-            <div class="slds-p-around_medium">
-                <lightning-input 
-                    label="Name" 
-                    name="name" 
-                    required
-                    onchange={handleInputChange}
-                    class="slds-m-bottom_small"
-                ></lightning-input>
-                <lightning-input 
-                    type="email" 
-                    label="Email" 
-                    name="email" 
-                    required
-                    onchange={handleInputChange}
-                    class="slds-m-bottom_small"
-                ></lightning-input>
-                <lightning-input 
-                    type="tel" 
-                    label="Phone" 
-                    name="phone" 
-                    onchange={handleInputChange}
-                    class="slds-m-bottom_small"
-                ></lightning-input>
-                <lightning-input 
-                    type="number" 
-                    label="Age" 
-                    name="age" 
-                    min="18" 
-                    max="120"
-                    onchange={handleInputChange}
-                    class="slds-m-bottom_small"
-                ></lightning-input>
-                <lightning-textarea 
-                    label="Comments" 
-                    name="comments" 
-                    onchange={handleInputChange}
-                    class="slds-m-bottom_small"
-                ></lightning-textarea>
-                <lightning-button 
-                    label="Submit" 
-                    variant="brand" 
-                    onclick={handleSubmit} 
-                    class="slds-m-top_medium"
-                ></lightning-button>
+    <div class="acme-form-validator">
+        <div class="acme-form-validator__progress">
+            <!-- Progress indicator implementation -->
+        </div>
+        <div class="acme-form-validator__error-summary" if:true={hasErrors}>
+            <!-- Error summary implementation -->
+        </div>
+        <div class="acme-form-validator__section">
+            <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
+            <div class="acme-form-validator__grid">
+                <div class="acme-form-validator__field">
+                    <label for="firstName" class="acme-form-validator__label">First Name<span class="acme-form-validator__required">*</span></label>
+                    <input type="text" id="firstName" class="acme-form-validator__input" required aria-required="true" onblur={validateField} />
+                </div>
+                <div class="acme-form-validator__field">
+                    <label for="middleName" class="acme-form-validator__label">Middle Name</label>
+                    <input type="text" id="middleName" class="acme-form-validator__input" />
+                </div>
+                <div class="acme-form-validator__field">
+                    <label for="lastName" class="acme-form-validator__label">Last Name<span class="acme-form-validator__required">*</span></label>
+                    <input type="text" id="lastName" class="acme-form-validator__input" required aria-required="true" onblur={validateField} />
+                </div>
+                <div class="acme-form-validator__field">
+                    <label for="birthdate" class="acme-form-validator__label">Birthdate<span class="acme-form-validator__required">*</span></label>
+                    <input type="date" id="birthdate" class="acme-form-validator__input" required aria-required="true" onblur={validateField} />
+                </div>
             </div>
-            <template if:true={errorMessage}>
-                <div class="slds-text-color_error slds-p-around_small">
-                    {errorMessage}
+        </div>
+        <div class="acme-form-validator__section">
+            <h2 class="acme-heading acme-heading_medium">Address</h2>
+            <div class="acme-form-validator__grid">
+                <div class="acme-form-validator__field">
+                    <label for="address" class="acme-form-validator__label">Address</label>
+                    <input type="text" id="address" class="acme-form-validator__input" />
                 </div>
-            </template>
-            <template if:true={successMessage}>
-                <div class="slds-text-color_success slds-p-around_small">
-                    {successMessage}
+                <div class="acme-form-validator__field">
+                    <label for="city" class="acme-form-validator__label">City or Town</label>
+                    <input type="text" id="city" class="acme-form-validator__input" />
                 </div>
-            </template>
-        </lightning-card>
+                <div class="acme-form-validator__field">
+                    <label for="state" class="acme-form-validator__label">State</label>
+                    <select id="state" class="acme-form-validator__select">
+                        <option value="">Choose a State</option>
+                        <!-- State options will be populated dynamically -->
+                    </select>
+                </div>
+                <div class="acme-form-validator__field">
+                    <label for="zipCode" class="acme-form-validator__label">Zip Code<span class="acme-form-validator__required">*</span></label>
+                    <input type="text" id="zipCode" class="acme-form-validator__input" required aria-required="true" onblur={validateField} />
+                </div>
+                <div class="acme-form-validator__field">
+                    <label for="startDate" class="acme-form-validator__label">Start Date<span class="acme-form-validator__required">*</span></label>
+                    <input type="date" id="startDate" class="acme-form-validator__input" required aria-required="true" onblur={validateField} />
+                </div>
+                <div class="acme-form-validator__field">
+                    <label for="endDate" class="acme-form-validator__label">End Date<span class="acme-form-validator__required">*</span></label>
+                    <input type="date" id="endDate" class="acme-form-validator__input" required aria-required="true" onblur={validateField} />
+                </div>
+            </div>
+        </div>
+        <div class="acme-form-validator__actions">
+            <button class="acme-button acme-button_primary" onclick={handleSubmit}>Submit</button>
+        </div>
     </div>
 </template>

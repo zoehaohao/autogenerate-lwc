@@ -6,47 +6,64 @@
     --acme-teal-color: #00A0B0;
     --acme-gold-color: #F2C94C;
     --acme-coral-color: #FF6B6B;
-    --acme-light-gray-color: #F5F7FA;
-    --acme-medium-gray-color: #E4E7EB;
+    --acme-light-gray: #F5F7FA;
 }
 
-.root-container {
-    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+.acme-form-validator {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--slds-c-card-spacing-block, 1rem);
 }
 
-.acme-card {
-    background-color: var(--acme-white-color);
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(66, 74, 84, 0.1);
+.acme-form-validator__section {
+    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
 }
 
-lightning-input, lightning-textarea {
-    --slds-c-input-color-border: var(--acme-medium-gray-color);
-    --slds-c-input-radius-border: 4px;
-    --slds-c-input-text-color: var(--acme-gray-color);
+.acme-heading {
+    color: var(--acme-blue-color);
+    margin-bottom: 0.5rem;
 }
 
-lightning-input:focus, lightning-textarea:focus {
-    --slds-c-input-color-border: var(--acme-blue-color);
-    --slds-c-input-shadow: 0 0 0 2px var(--acme-blue-color);
+.acme-form-validator__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
 }
 
-lightning-button.slds-button_brand {
-    --slds-c-button-brand-color-background: var(--acme-blue-color);
-    --slds-c-button-brand-color-border: var(--acme-blue-color);
-    --slds-c-button-text-color: var(--acme-white-color);
+.acme-form-validator__label {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--acme-gray-color);
 }
 
-lightning-button.slds-button_brand:hover, 
-lightning-button.slds-button_brand:focus {
-    --slds-c-button-brand-color-background-hover: var(--acme-teal-color);
-    --slds-c-button-brand-color-border-hover: var(--acme-teal-color);
+.acme-form-validator__input,
+.acme-form-validator__select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--acme-light-gray);
+    border-radius: var(--slds-c-input-radius-border, 0.25rem);
 }
 
-.slds-text-color_error {
+.acme-form-validator__required {
     color: var(--acme-coral-color);
+    margin-left: 0.25rem;
 }
 
-.slds-text-color_success {
-    color: var(--acme-teal-color);
+.acme-button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--slds-c-button-radius-border, 0.25rem);
+    cursor: pointer;
+}
+
+.acme-button_primary {
+    background-color: var(--acme-blue-color);
+    color: var(--acme-white-color);
+}
+
+@media screen and (max-width: 768px) {
+    .acme-form-validator__grid {
+        grid-template-columns: 1fr;
+    }
 }

@@ -1,66 +1,82 @@
 // formValidator.js
 import { LightningElement, track } from 'lwc';
-import { ValidationRuleEngine, ValidationRule } from 'c/validationRuleEngine';
+import { debounce } from 'c/utils';
 
 export default class FormValidator extends LightningElement {
     @track formData = {};
-    @track errorMessage = '';
-    @track successMessage = '';
-    validationEngine;
+    @track errors = {};
+    @track hasErrors = false;
 
     connectedCallback() {
-        this.initializeValidationRules();
-    }
-
-    initializeValidationRules() {
-        this.validationEngine = new ValidationRuleEngine();
-
-        this.validationEngine.addRule(new ValidationRule('name', 'required', 'Name is required'));
-        this.validationEngine.addRule(new ValidationRule('name', 'minLength', 'Name must be at least 2 characters long', 2));
-        this.validationEngine.addRule(new ValidationRule('name', 'maxLength', 'Name must not exceed 50 characters', 50));
-
-        this.validationEngine.addRule(new ValidationRule('email', 'required', 'Email is required'));
-        this.validationEngine.addRule(new ValidationRule('email', 'email', 'Invalid email format'));
-
-        this.validationEngine.addRule(new ValidationRule('phone', 'phone', 'Invalid phone number format'));
-
-        this.validationEngine.addRule(new ValidationRule('age', 'number', 'Age must be a number'));
-        this.validationEngine.addRule(new ValidationRule('age', 'min', 'Age must be at least 18', 18));
-        this.validationEngine.addRule(new ValidationRule('age', 'max', 'Age must not exceed 120', 120));
-
-        this.validationEngine.addRule(new ValidationRule('comments', 'maxLength', 'Comments must not exceed 500 characters', 500));
+        this.validateFieldDebounced = debounce(this.validateField.bind(this), 300);
     }
 
     handleInputChange(event) {
-        const { name, value } = event.target;
-        this.formData[name] = value;
-        this.validateField(name, value);
+        const { id, value } = event.target;
+        this.formData[id] = value;
+        this.validateFieldDebounced(event);
     }
 
-    validateField(fieldName, value) {
-        const fieldErrors = this.validationEngine.validateField(fieldName, value);
-        const inputElement = this.template.querySelector(`[name="${fieldName}"]`);
-        
-        if (fieldErrors.length > 0) {
-            inputElement.setCustomValidity(fieldErrors[0]);
-            inputElement.reportValidity();
-        } else {
-            inputElement.setCustomValidity('');
-            inputElement.reportValidity();
+    validateField(event) {
+        const { id, value } = event.target;
+        this.errors[id] = '';
+
+        switch (id) {
+            case 'firstName':
+            case 'lastName':
+                if (!/^[a-zA-Z]+$/.test(value)) {
+                    this.errors[id] = 'Only letters are allowed';
+                }
+                break;
+            case 'zipCode':
+                if (!/^\d{5}(-\d{4})?$/.test(value)) {
+                    this.errors[id] = 'Invalid zip code format';
+                }
+                break;
+            case 'startDate':
+            case 'endDate':
+                this.validateDates();
+                break;
         }
+
+        this.updateErrorState();
+    }
+
+    validateDates() {
+        const birthdate = new Date(this.formData.birthdate);
+        const startDate = new Date(this.formData.startDate);
+        const endDate = new Date(this.formData.endDate);
+
+        if (startDate < birthdate) {
+            this.errors.startDate = 'Start date cannot be before birthdate';
+        }
+
+        if (endDate < startDate) {
+            this.errors.endDate = 'End date cannot be before start date';
+        }
+    }
+
+    updateErrorState() {
+        this.hasErrors = Object.values(this.errors).some(error => error !== '');
     }
 
     handleSubmit() {
-        this.errorMessage = '';
-        this.successMessage = '';
-
-        const errors = this.validationEngine.validateAll(this.formData);
-
-        if (errors.length > 0) {
-            this.errorMessage = errors.join('. ');
-        } else {
-            this.successMessage = 'Form submitted successfully!';
-            console.log('Form data:', this.formData);
+        if (this.validateForm()) {
+            // Form submission logic
+            console.log('Form submitted:', this.formData);
         }
+    }
+
+    validateForm() {
+        let isValid = true;
+        this.template.querySelectorAll('input, select').forEach(field => {
+            if (field.required && !field.value) {
+                this.errors[field.id] = 'This field is required';
+                isValid = false;
+            }
+        });
+        this.validateDates();
+        this.updateErrorState();
+        return isValid;
     }
 }
