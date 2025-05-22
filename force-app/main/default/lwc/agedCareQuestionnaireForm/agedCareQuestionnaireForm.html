@@ -1,0 +1,57 @@
+<!-- agedCareQuestionnaireForm.html -->
+<template>
+    <div class="acme-card">
+        <h1 class="acme-heading acme-heading_large">Aged Care Questionnaire Form</h1>
+        <form class="acme-form" onsubmit={handleSubmit}>
+            <section>
+                <h2 class="acme-heading acme-heading_medium">Home Care Recipients</h2>
+                <div class="acme-form__field">
+                    <lightning-radio-group name="homecare" label="Current home care recipients below desired level?" options={yesNoOptions} required onchange={handleRadioChange} class="acme-radio-group"></lightning-radio-group>
+                </div>
+            </section>
+            
+            <section>
+                <h2 class="acme-heading acme-heading_medium">Business Improvement Advice or Strategies</h2>
+                <div class="acme-form__field">
+                    <lightning-radio-group name="improvement" label="Implementing business improvement strategy?" options={yesNoOptions} required onchange={handleRadioChange} class="acme-radio-group"></lightning-radio-group>
+                </div>
+            </section>
+            
+            <section>
+                <h2 class="acme-heading acme-heading_medium">Governance and Management</h2>
+                <div class="acme-form__field">
+                    <lightning-radio-group name="governance" label="Recent changes to Board/management?" options={yesNoOptions} required onchange={handleRadioChange} class="acme-radio-group"></lightning-radio-group>
+                </div>
+            </section>
+            
+            <section>
+                <h2 class="acme-heading acme-heading_medium">Recruitment and Retention</h2>
+                <div class="acme-form__field">
+                    <lightning-radio-group name="recruitment" label="Difficulty finding/retaining staff?" options={yesNoOptions} required onchange={handleRadioChange} class="acme-radio-group"></lightning-radio-group>
+                </div>
+            </section>
+            
+            <section>
+                <h2 class="acme-heading acme-heading_medium">Business Structure</h2>
+                <div class="acme-form__field">
+                    <lightning-checkbox-group name="structure" label="Business structure for aged care services" options={businessStructureOptions} required onchange={handleCheckboxChange} class="acme-checkbox-group"></lightning-checkbox-group>
+                </div>
+            </section>
+            
+            <div class="acme-form__actions">
+                <lightning-button label="Submit" variant="brand" type="submit" class="acme-button acme-button_primary"></lightning-button>
+                <lightning-button label="Clear" onclick={handleClear} class="acme-button acme-button_secondary"></lightning-button>
+            </div>
+        </form>
+        
+        <template if:true={formError}>
+            <div class="acme-error-message">
+                <p>{formError}</p>
+            </div>
+        </template>
+        
+        <div class="acme-link">
+            <a href="/dashboard" class="acme-link__text">Return to Dashboard</a>
+        </div>
+    </div>
+</template>
