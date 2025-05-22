@@ -1,0 +1,37 @@
+<!-- providerContactDetails.html -->
+<template>
+    <div class="acme-provider-contact-details">
+        <div class="acme-provider-contact-details__header">
+            <h2 class="acme-heading acme-heading_medium">Provider Contact Details</h2>
+            <lightning-button-icon
+                icon-name="utility:edit"
+                variant="brand"
+                alternative-text="Edit Contact Details"
+                title="Edit Contact Details"
+                onclick={handleEdit}
+                class="acme-icon acme-icon_medium"
+            ></lightning-button-icon>
+        </div>
+        <div class="acme-provider-contact-details__help-text">
+            {helpText}
+        </div>
+        <div class="acme-provider-contact-details__container">
+            <div class="acme-provider-contact-details__field">
+                <span class="acme-provider-contact-details__label">Name:</span>
+                <span class="acme-provider-contact-details__value">{contactName}</span>
+            </div>
+            <div class="acme-provider-contact-details__field">
+                <span class="acme-provider-contact-details__label">Position:</span>
+                <span class="acme-provider-contact-details__value">{position}</span>
+            </div>
+            <div class="acme-provider-contact-details__field">
+                <span class="acme-provider-contact-details__label">Phone:</span>
+                <span class="acme-provider-contact-details__value">{phoneNumber}</span>
+            </div>
+            <div class="acme-provider-contact-details__field">
+                <span class="acme-provider-contact-details__label">Email:</span>
+                <span class="acme-provider-contact-details__value">{emailAddress}</span>
+            </div>
+        </div>
+    </div>
+</template>
