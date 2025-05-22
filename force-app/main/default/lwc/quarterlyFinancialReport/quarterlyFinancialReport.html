@@ -1,0 +1,32 @@
+<!-- quarterlyFinancialReport.html -->
+<template>
+    <div class="acme-quarterly-report">
+        <div class="acme-quarterly-report__header">
+            <h1 class="acme-heading acme-heading_large">Quarterly Financial Report</h1>
+        </div>
+        <div class="acme-quarterly-report__content">
+            <section class="acme-quarterly-report__section">
+                <h2 class="acme-heading acme-heading_medium">Provider Contact</h2>
+                <p>
+                    <a href="#" onclick={openContactDetails} class="acme-link">Home Care Contact</a>
+                </p>
+            </section>
+            <section class="acme-quarterly-report__section">
+                <h2 class="acme-heading acme-heading_medium">About</h2>
+                <p>{aboutText}</p>
+            </section>
+            <section class="acme-quarterly-report__section">
+                <h2 class="acme-heading acme-heading_medium">Account Information</h2>
+                <p>{accountInfo}</p>
+            </section>
+        </div>
+        <div class="acme-quarterly-report__footer">
+            <lightning-button
+                label="Edit"
+                title="Edit"
+                onclick={handleEdit}
+                class="acme-button acme-button_primary"
+            ></lightning-button>
+        </div>
+    </div>
+</template>
