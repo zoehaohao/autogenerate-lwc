@@ -4,32 +4,43 @@
     --slds-c-form-element-spacing-vertical: 0.75rem;
 }
 
-.slds-form-element > .slds-form-element__control {
-    display: flex;
-    flex-wrap: wrap;
+lightning-input,
+lightning-combobox {
+    max-width: 20rem;
 }
 
-.slds-radio,
-.slds-checkbox {
-    margin-right: 1rem;
-}
-
-.slds-form-element__help {
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
-}
-
-.slds-box {
-    background-color: var(--slds-c-form-element-color-background, white);
-    padding: 1rem;
-    border-radius: 0.25rem;
-    border: 1px solid var(--slds-c-form-element-color-border, #dddbda);
-}
-
-.slds-box_xx-small {
+lightning-helptext {
+    position: absolute;
+    left: 0;
+    top: 2rem;
+    width: 20rem;
     padding: 0.5rem;
+    background-color: var(--slds-c-form-element-tooltip-color-background, var(--slds-c-form-element-tooltip-color-background-alt, var(--slds-c-form-element-tooltip-color-background-alt-inverse, white)));
+    color: var(--slds-c-form-element-tooltip-color-text, var(--slds-c-form-element-tooltip-color-text-alt, var(--slds-c-form-element-tooltip-color-text-alt-inverse, var(--slds-g-color-neutral-base-100, white))));
+    border: var(--slds-c-form-element-tooltip-border-width, 1px) solid var(--slds-c-form-element-tooltip-border-color, var(--slds-c-form-element-tooltip-border-color-alt, var(--slds-c-form-element-tooltip-border-color-alt-inverse, var(--slds-g-color-border-base-1, #ecebea))));
+    border-radius: var(--slds-c-form-element-tooltip-border-radius, 0.25rem);
+    box-shadow: var(--slds-c-form-element-tooltip-shadow, 0 2px 3px 0 rgba(0, 0, 0, 0.16));
+    z-index: 1;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
 }
 
-.slds-text-color_error {
-    color: var(--slds-c-form-element-color-error, #c23934);
+lightning-helptext:before {
+    content: '';
+    position: absolute;
+    top: -0.5rem;
+    left: 1rem;
+    width: 0;
+    height: 0;
+    border-top: 0.5rem solid transparent;
+    border-right: 0.5rem solid transparent;
+    border-bottom: 0.5rem solid var(--slds-c-form-element-tooltip-border-color, var(--slds-c-form-element-tooltip-border-color-alt, var(--slds-c-form-element-tooltip-border-color-alt-inverse, var(--slds-g-color-border-base-1, #ecebea))));
+    border-left: 0.5rem solid transparent;
+}
+
+.slds-form-element__label:hover + .slds-form-element__control lightning-helptext,
+.slds-form-element__control lightning-helptext:focus {
+    visibility: visible;
+    opacity: 1;
 }

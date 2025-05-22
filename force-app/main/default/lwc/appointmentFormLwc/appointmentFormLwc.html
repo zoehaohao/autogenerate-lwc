@@ -1,247 +1,125 @@
 <!-- appointmentFormLwc.html -->
 <template>
-    <div class="slds-box slds-box_x-small slds-m-around_x-small">
-        <h1 class="slds-text-heading_large">Aged Care Recipient Feedback Form</h1>
-        <p>Your provider wants to promote itself as a specialised aged care provider.</p>
-        <p>Older Australians are a diverse group of people with a wide range of care needs. While all aged care providers must be respectful and responsive to the background and life experiences of the people they support, some aged care providers go beyond this and 'specialise' in caring for one or more groups that have special aged care needs.</p>
-        <p>People can search for providers with these specialisations by using the 'Find a provider' tool on the My Aged Care website.</p>
-        
-        <div class="slds-box slds-box_x-small slds-m-vertical_medium">
-            <p>Your feedback will be private, and you can choose to remain anonymous or use a pseudonym.</p>
-            <p>Your personal information is protected by law, including the Privacy Act 1988 and the Australian Privacy Principles, and is being collected by the Australian Government Department of Health and Aged Care for the primary purpose of verifying the eligibility of aged care providers against the criteria set out in the Specialisation Verification Framework to ensure that aged care provider profiles on My Aged Care reflect information, which is accurate and relevant, for the purposes of providing aged care recipients and their representatives with specialised healthcare services. Your personal information may also be used and disclosed for other purposes such as delivering and evaluating the initiative and for statistical, performance, policy development and research purposes.</p>
-            <p>The department will not disclose your personal information to any overseas recipients.</p>
-            <p>If you do not provide this information, the department will be unable to use your feedback to verify the eligibility of aged care providers against the criteria set out in the Specialisation Verification Framework.</p>
-            <p>You can get more information about the way in which the Department of Health and Aged Care will manage your personal information, including our privacy policy, at <a href="#">Privacy Policy | My Aged Care</a>.</p>
-            <p>By providing sensitive information to us, you consent to the Department of Health and Aged Care collecting this information which may include information about your racial or ethnic origin, political opinions or associations, religious or philosophical beliefs, trade union membership or associations, sexual orientation or practices, criminal record information for the purposes indicated above.</p>
-            <p>Please note that we will not share your feedback with your aged care provider. If you would like to give feedback to your provider, please contact them directly. You can also contact the Older Person's Advocacy Network on 1800 700 600 to be connected with a local aged care advocate. If you want to make a complaint about your provider, contact the Aged Care Quality and Safety Commission, by visiting agedcarequality.gov.au or phoning 1800 951 822.</p>
-        </div>
-
-        <div class="slds-box slds-box_x-small slds-m-vertical_medium">
-            <h2 class="slds-text-heading_medium">Feedback questions – Veterans</h2>
-            <lightning-record-edit-form object-api-name="Feedback__c">
-                <lightning-input type="date" label="1. Date" required></lightning-input>
-                <lightning-input type="text" label="2. Provider name" placeholder="Outlet representative to enter provider name" required></lightning-input>
-                <lightning-input type="text" label="3. Outlet name" placeholder="Outlet representative to enter outlet name" required></lightning-input>
-                <lightning-input type="text" label="4. Outlet ID" placeholder="Outlet representative to enter outlet ID" required></lightning-input>
-                
-                <div class="slds-form-element">
-                    <label class="slds-form-element__label" for="type-of-care">5. Type of aged care</label>
-                    <div class="slds-form-element__control">
-                        <span class="slds-checkbox">
-                            <input type="checkbox" name="type-of-care" id="residential" value="residential" />
-                            <label class="slds-checkbox__label" for="residential">
-                                <span class="slds-checkbox_faux"></span>
-                                <span class="slds-form-element__label">residential aged care</span>
-                            </label>
+    <div class="slds-grid slds-wrap">
+        <div class="slds-col slds-size_1-of-2 slds-p-right_large">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-m-bottom_x-small" for="firstName">
+                    <abbr class="slds-required" title="required">* </abbr>First Name
+                    <button class="slds-button slds-button_icon slds-button_icon-bare" aria-describedby="firstName-tooltip">
+                        <lightning-helptext id="firstName-tooltip" content="Enter your legal first name as it appears on official documents"></lightning-helptext>
+                        <span class="slds-icon_container slds-icon-utility-info">
+                            <lightning-icon icon-name="utility:info" size="x-small"></lightning-icon>
                         </span>
-                        <span class="slds-checkbox">
-                            <input type="checkbox" name="type-of-care" id="home-based" value="home-based" />
-                            <label class="slds-checkbox__label" for="home-based">
-                                <span class="slds-checkbox_faux"></span>
-                                <span class="slds-form-element__label">home-based aged care</span>
-                            </label>
-                        </span>
-                    </div>
+                    </button>
+                </label>
+                <div class="slds-form-element__control">
+                    <lightning-input type="text" id="firstName" name="firstName" label="" required onchange={handleInputChange} value={formData.firstName}></lightning-input>
                 </div>
-                
-                <template if:true={showHomeBasedServices}>
-                    <lightning-textarea label="If you selected home-based care, what services do you receive from your provider?"></lightning-textarea>
+                <template if:true={errors.firstName}>
+                    <div class="slds-form-element__help slds-text-color_error">{errors.firstName}</div>
                 </template>
-
-                <lightning-input type="text" label="6. Name of respondent (optional)"></lightning-input>
-                <lightning-input type="tel" label="7. Respondent's phone number (optional)" help-text="We ask for this in case we need to clarify anything with you."></lightning-input>
-
-                <div class="slds-form-element">
-                    <legend class="slds-form-element__label">8. Are you:</legend>
-                    <div class="slds-form-element__control">
-                        <span class="slds-radio">
-                            <input type="radio" id="recipient" value="recipient" name="relationship" />
-                            <label class="slds-radio__label" for="recipient">
-                                <span class="slds-radio_faux"></span>
-                                <span class="slds-form-element__label">an aged care recipient</span>
-                            </label>
+            </div>
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-m-bottom_x-small" for="middleName">
+                    Middle Name
+                    <button class="slds-button slds-button_icon slds-button_icon-bare" aria-describedby="middleName-tooltip">
+                        <lightning-helptext id="middleName-tooltip" content="Enter your middle name or initial (leave blank if not applicable)"></lightning-helptext>
+                        <span class="slds-icon_container slds-icon-utility-info">
+                            <lightning-icon icon-name="utility:info" size="x-small"></lightning-icon>
                         </span>
-                        <span class="slds-radio">
-                            <input type="radio" id="family-member" value="family" name="relationship" />
-                            <label class="slds-radio__label" for="family-member">
-                                <span class="slds-radio_faux"></span>
-                                <span class="slds-form-element__label">a family member of an aged care recipient</span>
-                            </label>
-                        </span>
-                        <span class="slds-radio">
-                            <input type="radio" id="representative" value="representative" name="relationship" />
-                            <label class="slds-radio__label" for="representative">
-                                <span class="slds-radio_faux"></span>
-                                <span class="slds-form-element__label">a friend or other personal representative of an aged care recipient</span>
-                            </label>
-                        </span>
-                        <span class="slds-radio">
-                            <input type="radio" id="advocate" value="advocate" name="relationship" />
-                            <label class="slds-radio__label" for="advocate">
-                                <span class="slds-radio_faux"></span>
-                                <span class="slds-form-element__label">an aged care advocate, navigator or member of a community organisation who is responding with or on behalf of an aged care recipient</span>
-                            </label>
-                        </span>
-                    </div>
+                    </button>
+                </label>
+                <div class="slds-form-element__control">
+                    <lightning-input type="text" id="middleName" name="middleName" label="" onchange={handleInputChange} value={formData.middleName}></lightning-input>
                 </div>
-
-                <div class="slds-form-element">
-                    <legend class="slds-form-element__label">9a. If you are an aged care recipient, are you a veteran?</legend>
-                    <div class="slds-form-element__control">
-                        <span class="slds-radio">
-                            <input type="radio" id="veteran-yes" value="yes" name="is-veteran" />
-                            <label class="slds-radio__label" for="veteran-yes">
-                                <span class="slds-radio_faux"></span>
-                                <span class="slds-form-element__label">Yes</span>
-                            </label>
+            </div>
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-m-bottom_x-small" for="lastName">
+                    <abbr class="slds-required" title="required">* </abbr>Last Name
+                    <button class="slds-button slds-button_icon slds-button_icon-bare" aria-describedby="lastName-tooltip">
+                        <lightning-helptext id="lastName-tooltip" content="Enter your legal last name/surname as it appears on official documents"></lightning-helptext>
+                        <span class="slds-icon_container slds-icon-utility-info">
+                            <lightning-icon icon-name="utility:info" size="x-small"></lightning-icon>
                         </span>
-                        <span class="slds-radio">
-                            <input type="radio" id="veteran-no" value="no" name="is-veteran" />
-                            <label class="slds-radio__label" for="veteran-no">
-                                <span class="slds-radio_faux"></span>
-                                <span class="slds-form-element__label">No</span>
-                            </label>
-                        </span>
-                    </div>
-                    <p class="slds-form-element__help">For the purposes of this form, the term 'veteran' includes anyone who has served in the Australian Defence Force.</p>
-                    <template if:true={showNonVeteranError}>
-                        <div class="slds-box slds-box_xx-small slds-text-color_error slds-m-around_x-small">
-                            If 'no', please do not use this form to provide feedback, as you do not meet requirements for this criterion under the Specialisation Verification Framework.
-                        </div>
-                    </template>
+                    </button>
+                </label>
+                <div class="slds-form-element__control">
+                    <lightning-input type="text" id="lastName" name="lastName" label="" required onchange={handleInputChange} value={formData.lastName}></lightning-input>
                 </div>
-
-                <div class="slds-form-element">
-                    <legend class="slds-form-element__label">9b. If you are responding on behalf of an aged care recipient, is the recipient a veteran?</legend>
-                    <div class="slds-form-element__control">
-                        <span class="slds-radio">
-                            <input type="radio" id="recipient-veteran-yes" value="yes" name="recipient-is-veteran" />
-                            <label class="slds-radio__label" for="recipient-veteran-yes">
-                                <span class="slds-radio_faux"></span>
-                                <span class="slds-form-element__label">Yes</span>
-                            </label>
+                <template if:true={errors.lastName}>
+                    <div class="slds-form-element__help slds-text-color_error">{errors.lastName}</div>
+                </template>
+            </div>
+        </div>
+        <div class="slds-col slds-size_1-of-2 slds-p-left_large">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-m-bottom_x-small" for="address">
+                    Address
+                    <button class="slds-button slds-button_icon slds-button_icon-bare" aria-describedby="address-tooltip">
+                        <lightning-helptext id="address-tooltip" content="Enter your complete street address including unit/apartment number if applicable"></lightning-helptext>
+                        <span class="slds-icon_container slds-icon-utility-info">
+                            <lightning-icon icon-name="utility:info" size="x-small"></lightning-icon>
                         </span>
-                        <span class="slds-radio">
-                            <input type="radio" id="recipient-veteran-no" value="no" name="recipient-is-veteran" />
-                            <label class="slds-radio__label" for="recipient-veteran-no">
-                                <span class="slds-radio_faux"></span>
-                                <span class="slds-form-element__label">No</span>
-                            </label>
-                        </span>
-                    </div>
+                    </button>
+                </label>
+                <div class="slds-form-element__control">
+                    <lightning-input type="text" id="address" name="address" label="" onchange={handleInputChange} value={formData.address}></lightning-input>
                 </div>
-
-                <p>Please answer the following questions.</p>
-                <p>(If you are a family member, friend or other representative of the aged care recipient, please answer these questions from their perspective/on their behalf)</p>
-
-                <div class="slds-form-element">
-                    <legend class="slds-form-element__label">10a. Do you feel comfortable talking to staff at your provider about your specific aged care needs as a veteran?</legend>
-                    <div class="slds-form-element__control">
-                        <span class="slds-radio">
-                            <input type="radio" id="comfortable-no" value="no" name="comfortable" />
-                            <label class="slds-radio__label" for="comfortable-no">
-                                <span class="slds-radio_faux"></span>
-                                <span class="slds-form-element__label">No</span>
-                            </label>
+            </div>
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-m-bottom_x-small" for="city">
+                    City or Town
+                    <button class="slds-button slds-button_icon slds-button_icon-bare" aria-describedby="city-tooltip">
+                        <lightning-helptext id="city-tooltip" content="Enter the name of your city, town, or suburb"></lightning-helptext>
+                        <span class="slds-icon_container slds-icon-utility-info">
+                            <lightning-icon icon-name="utility:info" size="x-small"></lightning-icon>
                         </span>
-                        <span class="slds-radio">
-                            <input type="radio" id="comfortable-unsure" value="unsure" name="comfortable" />
-                            <label class="slds-radio__label" for="comfortable-unsure">
-                                <span class="slds-radio_faux"></span>
-                                <span class="slds-form-element__label">Unsure</span>
-                            </label>
-                        </span>
-                        <span class="slds-radio">
-                            <input type="radio" id="comfortable-yes" value="yes" name="comfortable" />
-                            <label class="slds-radio__label" for="comfortable-yes">
-                                <span class="slds-radio_faux"></span>
-                                <span class="slds-form-element__label">Yes</span>
-                            </label>
-                        </span>
-                    </div>
+                    </button>
+                </label>
+                <div class="slds-form-element__control">
+                    <lightning-input type="text" id="city" name="city" label="" onchange={handleInputChange} value={formData.city}></lightning-input>
                 </div>
-
-                <div class="slds-form-element">
-                    <legend class="slds-form-element__label">10b. If you answered Yes to question 10a, do you feel that staff at your provider meet, or try to meet, those needs?</legend>
-                    <div class="slds-form-element__control">
-                        <span class="slds-radio">
-                            <input type="radio" id="meet-needs-no" value="no" name="meet-needs" />
-                            <label class="slds-radio__label" for="meet-needs-no">
-                                <span class="slds-radio_faux"></span>
-                                <span class="slds-form-element__label">No</span>
-                            </label>
+            </div>
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-m-bottom_x-small" for="state">
+                    State
+                    <button class="slds-button slds-button_icon slds-button_icon-bare" aria-describedby="state-tooltip">
+                        <lightning-helptext id="state-tooltip" content="Select your Australian state or territory from the dropdown list"></lightning-helptext>
+                        <span class="slds-icon_container slds-icon-utility-info">
+                            <lightning-icon icon-name="utility:info" size="x-small"></lightning-icon>
                         </span>
-                        <span class="slds-radio">
-                            <input type="radio" id="meet-needs-unsure" value="unsure" name="meet-needs" />
-                            <label class="slds-radio__label" for="meet-needs-unsure">
-                                <span class="slds-radio_faux"></span>
-                                <span class="slds-form-element__label">Unsure</span>
-                            </label>
+                    </button>
+                </label>
+                <div class="slds-form-element__control">
+                    <lightning-combobox id="state" name="state" label="" options={stateOptions} value={formData.state} onchange={handleInputChange} variant="label-stacked" dropdown-alignment="auto">
+                        <option value="">Choose a State</option>
+                    </lightning-combobox>
+                </div>
+            </div>
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-m-bottom_x-small" for="zipCode">
+                    <abbr class="slds-required" title="required">* </abbr>Zip Code
+                    <button class="slds-button slds-button_icon slds-button_icon-bare" aria-describedby="zipCode-tooltip">
+                        <lightning-helptext id="zipCode-tooltip" content="Enter your 4-digit Australian postcode"></lightning-helptext>
+                        <span class="slds-icon_container slds-icon-utility-info">
+                            <lightning-icon icon-name="utility:info" size="x-small"></lightning-icon>
                         </span>
-                        <span class="slds-radio">
-                            <input type="radio" id="meet-needs-yes" value="yes" name="meet-needs" />
-                            <label class="slds-radio__label" for="meet-needs-yes">
-                                <span class="slds-radio_faux"></span>
-                                <span class="slds-form-element__label">Yes</span>
-                            </label>
-                        </span>
-                    </div>
+                    </button>
+                </label>
+                <div class="slds-form-element__control">
+                    <lightning-input type="text" id="zipCode" name="zipCode" label="" required onchange={handleInputChange} value={formData.zipCode}></lightning-input>
                 </div>
-
-                <div class="slds-form-element">
-                    <label class="slds-form-element__label" for="specialised-care-description">11a. Some aged care providers specialise in caring for veterans. What do you think these aged care services should provide or consider when caring for veterans?</label>
-                    <div class="slds-form-element__control">
-                        <lightning-textarea name="specialised-care-description" placeholder="Please describe what is important to you as a veteran. This could include, for example, facilitating access to DVA-funded supports or participation in commemorative ceremonies and events."></lightning-textarea>
-                    </div>
-                </div>
-
-                <div class="slds-form-element">
-                    <legend class="slds-form-element__label">11b. Do you feel that your provider provides the specialised care that you have described in question 11a?</legend>
-                    <div class="slds-form-element__control">
-                        <span class="slds-radio">
-                            <input type="radio" id="provides-care-no" value="no" name="provides-care" />
-                            <label class="slds-radio__label" for="provides-care-no">
-                                <span class="slds-radio_faux"></span>
-                                <span class="slds-form-element__label">No</span>
-                            </label>
-                        </span>
-                        <span class="slds-radio">
-                            <input type="radio" id="provides-care-unsure" value="unsure" name="provides-care" />
-                            <label class="slds-radio__label" for="provides-care-unsure">
-                                <span class="slds-radio_faux"></span>
-                                <span class="slds-form-element__label">Unsure</span>
-                            </label>
-                        </span>
-                        <span class="slds-radio">
-                            <input type="radio" id="provides-care-yes" value="yes" name="provides-care" />
-                            <label class="slds-radio__label" for="provides-care-yes">
-                                <span class="slds-radio_faux"></span>
-                                <span class="slds-form-element__label">Yes</span>
-                            </label>
-                        </span>
-                    </div>
-                </div>
-
-                <div class="slds-form-element">
-                    <label class="slds-form-element__label" for="provider-feedback">11c. In what ways does your provider do this or not do this?</label>Continuing from where I left off:
-
-                    <div class="slds-form-element__control">
-                        <lightning-textarea name="provider-feedback" placeholder="Please provide details on how your provider meets or does not meet your specialised care needs as a veteran."></lightning-textarea>
-                    </div>
-                </div>
-
-                <div class="slds-form-element">
-                    <label class="slds-form-element__label" for="other-comments">12. Do you have any other comments about your provider's ability to meet the aged care needs of veterans?</label>
-                    <div class="slds-form-element__control">
-                        <lightning-textarea name="other-comments" placeholder="Enter any additional comments here."></lightning-textarea>
-                    </div>
-                </div>
-
-                <div class="slds-m-top_medium">
-                    <lightning-button variant="brand" type="submit" label="Submit Feedback" onclick={handleSubmit}></lightning-button>
-                    <lightning-button variant="neutral" label="Cancel" onclick={handleCancel}></lightning-button>
-                </div>
-            </lightning-record-edit-form>
+                <template if:true={errors.zipCode}>
+                    <div class="slds-form-element__help slds-text-color_error">{errors.zipCode}</div>
+                </template>
+            </div>
         </div>
     </div>
+    <div class="slds-m-top_medium slds-align_absolute-center">
+        <lightning-button variant="brand" label="Submit" title="Submit" onclick={handleSubmit} class="slds-m-right_small" disabled={isLoading}></lightning-button>
+        <lightning-button variant="neutral" label="Cancel" title="Cancel" onclick={handleCancel} disabled={isLoading}></lightning-button>
+    </div>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Processing..." size="medium"></lightning-spinner>
+    </template>
 </template>
