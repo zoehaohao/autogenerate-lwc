@@ -2,57 +2,64 @@
 :host {
     --acme-blue-color: #0057B8;
     --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
     --acme-light-gray-color: #F5F7FA;
     --acme-medium-gray-color: #E4E7EB;
-    --acme-coral-color: #FF6B6B;
 }
 
-.acme-personal-info-form {
+.root-container {
     font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.acme-card {
+    background-color: var(--acme-white-color);
+    border: 1px solid var(--acme-medium-gray-color);
+    border-radius: 4px;
+    padding: var(--slds-c-card-spacing-block, 1rem);
+}
+
+.acme-card__header {
+    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
+}
+
+.acme-heading_medium {
+    font-size: 1.5rem;
+    font-weight: 700;
     color: var(--acme-gray-color);
 }
 
-.slds-text-heading_medium {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: var(--acme-blue-color);
+.acme-form-group {
+    margin-bottom: 1rem;
 }
 
-.slds-form-element__label {
+.acme-label {
+    display: block;
+    margin-bottom: 0.25rem;
     font-size: 0.875rem;
-    text-align: right;
+    color: var(--acme-gray-color);
 }
 
-.slds-input,
-.slds-select {
-    height: 40px;
+.acme-input {
+    width: 100%;
+    padding: 0.5rem;
     border: 1px solid var(--acme-medium-gray-color);
     border-radius: 4px;
+    font-size: 1rem;
 }
 
-.slds-input:focus,
-.slds-select:focus {
-    border-color: var(--acme-blue-color);
-    box-shadow: 0 0 3px var(--acme-blue-color);
+.acme-required {
+    color: #FF6B6B;
+    margin-left: 0.25rem;
 }
 
-.slds-button_brand {
-    background-color: var(--acme-blue-color);
-    border-color: var(--acme-blue-color);
+.acme-error {
+    color: #FF6B6B;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
 }
 
-.slds-button_brand:hover,
-.slds-button_brand:focus {
-    background-color: #004A9E;
-    border-color: #004A9E;
-}
-
-.slds-has-error .slds-input {
-    border-color: var(--acme-coral-color);
-}
-
-@media (max-width: 768px) {
-    .slds-medium-size_1-of-2 {
-        width: 100%;
+@media screen and (max-width: 768px) {
+    .acme-card {
+        padding: 0.75rem;
     }
 }
