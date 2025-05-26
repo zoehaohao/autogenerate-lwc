@@ -1,0 +1,105 @@
+<!-- fieldHelpText.html -->
+<template>
+    <div class="slds-box slds-box_x-small slds-m-around_x-small">
+        <form onsubmit={handleSubmit} class="slds-form_stacked">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="name">
+                    <abbr class="slds-required" title="required">* </abbr>Name
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="text" id="name" class="slds-input" required value={formData.name} onchange={handleChange} data-field="name" aria-describedby="name-help" />
+                </div>
+                <div class="slds-form-element__help" id="name-help">
+                    <lightning-helptext content="Enter your full name"></lightning-helptext>
+                </div>
+                <template if:true={errors.name}>
+                    <div class="slds-form-element__help slds-text-color_error" role="alert">{errors.name}</div>
+                </template>
+            </div>
+
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="email">
+                    <abbr class="slds-required" title="required">* </abbr>Email
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="email" id="email" class="slds-input" required value={formData.email} onchange={handleChange} data-field="email" aria-describedby="email-help" />
+                </div>
+                <div class="slds-form-element__help" id="email-help">
+                    <lightning-helptext content="Enter a valid email address"></lightning-helptext>
+                </div>
+                <template if:true={errors.email}>
+                    <div class="slds-form-element__help slds-text-color_error" role="alert">{errors.email}</div>
+                </template>
+            </div>
+
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="phone">
+                    Phone
+                    <button class="slds-button slds-button_icon slds-button_icon-small" onclick={toggleTooltip} data-id="phone-tooltip">
+                        <lightning-helptext icon-name="utility:info" title="Phone number help"></lightning-helptext>
+                    </button>
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="tel" id="phone" class="slds-input" value={formData.phone} onchange={handleChange} data-field="phone" aria-describedby="phone-help" />
+                </div>
+                <div class="slds-form-element__help" id="phone-help">
+                    <lightning-helptext content="Enter your phone number"></lightning-helptext>
+                </div>
+                <template if:true={showTooltip.phone}>
+                    <div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left" role="tooltip" id="phone-tooltip" style="position:absolute;">
+                        <div class="slds-popover__body slds-text-longform">
+                            <p>Phone number should be in the format:</p>
+                            <p>+1 (555) 555-5555</p>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <div class="slds-form-element">
+                <span class="slds-form-element__label">Preferred Contact Method</span>
+                <div class="slds-form-element__control">
+                    <div class="slds-checkbox">
+                        <input type="checkbox" id="contactEmail" value="email" checked={formData.preferredContact.includes('email')} onchange={handlePreferredContactChange} />
+                        <label class="slds-checkbox__label" for="contactEmail">
+                            <span class="slds-checkbox_faux"></span>
+                            <span class="slds-form-element__label">Email</span>
+                        </label>
+                    </div>
+                    <div class="slds-checkbox">
+                        <input type="checkbox" id="contactPhone" value="phone" checked={formData.preferredContact.includes('phone')} onchange={handlePreferredContactChange} />
+                        <label class="slds-checkbox__label" for="contactPhone">
+                            <span class="slds-checkbox_faux"></span>
+                            <span class="slds-form-element__label">Phone</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="slds-form-element__help">
+                    <lightning-helptext content="Select your preferred method(s) for contact"></lightning-helptext>
+                </div>
+            </div>
+
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="notes">Notes</label>
+                <div class="slds-form-element__control">
+                    <textarea id="notes" class="slds-textarea" value={formData.notes} onchange={handleChange} data-field="notes"></textarea>
+                </div>
+                <div class="slds-form-element__help">
+                    <lightning-helptext content="Enter any additional notes or comments"></lightning-helptext>
+                </div>
+            </div>
+
+            <div class="slds-form-element">
+                <button type="submit" class="slds-button slds-button_brand" disabled={isSubmitting} onclick={handleSubmit}>
+                    <template if:true={isSubmitting}>
+                        <div class="slds-spinner_container">
+                            <lightning-spinner alternative-text="Processing..." variant="brand" size="small"></lightning-spinner>
+                            <span class="slds-assistive-text">Processing</span>
+                        </div>
+                    </template>
+                    <template if:false={isSubmitting}>Submit</template>
+                </button>
+                <button type="button" class="slds-button slds-button_neutral" onclick={handleCancel}>Cancel</button>
+            </div>
+        </form>
+    </div>
+</template>

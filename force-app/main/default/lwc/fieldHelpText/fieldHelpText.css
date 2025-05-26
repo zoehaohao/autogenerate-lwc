@@ -1,0 +1,19 @@
+/* fieldHelpText.css */
+.slds-form-element__help {
+    font-size: 0.8rem;
+    color: var(--slds-g-color-neutral-base-30, #ecebea);
+}
+
+.slds-popover_tooltip {
+    max-width: 20rem;
+    font-size: 0.8rem;
+}
+
+.slds-spinner_container {
+    display: inline-flex;
+    align-items: center;
+}
+
+.slds-spinner_container .slds-assistive-text {
+    margin-left: 0.5rem;
+}
