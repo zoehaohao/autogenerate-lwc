@@ -1,65 +1,57 @@
 /* personalInfoForm.css */
 :host {
-    --acme-blue-color: #0057B8;
-    --acme-gray-color: #424A54;
-    --acme-white-color: #FFFFFF;
-    --acme-light-gray-color: #F5F7FA;
-    --acme-medium-gray-color: #E4E7EB;
+    --slds-c-form-compound-layout-row-gap: 0.75rem;
+    --slds-c-form-element-spacing-horizontal: 0.75rem;
+    --slds-c-form-element-spacing-vertical: 0.75rem;
 }
 
-.root-container {
-    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+.slds-form-element__label {
+    font-weight: bold;
+    color: #54698d;
 }
 
-.acme-card {
-    background-color: var(--acme-white-color);
-    border: 1px solid var(--acme-medium-gray-color);
-    border-radius: 4px;
-    padding: var(--slds-c-card-spacing-block, 1rem);
-}
-
-.acme-card__header {
-    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
-}
-
-.acme-heading_medium {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--acme-gray-color);
-}
-
-.acme-form-group {
-    margin-bottom: 1rem;
-}
-
-.acme-label {
-    display: block;
-    margin-bottom: 0.25rem;
+.slds-form-element__help {
     font-size: 0.875rem;
-    color: var(--acme-gray-color);
-}
+    color: #54698d;}
 
-.acme-input {
-    width: 100%;
+.slds-listbox__option {
     padding: 0.5rem;
-    border: 1px solid var(--acme-medium-gray-color);
-    border-radius: 4px;
-    font-size: 1rem;
 }
 
-.acme-required {
-    color: #FF6B6B;
-    margin-left: 0.25rem;
+.slds-listbox__option:hover {
+    background-color: #f4f6f9;
+    cursor: pointer;
 }
 
-.acme-error {
-    color: #FF6B6B;
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
+.slds-listbox__option .slds-media__figure {
+    margin-right: 0.5rem;
 }
 
-@media screen and (max-width: 768px) {
-    .acme-card {
-        padding: 0.75rem;
-    }
+.slds-listbox__option .slds-icon_container {
+    display: none;
+}
+
+.slds-listbox__option.slds-is-selected .slds-icon_container {
+    display: inline-block;
+}
+
+.slds-listbox__option.slds-is-selected .slds-icon_container .slds-icon {
+    fill: #0070d2;
+}
+
+.slds-combobox__input {
+    padding-right: 2rem;
+}
+
+.slds-combobox__input-value {
+    color: #54698d;
+}
+
+.slds-combobox__input-value::placeholder {
+    color: #54698d;
+    opacity: 0.5;
+}
+
+.slds-input__icon {
+    pointer-events: none;
 }
