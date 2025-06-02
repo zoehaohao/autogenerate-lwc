@@ -1,0 +1,178 @@
+<!-- qfrFormTest.html -->
+<template>
+    <lightning-card title="QFR Form Test">
+        <div class="slds-p-around_medium">
+            <lightning-progress-indicator current-step={currentStep} type="path" variant="base">
+                <lightning-progress-step label="Residential Viability" value="1"></lightning-progress-step>
+                <lightning-progress-step label="Contact Information" value="2"></lightning-progress-step>
+                <lightning-progress-step label="Business Structure" value="3"></lightning-progress-step>
+                <lightning-progress-step label="Document Management" value="4"></lightning-progress-step>
+            </lightning-progress-indicator>
+
+            <div class="slds-m-top_medium">
+                <!-- Page 1: Residential Viability and Prudential Reporting -->
+                <template if:true={isPage1}>
+                    <lightning-accordion allow-multiple-sections-open>
+                        <lightning-accordion-section name="about" label="About this section">
+                            <p>This section collects information about the financial health and viability of residential care services to identify providers who may need additional support or intervention.</p>
+                        </lightning-accordion-section>
+                    </lightning-accordion>
+
+                    <div class="slds-m-top_medium">
+                        <lightning-card title="Solvency Assessment">
+                            <div class="slds-m-around_medium">
+                                <lightning-radio-group name="solvencyConcern"
+                                                       label="Are you currently concerned about the solvency of your organisation?"
+                                                       options={yesNoOptions}
+                                                       value={solvencyConcern}
+                                                       onchange={handleSolvencyConcernChange}
+                                                       required>
+                                </lightning-radio-group>
+                                <lightning-helptext content="Consider your current financial position, cash flow, and ability to meet short-term obligations."></lightning-helptext>
+                            </div>
+                            <div class="slds-m-around_medium">
+                                <lightning-radio-group name="futureSolvencyIssues"
+                                                       label="Do you envisage any solvency issues arising in the next six months?"
+                                                       options={yesNoOptions}
+                                                       value={futureSolvencyIssues}
+                                                       onchange={handleFutureSolvencyIssuesChange}
+                                                       required>
+                                </lightning-radio-group>
+                                <lightning-helptext content="Consider upcoming financial obligations, market conditions, and potential changes in revenue or expenses."></lightning-helptext>
+                            </div>
+                        </lightning-card>
+                    </div>
+
+                    <div class="slds-m-top_medium">
+                        <lightning-card title="Financial Performance Assessment">
+                            <div class="slds-m-around_medium">
+                                <lightning-radio-group name="operationalLossForecast"
+                                                       label="Do you forecast an operational loss for the current year?"
+                                                       options={yesNoOptions}
+                                                       value={operationalLossForecast}
+                                                       onchange={handleOperationalLossForecastChange}
+                                                       required>
+                                </lightning-radio-group>
+                                <lightning-helptext content="An operational loss occurs when operating expenses exceed operating revenues from your core care services. Consider your year-to-date performance, budget forecasts, and any extraordinary items that may impact this year's results. This excludes investment income or one-time asset sales."></lightning-helptext>
+                            </div>
+                        </lightning-card>
+                    </div>
+                </template>
+
+                <!-- Page 2: Provider Contact Information -->
+                <template if:true={isPage2}>
+                    <lightning-card title="Provider Contact Information">
+                        <div class="slds-m-around_medium">
+                            <lightning-input label="Organization Name" value={organizationName} readonly></lightning-input>
+                            <lightning-input label="Identification Number" value={identificationNumber} readonly></lightning-input>
+                            <lightning-input label="Primary Contact Name" value={primaryContactName} onchange={handlePrimaryContactNameChange} required></lightning-input>
+                            <lightning-helptext content="Enter the full name of the primary contact responsible for this QFR submission."></lightning-helptext>
+                            <lightning-input label="Primary Contact Position" value={primaryContactPosition} onchange={handlePrimaryContactPositionChange} required></lightning-input>
+                            <lightning-helptext content="Provide the job title or position of the primary contact within your organization."></lightning-helptext>
+                            <lightning-input type="tel" label="Primary Contact Phone" value={primaryContactPhone} onchange={handlePrimaryContactPhoneChange} pattern="[0-9]{10}" required></lightning-input>
+                            <lightning-helptext content="Enter a 10-digit Australian phone number without spaces or special characters."></lightning-helptext>
+                            <lightning-input type="email" label="Primary Contact Email" value={primaryContactEmail} onchange={handlePrimaryContactEmailChange} required></lightning-input>
+                            <lightning-helptext content="Provide a valid email address for official communications regarding this QFR submission."></lightning-helptext>
+                        </div>
+                    </lightning-card>
+                </template>
+
+                <!-- Page 3: Business Structure Configuration -->
+                <template if:true={isPage3}>
+                    <lightning-card title="Business Structure Configuration">
+                        <div class="slds-m-around_medium">
+                            <template for:each={businessStructures} for:item="structure">
+                                <div key={structure.name} class="slds-m-bottom_small">
+                                    <lightning-input type="toggle"
+                                                     label={structure.label}
+                                                     name={structure.name}
+                                                     checked={structure.value}
+                                                     onchange={handleBusinessStructureChange}>
+                                    </lightning-input>
+                                    <lightning-helptext content={structure.helpText}></lightning-helptext>
+                                    
+                                    <template if:true={structure.value}>
+                                        <div class="slds-m-top_small slds-m-left_medium">
+                                            <lightning-checkbox-group name={structure.name + 'Services'}
+                                                                      label="Service Types"
+                                                                      options={serviceTypeOptions}
+                                                                      value={structure.selectedServices}
+                                                                      onchange={handleServiceTypeChange}>
+                                            </lightning-checkbox-group>
+                                            <lightning-textarea name={structure.name + 'Info'}
+                                                                label="Additional Information"
+                                                                value={structure.additionalInfo}
+                                                                onchange={handleAdditionalInfoChange}>
+                                            </lightning-textarea>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+
+                            <div class="slds-m-top_medium">
+                                <lightning-combobox name="workforceType"
+                                                    label="Workforce Type"
+                                                    value={workforceType}
+                                                    options={workforceTypeOptions}
+                                                    onchange={handleWorkforceTypeChange}
+                                                    required>
+                                </lightning-combobox>
+                                <lightning-helptext content="Select how your direct care workers are primarily engaged."></lightning-helptext>
+                            </div>
+                        </div>
+                    </lightning-card>
+                </template>
+
+                <!-- Page 4: Document Management and Submission -->
+                <template if:true={isPage4}>
+                    <lightning-card title="Document Management and Submission">
+                        <div class="slds-m-around_medium">
+                            <lightning-combobox name="documentCategory"
+                                                label="Document Category"
+                                                value={documentCategory}
+                                                options={documentCategoryOptions}
+                                                onchange={handleDocumentCategoryChange}
+                                                required>
+                            </lightning-combobox>
+                            <lightning-helptext content="Select the appropriate category for your document."></lightning-helptext>
+
+                            <lightning-combobox name="documentType"
+                                                label="Document Type"
+                                                value={documentType}
+                                                options={documentTypeOptions}
+                                                onchange={handleDocumentTypeChange}
+                                                required>
+                            </lightning-combobox>
+                            <lightning-helptext content="Specify the type of document you are uploading."></lightning-helptext>
+
+                            <lightning-file-upload label="Upload Files"
+                                                   name="fileUploader"
+                                                   accept={acceptedFormats}
+                                                   record-id={recordId}
+                                                   onuploadfinished={handleUploadFinished}
+                                                   multiple>
+                            </lightning-file-upload>
+                            <lightning-helptext content="Upload relevant documents in PDF, Word, Excel, or image formats."></lightning-helptext>
+
+                            <template if:true={uploadedFiles.length}>
+                                <div class="slds-m-top_medium">
+                                    <lightning-datatable
+                                        key-field="id"
+                                        data={uploadedFiles}
+                                        columns={fileColumns}
+                                        hide-checkbox-column>
+                                    </lightning-datatable>
+                                </div>
+                            </template>
+                        </div>
+                    </lightning-card>
+                </template>
+            </div>
+
+            <div class="slds-m-top_medium slds-grid slds-grid_align-spread">
+                <lightning-button label="Previous" onclick={handlePrevious} disabled={isPreviousDisabled}></lightning-button>
+                <lightning-button label={nextOrSubmitLabel} variant="brand" onclick={handleNextOrSubmit} disabled={isNextDisabled}></lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>

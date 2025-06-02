@@ -1,0 +1,25 @@
+/* qfrFormTest.css */
+:host {
+    --slds-c-card-color-background: #ffffff;
+    --slds-c-card-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.slds-progress-bar {
+    background: var(--lwc-colorBackgroundPathIncomplete, rgb(236, 235, 234));
+}
+
+.slds-progress-bar__value {
+    background: var(--lwc-colorBackgroundPathComplete, rgb(75, 202, 129));
+}
+
+lightning-input.toggle-switch {
+    --slds-c-checkbox-toggle-color-background-checked: var(--lwc-colorBackgroundSuccess, rgb(75, 202, 129));
+}
+
+@media (max-width: 768px) {
+    .slds-m-around_medium {
+        margin: 0.5rem;
+    }
+}
+
+**XML Metadata:**
