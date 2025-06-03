@@ -2,85 +2,93 @@
 import { LightningElement, track } from 'lwc';
 
 export default class AddressForm extends LightningElement {
-    @track formData = {};
+    @track formData = {
+        firstName: '',
+        middleName: '',
+        lastName: '',
+        birthdate: '',
+        address: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        startDate: '',
+        endDate: ''
+    };
+
+    @track showError = false;
     @track errorMessage = '';
-    @track isFormValid = false;
+    @track isSubmitDisabled = true;
 
-    handleSubmit() {
-        if (this.validateForm()) {
-            console.log('Form submitted:', this.formData);
-            this.errorMessage = '';
-        } else {
-            this.errorMessage = 'Please correct the errors before submitting.';
-        }
-    }
+    stateOptions = [
+        { label: 'Alabama', value: 'AL' },
+        { label: 'Alaska', value: 'AK' },
+        // ... Add all other states here
+        { label: 'Wyoming', value: 'WY' }
+    ];
 
-    handleClear() {
-        this.template.querySelectorAll('input, select').forEach(element => {
-            element.value = '';
-        });
-        this.formData = {};
-        this.errorMessage = '';
-        this.isFormValid = false;
-    }
-
-    validateField(event) {
-        const field = event.target;
-        const fieldName = field.id;
-        const fieldValue = field.value.trim();
-
-        this.formData[fieldName] = fieldValue;
-
-        switch (fieldName) {
-            case 'firstName':
-            case 'lastName':
-                if (!fieldValue) {
-                    field.setCustomValidity(`${fieldName} is required`);
-                } else {
-                    field.setCustomValidity('');
-                }
-                break;
-            case 'zipCode':
-                if (!/^\d{5}(\d{4})?$/.test(fieldValue)) {
-                    field.setCustomValidity('Invalid zip code format');
-                } else {
-                    field.setCustomValidity('');
-                }
-                break;
-            case 'birthdate':
-            case 'startDate':
-            case 'endDate':
-                if (!this.isValidDate(fieldValue)) {
-                    field.setCustomValidity('Invalid date format');
-                } else {
-                    field.setCustomValidity('');
-                }
-                break;
-        }
-
-        field.reportValidity();
+    handleInputChange(event) {
+        const { name, value } = event.target;
+        this.formData[name] = value;
         this.validateForm();
     }
 
     validateForm() {
-        const allValid = [...this.template.querySelectorAll('input, select')]
-            .reduce((validSoFar, inputField) => {
-                inputField.reportValidity();
-                return validSoFar && inputField.checkValidity();
-            }, true);
+        const allFieldsValid = [
+            'firstName',
+            'lastName',
+            'birthdate',
+            'zipCode',
+            'startDate',
+            'endDate'
+        ].every(field => this.formData[field].trim() !== '');
 
-        if (allValid && this.formData.startDate && this.formData.endDate) {
-            if (new Date(this.formData.endDate) <= new Date(this.formData.startDate)) {
-                this.errorMessage = 'End Date must be after Start Date';
-                allValid = false;
-            }
+        if (allFieldsValid) {
+            const zipCodeValid = /^\d{5}$/.test(this.formData.zipCode);
+            const datesValid = this.validateDates();
+
+            this.isSubmitDisabled = !(zipCodeValid && datesValid);
+        } else {
+            this.isSubmitDisabled = true;
         }
-
-        this.isFormValid = allValid;
-        return allValid;
     }
 
-    isValidDate(dateString) {
-        return !isNaN(new Date(dateString).getTime());
+    validateDates() {
+        const start = new Date(this.formData.startDate);
+        const end = new Date(this.formData.endDate);
+        return start < end;
+    }
+
+    handleSubmit() {
+        if (this.validateForm()) {
+            // Here you would typically call an Apex method to save the data
+            console.log('Form submitted:', this.formData);
+            this.showError = false;
+            this.errorMessage = '';
+            // Reset form or show success message
+        } else {
+            this.showError = true;
+            this.errorMessage = 'Please correct the errors in the form before submitting.';
+        }
+    }
+
+    handleClear() {
+        this.template.querySelectorAll('lightning-input, lightning-combobox').forEach(element => {
+            element.value = '';
+        });
+        this.formData = {
+            firstName: '',
+            middleName: '',
+            lastName: '',
+            birthdate: '',
+            address: '',
+            city: '',
+            state: '',
+            zipCode: '',
+            startDate: '',
+            endDate: ''
+        };
+        this.showError = false;
+        this.errorMessage = '';
+        this.isSubmitDisabled = true;
     }
 }

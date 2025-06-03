@@ -1,116 +1,32 @@
 /* addressForm.css */
 :host {
-    --acme-blue-color: #0057B8;
-    --acme-gray-color: #424A54;
-    --acme-white-color: #FFFFFF;
-    --acme-light-gray-color: #F5F7FA;
-    --acme-medium-gray-color: #E4E7EB;
-    --acme-coral-color: #FF6B6B;
+    --slds-c-input-color-border: #cccccc;
+    --slds-c-input-radius-border: 0.25rem;
+    --slds-c-input-text-color: #333333;
 }
 
-.acme-address-form {
-    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: var(--acme-space-md, 1rem);
-}
-
-.acme-heading {
-    color: var(--acme-blue-color);
-    font-weight: 700;
-    margin-bottom: var(--acme-space-md, 1rem);
-}
-
-.acme-heading_medium {
+.slds-section__title {
+    color: #1B396A;
     font-size: 18px;
+    font-weight: bold;
 }
 
-.acme-address-form__section {
-    margin-bottom: var(--acme-space-lg, 2rem);
+lightning-input, lightning-combobox {
+    --slds-c-input-spacing-horizontal-start: 0.5rem;
+    --slds-c-input-spacing-horizontal-end: 0.5rem;
 }
 
-.acme-address-form__field {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: var(--acme-space-sm, 0.5rem);
+lightning-helptext {
+    margin-left: 0.5rem;
 }
 
-.acme-address-form__label {
-    font-size: 14px;
-    color: var(--acme-gray-color);
-    margin-bottom: var(--acme-space-xs, 0.25rem);
-}
-
-.acme-address-form__input,
-.acme-address-form__select {
-    font-size: 16px;
-    padding: var(--acme-space-xs, 0.25rem) var(--acme-space-sm, 0.5rem);
-    border: 1px solid var(--acme-medium-gray-color);
-    border-radius: 4px;
-}
-
-.acme-address-form__required {
-    color: var(--acme-coral-color);
-    margin-left: var(--acme-space-xs, 0.25rem);
-}
-
-.acme-address-form__actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: var(--acme-space-sm, 0.5rem);
-    margin-top: var(--acme-space-md, 1rem);
-}
-
-.acme-button {
-    font-size: 16px;
-    padding: var(--acme-space-sm, 0.5rem) var(--acme-space-md, 1rem);
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.acme-button_primary {
-    background-color: var(--acme-blue-color);
-    color: var(--acme-white-color);
-    border: none;
-}
-
-.acme-button_primary:hover,
-.acme-button_primary:focus {
-    background-color: var(--acme-blue-dark-color, #004A9E);
-}
-
-.acme-button_secondary {
-    background-color: var(--acme-light-gray-color);
-    color: var(--acme-gray-color);
-    border: 1px solid var(--acme-medium-gray-color);
-}
-
-.acme-button_secondary:hover,
-.acme-button_secondary:focus {
-    background-color: var(--acme-medium-gray-color);
-}
-
-.acme-address-form__error {
-    color: var(--acme-coral-color);
+.slds-text-color_error {
     font-size: 12px;
-    margin-top: var(--acme-space-sm, 0.5rem);
 }
 
-@media screen and (min-width: 768px) {
-    .acme-address-form__field {
-        flex-direction: row;
-        align-items: center;
-    }
-
-    .acme-address-form__label {
-        flex: 0 0 30%;
-        text-align: right;
-        padding-right: var(--acme-space-sm, 0.5rem);
-    }
-
-    .acme-address-form__input,
-    .acme-address-form__select {
-        flex: 1;
+@media (max-width: 768px) {
+    .slds-section__content {
+        padding-left: 0;
+        padding-right: 0;
     }
 }
