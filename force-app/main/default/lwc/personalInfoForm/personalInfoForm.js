@@ -1,120 +1,123 @@
 // personalInfoForm.js
 import { LightningElement, track } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class PersonalInfoForm extends LightningElement {
     @track formData = {
         firstName: '',
         middleName: '',
         lastName: '',
+        birthdate: '',
         address: '',
         city: '',
         state: '',
-        zipCode: ''
+        zipCode: '',
+        startDate: '',
+        endDate: ''
     };
 
     @track errors = {};
-
-    @track isSubmitting = false;
+    @track showSpinner = false;
 
     stateOptions = [
         { label: 'Alabama', value: 'AL' },
         { label: 'Alaska', value: 'AK' },
-        // ... (add remaining state options)
+        // ... Add all other states here
+        { label: 'Wyoming', value: 'WY' }
     ];
 
-    @track stateComboboxClass = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click';
-    @track stateComboboxAriaExpanded = false;
-    @track stateComboboxReadonly = true;
-    @track stateComboboxListboxClass = 'slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid';
+    get isSubmitDisabled() {
+        return !this.formData.firstName || !this.formData.lastName || !this.formData.birthdate ||
+               !this.formData.zipCode || !this.formData.startDate || !this.formData.endDate ||
+               Object.keys(this.errors).length > 0;
+    }
 
     handleInputChange(event) {
         const { name, value } = event.target;
-        this.formData = { ...this.formData, [name]: value };
+        this.formData[name] = value;
         this.validateField(name, value);
     }
 
-    validateField(fieldName, value) {
-        const errors = { ...this.errors };
-        switch (fieldName) {
+    validateField(name, value) {
+        switch (name) {
             case 'firstName':
-                errors.firstName = value ? '' : 'First name is required.';
-                break;
             case 'lastName':
-                errors.lastName = value ? '' : 'Last name is required.';
+                this.errors[name] = value ? '' : `${name} is required`;
+                break;
+            case 'birthdate':
+                this.errors[name] = this.validateBirthdate(value);
                 break;
             case 'zipCode':
-                const zipCodePattern = /^\d{5}(?:[-\s]\d{4})?$/;
-                errors.zipCode = zipCodePattern.test(value) ? '' : 'Invalid zip code format.';
+                this.errors[name] = this.validateZipCode(value);
                 break;
-            // Add more validation cases as needed
-            default:
+            case 'startDate':
+            case 'endDate':
+                this.errors[name] = this.validateDates();
                 break;
         }
-        this.errors = errors;
+        this.errors = { ...this.errors };
     }
 
-    validateForm() {
-        const allValid = [...Object.values(this.formData), ...Object.values(this.errors)].every(Boolean);
-        return allValid;
-    }
-
-    handleSubmit() {
-        this.isSubmitting = true;
-        if (this.validateForm()) {
-            // Submit form data
-            console.log('Form data:', this.formData);
-            // Perform any additional actions (e.g., API calls, navigation)
-        } else {
-            // Show validation errors
-            console.error('Form validation failed:', this.errors);
+    validateBirthdate(value) {
+        if (!value) return 'Birthdate is required';
+        const birthDate = new Date(value);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
         }
-        this.isSubmitting = false;
+        return age < 18 ? 'You must be at least 18 years old' : '';
     }
 
-    handleCancel() {
-        // Reset form data or navigate away
+    validateZipCode(value) {
+        return /^\d{5}(-\d{4})?$/.test(value) ? '' : 'Please enter a valid 5-digit or 9-digit zip code';
+    }
+
+    validateDates() {
+        const { startDate, endDate } = this.formData;
+        if (!startDate || !endDate) return 'Both start and end dates are required';
+        return new Date(startDate) < new Date(endDate) ? '' : 'End date must be after start date';
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+        this.showSpinner = true;
+
+        // Simulate API call
+        setTimeout(() => {
+            this.showSpinner = false;
+            this.showToast('Success', 'Form submitted successfully', 'success');
+            this.handleClear();
+        }, 2000);
+    }
+
+    handleClear() {
         this.formData = {
             firstName: '',
             middleName: '',
             lastName: '',
+            birthdate: '',
             address: '',
             city: '',
             state: '',
-            zipCode: ''
+            zipCode: '',
+            startDate: '',
+            endDate: ''
         };
         this.errors = {};
+        this.template.querySelectorAll('lightning-input, lightning-combobox').forEach(element => {
+            element.value = '';
+        });
     }
 
-    handleStateClick() {
-        this.stateComboboxAriaExpanded = !this.stateComboboxAriaExpanded;
-        this.stateComboboxClass = this.stateComboboxAriaExpanded
-            ? 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open'
-            : 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click';
-        this.stateComboboxListboxClass = this.stateComboboxAriaExpanded
-            ? 'slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-dropdown_left'
-            : 'slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid';
-    }
-
-    handleStateFocus() {
-        this.stateComboboxReadonly = false;
-    }
-
-    handleStateBlur() {
-        this.stateComboboxReadonly = true;
-        this.stateComboboxAriaExpanded = false;
-        this.stateComboboxClass = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click';
-        this.stateComboboxListboxClass = 'slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid';
-    }
-
-    handleStateChange(event) {
-        this.formData.state = event.target.value;
-    }
-
-    handleStateOptionClick(event) {
-        const selectedValue = event.currentTarget.dataset.value;
-        this.formData.state = selectedValue;
-        this.stateComboboxAriaExpanded = false;
-        this.stateComboboxClass = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click';
-        this.stateComboboxListboxClass = 'slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid';
+    showToast(title, message, variant) {
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: title,
+                message: message,
+                variant: variant
+            })
+        );
     }
 }

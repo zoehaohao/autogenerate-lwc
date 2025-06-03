@@ -1,57 +1,36 @@
 /* personalInfoForm.css */
 :host {
-    --slds-c-form-compound-layout-row-gap: 0.75rem;
-    --slds-c-form-element-spacing-horizontal: 0.75rem;
-    --slds-c-form-element-spacing-vertical: 0.75rem;
+    --slds-c-input-color-border: #dddbda;
+    --slds-c-input-radius-border: 0.25rem;
+    --slds-c-input-text-color: #3e3e3c;
 }
 
-.slds-form-element__label {
-    font-weight: bold;
-    color: #54698d;
-}
-
-.slds-form-element__help {
-    font-size: 0.875rem;
-    color: #54698d;}
-
-.slds-listbox__option {
+.slds-section__title {
+    background-color: #1B396A;
+    color: white;
     padding: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: bold;
 }
 
-.slds-listbox__option:hover {
-    background-color: #f4f6f9;
-    cursor: pointer;
+lightning-input, lightning-combobox {
+    --slds-c-input-spacing-horizontal-start: 0.5rem;
+    --slds-c-input-spacing-horizontal-end: 0.5rem;
 }
 
-.slds-listbox__option .slds-media__figure {
-    margin-right: 0.5rem;
+lightning-helptext {
+    margin-top: -0.5rem;
+    margin-bottom: 0.5rem;
+    display: block;
 }
 
-.slds-listbox__option .slds-icon_container {
-    display: none;
-}
+@media (max-width: 768px) {
+    .slds-grid {
+        flex-direction: column;
+    }
 
-.slds-listbox__option.slds-is-selected .slds-icon_container {
-    display: inline-block;
-}
-
-.slds-listbox__option.slds-is-selected .slds-icon_container .slds-icon {
-    fill: #0070d2;
-}
-
-.slds-combobox__input {
-    padding-right: 2rem;
-}
-
-.slds-combobox__input-value {
-    color: #54698d;
-}
-
-.slds-combobox__input-value::placeholder {
-    color: #54698d;
-    opacity: 0.5;
-}
-
-.slds-input__icon {
-    pointer-events: none;
+    lightning-button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
 }
