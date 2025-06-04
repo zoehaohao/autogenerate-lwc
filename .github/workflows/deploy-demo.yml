@@ -59,60 +59,71 @@ jobs:
             echo "HAS_CHANGES=false" >> $GITHUB_ENV
           fi
         
-      - name: Deploy Changed LWC Components to Salesforce
+      - name: Validate LWC Components
         if: env.HAS_CHANGES == 'true'
         run: |
-          # Create a manifest file for only changed components
+          echo "Validating LWC components..."
+          cat ./changed_files/lwc_components.txt | while read -r COMPONENT_PATH; do
+            COMPONENT_NAME=$(basename "$COMPONENT_PATH")
+            echo "Checking $COMPONENT_NAME..."
+            
+            # Check for required files
+            for file in "$COMPONENT_PATH/$COMPONENT_NAME.js" "$COMPONENT_PATH/$COMPONENT_NAME.html"; do
+              if [ ! -f "$file" ]; then
+                echo "::error::Missing required file: $file"
+                exit 1
+              fi
+            done
+          done
+          
+      - name: Create Deployment Manifest
+        if: env.HAS_CHANGES == 'true'
+        run: |
           mkdir -p manifest
           echo '<?xml version="1.0" encoding="UTF-8"?>' > manifest/package.xml
           echo '<Package xmlns="http://soap.sforce.com/2006/04/metadata">' >> manifest/package.xml
           
-          # Add LWC components that have changed
-          if [ -s ./changed_files/lwc_changes.txt ]; then
-            echo '    <types>' >> manifest/package.xml
-            
-            # Process each changed LWC folder
-            cat ./changed_files/lwc_changes.txt | grep -o "force-app/main/default/lwc/[^/]*" | sort | uniq | while read -r LWC_PATH; do
-              LWC_NAME=$(basename "$LWC_PATH")
-              echo "        <members>$LWC_NAME</members>" >> manifest/package.xml
-            done
-            
-            echo '        <name>LightningComponentBundle</name>' >> manifest/package.xml
-            echo '    </types>' >> manifest/package.xml
-          fi
+          # Add LWC components
+          echo '    <types>' >> manifest/package.xml
+          cat ./changed_files/lwc_components.txt | while read -r COMPONENT_PATH; do
+            COMPONENT_NAME=$(basename "$COMPONENT_PATH")
+            echo "        <members>$COMPONENT_NAME</members>" >> manifest/package.xml
+          done
+          echo '        <name>LightningComponentBundle</name>' >> manifest/package.xml
+          echo '    </types>' >> manifest/package.xml
           
-          echo '    <version>58.0</version>' >> manifest/package.xml
           echo '</Package>' >> manifest/package.xml
           
-          echo "Created deployment manifest:"
+          echo "Deployment manifest:"
           cat manifest/package.xml
           
-          # Deploy only the changed components using the manifest
-          sf project deploy start -o targetOrg -l NoTestRun -x manifest/package.xml --json > deployment_result.json
-          
-      - name: Check Deployment Status
+      - name: Deploy Changes
         if: env.HAS_CHANGES == 'true'
         run: |
-          DEPLOY_ID=$(cat deployment_result.json | jq -r '.result.id')
-          echo "Deployment ID: $DEPLOY_ID"
+          echo "Starting deployment..."
+          sf project deploy start \
+            -o targetOrg \
+            -l NoTestRun \
+            -x manifest/package.xml \
+            --json \
+            --wait 30 \
+            > deployment_result.json || (echo "::error::Deployment failed" && exit 1)
           
-          # Wait and check deployment status until complete
-          while true; do
-            STATUS=$(sf project deploy report -i $DEPLOY_ID -o targetOrg --json | jq -r '.result.status')
-            echo "Current deployment status: $STATUS"
-            
-            if [ "$STATUS" == "Succeeded" ]; then
-              echo "Deployment completed successfully!"
-              break
-            elif [ "$STATUS" == "Failed" ] || [ "$STATUS" == "Error" ]; then
-              echo "Deployment failed!"
-              sf project deploy report -i $DEPLOY_ID -o targetOrg
+          # Check deployment result
+          if [ -f "deployment_result.json" ]; then
+            STATUS=$(jq -r '.result.status' deployment_result.json)
+            if [ "$STATUS" != "Succeeded" ]; then
+              echo "::error::Deployment failed with status: $STATUS"
+              jq '.result' deployment_result.json
               exit 1
+            else
+              echo "Deployment succeeded!"
+              jq '.result' deployment_result.json
             fi
-            
-            echo "Waiting for deployment to complete..."
-            sleep 30
-          done
+          else
+            echo "::error::No deployment result file found"
+            exit 1
+          end
       
       - name: Skip Deployment Notice
         if: env.HAS_CHANGES == 'false'
