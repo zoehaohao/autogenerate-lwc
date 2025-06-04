@@ -1,0 +1,120 @@
+name: Salesforce Deployment
+on:
+  push:
+    branches:
+      - demo  # Trigger deployment when changes are pushed to the 'demo' branch
+jobs:
+  deploy-lwc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetches all history for all branches and tags
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install Salesforce CLI
+        run: |
+          npm install @salesforce/cli --global
+          sf --version
+          
+      - name: Install dependencies
+        run: |
+          # Only run npm install if package.json exists
+          if [ -f "package.json" ]; then
+            npm install
+          else
+            echo "No package.json found, skipping npm install"
+          fi
+        
+      - name: Authenticate with Salesforce
+        run: |
+          echo "${{ secrets.DEMO_AUTH_URL }}" > ./SALESFORCE_AUTH_URL.txt
+          sf org login sfdx-url -f ./SALESFORCE_AUTH_URL.txt -a targetOrg
+      
+      - name: Find Changed Files
+        id: changed-files
+        run: |
+          # Get the previous commit hash
+          PREV_COMMIT=$(git rev-parse HEAD~1)
+          CURRENT_COMMIT=$(git rev-parse HEAD)
+          echo "Comparing changes between $PREV_COMMIT and $CURRENT_COMMIT"
+          
+          # Create directory for changed files list
+          mkdir -p ./changed_files
+          
+          # Find changed files in force-app/main/default/lwc
+          git diff --name-only $PREV_COMMIT $CURRENT_COMMIT -- force-app/main/default/lwc > ./changed_files/lwc_changes.txt
+          
+          if [ -s ./changed_files/lwc_changes.txt ]; then
+            echo "Changed LWC files detected:"
+            cat ./changed_files/lwc_changes.txt
+            echo "HAS_CHANGES=true" >> $GITHUB_ENV
+          else
+            echo "No LWC changes detected"
+            echo "HAS_CHANGES=false" >> $GITHUB_ENV
+          fi
+        
+      - name: Deploy Changed LWC Components to Salesforce
+        if: env.HAS_CHANGES == 'true'
+        run: |
+          # Create a manifest file for only changed components
+          mkdir -p manifest
+          echo '<?xml version="1.0" encoding="UTF-8"?>' > manifest/package.xml
+          echo '<Package xmlns="http://soap.sforce.com/2006/04/metadata">' >> manifest/package.xml
+          
+          # Add LWC components that have changed
+          if [ -s ./changed_files/lwc_changes.txt ]; then
+            echo '    <types>' >> manifest/package.xml
+            
+            # Process each changed LWC folder
+            cat ./changed_files/lwc_changes.txt | grep -o "force-app/main/default/lwc/[^/]*" | sort | uniq | while read -r LWC_PATH; do
+              LWC_NAME=$(basename "$LWC_PATH")
+              echo "        <members>$LWC_NAME</members>" >> manifest/package.xml
+            done
+            
+            echo '        <name>LightningComponentBundle</name>' >> manifest/package.xml
+            echo '    </types>' >> manifest/package.xml
+          fi
+          
+          echo '    <version>58.0</version>' >> manifest/package.xml
+          echo '</Package>' >> manifest/package.xml
+          
+          echo "Created deployment manifest:"
+          cat manifest/package.xml
+          
+          # Deploy only the changed components using the manifest
+          sf project deploy start -o targetOrg -l NoTestRun -x manifest/package.xml --json > deployment_result.json
+          
+      - name: Check Deployment Status
+        if: env.HAS_CHANGES == 'true'
+        run: |
+          DEPLOY_ID=$(cat deployment_result.json | jq -r '.result.id')
+          echo "Deployment ID: $DEPLOY_ID"
+          
+          # Wait and check deployment status until complete
+          while true; do
+            STATUS=$(sf project deploy report -i $DEPLOY_ID -o targetOrg --json | jq -r '.result.status')
+            echo "Current deployment status: $STATUS"
+            
+            if [ "$STATUS" == "Succeeded" ]; then
+              echo "Deployment completed successfully!"
+              break
+            elif [ "$STATUS" == "Failed" ] || [ "$STATUS" == "Error" ]; then
+              echo "Deployment failed!"
+              sf project deploy report -i $DEPLOY_ID -o targetOrg
+              exit 1
+            fi
+            
+            echo "Waiting for deployment to complete..."
+            sleep 30
+          done
+      
+      - name: Skip Deployment Notice
+        if: env.HAS_CHANGES == 'false'
+        run: |
+          echo "No LWC changes detected in this commit. Skipping deployment."
