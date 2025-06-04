@@ -1,19 +1,186 @@
 /* qfrFormTest.css */
-.qfr-form-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1rem;
+:host {
+    --form-max-width: 480px;
+    --error-color: #ba0517;
+    --success-color: #04844b;
+    --primary-color: #0176d3;
+    --text-color: #181818;
+    --background-color: #ffffff;
+    --border-radius: 0.25rem;
+    --spacing-small: 0.5rem;
+    --spacing-medium: 1rem;
+    --spacing-large: 1.5rem;
 }
 
-.page-container {
-    min-height: 600px;
+.slds-card {
+    max-width: var(--form-max-width);
+    margin: 0 auto;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Form field styling */
+lightning-input,
+lightning-textarea {
+    margin-bottom: var(--spacing-small);
+}
+
+/* Error state styling */
+.slds-has-error lightning-input,
+.slds-has-error lightning-textarea {
+    --slds-c-input-color-border: var(--error-color);
+    --slds-c-input-color-border-focus: var(--error-color);
+}
+
+/* Error message styling */
+.slds-text-color_error {
+    color: var(--error-color);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+/* Success message styling */
+.slds-theme_success {
+    background-color: #f3f9f1;
+    border-left: 4px solid var(--success-color);
+    color: #181818;
+}
+
+/* Error alert styling */
+.slds-theme_error {
+    background-color: #fdf2f2;
+    border-left: 4px solid var(--error-color);
+    color: #181818;
+}
+
+/* Button styling */
+lightning-button {
+    margin: 0 var(--spacing-small);
+}
+
+/* Hover effects for buttons */
+lightning-button[variant="brand"]:hover {
+    --slds-c-button-brand-color-background: #014486;
+}
+
+lightning-button[variant="neutral"]:hover {
+    --slds-c-button-neutral-color-background: #f3f3f3;
+}
+
+/* Disabled button styling */
+lightning-button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Loading spinner container */
+.slds-is-relative {
+    position: relative;
+    min-height: 60px;
+}
+
+/* Form container spacing */
+.slds-p-around_medium {
+    padding: var(--spacing-medium);
+}
+
+/* Grid spacing adjustments */
+.slds-gutters {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+}
+
+.slds-gutters > .slds-col {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .slds-card {
+        margin: 0 var(--spacing-small);
+        max-width: none;
+    }
+    
+    .slds-medium-size_1-of-2 {
+        width: 100%;
+    }
+    
+    lightning-button {
+        width: 100%;
+        margin: var(--spacing-small) 0;
+    }
+    
+    .slds-text-align_center {
+        text-align: left;
+    }
+}
+
+/* Focus states for accessibility */
+lightning-input:focus-within,
+lightning-textarea:focus-within {
+    --slds-c-input-color-border-focus: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(1, 118, 211, 0.1);
+}
+
+/* Help text styling */
+lightning-helptext {
+    --slds-c-helptext-color-text: #706e6b;
+}
+
+/* Form validation styling */
+.slds-form-element__help {
+    color: var(--error-color);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+/* Card header styling */
+.slds-card__header {
+    border-bottom: 1px solid #dddbda;
+    padding: var(--spacing-medium);
+}
+
+/* Notification styling improvements */
+.slds-notify {
+    border-radius: var(--border-radius);
+    padding: var(--spacing-medium);
+    margin: var(--spacing-medium) 0;
+}
+
+.slds-notify h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.slds-notify p {
+    margin: 0;
+    font-size: 0.875rem;
+}
+
+/* List styling in error messages */
+.slds-list_dotted {
+    padding-left: var(--spacing-medium);
+}
+
+.slds-list_dotted li {
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+}
+
+/* Animation for smooth transitions */
+.slds-notify,
+lightning-spinner {
     animation: fadeIn 0.3s ease-in-out;
 }
 
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(-10px);
     }
     to {
         opacity: 1;
@@ -21,239 +188,24 @@
     }
 }
 
-.business-structure-item {
-    border: 1px solid #d8dde6;
-    border-radius: 0.25rem;
-    padding: 1rem;
-    background-color: #fafaf9;
-}
-
-.business-structure-item:hover {
-    background-color: #f3f3f2;
-    border-color: #c9c7c5;
-}
-
-.navigation-container {
-    border-top: 1px solid #d8dde6;
-    padding-top: 1rem;
-    margin-top: 2rem;
-}
-
-.file-upload-area {
-    border: 2px dashed #d8dde6;
-    border-radius: 0.5rem;
-    padding: 2rem;
-    text-align: center;
-    background-color: #fafaf9;
-    transition: all 0.3s ease;
-    position: relative;
-    min-height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.file-upload-area:hover {
-    border-color: #1589ee;
-    background-color: #f3f8ff;
-}
-
-.file-upload-area.drag-over {
-    border-color: #1589ee;
-    background-color: #e8f4fd;
-    transform: scale(1.02);
-}
-
-.upload-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.file-input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-}
-
-.data-item-link {
-    text-decoration: underline;
-    color: #1589ee;
-}
-
-.data-item-link:hover {
-    color: #0d5cab;
-}
-
-.centrally-held-value {
-    margin-left: 0.5rem;
-    font-weight: bold;
-    color: #3e3e3c;
-}
-
-.labour-cost-table {
-    font-size: 0.875rem;
-}
-
-.labour-cost-table .slds-table th,
-.labour-cost-table .slds-table td {
-    padding: 0.5rem 0.25rem;
-}
-
-/* Progress indicator customization */
-.slds-progress-indicator {
-    margin-bottom: 2rem;
-}
-
-/* Card spacing */
-.slds-card + .slds-card {
-    margin-top: 1rem;
-}
-
-/* Form element spacing */
-.slds-form-element {
-    margin-bottom: 1rem;
-}
-
-/* Button group spacing */
-.slds-button-group .slds-button {
-    margin-right: 0.5rem;
-}
-
-.slds-button-group .slds-button:last-child {
-    margin-right: 0;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    .qfr-form-container {
-        padding: 0.5rem;
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :host {
+        --error-color: #d73a49;
+        --success-color: #28a745;
+        --primary-color: #0366d6;
     }
     
-    .slds-grid.slds-gutters .slds-col {
-        padding: 0.25rem;
-    }
-    
-    .file-upload-area {
-        padding: 1rem;
-        min-height: 150px;
-    }
-    
-    .navigation-container .slds-grid {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .navigation-container .slds-col {
-        text-align: center;
+    .slds-card {
+        border: 2px solid #000;
     }
 }
 
-/* Loading state */
-.slds-spinner_container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.8);
-    z-index: 9999;
-}
-
-/* Error states */
-.slds-has-error .slds-form-element__control {
-    border-color: #ea001e;
-}
-
-.slds-form-element__help {
-    color: #ea001e;
-}
-
-/* Success states */
-.slds-form-element.slds-has-success .slds-form-element__control {
-    border-color: #4bca81;
-}
-
-/* Focus states */
-.slds-input:focus,
-.slds-textarea:focus,
-.slds-select:focus {
-    border-color: #1589ee;
-    box-shadow: 0 0 3px #1589ee;
-}
-
-/* Accordion customization */
-.slds-accordion__section {
-    border-color: #d8dde6;
-}
-
-.slds-accordion__summary-heading {
-    background-color: #f3f3f2;
-}
-
-.slds-accordion__summary-heading:hover {
-    background-color: #e8e8e6;
-}
-
-/* Table customization */
-.slds-table thead th {
-    background-color: #f3f3f2;
-    border-bottom: 2px solid #d8dde6;
-    font-weight: 700;
-}
-
-.slds-table tbody tr:nth-child(even) {
-    background-color: #fafaf9;
-}
-
-.slds-table tbody tr:hover {
-    background-color: #f3f8ff;
-}
-
-/* Warning box styling */
-.slds-theme_warning {
-    background-color: #fef7e0;
-    border-left: 4px solid #ffb75d;
-}
-
-/* Toggle switch customization */
-.slds-checkbox_toggle .slds-checkbox_faux {
-    background-color: #c9c7c5;
-}
-
-.slds-checkbox_toggle .slds-checkbox_faux:after {
-    background-color: #ffffff;
-}
-
-.slds-checkbox_toggle [type="checkbox"]:checked + .slds-checkbox_faux {
-    background-color: #1589ee;
-}
-
-/* Progress bar customization */
-.slds-progress-bar {
-    background-color: #e8e8e6;
-}
-
-.slds-progress-bar__value {
-    background-color: #1589ee;
-}
-
-/* Tooltip positioning */
-.slds-form-element__label .slds-form-element__icon {
-    margin-left: 0.25rem;
-    vertical-align: middle;
-}
-
-/* Currency input styling */
-.slds-input[type="number"] {
-    text-align: right;
-}
-
-/* Search input styling */
-.slds-input[type="search"] {
-    padding-left: 2rem;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23706e6b' d='M15.7 14.3l-4.2-4.2c.9-1.1 1.4-2.5 1.4-4 0-3.5-2.8-6.3-6.3-6.3S0 2.6 0 6.1s2.8 6.3 6.3 6.3c1.5 0 2.9-.5 4-1.4l4.2 4.2c.2.2.4.3.7.3s.5-.1.7-.3c.4-.3.4-.9-.2-1.3zM6.3 11.1c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: 0.5rem center;
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
