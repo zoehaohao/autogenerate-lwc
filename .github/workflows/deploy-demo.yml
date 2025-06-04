@@ -1,4 +1,4 @@
-name: Salesforce Deployment
+name: Poc Org Deployment
 on:
   push:
     branches:
