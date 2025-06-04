@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - demo  # Trigger deployment when changes are pushed to the 'demo' branch
+
 jobs:
   deploy-lwc:
     runs-on: ubuntu-latest
@@ -35,6 +36,15 @@ jobs:
         run: |
           echo "${{ secrets.DEMO_AUTH_URL }}" > ./SALESFORCE_AUTH_URL.txt
           sf org login sfdx-url -f ./SALESFORCE_AUTH_URL.txt -a targetOrg
+          
+          # Verify authentication worked
+          echo "Verifying authentication..."
+          if sf org display -o targetOrg; then
+            echo "Authentication successful!"
+          else
+            echo "Authentication failed!"
+            exit 1
+          fi
       
       - name: Find Changed Files
         id: changed-files
@@ -71,11 +81,19 @@ jobs:
           if [ -s ./changed_files/lwc_changes.txt ]; then
             echo '    <types>' >> manifest/package.xml
             
-            # Process each changed LWC folder
-            cat ./changed_files/lwc_changes.txt | grep -o "force-app/main/default/lwc/[^/]*" | sort | uniq | while read -r LWC_PATH; do
+            # Process each changed LWC folder - Fixed approach
+            echo "Processing changed LWC components..."
+            cat ./changed_files/lwc_changes.txt | grep -o "force-app/main/default/lwc/[^/]*" | sort | uniq > ./changed_files/lwc_components.txt
+            
+            echo "Unique LWC components found:"
+            cat ./changed_files/lwc_components.txt
+            
+            # Add each component to the manifest
+            while IFS= read -r LWC_PATH; do
               LWC_NAME=$(basename "$LWC_PATH")
+              echo "Adding component: $LWC_NAME"
               echo "        <members>$LWC_NAME</members>" >> manifest/package.xml
-            done
+            done < ./changed_files/lwc_components.txt
             
             echo '        <name>LightningComponentBundle</name>' >> manifest/package.xml
             echo '    </types>' >> manifest/package.xml
@@ -87,34 +105,117 @@ jobs:
           echo "Created deployment manifest:"
           cat manifest/package.xml
           
+          # Validate manifest before deployment
+          if [ ! -s manifest/package.xml ]; then
+            echo "Error: Empty or missing manifest file!"
+            exit 1
+          fi
+          
+          # Check if manifest has actual components
+          if ! grep -q "<members>" manifest/package.xml; then
+            echo "Error: No components found in manifest!"
+            cat manifest/package.xml
+            exit 1
+          fi
+          
           # Deploy only the changed components using the manifest
-          sf project deploy start -o targetOrg -l NoTestRun -x manifest/package.xml --json > deployment_result.json
+          echo "Starting deployment..."
+          if sf project deploy start -o targetOrg -l NoTestRun -x manifest/package.xml --json > deployment_result.json; then
+            echo "Deployment command executed successfully"
+            echo "Deployment result:"
+            cat deployment_result.json
+          else
+            echo "Deployment command failed!"
+            echo "Error output:"
+            cat deployment_result.json
+            exit 1
+          fi
           
       - name: Check Deployment Status
         if: env.HAS_CHANGES == 'true'
         run: |
-          DEPLOY_ID=$(cat deployment_result.json | jq -r '.result.id')
+          if [ ! -f deployment_result.json ]; then
+            echo "No deployment result file found!"
+            exit 1
+          fi
+          
+          # Extract deployment ID with better error handling
+          DEPLOY_ID=$(cat deployment_result.json | jq -r '.result.id // empty')
+          
+          if [ -z "$DEPLOY_ID" ] || [ "$DEPLOY_ID" == "null" ]; then
+            echo "Could not extract deployment ID from result:"
+            cat deployment_result.json
+            # Check if there was an error in the deployment command
+            ERROR_MSG=$(cat deployment_result.json | jq -r '.message // empty')
+            if [ -n "$ERROR_MSG" ]; then
+              echo "Error message: $ERROR_MSG"
+            fi
+            exit 1
+          fi
+          
           echo "Deployment ID: $DEPLOY_ID"
           
-          # Wait and check deployment status until complete
-          while true; do
-            STATUS=$(sf project deploy report -i $DEPLOY_ID -o targetOrg --json | jq -r '.result.status')
-            echo "Current deployment status: $STATUS"
+          # Wait and check deployment status with timeout
+          MAX_ATTEMPTS=20
+          ATTEMPT=0
+          
+          while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
+            echo "Checking deployment status (Attempt $((ATTEMPT + 1))/$MAX_ATTEMPTS)..."
             
-            if [ "$STATUS" == "Succeeded" ]; then
-              echo "Deployment completed successfully!"
-              break
-            elif [ "$STATUS" == "Failed" ] || [ "$STATUS" == "Error" ]; then
-              echo "Deployment failed!"
-              sf project deploy report -i $DEPLOY_ID -o targetOrg
+            if STATUS_RESULT=$(sf project deploy report -i $DEPLOY_ID -o targetOrg --json 2>&1); then
+              STATUS=$(echo "$STATUS_RESULT" | jq -r '.result.status // "Unknown"')
+              echo "Current deployment status: $STATUS"
+              
+              if [ "$STATUS" == "Succeeded" ]; then
+                echo "Deployment completed successfully!"
+                echo "Deployment details:"
+                echo "$STATUS_RESULT" | jq '.result'
+                break
+              elif [ "$STATUS" == "Failed" ] || [ "$STATUS" == "Error" ]; then
+                echo "Deployment failed!"
+                echo "Failure details:"
+                echo "$STATUS_RESULT" | jq '.result'
+                
+                # Show detailed error information
+                echo "Detailed error information:"
+                echo "$STATUS_RESULT" | jq -r '.result.details.componentFailures[]? | "Component: \(.componentType).\(.fullName) - Error: \(.problem)"'
+                exit 1
+              elif [ "$STATUS" == "InProgress" ] || [ "$STATUS" == "Pending" ]; then
+                echo "Deployment is still in progress..."
+              else
+                echo "Unknown status: $STATUS"
+                echo "Full response:"
+                echo "$STATUS_RESULT"
+              fi
+            else
+              echo "Failed to check deployment status:"
+              echo "$STATUS_RESULT"
               exit 1
             fi
             
-            echo "Waiting for deployment to complete..."
-            sleep 30
+            ATTEMPT=$((ATTEMPT + 1))
+            
+            if [ $ATTEMPT -lt $MAX_ATTEMPTS ]; then
+              echo "Waiting 30 seconds before next check..."
+              sleep 30
+            fi
           done
+          
+          if [ $ATTEMPT -eq $MAX_ATTEMPTS ]; then
+            echo "Deployment timed out after $((MAX_ATTEMPTS * 30)) seconds"
+            echo "Final status check:"
+            sf project deploy report -i $DEPLOY_ID -o targetOrg --json | jq '.'
+            exit 1
+          fi
       
       - name: Skip Deployment Notice
         if: env.HAS_CHANGES == 'false'
         run: |
           echo "No LWC changes detected in this commit. Skipping deployment."
+          
+      - name: Cleanup
+        if: always()
+        run: |
+          # Clean up sensitive files
+          rm -f ./SALESFORCE_AUTH_URL.txt
+          rm -f deployment_result.json
