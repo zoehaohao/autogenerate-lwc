@@ -1,211 +1,298 @@
 /* qfrFormTest.css */
-:host {
-    --form-max-width: 480px;
-    --error-color: #ba0517;
-    --success-color: #04844b;
-    --primary-color: #0176d3;
-    --text-color: #181818;
-    --background-color: #ffffff;
-    --border-radius: 0.25rem;
-    --spacing-small: 0.5rem;
-    --spacing-medium: 1rem;
-    --spacing-large: 1.5rem;
+.qfr-form-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
 }
 
+.page-content {
+    margin-top: 1rem;
+}
+
+.business-structure-item {
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #fafaf9;
+}
+
+.business-structure-item:hover {
+    background-color: #f3f3f2;
+}
+
+.conditional-content {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #d8dde6;
+}
+
+.contact-display,
+.contact-edit {
+    margin-top: 1rem;
+}
+
+.table-controls {
+    background-color: #f3f3f2;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    border: 1px solid #d8dde6;
+}
+
+.file-upload-area {
+    border: 2px dashed #0176d3;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    text-align: center;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.file-upload-area:hover {
+    background-color: #e8f4fd;
+    border-color: #014486;
+}
+
+.upload-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.upload-icon {
+    color: #0176d3;
+}
+
+.file-input {
+    display: none;}
+
+.navigation-buttons {
+    border-top: 1px solid #d8dde6;
+    padding-top: 1rem;
+}
+
+.slds-spinner_container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Progress indicator styling */
+lightning-progress-indicator {
+    margin-bottom: 2rem;
+}
+
+/* Form field spacing */
+.slds-form-element {
+    margin-bottom: 1rem;
+}
+
+/* Card styling */
 .slds-card {
-    max-width: var(--form-max-width);
-    margin: 0 auto;
-    background-color: var(--background-color);
-    border-radius: var(--border-radius);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Form field styling */
-lightning-input,
-lightning-textarea {
-    margin-bottom: var(--spacing-small);
+.slds-card__header {
+    background-color: #f3f3f2;
+    border-bottom: 1px solid #d8dde6;
 }
 
-/* Error state styling */
-.slds-has-error lightning-input,
-.slds-has-error lightning-textarea {
-    --slds-c-input-color-border: var(--error-color);
-    --slds-c-input-color-border-focus: var(--error-color);
+.slds-card__header-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #080707;
 }
 
-/* Error message styling */
-.slds-text-color_error {
-    color: var(--error-color);
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-    display: block;
+/* Section styling */
+.slds-section__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #080707;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #d8dde6;
 }
 
-/* Success message styling */
-.slds-theme_success {
-    background-color: #f3f9f1;
-    border-left: 4px solid var(--success-color);
-    color: #181818;
-}
-
-/* Error alert styling */
-.slds-theme_error {
-    background-color: #fdf2f2;
-    border-left: 4px solid var(--error-color);
-    color: #181818;
+/* Toggle styling */
+lightning-input[type="toggle"] {
+    --sds-c-toggle-color-background: #0176d3;
 }
 
 /* Button styling */
-lightning-button {
-    margin: 0 var(--spacing-small);
+lightning-button[variant="brand"] {
+    --sds-c-button-brand-color-background: #0176d3;
+    --sds-c-button-brand-color-background-hover: #014486;
 }
 
-/* Hover effects for buttons */
-lightning-button[variant="brand"]:hover {
-    --slds-c-button-brand-color-background: #014486;
+lightning-button[variant="neutral"] {
+    --sds-c-button-neutral-color-border: #d8dde6;
+    --sds-c-button-neutral-color-background-hover: #f3f3f2;
 }
 
-lightning-button[variant="neutral"]:hover {
-    --slds-c-button-neutral-color-background: #f3f3f3;
+/* Datatable styling */
+lightning-datatable {
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
 }
 
-/* Disabled button styling */
-lightning-button[disabled] {
-    opacity: 0.6;
-    cursor: not-allowed;
+/* Accordion styling */
+lightning-accordion {
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
 }
 
-/* Loading spinner container */
-.slds-is-relative {
-    position: relative;
-    min-height: 60px;
-}
-
-/* Form container spacing */
-.slds-p-around_medium {
-    padding: var(--spacing-medium);
-}
-
-/* Grid spacing adjustments */
-.slds-gutters {
-    margin-left: -0.5rem;
-    margin-right: -0.5rem;
-}
-
-.slds-gutters > .slds-col {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+/* Radio group button styling */
+lightning-radio-group[type="button"] {
+    --sds-c-radio-button-color-background-checked: #0176d3;
+    --sds-c-radio-button-color-border-checked: #0176d3;
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
-    .slds-card {
-        margin: 0 var(--spacing-small);
-        max-width: none;
+    .qfr-form-container {
+        padding: 0.5rem;
     }
     
-    .slds-medium-size_1-of-2 {
+    .slds-col {
         width: 100%;
+        margin-bottom: 1rem;
     }
     
-    lightning-button {
-        width: 100%;
-        margin: var(--spacing-small) 0;
+    .table-controls .slds-grid {
+        flex-direction: column;
     }
     
-    .slds-text-align_center {
-        text-align: left;
+    .navigation-buttons .slds-grid {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .file-upload-area {
+        padding: 1rem;
     }
 }
 
-/* Focus states for accessibility */
-lightning-input:focus-within,
-lightning-textarea:focus-within {
-    --slds-c-input-color-border-focus: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(1, 118, 211, 0.1);
-}
-
-/* Help text styling */
-lightning-helptext {
-    --slds-c-helptext-color-text: #706e6b;
-}
-
-/* Form validation styling */
-.slds-form-element__help {
-    color: var(--error-color);
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-}
-
-/* Card header styling */
-.slds-card__header {
-    border-bottom: 1px solid #dddbda;
-    padding: var(--spacing-medium);
-}
-
-/* Notification styling improvements */
-.slds-notify {
-    border-radius: var(--border-radius);
-    padding: var(--spacing-medium);
-    margin: var(--spacing-medium) 0;
-}
-
-.slds-notify h2 {
-    font-size: 1rem;
+/* Accessibility improvements */
+.slds-form-element__label {
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    color: #080707;
 }
 
-.slds-notify p {
-    margin: 0;
+.slds-form-element__help {
     font-size: 0.875rem;
+    color: #706e6b;
 }
 
-/* List styling in error messages */
-.slds-list_dotted {
-    padding-left: var(--spacing-medium);
+/* Error state styling */
+.slds-has-error .slds-form-element__control {
+    border-color: #ea001e;
 }
 
-.slds-list_dotted li {
-    margin-bottom: 0.25rem;
+.slds-form-element__help.slds-form-element__help_error {
+    color: #ea001e;
+}
+
+/* Focus states */
+lightning-input:focus-within,
+lightning-combobox:focus-within,
+lightning-textarea:focus-within {
+    box-shadow: 0 0 3px #0176d3;
+}
+
+/* Loading states */
+.slds-is-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Custom checkbox and radio styling */
+.slds-checkbox,
+.slds-radio {
+    --sds-c-checkbox-color-background-checked: #0176d3;
+    --sds-c-radio-color-background-checked: #0176d3;
+}
+
+/* Help text positioning */
+lightning-helptext {
+    margin-left: 0.5rem;
+}
+
+/* Table cell alignment */
+.slds-cell-edit {
+    text-align: right;
+}
+
+/* Currency formatting */
+.currency-cell {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    font-weight: 600;
+}
+
+/* Status indicators */
+.status-uploaded {
+    color: #2e844a;
+    font-weight: 600;
+}
+
+.status-processing {
+    color: #0176d3;
+    font-weight: 600;
+}
+
+.status-error {
+    color: #ea001e;
+    font-weight: 600;
+}
+
+/* File management table */
+.file-table {
+    margin-top: 1rem;
+}
+
+/* Progress step styling */
+.slds-progress__item_completed .slds-progress__marker {
+    background-color: #2e844a;
+    border-color: #2e844a;
+}
+
+.slds-progress__item_active .slds-progress__marker {
+    background-color: #0176d3;
+    border-color: #0176d3;
+}
+
+/* Tooltip styling */
+.slds-popover {
+    max-width: 300px;
+}
+
+.slds-popover__body {
     font-size: 0.875rem;
+    line-height: 1.4;
 }
 
-/* Animation for smooth transitions */
-.slds-notify,
-lightning-spinner {
-    animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-    :host {
-        --error-color: #d73a49;
-        --success-color: #28a745;
-        --primary-color: #0366d6;
+/* Print styles */
+@media print {
+    .navigation-buttons,
+    .file-upload-area,
+    lightning-button {
+        display: none;
     }
     
     .slds-card {
-        border: 2px solid #000;
+        box-shadow: none;
+        border: 1px solid #000;
     }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+    
+    .page-content {
+        page-break-inside: avoid;
     }
 }

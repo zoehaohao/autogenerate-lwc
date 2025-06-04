@@ -1,346 +1,516 @@
 // qfrFormTest.js
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class QfrFormTest extends LightningElement {
-    // Form data properties
+    @track currentStep = '1';
     @track formData = {
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        address: ''
+        // Page 1 - Residential Viability
+        solvencyConcern: '',
+        futureSolvencyIssues: '',
+        operationalLoss: '',
+        
+        // Page 2 - Contact Information
+        contactName: 'John Smith',
+        contactPosition: 'Financial Manager',
+        contactPhone: '02 1234 5678',
+        contactEmail: 'john.smith@healthcare.com.au',
+        
+        // Page 3 - Business Structure
+        inHouseDelivery: false,
+        franchisee: false,
+        franchisor: false,
+        brokerage: false,
+        subcontractor: false,
+        selfEmployed: false,
+        other: false,
+        inHouseServices: [],
+        franchiseeServices: [],
+        inHouseAdditionalInfo: '',
+        franchiseeAdditionalInfo: '',
+        workforceEngagement: 'individual-agreements',
+        
+        // Page 4 - Labour Costs
+        centrallyHeld: true
     };
 
-    // Error tracking
-    @track errors = {
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        address: ''
-    };
-
-    // UI state properties
+    @track openSections = [];
+    @track isEditingContact = false;
     @track isLoading = false;
-    @track showSuccessMessage = false;
+    @track documentCategory = '';
+    @track documentType = '';
+    @track uploadedFiles = [];
+    @track draftValues = [];
+    @track viewFilter = 'all';
+    @track jumpToSection = '';
+    @track jumpToColumn = '';
 
-    /**
-     * Handles input field changes and performs real-time validation
-     * @param {Event} event - Input change event
-     */
+    // Account Information
+    accountInfo = {
+        organizationName: 'Sunshine Healthcare Services',
+        napsId: 'NAPS ID: 12345678'
+    };
+
+    // Options for form fields
+    yesNoOptions = [
+        { label: 'Yes', value: 'yes' },
+        { label: 'No', value: 'no' }
+    ];
+
+    serviceTypeOptions = [
+        { label: 'Clinical care', value: 'clinical-care' },
+        { label: 'Personal care', value: 'personal-care' },
+        { label: 'Allied health', value: 'allied-health' },
+        { label: 'Domestic assistance', value: 'domestic-assistance' },
+        { label: 'Social support', value: 'social-support' },
+        { label: 'Transport', value: 'transport' },
+        { label: 'Meals', value:'meals' },
+        { label: 'Equipment and technology', value: 'equipment-technology' }
+    ];
+
+    workforceOptions = [
+        { label: 'Individual agreements', value: 'individual-agreements' },
+        { label: 'Enterprise agreement', value: 'enterprise-agreement' },
+        { label: 'Award rates', value: 'award-rates' },
+        { label: 'Mixed arrangements', value: 'mixed-arrangements' }
+    ];
+
+    documentCategoryOptions = [
+        { label: 'Financial Statement', value: 'financial-statement' },
+        { label: 'Declaration', value: 'declaration' },
+        { label: 'Supporting Evidence', value: 'supporting-evidence' },
+        { label: 'Audit Report', value: 'audit-report' },
+        { label: 'Other', value: 'other' }
+    ];
+
+    documentTypeOptions = [
+        { label: 'PDF Report', value: 'pdf-report' },
+        { label: 'Excel Spreadsheet', value: 'excel-spreadsheet' },
+        { label: 'Word Document', value: 'word-document' },
+        { label: 'Signed Declaration', value: 'signed-declaration' },
+        { label: 'Image/Scan', value: 'image-scan' }
+    ];
+
+    viewFilterOptions = [
+        { label: 'All Categories', value: 'all' },
+        { label: 'Employee Staff', value: 'employee' },
+        { label: 'Agency Staff', value: 'agency' },
+        { label: 'Contracted Services', value: 'contracted' }
+    ];
+
+    sectionOptions = [
+        { label: 'Employee Categories', value: 'employee-section' },
+        { label: 'Agency Staff', value: 'agency-section' },
+        { label: 'Contracted Services', value: 'contracted-section' }
+    ];
+
+    columnOptions = [
+        { label: 'Employee Category', value: 'category' },
+        { label: 'Total Amount', value: 'total' }
+    ];
+
+    // Labour Cost Data
+    @track labourCostData = [
+        {
+            id: '1',
+            category: 'Other employee staff (employed in a direct care role)',
+            total: 0,
+            isEditable: true,
+            isTotal: false
+        },
+        {
+            id: '2',
+            category: 'Total labour - internal direct care - employee',
+            total: 0,
+            isEditable: false,
+            isTotal: true
+        },
+        {
+            id: '3',
+            category: 'Registered nurses',
+            total: 125000,
+            isEditable: true,
+            isTotal: false
+        },
+        {
+            id: '4',
+            category: 'Enrolled nurses (registered with the NMBA)',
+            total: 85000,
+            isEditable: true,
+            isTotal: false
+        },
+        {
+            id: '5',
+            category: 'Personal care workers (including gardening and cleaning)',
+            total: 180000,
+            isEditable: true,
+            isTotal: false
+        },
+        {
+            id: '6',
+            category: 'Allied health',
+            total: 95000,
+            isEditable: true,
+            isTotal: false
+        },
+        {
+            id: '7',
+            category: 'Other agency staff',
+            total: 45000,
+            isEditable: true,
+            isTotal: false
+        },
+        {
+            id: '8',
+            category: 'Sub-contracted or brokered client services - external direct care service cost',
+            total: 75000,
+            isEditable: true,
+            isTotal: false
+        }
+    ];
+
+    labourCostColumns = [
+        {
+            label: 'Employee Category',
+            fieldName: 'category',
+            type: 'text',
+            hideDefaultActions: true
+        },
+        {
+            label: 'Total ($)',
+            fieldName: 'total',
+            type: 'currency',
+            editable: true,
+            hideDefaultActions: true,
+            cellAttributes: {
+                alignment: 'right'
+            }
+        }
+    ];
+
+    fileColumns = [
+        {
+            label: 'File Name',
+            fieldName: 'name',
+            type: 'text'
+        },
+        {
+            label: 'Category',
+            fieldName: 'category',
+            type: 'text'
+        },
+        {
+            label: 'Type',
+            fieldName: 'type',
+            type: 'text'
+        },
+        {
+            label: 'Size',
+            fieldName: 'size',
+            type: 'text'
+        },
+        {
+            label: 'Status',
+            fieldName: 'status',
+            type: 'text'
+        },
+        {
+            type: 'action',
+            typeAttributes: {
+                rowActions: [
+                    { label: 'View', name: 'view' },
+                    { label: 'Download', name: 'download' },
+                    { label: 'Remove', name: 'remove' }
+                ]
+            }
+        }
+    ];
+
+    // Computed properties
+    get isPage1() {
+        return this.currentStep === '1';
+    }
+
+    get isPage2() {
+        return this.currentStep === '2';
+    }
+
+    get isPage3() {
+        return this.currentStep === '3';
+    }
+
+    get isPage4() {
+        return this.currentStep === '4';
+    }
+
+    get isPage5() {
+        return this.currentStep === '5';
+    }
+
+    get isPreviousDisabled() {
+        return this.currentStep === '1' || this.isLoading;
+    }
+
+    get isNextDisabled() {
+        return !this.isCurrentPageValid() || this.isLoading;
+    }
+
+    get nextButtonLabel() {
+        return this.currentStep === '5' ? 'Submit' : 'Next';
+    }
+
+    get editContactLabel() {
+        return this.isEditingContact ? 'Save' : 'Edit';
+    }
+
+    get editContactVariant() {
+        return this.isEditingContact ? 'brand' : 'neutral';
+    }
+
+    get hasUploadedFiles() {
+        return this.uploadedFiles.length > 0;
+    }
+
+    // Event Handlers
+    handleAccordionToggle(event) {
+        const openSections = event.detail.openSections;
+        this.openSections = openSections;
+    }
+
     handleInputChange(event) {
-        const fieldName = event.target.name;
-        const fieldValue = event.target.value;
-        
-        // Update form data
-        this.formData = {
-            ...this.formData,
-            [fieldName]: fieldValue
-        };
+        const field = event.target.name;
+        const value = event.target.value;
+        this.formData = { ...this.formData, [field]: value };
+    }
 
-        // Clear previous error for this field
-        this.errors = {
-            ...this.errors,
-            [fieldName]: ''
-        };
+    handleToggleChange(event) {
+        const field = event.target.name;
+        const value = event.target.checked;
+        this.formData = { ...this.formData, [field]: value };
+    }
 
-        // Perform field-specific validation on blur
-        if (event.type === 'blur' || fieldValue.length > 0) {
-            this.validateField(fieldName, fieldValue);
+    handleServiceTypeChange(event) {
+        const field = event.target.name;
+        const value = event.detail.value;
+        this.formData = { ...this.formData, [field]: value };
+    }
+
+    handleEditContact() {
+        if (this.isEditingContact) {
+            // Save contact information
+            this.isEditingContact = false;
+            this.showToast('Success', 'Contact information updated successfully', 'success');
+        } else {
+            this.isEditingContact = true;
         }
     }
 
-    /**
-     * Validates individual form fields
-     * @param {string} fieldName - Name of the field to validate
-     * @param {string} fieldValue - Value to validate
-     */
-    validateField(fieldName, fieldValue) {
-        let errorMessage = '';
-
-        switch (fieldName) {
-            case 'firstName':
-                errorMessage = this.validateName(fieldValue, 'First name');
-                break;
-            case 'lastName':
-                errorMessage = this.validateName(fieldValue, 'Last name');
-                break;
-            case 'email':
-                errorMessage = this.validateEmail(fieldValue);
-                break;
-            case 'phone':
-                errorMessage = this.validatePhone(fieldValue);
-                break;
-            case 'address':
-                errorMessage = this.validateAddress(fieldValue);
-                break;
-        }
-
-        this.errors = {
-            ...this.errors,
-            [fieldName]: errorMessage
-        };
-    }
-
-    /**
-     * Validates name fields (first name, last name)
-     * @param {string} value - Name value to validate
-     * @param {string} fieldLabel - Field label for error messages
-     * @returns {string} Error message or empty string if valid
-     */
-    validateName(value, fieldLabel) {
-        if (!value || value.trim().length === 0) {
-            return `${fieldLabel} is required.`;
-        }
+    handleCellChange(event) {
+        const draftValues = event.detail.draftValues;
+        this.draftValues = draftValues;
         
-        if (value.length > 50) {
-            return `${fieldLabel} must be 50 characters or less.`;
-        }
-        
-        const namePattern = /^[a-zA-Z\s'-]+$/;
-        if (!namePattern.test(value)) {
-            return `${fieldLabel} can only contain letters, spaces, hyphens, and apostrophes.`;
-        }
-        
-        return '';
-    }
-
-    /**
-     * Validates email field
-     * @param {string} value - Email value to validate
-     * @returns {string} Error message or empty string if valid
-     */
-    validateEmail(value) {
-        if (!value || value.trim().length === 0) {
-            return 'Email address is required.';
-        }
-        
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(value)) {
-            return 'Please enter a valid email address (e.g., user@domain.com).';
-        }
-        
-        return '';
-    }
-
-    /**
-     * Validates phone field
-     * @param {string} value - Phone value to validate
-     * @returns {string} Error message or empty string if valid
-     */
-    validatePhone(value) {
-        // Phone is optional, so empty is valid
-        if (!value || value.trim().length === 0) {
-            return '';
-        }
-        
-        // Remove all non-digit characters for validation
-        const digitsOnly = value.replace(/\D/g, '');
-        
-        if (digitsOnly.length < 10) {
-            return 'Phone number must contain at least 10 digits.';
-        }
-        
-        if (digitsOnly.length > 15) {
-            return 'Phone number cannot exceed 15 digits.';
-        }
-        
-        return '';
-    }
-
-    /**
-     * Validates address field
-     * @param {string} value - Address value to validate
-     * @returns {string} Error message or empty string if valid
-     */
-    validateAddress(value) {
-        // Address is optional, so empty is valid
-        if (!value || value.trim().length === 0) {
-            return '';
-        }
-        
-        if (value.length > 200) {
-            return 'Address must be 200 characters or less.';
-        }
-        
-        return '';
-    }
-
-    /**
-     * Validates all form fields
-     * @returns {boolean} True if all fields are valid
-     */
-    validateAllFields() {
-        let isValid = true;
-        const newErrors = {};
-
-        // Validate each field
-        Object.keys(this.formData).forEach(fieldName => {
-            const fieldValue = this.formData[fieldName];
-            let errorMessage = '';
-
-            switch (fieldName) {
-                case 'firstName':
-                    errorMessage = this.validateName(fieldValue, 'First name');
-                    break;
-                case 'lastName':
-                    errorMessage = this.validateName(fieldValue, 'Last name');
-                    break;
-                case 'email':
-                    errorMessage = this.validateEmail(fieldValue);
-                    break;
-                case 'phone':
-                    errorMessage = this.validatePhone(fieldValue);
-                    break;
-                case 'address':
-                    errorMessage = this.validateAddress(fieldValue);
-                    break;
-            }
-
-            newErrors[fieldName] = errorMessage;
-            if (errorMessage) {
-                isValid = false;
+        // Update the data
+        draftValues.forEach(draft => {
+            const record = this.labourCostData.find(item => item.id === draft.id);
+            if (record) {
+                record.total = draft.total || 0;
             }
         });
-
-        this.errors = newErrors;
-        return isValid;
+        
+        this.calculateTotals();
     }
 
-    /**
-     * Handles form submission
-     * @param {Event} event - Form submit event
-     */
-    async handleSubmit(event) {
+    handleViewFilterChange(event) {
+        this.viewFilter = event.detail.value;
+        // Apply filter logic here
+    }
+
+    handleExpandTable() {
+        // Implement table expansion logic
+        this.showToast('Info', 'Table expanded', 'info');
+    }
+
+    handleJumpToSection(event) {
+        this.jumpToSection = event.detail.value;
+        // Implement jump to section logic
+    }
+
+    handleJumpToColumn(event) {
+        this.jumpToColumn = event.detail.value;
+        // Implement jump to column logic
+    }
+
+    handleDocumentConfigChange(event) {
+        const field = event.target.name;
+        const value = event.target.value;
+        if (field === 'documentCategory') {
+            this.documentCategory = value;
+        } else if (field === 'documentType') {
+            this.documentType = value;
+        }
+    }
+
+    handleFileDrop(event) {
         event.preventDefault();
+        const files = event.dataTransfer.files;
+        this.processFiles(files);
+    }
+
+    handleDragOver(event) {
+        event.preventDefault();
+    }
+
+    handleBrowseFiles() {
+        const fileInput = this.template.querySelector('.file-input');
+        fileInput.click();
+    }
+
+    handleFileSelect(event) {
+        const files = event.target.files;
+        this.processFiles(files);
+    }
+
+    handleFileAction(event) {
+        const action = event.detail.action;
+        const row = event.detail.row;
         
-        // Show loading state
-        this.isLoading = true;
-        this.showSuccessMessage = false;
-
-        try {
-            // Validate all fields
-            if (!this.validateAllFields()) {
-                this.showToast('Error', 'Please correct the errors before submitting.', 'error');
-                return;
-            }
-
-            // Simulate API call delay
-            await this.simulateApiCall();
-
-            // Show success message
-            this.showSuccessMessage = true;
-            this.showToast('Success', 'Form submitted successfully!', 'success');
-
-            // Scroll to top to show success message
-            this.template.querySelector('lightning-card').scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'start' 
-            });
-
-        } catch (error) {
-            console.error('Form submission error:', error);
-            this.showToast('Error', 'An error occurred while submitting the form. Please try again.', 'error');
-        } finally {
-            this.isLoading = false;
+        switch (action.name) {
+            case 'view':
+                this.viewFile(row);
+                break;
+            case 'download':
+                this.downloadFile(row);
+                break;
+            case 'remove':
+                this.removeFile(row);
+                break;
         }
     }
 
-    /**
-     * Handles form reset
-     */
-    handleReset() {
-        // Reset form data
-        this.formData = {
-            firstName: '',
-            lastName: '',
-            email: '',
-            phone: '',
-            address: ''
-        };
-
-        // Clear all errors
-        this.errors = {
-            firstName: '',
-            lastName: '',
-            email: '',
-            phone: '',
-            address: ''
-        };
-
-        // Hide success message
-        this.showSuccessMessage = false;
-
-        // Show confirmation toast
-        this.showToast('Info', 'Form has been reset.', 'info');
+    handlePrevious() {
+        if (this.currentStep > '1') {
+            this.currentStep = String(parseInt(this.currentStep) - 1);
+        }
     }
 
-    /**
-     * Simulates an API call with delay
-     * @returns {Promise} Promise that resolves after delay
-     */
-    simulateApiCall() {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                console.log('Form data submitted:', JSON.stringify(this.formData, null, 2));
-                resolve();
-            }, 2000);
+    handleNext() {
+        if (this.isCurrentPageValid()) {
+            if (this.currentStep === '5') {
+                this.submitForm();
+            } else {
+                this.currentStep = String(parseInt(this.currentStep) + 1);
+            }
+        }
+    }
+
+    // Helper Methods
+    isCurrentPageValid() {
+        switch (this.currentStep) {
+            case '1':
+                return this.formData.solvencyConcern && 
+                       this.formData.futureSolvencyIssues && 
+                       this.formData.operationalLoss;
+            case '2':
+                return this.formData.contactName && 
+                       this.formData.contactPosition && 
+                       this.formData.contactPhone && 
+                       this.formData.contactEmail;
+            case '3':
+                return this.hasSelectedBusinessStructure() && 
+                       this.formData.workforceEngagement;
+            case '4':
+                return this.hasLabourCostData();
+            case '5':
+                return this.uploadedFiles.length > 0;
+            default:
+                return true;
+        }
+    }
+
+    hasSelectedBusinessStructure() {
+        return this.formData.inHouseDelivery || 
+               this.formData.franchisee || 
+               this.formData.franchisor || 
+               this.formData.brokerage || 
+               this.formData.subcontractor || 
+               this.formData.selfEmployed || 
+               this.formData.other;
+    }
+
+    hasLabourCostData() {
+        return this.labourCostData.some(item => item.total > 0);
+    }
+
+    calculateTotals() {
+        // Calculate total for employee categories
+        const employeeTotal = this.labourCostData
+            .filter(item => !item.isTotal && item.id !== '7' && item.id !== '8')
+            .reduce((sum, item) => sum + (item.total || 0), 0);
+        
+        const totalRecord = this.labourCostData.find(item => item.id === '2');
+        if (totalRecord) {
+            totalRecord.total = employeeTotal;
+        }
+    }
+
+    processFiles(files) {
+        if (!this.documentCategory || !this.documentType) {
+            this.showToast('Error', 'Please select document category and type before uploading', 'error');
+            return;
+        }
+
+        Array.from(files).forEach(file => {
+            const fileRecord = {
+                id: Date.now() + Math.random(),
+                name: file.name,
+                category: this.documentCategory,
+                type: this.documentType,
+                size: this.formatFileSize(file.size),
+                status: 'Uploaded'
+            };
+            this.uploadedFiles = [...this.uploadedFiles, fileRecord];
         });
+
+        this.showToast('Success', `${files.length} file(s) uploaded successfully`, 'success');
     }
 
-    /**
-     * Shows toast notification
-     * @param {string} title - Toast title
-     * @param {string} message - Toast message
-     * @param {string} variant - Toast```js
-     * Shows toast notification
-     * @param {string} title - Toast title
-     * @param {string} message - Toast message
-     * @param {string} variant - Toast variant (success, error, warning, info)
-     */
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    viewFile(file) {
+        this.showToast('Info', `Viewing ${file.name}`, 'info');
+    }
+
+    downloadFile(file) {
+        this.showToast('Info', `Downloading ${file.name}`, 'info');
+    }
+
+    removeFile(file) {
+        this.uploadedFiles = this.uploadedFiles.filter(f => f.id !== file.id);
+        this.showToast('Success', `${file.name} removed`, 'success');
+    }
+
+    submitForm() {
+        this.isLoading = true;
+        
+        // Simulate form submission
+        setTimeout(() => {
+            this.isLoading = false;
+            this.showToast('Success', 'QFR Form submitted successfully', 'success');
+        }, 2000);
+    }
+
     showToast(title, message, variant) {
-        const event = new ShowToastEvent({
+        const evt = new ShowToastEvent({
             title: title,
             message: message,
-            variant: variant,
-            mode: 'dismissable'
+            variant: variant
         });
-        this.dispatchEvent(event);
-    }
-
-    // CSS class getters for conditional styling
-    get firstNameCssClass() {
-        return this.errors.firstName ? 'slds-has-error' : '';
-    }
-
-    get lastNameCssClass() {
-        return this.errors.lastName ? 'slds-has-error' : '';
-    }
-
-    get emailCssClass() {
-        return this.errors.email ? 'slds-has-error' : '';
-    }
-
-    get phoneCssClass() {
-        return this.errors.phone ? 'slds-has-error' : '';
-    }
-
-    get addressCssClass() {
-        return this.errors.address ? 'slds-has-error' : '';
-    }
-
-    get hasFormErrors() {
-        return Object.values(this.errors).some(error => error !== '');
-    }
-
-    get submitDisabled() {
-        return this.isLoading || this.hasFormErrors || !this.isFormComplete;
-    }
-
-    get isFormComplete() {
-        return this.formData.firstName && 
-               this.formData.lastName && 
-               this.formData.email;
+        this.dispatchEvent(evt);
     }
 }

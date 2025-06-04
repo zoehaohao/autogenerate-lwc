@@ -9,6 +9,15 @@
         <target>lightning__Tab</target>
         <target>lightningCommunity__Page</target>
     </targets>
-    <masterLabel>QFR Form Test</masterLabel>
-    <description>A comprehensive form component for user registration with validation, error handling, and accessibility features.</description>
+    <targetConfigs>
+        <targetConfig targets="lightning__AppPage,lightning__HomePage">
+            <property name="height" type="String" default="auto"/>
+        </targetConfig>
+        <targetConfig targets="lightning__RecordPage">
+            <property name="recordId" type="String"/>
+        </targetConfig>
+        <targetConfig targets="lightningCommunity__Page">
+            <property name="showHeader" type="Boolean" default="true"/>
+        </targetConfig>
+    </targetConfigs>
 </LightningComponentBundle>
