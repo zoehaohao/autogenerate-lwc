@@ -275,9 +275,7 @@
                                     onchange={handleToggleChange}>
                                 </lightning-input>
                             </div>
-                            <lightning-helptext 
-                                content="Services delivered directly by your organization's employed staff using your own resources and management systems.">
-                            </lightning-helptext>
+
                             
                             <div if:true={formData.inHouseDelivery} class="conditional-content">
                                 <lightning-checkbox-group 
@@ -292,10 +290,6 @@
                                     value={formData.inHouseAdditionalInfo}
                                     onchange={handleInputChange}
                                     placeholder="Please provide percentage breakdowns and explanations">
-                                    <lightning-helptext 
-                                        slot="help" 
-                                        content="Provide details about service delivery percentages, operational arrangements, or other relevant information about your in-house delivery model.">
-                                    </lightning-helptext>
                                 </lightning-textarea>
                             </div>
                         </div>
@@ -311,9 +305,6 @@
                                     onchange={handleToggleChange}>
                                 </lightning-input>
                             </div>
-                            <lightning-helptext 
-                                content="Operating under a franchise agreement where you deliver services using another organization's business model, branding, and systems.">
-                            </lightning-helptext>
                             
                             <div if:true={formData.franchisee} class="conditional-content">
                                 <lightning-checkbox-group 
@@ -328,10 +319,6 @@
                                     value={formData.franchiseeAdditionalInfo}
                                 onchange={handleInputChange}
                                     placeholder="Please provide percentage breakdowns and explanations">
-                                    <lightning-helptext 
-                                        slot="help" 
-                                        content="Provide details about your franchise arrangement, service delivery percentages, and franchisor relationship.">
-                                    </lightning-helptext>
                                 </lightning-textarea>
                             </div>
                         </div>
@@ -347,9 +334,6 @@
                                     onchange={handleToggleChange}>
                                 </lightning-input>
                             </div>
-                            <lightning-helptext 
-                                content="Providing franchise opportunities to other organizations, licensing your business model, branding, and operational systems.">
-                            </lightning-helptext>
                         </div>
 
                         <!-- Brokerage -->
@@ -363,9 +347,6 @@
                                     onchange={handleToggleChange}>
                                 </lightning-input>
                             </div>
-                            <lightning-helptext 
-                                content="Acting as an intermediary to connect clients with service providers, coordinating care arrangements without directly delivering services.">
-                            </lightning-helptext>
                         </div>
 
                         <!-- Subcontractor -->
@@ -379,9 +360,6 @@
                                     onchange={handleToggleChange}>
                                 </lightning-input>
                             </div>
-                            <lightning-helptext 
-                                content="Delivering services under contract to another approved provider, working as part of their service delivery model.">
-                            </lightning-helptext>
                         </div>
 
                         <!-- Self-employ individual -->
@@ -395,9 +373,6 @@
                                     onchange={handleToggleChange}>
                                 </lightning-input>
                             </div>
-                            <lightning-helptext 
-                                content="Operating as a sole trader or individual contractor providing care services directly to clients.">
-                            </lightning-helptext>
                         </div>
 
                         <!-- Other -->
@@ -411,9 +386,6 @@
                                     onchange={handleToggleChange}>
                                 </lightning-input>
                             </div>
-                            <lightning-helptext 
-                                content="Any other business structure not covered by the above categories. Please provide details in the additional information field.">
-                            </lightning-helptext>
                         </div>
                     </div>
 
@@ -427,10 +399,6 @@
                             options={workforceOptions}
                             onchange={handleInputChange}
                             required>
-                            <lightning-helptext 
-                                slot="help" 
-                                content="Select the primary method by which your organization engages direct care workers. This affects regulatory requirements and reporting obligations.">
-                            </lightning-helptext>
                         </lightning-combobox>
                     </div>
                 </div>
@@ -466,12 +434,6 @@
                                     options={viewFilterOptions}
                                     onchange={handleViewFilterChange}>
                                 </lightning-combobox>
-                            </div>
-                            <div class="slds-col">
-                                <lightning-button 
-                                    label="Expand Table"
-                                    onclick={handleExpandTable}>
-                                </lightning-button>
                             </div>
                             <div class="slds-col">
                                 <lightning-combobox 
