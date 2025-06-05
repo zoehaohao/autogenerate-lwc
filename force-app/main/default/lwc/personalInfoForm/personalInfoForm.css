@@ -1,36 +1,55 @@
 /* personalInfoForm.css */
 :host {
-    --slds-c-input-color-border: #dddbda;
-    --slds-c-input-radius-border: 0.25rem;
-    --slds-c-input-text-color: #3e3e3c;
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-error-color: #FF6B6B;
 }
 
-.slds-section__title {
-    background-color: #1B396A;
-    color: white;
-    padding: 0.5rem;
-    font-size: 1.125rem;
-    font-weight: bold;
+.root-container {
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-lightning-input, lightning-combobox {
-    --slds-c-input-spacing-horizontal-start: 0.5rem;
-    --slds-c-input-spacing-horizontal-end: 0.5rem;
+.acme-heading {
+    color: var(--acme-blue-color);
+    font-weight: 700;
+    margin-bottom: var(--slds-c-card-spacing-block-start, 0.75rem);
 }
 
-lightning-helptext {
-    margin-top: -0.5rem;
-    margin-bottom: 0.5rem;
-    display: block;
+.acme-heading_medium {
+    font-size: 18px;
 }
 
-@media (max-width: 768px) {
-    .slds-grid {
-        flex-direction: column;
-    }
+.slds-form-element__label {
+    font-size: 14px;
+    color: var(--acme-gray-color);
+}
 
-    lightning-button {
+.slds-input, .slds-select {
+    font-size: 16px;
+}
+
+.slds-required {
+    color: var(--acme-error-color);
+}
+
+.acme-button_primary {
+    background-color: var(--acme-blue-color);
+    border-color: var(--acme-blue-color);
+}
+
+.acme-button_primary:hover, .acme-button_primary:focus {
+    background-color: #004A9E;
+    border-color: #004A9E;
+}
+
+.slds-text-color_error {
+    color: var(--acme-error-color);
+    font-size: 12px;
+}
+
+@media screen and (max-width: 768px) {
+    .slds-medium-size_1-of-2 {
         width: 100%;
-        margin-bottom: 0.5rem;
     }
 }

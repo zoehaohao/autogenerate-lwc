@@ -1,135 +1,94 @@
 <!-- personalInfoForm.html -->
 <template>
-    <lightning-card title="Personal Information Form" icon-name="standard:person_account">
-        <div class="slds-p-around_medium">
-            <form onsubmit={handleSubmit}>
-                <!-- Personal Information Section -->
-                <div class="slds-section slds-is-open">
-                    <h3 class="slds-section__title slds-theme_shade">
-                        <span class="slds-truncate slds-p-horizontal_small" title="Personal Information">Personal Information</span>
-                    </h3>
-                    <div class="slds-section__content">
-                        <lightning-input
-                            label="First Name"
-                            name="firstName"
-                            required
-                            onchange={handleInputChange}
-                            class="slds-p-bottom_small"
-                        ></lightning-input>
-                        <lightning-helptext content="Enter your legal first name as it appears on official documents."></lightning-helptext>
-
-                        <lightning-input
-                            label="Middle Name"
-                            name="middleName"
-                            onchange={handleInputChange}
-                            class="slds-p-bottom_small"
-                        ></lightning-input>
-                        <lightning-helptext content="Optional: Enter your middle name if applicable."></lightning-helptext>
-
-                        <lightning-input
-                            label="Last Name"
-                            name="lastName"
-                            required
-                            onchange={handleInputChange}
-                            class="slds-p-bottom_small"
-                        ></lightning-input>
-                        <lightning-helptext content="Enter your legal last name as it appears on official documents."></lightning-helptext>
-
-                        <lightning-input
-                            type="date"
-                            label="Birthdate"
-                            name="birthdate"
-                            required
-                            onchange={handleInputChange}
-                            class="slds-p-bottom_small"
-                        ></lightning-input>
-                        <lightning-helptext content="Enter your date of birth. You must be at least 18 years old."></lightning-helptext>
+    <div class="root-container">
+        <div class="acme-form slds-grid slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-right_medium">
+                <h2 class="acme-heading acme-heading_medium">Personal Information</h2>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label" for="firstName">
+                        <abbr class="slds-required" title="required">*</abbr> First Name
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="firstName" class="slds-input" required onchange={handleInputChange} />
                     </div>
                 </div>
-
-                <!-- Address Section -->
-                <div class="slds-section slds-is-open">
-                    <h3 class="slds-section__title slds-theme_shade">
-                        <span class="slds-truncate slds-p-horizontal_small" title="Address">Address</span>
-                    </h3>
-                    <div class="slds-section__content">
-                        <lightning-input
-                            label="Address"
-                            name="address"
-                            onchange={handleInputChange}
-                            class="slds-p-bottom_small"
-                        ></lightning-input>
-                        <lightning-helptext content="Enter your street address, including apartment or unit number if applicable."></lightning-helptext>
-
-                        <lightning-input
-                            label="City or Town"
-                            name="city"
-                            onchange={handleInputChange}
-                            class="slds-p-bottom_small"
-                        ></lightning-input>
-                        <lightning-helptext content="Enter the name of your city or town."></lightning-helptext>
-
-                        <lightning-combobox
-                            label="State"
-                            name="state"
-                            options={stateOptions}
-                            onchange={handleInputChange}
-                            placeholder="Choose a State"
-                            class="slds-p-bottom_small"
-                        ></lightning-combobox>
-                        <lightning-helptext content="Select your state from the dropdown list."></lightning-helptext>
-
-                        <lightning-input
-                            label="Zip Code"
-                            name="zipCode"
-                            required
-                            onchange={handleInputChange}
-                            pattern="^\d{5}(-\d{4})?$"
-                            message-when-pattern-mismatch="Please enter a valid 5-digit or 9-digit zip code"
-                            class="slds-p-bottom_small"
-                        ></lightning-input>
-                        <lightning-helptext content="Enter your 5-digit zip code. You may also enter a 9-digit zip code in the format 12345-6789."></lightning-helptext>
-
-                        <lightning-input
-                            type="date"
-                            label="Start Date"
-                            name="startDate"
-                            required
-                            onchange={handleInputChange}
-                            class="slds-p-bottom_small"
-                        ></lightning-input>
-                        <lightning-helptext content="Enter the start date for this address."></lightning-helptext>
-
-                        <lightning-input
-                            type="date"
-                            label="End Date"
-                            name="endDate"
-                            required
-                            onchange={handleInputChange}
-                            class="slds-p-bottom_small"
-                        ></lightning-input>
-                        <lightning-helptext content="Enter the end date for this address. This must be after the start date."></lightning-helptext>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label" for="middleName">Middle Name</label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="middleName" class="slds-input" onchange={handleInputChange} />
                     </div>
                 </div>
-
-                <div class="slds-grid slds-grid_align-end slds-p-top_medium">
-                    <lightning-button
-                        label="Clear"
-                        onclick={handleClear}
-                        class="slds-m-right_x-small"
-                    ></lightning-button>
-                    <lightning-button
-                        label="Submit"
-                        variant="brand"
-                        type="submit"
-                        disabled={isSubmitDisabled}
-                    ></lightning-button>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label" for="lastName">
+                        <abbr class="slds-required" title="required">*</abbr> Last Name
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="lastName" class="slds-input" required onchange={handleInputChange} />
+                    </div>
                 </div>
-            </form>
-
-            <template if:true={showSpinner}>
-                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
-            </template>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label" for="birthdate">
+                        <abbr class="slds-required" title="required">*</abbr> Birthdate
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input type="date" id="birthdate" class="slds-input" required onchange={handleInputChange} />
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                <h2 class="acme-heading acme-heading_medium">Address</h2>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label" for="address">Address</label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="address" class="slds-input" onchange={handleInputChange} />
+                    </div>
+                </div>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label" for="city">City/Town</label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="city" class="slds-input" onchange={handleInputChange} />
+                    </div>
+                </div>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label" for="state">State</label>
+                    <div class="slds-form-element__control">
+                        <div class="slds-select_container">
+                            <select id="state" class="slds-select" onchange={handleInputChange}>
+                                <option value="">Choose a State</option>
+                                <!-- Add state options here -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label" for="zipCode">
+                        <abbr class="slds-required" title="required">*</abbr> Zip Code
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input type="text" id="zipCode" class="slds-input" required onchange={handleInputChange} />
+                    </div>
+                </div>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label" for="startDate">
+                        <abbr class="slds-required" title="required">*</abbr> Start Date
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input type="date" id="startDate" class="slds-input" required onchange={handleInputChange} />
+                    </div>
+                </div>
+                <div class="slds-form-element slds-m-bottom_small">
+                    <label class="slds-form-element__label" for="endDate">
+                        <abbr class="slds-required" title="required">*</abbr> End Date
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input type="date" id="endDate" class="slds-input" required onchange={handleInputChange} />
+                    </div>
+                </div>
+            </div>
         </div>
-    </lightning-card>
+        <div class="slds-m-top_medium">
+            <button class="slds-button slds-button_brand acme-button_primary" onclick={handleSubmit} disabled={!isFormValid}>Submit</button>
+        </div>
+        <div if:true={errorMessage} class="slds-text-color_error slds-m-top_small">{errorMessage}</div>
+    </div>
 </template>
