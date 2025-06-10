@@ -4,229 +4,333 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class QfrFormTest extends LightningElement {
     @track currentStep = '1';
+    @track isLoading = false;
+    @track openSections = ['about-section'];
+    @track errors = {};
+    @track isEditMode = false;
+
+    // Form Data
     @track formData = {
-        // Page 1 - Residential Viability
         solvencyConcern: '',
         futureSolvencyIssues: '',
         operationalLoss: '',
-        
-        // Page 2 - Contact Information
-        contactName: 'John Smith',
-        contactPosition: 'Financial Manager',
-        contactPhone: '02 1234 5678',
-        contactEmail: 'john.smith@healthcare.com.au',
-        
-        // Page 3 - Business Structure
-        inHouseDelivery: false,
-        franchisee: false,
-        franchisor: false,
-        brokerage: false,
-        subcontractor: false,
-        selfEmployed: false,
-        other: false,
-        inHouseServices: [],
-        franchiseeServices: [],
-        inHouseAdditionalInfo: '',
-        franchiseeAdditionalInfo: '',
-        workforceEngagement: 'individual-agreements',
-        
-        // Page 4 - Labour Costs
-        centrallyHeld: true
+        workforceType: 'Individual agreements',
+        centrallyHeld: false
     };
 
-    @track openSections = [];
-    @track isEditingContact = false;
-    @track isLoading = false;
+    @track contactInfo = {
+        organisationName: 'Sample Healthcare Provider',
+        napsId: 'NAPS123456',
+        contactName: 'John Smith',
+        position: 'Finance Manager',
+        phone: '02 1234 5678',
+        email: 'john.smith@healthcare.com.au'
+    };
+
+    @track businessStructures = [
+        {
+            name: 'inHouseDelivery',
+            label: 'In-house delivery',
+            selected: false,
+            serviceTypes: [],
+            additionalInfo: '',
+            serviceTypesName: 'inHouseServiceTypes',
+            additionalInfoName: 'inHouseAdditionalInfo',
+            helpText: 'Services delivered directly by your organization using your own staff and resources.'
+        },
+        {
+            name: 'franchisee',
+            label: 'Franchisee',
+            selected: false,
+            serviceTypes: [],
+            additionalInfo: '',
+            serviceTypesName: 'franchiseeServiceTypes',
+            additionalInfoName: 'franchiseeAdditionalInfo',
+            helpText: 'Operating under a franchise agreement where you deliver services using a franchisor\'s business model.'
+        },
+        {
+            name: 'franchisor',
+            label: 'Franchisor',
+            selected: false,
+            serviceTypes: [],
+            additionalInfo: '',
+            serviceTypesName: 'franchisorServiceTypes',
+            additionalInfoName: 'franchisorAdditionalInfo',
+            helpText: 'Providing franchise opportunities to other organizations to deliver services under your business model.'
+        },
+        {
+            name: 'brokerage',
+            label: 'Brokerage',
+            selected: false,
+            serviceTypes: [],
+            additionalInfo: '',
+            serviceTypesName: 'brokerageServiceTypes',
+            additionalInfoName: 'brokerageAdditionalInfo',
+            helpText: 'Connecting clients with service providers and managing the arrangement between parties.'
+        },
+        {
+            name: 'subcontractor',
+            label: 'Subcontractor',
+            selected: false,
+            serviceTypes: [],
+            additionalInfo: '',
+            serviceTypesName: 'subcontractorServiceTypes',
+            additionalInfoName: 'subcontractorAdditionalInfo',
+            helpText: 'Providing services as a subcontractor to another primary service provider.'
+        },
+        {
+            name: 'selfEmployed',
+            label: 'Self-employ individual',
+            selected: false,
+            serviceTypes: [],
+            additionalInfo: '',
+            serviceTypesName: 'selfEmployedServiceTypes',
+            additionalInfoName: 'selfEmployedAdditionalInfo',
+            helpText: 'Individual practitioner providing services directly to clients.'
+        },
+        {
+            name: 'other',
+            label: 'Other',
+            selected: false,
+            serviceTypes: [],
+            additionalInfo: '',
+            serviceTypesName: 'otherServiceTypes',
+            additionalInfoName: 'otherAdditionalInfo',
+            helpText: 'Other business structure not covered by the above categories.'
+        }
+    ];
+
+    @track selectedColumns = ['residential', 'homeCare', 'community'];
     @track documentCategory = '';
     @track documentType = '';
     @track uploadedFiles = [];
-    @track draftValues = [];
-    @track viewFilter = 'all';
+    @track viewAllFilter = '';
     @track jumpToSection = '';
     @track jumpToColumn = '';
 
-    // Account Information
-    accountInfo = {
-        organizationName: 'Sunshine Healthcare Services',
-        napsId: 'NAPS ID: 12345678'
-    };
+    // Financial Data
+    @track financialData = [
+        {
+            id: '1',
+            category: 'Direct Care Hours',
+            residential: 1250,
+            homeCare: 850,
+            community: 420,
+            total: 2520
+        },
+        {
+            id: '2',
+            category: 'Labour Costs',
+            residential: 45000,
+            homeCare: 32000,
+            community: 15000,
+            total: 92000
+        },
+        {
+            id: '3',
+            category: 'Average Hourly Rate',
+            residential: 36.00,
+            homeCare: 37.65,
+            community: 35.71,
+            total: 36.51
+        }
+    ];
 
-    // Options for form fields
+    @track labourCostsData = [
+        {
+            id: '1',
+            category: 'Other employee staff (employed in a direct care role)',
+            column1: 0,
+            column2: 25,
+            column3: 0,
+            column4: 25,
+            total: 50
+        },
+        {
+            id: '2',
+            category: 'Total labour costs - internal direct care - employee',
+            column1: 15000,
+            column2: 8500,
+            column3: 12000,
+            column4: 6500,
+            total: 42000
+        },
+        {
+            id: '3',
+            category: 'Labour cost - internal direct care - agency care staff',
+            column1: 5000,
+            column2: 3200,
+            column3: 4100,
+            column4: 2800,
+            total: 15100
+        },
+        {
+            id: '4',
+            category: 'Registered nurses',
+            column1: 8500,
+            column2: 4200,
+            column3: 6300,
+            column4: 3100,
+            total: 22100
+        },
+        {
+            id: '5',
+            category: 'Enrolled nurses (registered with the NMBA)',
+            column1: 6200,
+            column2: 3800,
+            column3: 4500,
+            column4: 2900,
+            total: 17400
+        },
+        {
+            id: '6',
+            category: 'Personal care workers (including gardening and cleaning)',
+            column1: 12000,
+            column2: 7500,
+            column3: 8900,
+            column4: 5200,
+            total: 33600
+        },
+        {
+            id: '7',
+            category: 'Allied health',
+            column1: 3500,
+            column2: 2100,
+            column3: 2800,
+            column4: 1600,
+            total: 10000
+        },
+        {
+            id: '8',
+            category: 'Other agency staff',
+            column1: 2200,
+            column2: 1800,
+            column3: 1500,
+            column4: 1200,
+            total: 6700
+        },
+        {
+            id: '9',
+            category: 'Total labour costs - internal direct care - agency care staff',
+            column1: 37400,
+            column2: 23100,
+            column3: 28100,
+            column4: 16800,
+            total: 105400
+        },
+        {
+            id: '10',
+            category: 'Sub-contracted or brokered client services - external direct care service cost',
+            column1: 8500,
+            column2: 4200,
+            column3: 5100,
+            column4: 3200,
+            total: 21000
+        }
+    ];
+
+    // Options
     yesNoOptions = [
-        { label: 'Yes', value: 'yes' },
-        { label: 'No', value: 'no' }
+        { label: 'Yes', value: 'Yes' },
+        { label: 'No', value: 'No' }
     ];
 
     serviceTypeOptions = [
-        { label: 'Clinical care', value: 'clinical-care' },
-        { label: 'Personal care', value: 'personal-care' },
-        { label: 'Allied health', value: 'allied-health' },
-        { label: 'Domestic assistance', value: 'domestic-assistance' },
-        { label: 'Social support', value: 'social-support' },
+        { label: 'Clinical care', value: 'clinical' },
+        { label: 'Personal care', value: 'personal' },
+        { label: 'Allied health', value: 'allied' },
+        { label: 'Domestic assistance', value: 'domestic' },
+        { label: 'Social support', value: 'social' },
         { label: 'Transport', value: 'transport' },
-        { label: 'Meals', value:'meals' },
-        { label: 'Equipment and technology', value: 'equipment-technology' }
+        { label: 'Meal services', value: 'meals' }
     ];
 
     workforceOptions = [
-        { label: 'Individual agreements', value: 'individual-agreements' },
-        { label: 'Enterprise agreement', value: 'enterprise-agreement' },
-        { label: 'Award rates', value: 'award-rates' },
-        { label: 'Mixed arrangements', value: 'mixed-arrangements' }
+        { label: 'Individual agreements', value: 'Individual agreements' },
+        { label: 'Enterprise agreement', value: 'Enterprise agreement' },
+        { label: 'Award wages', value: 'Award wages' },
+        { label: 'Contractors', value: 'Contractors' },
+        { label: 'Agency staff', value: 'Agency staff' }
+    ];
+
+    columnRelevanceOptions = [
+        { label: 'Residential Care', value: 'residential' },
+        { label: 'Home Care', value: 'homeCare' },
+        { label: 'Community Services', value: 'community' }
     ];
 
     documentCategoryOptions = [
-        { label: 'Financial Statement', value: 'financial-statement' },
+        { label: 'Financial Statement', value: 'financial' },
         { label: 'Declaration', value: 'declaration' },
-        { label: 'Supporting Evidence', value: 'supporting-evidence' },
-        { label: 'Audit Report', value: 'audit-report' },
+        { label: 'Supporting Documentation', value: 'supporting' },
         { label: 'Other', value: 'other' }
     ];
 
     documentTypeOptions = [
-        { label: 'PDF Report', value: 'pdf-report' },
-        { label: 'Excel Spreadsheet', value: 'excel-spreadsheet' },
-        { label: 'Word Document', value: 'word-document' },
-        { label: 'Signed Declaration', value: 'signed-declaration' },
-        { label: 'Image/Scan', value: 'image-scan' }
+        { label: 'PDF Document', value: 'pdf' },
+        { label: 'Word Document', value: 'word' },
+        { label: 'Excel Spreadsheet', value: 'excel' },
+        { label: 'Image', value: 'image' }
     ];
 
-    viewFilterOptions = [
+    viewAllOptions = [
         { label: 'All Categories', value: 'all' },
-        { label: 'Employee Staff', value: 'employee' },
-        { label: 'Agency Staff', value: 'agency' },
-        { label: 'Contracted Services', value: 'contracted' }
+        { label: 'Employee Costs', value: 'employee' },
+        { label: 'Agency Costs', value: 'agency' },
+        { label: 'External Costs', value: 'external' }
     ];
 
     sectionOptions = [
-        { label: 'Employee Categories', value: 'employee-section' },
-        { label: 'Agency Staff', value: 'agency-section' },
-        { label: 'Contracted Services', value: 'contracted-section' }
+        { label: 'Employee Staff', value: 'employee' },
+        { label: 'Agency Staff', value: 'agency' },
+        { label: 'External Services', value: 'external' }
     ];
 
     columnOptions = [
-        { label: 'Employee Category', value: 'category' },
-        { label: 'Total Amount', value: 'total' }
+        { label: 'Column 1', value: 'column1' },
+        { label: 'Column 2', value: 'column2' },
+        { label: 'Column 3', value: 'column3' },
+        { label: 'Column 4', value: 'column4' },
+        { label: 'Total', value: 'total' }
     ];
 
-    // Labour Cost Data
-    @track labourCostData = [
-        {
-            id: '1',
-            category: 'Other employee staff (employed in a direct care role)',
-            total: 0,
-            isEditable: true,
-            isTotal: false
-        },
-        {
-            id: '2',
-            category: 'Total labour - internal direct care - employee',
-            total: 0,
-            isEditable: false,
-            isTotal: true
-        },
-        {
-            id: '3',
-            category: 'Registered nurses',
-            total: 125000,
-            isEditable: true,
-            isTotal: false
-        },
-        {
-            id: '4',
-            category: 'Enrolled nurses (registered with the NMBA)',
-            total: 85000,
-            isEditable: true,
-            isTotal: false
-        },
-        {
-            id: '5',
-            category: 'Personal care workers (including gardening and cleaning)',
-            total: 180000,
-            isEditable: true,
-            isTotal: false
-        },
-        {
-            id: '6',
-            category: 'Allied health',
-            total: 95000,
-            isEditable: true,
-            isTotal: false
-        },
-        {
-            id: '7',
-            category: 'Other agency staff',
-            total: 45000,
-            isEditable: true,
-            isTotal: false
-        },
-        {
-            id: '8',
-            category: 'Sub-contracted or brokered client services - external direct care service cost',
-            total: 75000,
-            isEditable: true,
-            isTotal: false
-        }
+    // Table Columns
+    financialColumns = [
+        { label: 'Category', fieldName: 'category', type: 'text' },
+        { label: 'Residential', fieldName: 'residential', type: 'currency', editable: true },
+        { label: 'Home Care', fieldName: 'homeCare', type: 'currency', editable: true },
+        { label: 'Community', fieldName: 'community', type: 'currency', editable: true },
+        { label: 'Total', fieldName: 'total', type: 'currency' }
     ];
 
-    labourCostColumns = [
-        {
-            label: 'Employee Category',
-            fieldName: 'category',
-            type: 'text',
-            hideDefaultActions: true
-        },
-        {
-            label: 'Total ($)',
-            fieldName: 'total',
-            type: 'currency',
-            editable: true,
-            hideDefaultActions: true,
-            cellAttributes: {
-                alignment: 'right'
-            }
-        }
+    labourCostsColumns = [
+        { label: 'Employee Category', fieldName: 'category', type: 'text' },
+        { label: '$', fieldName: 'column1', type: 'currency', editable: true },
+        { label: '25', fieldName: 'column2', type: 'currency', editable: true },
+        { label: '$', fieldName: 'column3', type: 'currency', editable: true },
+        { label: '25', fieldName: 'column4', type: 'currency', editable: true },
+        { label: 'Total', fieldName: 'total', type: 'currency' }
     ];
 
-    fileColumns = [
-        {
-            label: 'File Name',
-            fieldName: 'name',
-            type: 'text'
-        },
-        {
-            label: 'Category',
-            fieldName: 'category',
-            type: 'text'
-        },
-        {
-            label: 'Type',
-            fieldName: 'type',
-            type: 'text'
-        },
-        {
-            label: 'Size',
-            fieldName: 'size',
-            type: 'text'
-        },
-        {
-            label: 'Status',
-            fieldName: 'status',
-            type: 'text'
-        },
+    documentColumns = [
+        { label: 'File Name', fieldName: 'name', type: 'text' },
+        { label: 'Category', fieldName: 'category', type: 'text' },
+        { label: 'Type', fieldName: 'type', type: 'text' },
+        { label: 'Size', fieldName: 'size', type: 'text' },
+        { label: 'Status', fieldName: 'status', type: 'text' },
         {
             type: 'action',
             typeAttributes: {
                 rowActions: [
                     { label: 'View', name: 'view' },
                     { label: 'Download', name: 'download' },
-                    { label: 'Remove', name: 'remove' }
+                    { label: 'Delete', name: 'delete' }
                 ]
             }
         }
     ];
 
-    // Computed properties
+    // Computed Properties
     get isPage1() {
         return this.currentStep === '1';
     }
@@ -247,28 +351,32 @@ export default class QfrFormTest extends LightningElement {
         return this.currentStep === '5';
     }
 
+    get isPage6() {
+        return this.currentStep === '6';
+    }
+
     get isPreviousDisabled() {
         return this.currentStep === '1' || this.isLoading;
     }
 
     get isNextDisabled() {
-        return !this.isCurrentPageValid() || this.isLoading;
+        return this.isLoading || !this.isCurrentPageValid();
     }
 
     get nextButtonLabel() {
-        return this.currentStep === '5' ? 'Submit' : 'Next';
+        return this.currentStep === '6' ? 'Submit' : 'Next';
     }
 
-    get editContactLabel() {
-        return this.isEditingContact ? 'Save' : 'Edit';
+    get editButtonLabel() {
+        return this.isEditMode ? 'Save' : 'Edit';
     }
 
-    get editContactVariant() {
-        return this.isEditingContact ? 'brand' : 'neutral';
+    get editButtonVariant() {
+        return this.isEditMode ? 'brand' : 'neutral';
     }
 
-    get hasUploadedFiles() {
-        return this.uploadedFiles.length > 0;
+    get centrallyHeldValue() {
+        return this.formData.centrallyHeld ? '67600' : '0';
     }
 
     // Event Handlers
@@ -279,112 +387,136 @@ export default class QfrFormTest extends LightningElement {
 
     handleInputChange(event) {
         const field = event.target.name;
+        const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+        this.formData = { ...this.formData, [field]: value };
+        this.clearError(field);
+    }
+
+    handleContactChange(event) {
+        const field = event.target.name;
         const value = event.target.value;
-        this.formData = { ...this.formData, [field]: value };
-    }
-
-    handleToggleChange(event) {
-        const field = event.target.name;
-        const value = event.target.checked;
-        this.formData = { ...this.formData, [field]: value };
-    }
-
-    handleServiceTypeChange(event) {
-        const field = event.target.name;
-        const value = event.detail.value;
-        this.formData = { ...this.formData, [field]: value };
+        this.contactInfo = { ...this.contactInfo, [field]: value };
     }
 
     handleEditContact() {
-        if (this.isEditingContact) {
-            // Save contact information
-            this.isEditingContact = false;
-            this.showToast('Success', 'Contact information updated successfully', 'success');
+        if (this.isEditMode) {
+            // Save changes
+            if (this.validateContactInfo()) {
+                this.isEditMode = false;
+                this.showToast('Success', 'Contact information updated successfully', 'success');
+            }
         } else {
-            this.isEditingContact = true;
+            this.isEditMode = true;
         }
     }
 
-    handleCellChange(event) {
-        const draftValues = event.detail.draftValues;
-        this.draftValues = draftValues;
+    handleStructureToggle(event) {
+        const structureName = event.target.name;
+        const isSelected = event.target.checked;
         
-        // Update the data
-        draftValues.forEach(draft => {
-            const record = this.labourCostData.find(item => item.id === draft.id);
-            if (record) {
-                record.total = draft.total || 0;
+        this.businessStructures = this.businessStructures.map(structure => {
+            if (structure.name === structureName) {
+                return { ...structure, selected: isSelected };
             }
+            return structure;
         });
-        
-        this.calculateTotals();
     }
 
-    handleViewFilterChange(event) {
-        this.viewFilter = event.detail.value;
-        // Apply filter logic here
+    handleServiceTypeChange(event) {
+        const fieldName = event.target.name;
+        const selectedValues = event.detail.value;
+        
+        this.businessStructures = this.businessStructures.map(structure => {
+            if (structure.serviceTypesName === fieldName) {
+                return { ...structure, serviceTypes: selectedValues };
+            }
+            return structure;
+        });
+    }
+
+    handleAdditionalInfoChange(event) {
+        const fieldName = event.target.name;
+        const value = event.target.value;
+        
+        this.businessStructures = this.businessStructures.map(structure => {
+            if (structure.additionalInfoName === fieldName) {
+                return { ...structure, additionalInfo: value };
+            }
+            return structure;
+        });
+    }
+
+    handleColumnRelevanceChange(event) {
+        this.selectedColumns = event.detail.value;
+        // Update financial data based on selected columns
+        this.updateFinancialDataColumns();
+    }
+
+    handleFinancialDataChange(event) {
+        const draftValues = event.detail.draftValues;
+        this.updateFinancialData(draftValues);
+    }
+
+    handleLabourCostsChange(event) {
+        const draftValues = event.detail.draftValues;
+        this.updateLabourCostsData(draftValues);
+    }
+
+    handleViewAllChange(event) {
+        this.viewAllFilter = event.target.value;
+        this.filterLabourCostsData();
     }
 
     handleExpandTable() {
-        // Implement table expansion logic
-        this.showToast('Info', 'Table expanded', 'info');
+        // Toggle expanded view
+        const tableElement = this.template.querySelector('.labour-costs-table');
+        tableElement.classList.toggle('expanded-table');
     }
 
     handleJumpToSection(event) {
-        this.jumpToSection = event.detail.value;
-        // Implement jump to section logic
+        this.jumpToSection = event.target.value;
+        // Implement section navigation logic
     }
 
     handleJumpToColumn(event) {
-        this.jumpToColumn = event.detail.value;
-        // Implement jump to column logic
+        this.jumpToColumn = event.target.value;
+        // Implement column navigation logic
     }
 
-    handleDocumentConfigChange(event) {
-        const field = event.target.name;
-        const value = event.target.value;
-        if (field === 'documentCategory') {
-            this.documentCategory = value;
-        } else if (field === 'documentType') {
-            this.documentType = value;
-        }
+    handleDocumentCategoryChange(event) {
+        this.documentCategory = event.target.value;
     }
 
-    handleFileDrop(event) {
-        event.preventDefault();
-        const files = event.dataTransfer.files;
-        this.processFiles(files);
+    handleDocumentTypeChange(event) {
+        this.documentType = event.target.value;
     }
 
-    handleDragOver(event) {
-        event.preventDefault();
-    }
-
-    handleBrowseFiles() {
-        const fileInput = this.template.querySelector('.file-input');
-        fileInput.click();
-    }
-
-    handleFileSelect(event) {
+    handleFileUpload(event) {
         const files = event.target.files;
-        this.processFiles(files);
+        this.processFileUploads(files);
     }
 
-    handleFileAction(event) {
-        const action = event.detail.action;
+    handleDocumentAction(event) {
+        const actionName = event.detail.action.name;
         const row = event.detail.row;
         
-        switch (action.name) {
+        switch (actionName) {
             case 'view':
-                this.viewFile(row);
+                this.viewDocument(row);
                 break;
             case 'download':
-                this.downloadFile(row);
+                this.downloadDocument(row);
                 break;
-            case 'remove':
-                this.removeFile(row);
+            case 'delete':
+                this.deleteDocument(row);
                 break;
         }
+    }
+
+    handleDataItemClick(event) {
+        event.preventDefault();
+        // Navigate to specific data item
+        this.showToast('Info', 'Navigating to data item', 'info');
     }
 
     handlePrevious() {
@@ -395,7 +527,7 @@ export default class QfrFormTest extends LightningElement {
 
     handleNext() {
         if (this.isCurrentPageValid()) {
-            if (this.currentStep === '5') {
+            if (this.currentStep === '6') {
                 this.submitForm();
             } else {
                 this.currentStep = String(parseInt(this.currentStep) + 1);
@@ -403,96 +535,208 @@ export default class QfrFormTest extends LightningElement {
         }
     }
 
-    // Helper Methods
+    // Validation Methods
     isCurrentPageValid() {
+        this.errors = {};
+        
         switch (this.currentStep) {
             case '1':
-                return this.formData.solvencyConcern && 
-                       this.formData.futureSolvencyIssues && 
-                       this.formData.operationalLoss;
+                return this.validatePage1();
             case '2':
-                return this.formData.contactName && 
-                       this.formData.contactPosition && 
-                       this.formData.contactPhone && 
-                       this.formData.contactEmail;
+                return this.validatePage2();
             case '3':
-                return this.hasSelectedBusinessStructure() && 
-                       this.formData.workforceEngagement;
+                return this.validatePage3();
             case '4':
-                return this.hasLabourCostData();
+                return this.validatePage4();
             case '5':
-                return this.uploadedFiles.length > 0;
+                return this.validatePage5();
+            case '6':
+                return this.validatePage6();
             default:
                 return true;
         }
     }
 
-    hasSelectedBusinessStructure() {
-        return this.formData.inHouseDelivery || 
-               this.formData.franchisee || 
-               this.formData.franchisor || 
-               this.formData.brokerage || 
-               this.formData.subcontractor || 
-               this.formData.selfEmployed || 
-               this.formData.other;
-    }
-
-    hasLabourCostData() {
-        return this.labourCostData.some(item => item.total > 0);
-    }
-
-    calculateTotals() {
-        // Calculate total for employee categories
-        const employeeTotal = this.labourCostData
-            .filter(item => !item.isTotal && item.id !== '7' && item.id !== '8')
-            .reduce((sum, item) => sum + (item.total || 0), 0);
+    validatePage1() {
+        let isValid = true;
         
-        const totalRecord = this.labourCostData.find(item => item.id === '2');
-        if (totalRecord) {
-            totalRecord.total = employeeTotal;
+        if (!this.formData.solvencyConcern) {
+            this.errors.solvencyConcern = 'Please answer the solvency concern question';
+            isValid = false;
+        }
+        
+        if (!this.formData.futureSolvencyIssues) {
+            this.errors.futureSolvencyIssues = 'Please answer the future solvency issues question';
+            isValid = false;
+        }
+        
+        if (!this.formData.operationalLoss) {
+            this.errors.operationalLoss = 'Please answer the operational loss question';
+            isValid = false;
+        }
+        
+        return isValid;
+    }
+
+    validatePage2() {
+        return this.validateContactInfo();
+    }
+
+    validatePage3() {
+        const hasSelectedStructure = this.businessStructures.some(structure => structure.selected);
+        if (!hasSelectedStructure) {
+            this.showToast('Error', 'Please select at least one business structure', 'error');
+            return false;
+        }
+        
+        // Validate that selected structures have service types
+        for (let structure of this.businessStructures) {
+            if (structure.selected && structure.serviceTypes.length === 0) {
+                this.showToast('Error', `Please select service types for ${structure.label}`, 'error');
+                return false;
+            }
+        }
+        
+        return true;
+    }
+
+    validatePage4() {
+        return this.selectedColumns.length > 0;
+    }
+
+    validatePage5() {
+        return true; // Labour costs validation
+    }
+
+    validatePage6() {
+        return this.uploadedFiles.length > 0;
+    }
+
+    validateContactInfo() {
+        let isValid = true;
+        
+        if (!this.contactInfo.contactName) {
+            this.showToast('Error', 'Contact name is required', 'error');
+            isValid = false;
+        }
+        
+        if (!this.contactInfo.email || !this.isValidEmail(this.contactInfo.email)) {
+            this.showToast('Error', 'Valid email address is required', 'error');
+            isValid = false;
+        }
+        
+        if (!this.contactInfo.phone) {
+            this.showToast('Error', 'Phone number is required', 'error');
+            isValid = false;
+        }
+        
+        return isValid;
+    }
+
+    isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    clearError(field) {
+        if (this.errors[field]) {
+            delete this.errors[field];
+            this.errors = { ...this.errors };
         }
     }
 
-    processFiles(files) {
+    // Data Processing Methods
+    updateFinancialDataColumns() {
+        // Zero out unselected columns
+        this.financialData = this.financialData.map(row => {
+            const updatedRow = { ...row };
+            if (!this.selectedColumns.includes('residential')) {
+                updatedRow.residential = 0;
+            }
+            if (!this.selectedColumns.includes('homeCare')) {
+                updatedRow.homeCare = 0;
+            }
+            if (!this.selectedColumns.includes('community')) {
+                updatedRow.community = 0;
+            }
+            updatedRow.total = updatedRow.residential + updatedRow.homeCare + updatedRow.community;
+            return updatedRow;
+        });
+    }
+
+    updateFinancialData(draftValues) {
+        const updatedData = [...this.financialData];
+        
+        draftValues.forEach(draft => {
+            const index = updatedData.findIndex(item => item.id === draft.id);
+            if (index !== -1) {
+                updatedData[index] = { ...updatedData[index], ...draft };
+                // Recalculate total
+                const row = updatedData[index];
+                row.total = (row.residential || 0) + (row.homeCare || 0) + (row.community || 0);
+            }
+        });
+        
+        this.financialData = updatedData;
+    }
+
+    updateLabourCostsData(draftValues) {
+        const updatedData = [...this.labourCostsData];
+        
+        draftValues.forEach(draft => {
+            const index = updatedData.findIndex(item => item.id === draft.id);
+            if (index !== -1) {
+                updatedData[index] = { ...updatedData[index], ...draft };
+                // Recalculate total
+                const row = updatedData[index];
+                row.total = (row.column1 || 0) + (row.column2 || 0) + (row.column3 || 0) + (row.column4 || 0);
+            }
+        });
+        
+        this.labourCostsData = updatedData;
+    }
+
+    filterLabourCostsData() {
+        // Filter data based on viewAllFilter
+        // Implementation depends on specific filtering requirements
+    }
+
+    processFileUploads(files) {
         if (!this.documentCategory || !this.documentType) {
             this.showToast('Error', 'Please select document category and type before uploading', 'error');
             return;
         }
 
         Array.from(files).forEach(file => {
-            const fileRecord = {
-                id: Date.now() + Math.random(),
+            const fileData = {
+                id: this.generateId(),
                 name: file.name,
                 category: this.documentCategory,
                 type: this.documentType,
                 size: this.formatFileSize(file.size),
-                status: 'Uploaded'
+                status: 'Uploaded',
+                file: file
             };
-            this.uploadedFiles = [...this.uploadedFiles, fileRecord];
+            
+            this.uploadedFiles = [...this.uploadedFiles, fileData];
         });
 
         this.showToast('Success', `${files.length} file(s) uploaded successfully`, 'success');
     }
 
-    formatFileSize(bytes) {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    viewDocument(row) {
+        // Implement document viewing logic
+        this.showToast('Info', `Viewing document: ${row.name}`, 'info');
     }
 
-    viewFile(file) {
-        this.showToast('Info', `Viewing ${file.name}`, 'info');
+    downloadDocument(row) {
+        // Implement document download logic
+        this.showToast('Info', `Downloading document: ${row.name}`, 'info');
     }
 
-    downloadFile(file) {
-        this.showToast('Info', `Downloading ${file.name}`, 'info');
-    }
-
-    removeFile(file) {
-        this.uploadedFiles = this.uploadedFiles.filter(f => f.id !== file.id);
-        this.showToast('Success', `${file.name} removed`, 'success');
+    deleteDocument(row) {
+        this.uploadedFiles = this.uploadedFiles.filter(file => file.id !== row.id);
+        this.showToast('Success', `Document ${row.name} deleted successfully`, 'success');
     }
 
     submitForm() {
@@ -505,12 +749,35 @@ export default class QfrFormTest extends LightningElement {
         }, 2000);
     }
 
+    // Utility Methods
+    generateId() {
+        return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+    }
+
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
     showToast(title, message, variant) {
-        const evt = new ShowToastEvent({
+        const event = new ShowToastEvent({
             title: title,
             message: message,
             variant: variant
         });
-        this.dispatchEvent(evt);
+        this.dispatchEvent(event);
+    }
+
+    // Lifecycle Hooks
+    connectedCallback() {
+        // Initialize component
+        this.openSections = ['about-section'];
+    }
+
+    renderedCallback() {
+        // Handle any post-render logic
     }
 }
