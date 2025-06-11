@@ -1,0 +1,54 @@
+/* qfrMultiPageForm.css */
+:host {
+    --acme-blue-color: #0057B8;
+    --acme-gray-color: #424A54;
+    --acme-white-color: #FFFFFF;
+    --acme-light-gray-color: #F5F7FA;
+}
+.acme-qfr-form {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    color: var(--acme-gray-color);
+    background-color: var(--acme-white-color);
+    padding: var(--slds-c-card-spacing-block, 1rem);
+}
+.acme-qfr-form__content {
+    margin-bottom: var(--slds-c-card-spacing-block, 1rem);
+}
+.acme-qfr-form__footer {
+    display: flex;
+    justify-content: space-between;
+}
+.acme-button {
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+}
+.acme-button_primary {
+    background-color: var(--acme-blue-color);
+    border-color: var(--acme-blue-color);
+    color: var(--acme-white-color);
+}
+.acme-button_primary:hover, .acme-button_primary:focus {
+    background-color: #004A9E;
+    border-color: #004A9E;
+}
+.acme-button_secondary {
+    background-color: var(--acme-white-color);
+    border-color: var(--acme-blue-color);
+    color: var(--acme-blue-color);
+}
+.acme-button_secondary:hover, .acme-button_secondary:focus {
+    background-color: var(--acme-light-gray-color);
+}
+@media screen and (max-width: 768px) {
+    .acme-qfr-form {
+        padding: 0.5rem;
+    }
+    .acme-qfr-form__footer {
+        flex-direction: column;
+    }
+    .acme-button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}

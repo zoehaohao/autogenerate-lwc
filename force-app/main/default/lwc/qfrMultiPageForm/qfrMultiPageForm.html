@@ -1,0 +1,44 @@
+<!-- qfrMultiPageForm.html -->
+<template>
+    <div class="acme-qfr-form">
+        <c-qfr-progress-indicator current-page={currentPage} total-pages={totalPages}></c-qfr-progress-indicator>
+        <div class="acme-qfr-form__content">
+            <template if:true={isPage1}>
+                <c-qfr-page-one 
+                    form-data={formData} 
+                    onupdatedata={handleDataUpdate}
+                    onvalidate={handleValidation}>
+                </c-qfr-page-one>
+            </template>
+            <template if:true={isPage2}>
+                <c-qfr-page-two 
+                    form-data={formData} 
+                    onupdatedata={handleDataUpdate}
+                    onvalidate={handleValidation}>
+                </c-qfr-page-two>
+            </template>
+            <template if:true={isPage3}>
+                <c-qfr-page-three 
+                    form-data={formData} 
+                    onupdatedata={handleDataUpdate}
+                    onvalidate={handleValidation}>
+                </c-qfr-page-three>
+            </template>
+        </div>
+        <div class="acme-qfr-form__footer">
+            <lightning-button 
+                label="Previous" 
+                onclick={handlePrevious} 
+                disabled={isFirstPage} 
+                class="acme-button acme-button_secondary">
+            </lightning-button>
+            <lightning-button 
+                label={nextButtonLabel} 
+                onclick={handleNext} 
+                disabled={isNextDisabled} 
+                variant="brand" 
+                class="acme-button acme-button_primary">
+            </lightning-button>
+        </div>
+    </div>
+</template>
