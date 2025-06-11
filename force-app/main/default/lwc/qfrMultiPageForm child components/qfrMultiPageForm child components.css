@@ -1,0 +1,20 @@
+/* qfrProgressIndicator.css */
+.acme-progress-indicator {
+    background-color: var(--acme-light-gray-color, #F5F7FA);
+    border-radius: 4px;
+    height: 8px;
+    margin-bottom: 1rem;
+    position: relative;
+}
+.acme-progress-indicator__bar {
+    background-color: var(--acme-blue-color, #0057B8);
+    border-radius: 4px;
+    height: 100%;
+    transition: width 0.3s ease;
+}
+.acme-progress-indicator__text {
+    color: var(--acme-gray-color, #424A54);
+    font-size: 14px;
+    margin-top: 0.5rem;
+    text-align: center;
+}
