@@ -8,139 +8,292 @@
     margin-top: 1rem;
 }
 
-.required-asterisk {
-    color: #c23934;
-    margin-right: 0.25rem;
-}
-
 .business-structure-item {
-    border: 1px solid #dddbda;
+    border: 1px solid #d8dde6;
     border-radius: 0.25rem;
     padding: 1rem;
     background-color: #fafaf9;
 }
 
-.table-controls {margin-bottom: 1rem;
-    padding: 1rem;
-    background-color: #f3f3f3;
-    border-radius: 0.25rem;
+.business-structure-item:hover {
+    background-color: #f3f2f2;
 }
 
-.labour-costs-table {
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
-    overflow: hidden;
+.labour-costs-container {
+    overflow-x: auto;
 }
 
-.expandable-rows-section {
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
-    background-color: #ffffff;
-}
-
-.labour-category-row {
-    border-bottom: 1px solid #dddbda;
-}
-
-.labour-category-row:last-child {
-    border-bottom: none;
-}
-
-.category-header {
-    padding: 0.75rem 1rem;
-    background-color: #f8f9fa;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.category-header:hover {
-    background-color: #e8f4fd;
-}
-
-.category-name {
-    font-weight: 600;
-    color: #181818;
-}
-
-.category-total {
-    font-weight: 600;
-    color: #0176d3;
-}
-
-.category-children {
-    background-color: #ffffff;
-    border-top: 1px solid #e5e5e5;
-}
-
-.child-row {
-    padding: 0.5rem 1rem;
-    border-bottom: 1px solid #f1f1f1;
-}
-
-.child-row:last-child {
-    border-bottom: none;
-}
-
-.child-name {
-    color: #444444;
-    font-size: 0.875rem;
-}
-
-.child-name::before {
-    content: "├── ";
-    color: #999999;
-    margin-right: 0.25rem;
-}
-
-.child-row:last-child .child-name::before {
-    content: "└── ";
+.labour-costs-container .slds-table {
+    min-width: 600px;
 }
 
 .file-upload-area {
-    border: 2px dashed #0176d3;
-    border-radius: 0.5rem;
-    transition: all 0.3s ease;
-    cursor: pointer;
+    border: 2px dashed #d8dde6;
+    border-radius: 0.25rem;
+    padding: 2rem;
+    text-align: center;
+    background-color: #fafaf9;
+    transition: all 0.2s ease;
 }
 
 .file-upload-area:hover {
-    border-color: #014486;
-    background-color: #f0f8ff;
+    border-color: #1589ee;
+    background-color: #f3f8ff;
 }
 
-.file-input-hidden {
-    display: none;
+.file-upload-area.dragover {
+    border-color: #1589ee;
+    background-color: #e8f4ff;
 }
 
-.upload-progress {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    background-color: #f8f9fa;
-    border-radius: 0.25rem;
+.navigation-controls {
+    border-top: 1px solid #d8dde6;
+    padding-top: 1rem;
 }
 
-.navigation-buttons {
-    position: sticky;
-    bottom: 0;
-    background-color: #ffffff;
-    padding: 1rem 0;
-    border-top: 1px solid #dddbda;
-    margin-top: 2rem;
-}
-
-.loading-overlay {
+.slds-spinner_container {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    right: 0;
+    bottom: 0;
     background-color: rgba(255, 255, 255, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
     z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slds-form-element__static {
+    font-weight: 500;
+    color: #181818;
+}
+
+.slds-section__title {
+    font-weight: 600;
+    color: #181818;
+    margin-bottom: 0.5rem;
+}
+
+.slds-card__header-title {
+    font-weight: 700;
+    color: #181818;
+}
+
+/* Progress Indicator Styling */
+.slds-progress-indicator {
+    margin-bottom: 2rem;
+}
+
+/* Accordion Styling */
+.slds-accordion__section {
+    border: 1px solid #d8dde6;
+    margin-bottom: 0.5rem;
+}
+
+.slds-accordion__summary {
+    background-color: #f3f2f2;
+    padding: 1rem;
+    font-weight: 600;
+}
+
+.slds-accordion__summary:hover {
+    background-color: #ecebea;
+}
+
+.slds-accordion__content {
+    padding: 1rem;
+    background-color: #ffffff;
+}
+
+/* Radio Group Button Styling */
+.slds-radio_button-group .slds-button {
+    min-width: 80px;
+    margin-right: 0.5rem;
+}
+
+.slds-radio_button-group .slds-button:last-child {
+    margin-right: 0;
+}
+
+/* Toggle Switch Styling */
+.slds-form-element__control .slds-checkbox_toggle {
+    margin-left: auto;
+}
+
+/* Checkbox Group Styling */
+.slds-checkbox_button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.slds-checkbox_button-group .slds-button {
+    flex: 0 0 auto;
+    min-width: 120px;
+}
+
+/* Datatable Styling */
+.slds-table_header-fixed_container {
+    max-height: 400px;
+}
+
+.slds-table th {
+    background-color: #f3f2f2;
+    font-weight: 600;
+    border-bottom: 2px solid #d8dde6;
+}
+
+.slds-table td {
+    border-bottom: 1px solid #e5e5e5;
+    vertical-align: middle;
+}
+
+.slds-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* File Upload Styling */
+.slds-file-selector__dropzone {
+    border: 2px dashed #d8dde6;
+    border-radius: 0.25rem;
+    padding: 2rem;
+    text-align: center;
+    background-color: #fafaf9;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.slds-file-selector__dropzone:hover {
+    border-color: #1589ee;
+    background-color: #f3f8ff;
+}
+
+.slds-file-selector__button {
+    margin-bottom: 0.5rem;
+}
+
+.slds-file-selector__text {
+    color: #706e6b;
+    font-size: 0.875rem;
+}
+
+/* Error Message Styling */
+.slds-notify_alert {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 0.25rem;
+}
+
+.slds-theme_error {
+    background-color: #c23934;
+    color: #ffffff;
+}
+
+.slds-theme_error .slds-notify__content {
+    color: #ffffff;
+}
+
+/* Button Styling */
+.slds-button_brand {
+    background-color: #1589ee;
+    border-color: #1589ee;
+    color: #ffffff;
+}
+
+.slds-button_brand:hover {
+    background-color: #0176d3;
+    border-color: #0176d3;
+}
+
+.slds-button_brand:disabled {
+    background-color: #dddbda;
+    border-color: #dddbda;
+    color: #706e6b;
+}
+
+.slds-button_neutral {
+    background-color: #ffffff;
+    border-color: #d8dde6;
+    color: #0176d3;
+}
+
+.slds-button_neutral:hover {
+    background-color: #f3f2f2;
+    border-color: #c9c7c5;
+}
+
+/* Form Element Styling */
+.slds-form-element__label {
+    font-weight: 600;
+    color: #181818;
+    margin-bottom: 0.25rem;
+}
+
+.slds-form-element__control {
+    position: relative;
+}
+
+.slds-input {
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25;
+    color: #181818;
+    background-color: #ffffff;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.slds-input:focus {
+    border-color: #1589ee;
+    box-shadow: 0 0 0 2px rgba(21, 137, 238, 0.1);
+    outline: none;
+}
+
+.slds-input:disabled {
+    background-color: #f3f2f2;
+    color: #706e6b;
+    cursor: not-allowed;
+}
+
+.slds-textarea {
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25;
+    color: #181818;
+    background-color: #ffffff;
+    min-height: 80px;
+    resize: vertical;
+}
+
+.slds-textarea:focus {
+    border-color: #1589ee;
+    box-shadow: 0 0 0 2px rgba(21, 137, 238, 0.1);
+    outline: none;
+}
+
+/* Combobox Styling */
+.slds-combobox__form-element {
+    position: relative;
+}
+
+.slds-combobox__input {
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25;
+    color: #181818;
+    background-color: #ffffff;
+}
+
+.slds-combobox__input:focus {
+    border-color: #1589ee;
+    box-shadow: 0 0 0 2px rgba(21, 137, 238, 0.1);
+    outline: none;
 }
 
 /* Responsive Design */
@@ -149,194 +302,100 @@
         padding: 0.5rem;
     }
     
-    .slds-grid.slds-gutters {
-        margin: 0;
+    .slds-grid .slds-col {
+        flex-basis: 100%;
+        max-width: 100%;
     }
     
-    .slds-col {
-        padding: 0.25rem;
+    .slds-grid .slds-size_1-of-2 {
+        flex-basis: 100%;
+        max-width: 100%;
+        padding-left: 0;
+        padding-right: 0;
     }
     
-    .table-controls .slds-col {
-        margin-bottom: 0.5rem;
+    .navigation-controls .slds-grid {
+        flex-direction: column;
+        gap: 1rem;
     }
     
-    .navigation-buttons {
+    .navigation-controls .slds-button {
+        width: 100%;
+    }
+    
+    .labour-costs-container {
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .file-upload-area {
+        padding: 1rem;
+    }
+    
+    .slds-file-selector__text.slds-medium-show {
+        display: block;
+    }
+}
+
+@media (max-width: 480px) {
+    .slds-progress-indicator {
+        font-size: 0.75rem;
+    }
+    
+    .slds-progress-step {
+        min-width: auto;
+        flex: 1;
+    }
+    
+    .slds-card__body {
         padding: 0.5rem;
     }
+    
+    .business-structure-item {
+        padding: 0.5rem;
+    }
+    
+    .slds-checkbox_button-group .slds-button {
+        min-width: 100px;
+        font-size: 0.75rem;
+    }
 }
 
-/* Progress Indicator Styling */
-.slds-progress__item.slds-is-active .slds-progress__marker {
-    background-color: #0176d3;
-    border-color: #0176d3;
+/* Animation and Transitions */
+.page-content {
+    animation: fadeIn 0.3s ease-in-out;
 }
 
-.slds-progress__item.slds-is-completed .slds-progress__marker {
-    background-color: #04844b;
-    border-color: #04844b;
-}
-
-/* Form Field Enhancements */
-.slds-form-element__label {
-    font-weight: 600;
-    color: #181818;
-}
-
-.slds-form-element__static {
-    font-weight: 500;
-    color: #444444;
-    padding: 0.5rem 0;
-}
-
-/* Card Styling */
-.slds-card {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border: 1px solid #dddbda;
-}
-
-.slds-card__header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #dddbda;
-}
-
-.slds-card__header-title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: #181818;
-}
-
-/* Section Styling */
-.slds-section__title {
-    background-color: #f3f3f3;
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem 0.25rem 0 0;
-    font-weight: 600;
-}
-
-.slds-section__content {
-    border: 1px solid #dddbda;
-    border-top: none;
-    border-radius: 0 0 0.25rem 0.25rem;
-    background-color: #ffffff;
-}
-
-/* Button Styling */
-.slds-button_brand {
-    background-color: #0176d3;
-    border-color: #0176d3;
-}
-
-.slds-button_brand:hover {
-    background-color: #014486;
-    border-color: #014486;
-}
-
-.slds-button_neutral {
-    background-color: #ffffff;
-    border-color: #dddbda;
-    color: #0176d3;
-}
-
-.slds-button_neutral:hover {
-    background-color: #f8f9fa;
-    border-color: #0176d3;
-}
-
-/* Toggle Switch Styling */
-.slds-checkbox_toggle .slds-checkbox_faux {
-    background-color: #dddbda;
-}
-
-.slds-checkbox_toggle .slds-checkbox_faux:after {
-    background-color: #ffffff;
-}
-
-.slds-checkbox_toggle [type="checkbox"]:checked + .slds-checkbox_faux {
-    background-color: #0176d3;
-}
-
-/* Radio Button Styling */
-.slds-radio_button-group .slds-button {
-    margin-right: 0.5rem;
-}
-
-.slds-radio_button-group .slds-button_neutral {
-    background-color: #ffffff;
-    border-color: #dddbda;
-    color: #181818;
-}
-
-.slds-radio_button-group .slds-button_neutral:hover {
-    background-color: #f8f9fa;
-    border-color: #0176d3;
-}
-
-.slds-radio_button-group [type="radio"]:checked + .slds-button {
-    background-color: #0176d3;
-    border-color: #0176d3;
-    color: #ffffff;
-}
-
-/* Datatable Styling */
-.slds-table {
-    border: 1px solid #dddbda;
-}
-
-.slds-table thead th {
-    background-color: #f8f9fa;
-    border-bottom: 2px solid #dddbda;
-    font-weight: 600;
-    color: #181818;
-}
-
-.slds-table tbody tr:nth-child(even) {
-    background-color: #fafaf9;
-}
-
-.slds-table tbody tr:hover {
-    background-color: #e8f4fd;
-}
-
-/* Accordion Styling */
-.slds-accordion__section {
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
-    margin-bottom: 0.5rem;
-}
-
-.slds-accordion__summary {
-    background-color: #f8f9fa;
-    padding: 0.75rem 1rem;
-    font-weight: 600;
-    color: #181818;
-}
-
-.slds-accordion__summary:hover {
-    background-color: #e8f4fd;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .slds-accordion__content {
-    padding: 1rem;
-    background-color: #ffffff;
+    transition: all 0.2s ease-in-out;
 }
 
-/* Spinner Styling */
-.slds-spinner_container {
-    position: relative;
+.business-structure-item {
+    transition: background-color 0.2s ease-in-out;
 }
 
-.slds-spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.slds-button {
+    transition: all 0.2s ease-in-out;
 }
 
-/* Accessibility Enhancements */
-:focus {
-    outline: 2px solid #0176d3;
-    outline-offset: 2px;
+/* Focus and Accessibility */
+.slds-button:focus,
+.slds-input:focus,
+.slds-textarea:focus,
+.slds-combobox__input:focus {
+    box-shadow: 0 0 0 2px rgba(21, 137, 238, 0.1);
+    outline: none;
 }
 
 .slds-assistive-text {
@@ -352,62 +411,36 @@
     white-space: nowrap !important;
 }
 
-/* Error State Styling */
-.slds-has-error .slds-form-element__control {
-    border-color: #c23934;
-}
-
-.slds-form-element__help {
-    color: #c23934;
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-}
-
-/* Success State Styling */
-.slds-form-element__icon {
-    fill: #04844b;
-}
-
-/* Animation Classes */
-.fade-in {
-    animation: fadeIn 0.3s ease-in;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.slide-down {
-    animation: slideDown 0.2s ease-out;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    .slds-input,
+    .slds-textarea,
+    .slds-combobox__input {
+        border-width: 2px;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    
+    .slds-button {
+        border-width: 2px;
+    }
+    
+    .business-structure-item {
+        border-width: 2px;
     }
 }
 
 /* Print Styles */
 @media print {
-    .navigation-buttons,
-    .loading-overlay {
+    .navigation-controls,
+    .slds-spinner_container {
         display: none !important;
     }
     
-    .qfr-form-container {
-        max-width: none;
-        padding: 0;
+    .page-content {
+        page-break-inside: avoid;
     }
     
     .slds-card {
+        border: 1px solid #000;
         box-shadow: none;
-        border: 1px solid #000000;
-        page-break-inside: avoid;
     }
 }
