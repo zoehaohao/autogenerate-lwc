@@ -5,152 +5,169 @@ export default class QfrFormTest2 extends LightningElement {
     @track currentStep = '1';
     @track isLoading = false;
     @track openSections = [];
-    @track errors = {};
 
-    // Form Data
-    @track formData = {
-        solvencyConcern: '',
-        solvencyFuture: '',
-        operationalLoss: ''
-    };
+    // Page 1 Properties
+    @track solvencyConcern = '';
+    @track solvencyFuture = '';
+    @track operationalLoss = '';
 
-    @track contactData = {
+    // Page 2 Properties
+    @track contactInfo = {
         organizationName: 'Sample Healthcare Provider',
         napsId: 'NAPS123456',
-        contactName: 'John Smith',
+        name: 'John Smith',
         position: 'Financial Manager',
-        phone: '+61 2 1234 5678',
+        phone: '02 1234 5678',
         email: 'john.smith@healthcare.com.au'
     };
+    @track isContactEditMode = false;
+    @track isContactReadOnly = true;
 
-    @track businessStructure = {
-        inHouseDelivery: false,
-        franchisee: false,
-        franchisor: false,
-        brokerage: false,
-        subcontractor: false,
-        selfEmployIndividual: false,
-        other: false,
-        inHouseServices: [],
-        franchiseeServices: [],
-        franchisorServices: [],
-        brokerageServices: [],
-        subcontractorServices: [],
-        selfEmployServices: [],
-        otherServices: [],
-        otherDescription: '',
-        qaComments: '',
-        workforceType: 'Individual agreements'
-    };
+    // Page 3 Properties
+    @track businessStructures = [
+        { name: 'inHouse', label: 'In-house delivery', selected: false, serviceTypes: [], additionalInfo: '' },
+        { name: 'franchisee', label: 'Franchisee', selected: false, serviceTypes: [], additionalInfo: '' },
+        { name: 'franchisor', label: 'Franchisor', selected: false, serviceTypes: [], additionalInfo: '' },
+        { name: 'brokerage', label: 'Brokerage', selected: false, serviceTypes: [], additionalInfo: '' },
+        { name: 'subcontractor', label: 'Subcontractor', selected: false, serviceTypes: [], additionalInfo: '' },
+        { name: 'selfEmployed', label: 'Self-employ individual', selected: false, serviceTypes: [], additionalInfo: '' },
+        { name: 'other', label: 'Other', selected: false, serviceTypes: [], additionalInfo: '' }
+    ];
+    @track workforceEngagement = 'individual';
 
-    @track labourData = {
-        centrallyHeld: false,
-        data: [
-            { id: '1', employeeCategory: 'Other employee staff (employed in a direct care role)', total: 0, centrallyHeld: 0 },
-            { id: '2', employeeCategory: 'Total labour - internal direct care - employee', total: 0, centrallyHeld: 0 },
-            { id: '3', employeeCategory: 'Registered nurses', total: 0, centrallyHeld: 0 },
-            { id: '4', employeeCategory: 'Enrolled nurses (registered with the NMBA)', total: 0, centrallyHeld: 0 },
-            { id: '5', employeeCategory: 'Personal care workers (including gardening and cleaning)', total: 0, centrallyHeld: 0 },
-            { id: '6', employeeCategory: 'Allied health', total: 0, centrallyHeld: 0 },
-            { id: '7', employeeCategory: 'Other agency staff', total: 0, centrallyHeld: 0 },
-            { id: '8', employeeCategory: 'Sub-contracted or brokered client services - external direct care service cost', total: 0, centrallyHeld: 0 }
-        ]
-    };
-
-    @track uploadConfig = {
-        category: '',
-        type: ''
-    };
-
-    @track uploadedDocuments = [
-        { id: '1', name: 'Financial Declaration.pdf', category: 'Declaration', type: 'PDF', status: 'Uploaded', uploadDate: '2024-01-15' },
-        { id: '2', name: 'Audit Report.xlsx', category: 'Financial Report', type: 'Excel', status: 'Processing', uploadDate: '2024-01-15' }
+    // Page 4 Properties
+    @track viewAllFilter = 'all';
+    @track jumpToSection = '';
+    @track jumpToColumn = '';
+    @track filteredLabourData = [];
+    @track labourCategories = [
+        {
+            id: 'employee',
+            name: 'Employee Staff Categories',
+            total: 0,
+            expanded: false,
+            expandIcon: 'utility:chevronright',
+            children: [
+                { id: 'emp1', name: 'Other employee staff (employed in a direct care role)', amount: 0 },
+                { id: 'emp2', name: 'Total labour - internal direct care - employee', amount: 0 }
+            ]
+        },
+        {
+            id: 'nursing',
+            name: 'Nursing Staff Categories',
+            total: 0,
+            expanded: false,
+            expandIcon: 'utility:chevronright',
+            children: [
+                { id: 'nurse1', name: 'Registered nurses', amount: 0 },
+                { id: 'nurse2', name: 'Enrolled nurses (registered with the NMBA)', amount: 0 },
+                { id: 'nurse3', name: 'Total nursing staff', amount: 0 }
+            ]
+        },
+        {
+            id: 'care',
+            name: 'Care Support Categories',
+            total: 0,
+            expanded: false,
+            expandIcon: 'utility:chevronright',
+            children: [
+                { id: 'care1', name: 'Personal care workers (including gardening and cleaning)', amount: 0 },
+                { id: 'care2', name: 'Allied health', amount: 0 },
+                { id: 'care3', name: 'Total care support staff', amount: 0 }
+            ]
+        },
+        {
+            id: 'external',
+            name: 'External Service Categories',
+            total: 0,
+            expanded: false,
+            expandIcon: 'utility:chevronright',
+            children: [
+                { id: 'ext1', name: 'Other agency staff', amount: 0 },
+                { id: 'ext2', name: 'Sub-contracted or brokered client services - external direct care service cost', amount: 0 },
+                { id: 'ext3', name: 'Total external services', amount: 0 }
+            ]
+        }
     ];
 
-    @track tableFilters = {
-        viewAll: 'All Rows',
-        jumpToSection: '',
-        jumpToColumn: ''
-    };
-
-    @track documentSearch = '';
-    @track isEditingContact = false;
+    // Page 5 Properties
+    @track selectedDocumentCategory = '';
+    @track selectedDocumentType = '';
     @track isUploading = false;
+    @track uploadedFiles = [];
 
     // Options
     yesNoOptions = [
-        { label: 'Yes', value: 'Yes' },
-        { label: 'No', value: 'No' }
+        { label: 'Yes', value: 'yes' },
+        { label: 'No', value: 'no' }
     ];
 
     serviceTypeOptions = [
-        { label: 'Clinical care', value: 'Clinical care' },
-        { label: 'Personal care', value: 'Personal care' },
-        { label: 'Allied health', value: 'Allied health' },
-        { label: 'Domestic assistance', value: 'Domestic assistance' },
-        { label: 'Social support', value: 'Social support' },
-        { label: 'Transport', value: 'Transport' },
-        { label: 'Equipment and technology', value: 'Equipment and technology' }
+        { label: 'Clinical care', value: 'clinical' },
+        { label: 'Personal care', value: 'personal' },
+        { label: 'Allied health', value: 'allied' },
+        { label: 'Domestic assistance', value: 'domestic' },
+        { label: 'Social support', value: 'social' }
     ];
 
     workforceOptions = [
-        { label: 'Individual agreements', value: 'Individual agreements' },
-        { label: 'Enterprise agreements', value: 'Enterprise agreements' },
-        { label: 'Award wages', value: 'Award wages' },
-        { label: 'Mixed arrangements', value: 'Mixed arrangements' }
+        { label: 'Individual agreements', value: 'individual' },
+        { label: 'Enterprise agreements', value: 'enterprise' },
+        { label: 'Award wages', value: 'award' },
+        { label: 'Mixed arrangements', value: 'mixed' }
     ];
 
     viewAllOptions = [
-        { label: 'All Rows', value: 'All Rows' },
-        { label: 'Employee Categories Only', value: 'Employee Categories Only' },
-        { label: 'Total Rows Only', value: 'Total Rows Only' },
-        { label: 'Calculated Fields Only', value: 'Calculated Fields Only' }
+        { label: 'All Rows', value: 'all' },
+        { label: 'Employee Categories Only', value: 'categories' },
+        { label: 'Total Rows Only', value: 'totals' },
+        { label: 'Calculated Fields Only', value: 'calculated' }
     ];
 
-    sectionOptions = [
-        { label: 'Other employee staff', value: '1' },
-        { label: 'Total labour - internal direct care', value: '2' },
-        { label: 'Registered nurses', value: '3' },
-        { label: 'Enrolled nurses', value: '4' },
-        { label: 'Personal care workers', value: '5' },
-        { label: 'Allied health', value: '6' },
-        { label: 'Other agency staff', value: '7' },
-        { label: 'Sub-contracted services', value: '8' }
+    jumpToSectionOptions = [
+        { label: 'Employee Staff Categories', value: 'employee' },
+        { label: 'Registered Nurses', value: 'nurses' },
+        { label: 'Enrolled Nurses', value: 'enrolled' },
+        { label: 'Personal Care Workers', value: 'pcw' },
+        { label: 'Allied Health', value: 'allied' },
+        { label: 'Agency Staff', value: 'agency' },
+        { label: 'Sub-contracted Services', value: 'subcontracted' },
+        { label: 'Total Summary Rows', value: 'summary' }
     ];
 
-    columnOptions = [
-        { label: 'Employee Category', value: 'employeeCategory' },
-        { label: 'Total', value: 'total' },
-        { label: 'Centrally Held', value: 'centrallyHeld' }
+    jumpToColumnOptions = [
+        { label'Employee Category', value: 'category' },
+        { label: 'Total Amount', value: 'total' },
+        { label: 'Centrally Held', value: 'centrally' },
+        { label: 'Quarterly Breakdown', value: 'quarterly' }
     ];
 
     documentCategoryOptions = [
-        { label: 'Financial Declaration', value: 'Financial Declaration' },
-        { label: 'Audit Report', value: 'Audit Report' },
-        { label: 'Supporting Documentation', value: 'Supporting Documentation' },
-        { label: 'Compliance Certificate', value: 'Compliance Certificate' }
+        { label: 'Financial Statements', value: 'financial' },
+        { label: 'Declarations', value: 'declarations' },
+        { label: 'Supporting Documents', value: 'supporting' },
+        { label: 'Compliance Reports', value: 'compliance' }
     ];
 
     documentTypeOptions = [
-        { label: 'PDF Document', value: 'PDF' },
-        { label: 'Word Document', value: 'Word' },
-        { label: 'Excel Spreadsheet', value: 'Excel' },
-        { label: 'Image File', value: 'Image' }
+        { label: 'PDF Document', value: 'pdf' },
+        { label: 'Word Document', value: 'word' },
+        { label: 'Excel Spreadsheet', value: 'excel' },
+        { label: 'Image File', value: 'image' }
     ];
 
-    // Columns for data tables
     labourCostColumns = [
-        { label: 'Employee Category', fieldName: 'employeeCategory', type: 'text' },
-        { label: 'Total ($)', fieldName: 'total', type: 'currency', editable: true },
-        { label: 'Centrally Held ($)', fieldName: 'centrallyHeld', type: 'currency', editable: true }
+        { label: 'Employee Category', fieldName: 'category', type: 'text' },
+        { label: 'Total Amount', fieldName: 'total', type: 'currency', editable: true },
+        { label: 'Centrally Held', fieldName: 'centrallyHeld', type: 'currency', editable: true }
     ];
 
     documentColumns = [
-        { label: 'Document Name', fieldName: 'name', type: 'text' },
+        { label: 'File Name', fieldName: 'name', type: 'text' },
         { label: 'Category', fieldName: 'category', type: 'text' },
         { label: 'Type', fieldName: 'type', type: 'text' },
+        { label: 'Size', fieldName: 'size', type: 'text' },
         { label: 'Status', fieldName: 'status', type: 'text' },
-        { label: 'Upload Date', fieldName: 'uploadDate', type: 'date' },
         {
             type: 'action',
             typeAttributes: {
@@ -161,7 +178,23 @@ export default class QfrFormTest2 extends LightningElement {
                 ]
             }
         }
-    ];// Computed Properties
+    ];
+
+    connectedCallback() {
+        this.initializeLabourData();
+    }
+
+    initializeLabourData() {
+        this.filteredLabourData = [
+            { id: '1', category: 'Registered Nurses', total: 0, centrallyHeld: 0 },
+            { id: '2', category: 'Enrolled Nurses', total: 0, centrallyHeld: 0 },
+            { id: '3', category: 'Personal Care Workers', total: 0, centrallyHeld: 0 },
+            { id: '4', category: 'Allied Health', total: 0, centrallyHeld: 0 },
+            { id: '5', category: 'Agency Staff', total: 0, centrallyHeld: 0 }
+        ];
+    }
+
+    // Computed Properties
     get isPage1() {
         return this.currentStep === '1';
     }
@@ -195,159 +228,15 @@ export default class QfrFormTest2 extends LightningElement {
     }
 
     get editButtonLabel() {
-        return this.isEditingContact ? 'Editing...' : 'Edit';
+        return this.isContactEditMode ? 'Save' : 'Edit';
     }
 
     get editButtonVariant() {
-        return this.isEditingContact ? 'neutral' : 'brand';
+        return this.isContactEditMode ? 'brand' : 'neutral';
     }
 
-    get filteredLabourData() {
-        let data = [...this.labourData.data];
-        
-        switch (this.tableFilters.viewAll) {
-            case 'Employee Categories Only':
-                data = data.filter(row => !row.employeeCategory.includes('Total'));
-                break;
-            case 'Total Rows Only':
-                data = data.filter(row => row.employeeCategory.includes('Total'));
-                break;
-            case 'Calculated Fields Only':
-                data = data.filter(row => row.total > 0 || row.centrallyHeld > 0);
-                break;
-            default:
-                break;
-        }
-        
-        return data;
-    }
-
-    get filteredDocuments() {
-        if (!this.documentSearch) {
-            return this.uploadedDocuments;
-        }
-        
-        const searchTerm = this.documentSearch.toLowerCase();
-        return this.uploadedDocuments.filter(doc => 
-            doc.name.toLowerCase().includes(searchTerm) ||
-            doc.category.toLowerCase().includes(searchTerm) ||
-            doc.type.toLowerCase().includes(searchTerm)
-        );
-    }
-
-    // Lifecycle Methods
-    connectedCallback() {
-        this.initializeForm();
-    }
-
-    // Initialization Methods
-    initializeForm() {
-        this.clearErrors();
-        this.loadSavedData();
-    }
-
-    loadSavedData() {
-        // Simulate loading saved data from server
-        console.log('Loading saved form data...');
-    }
-
-    // Validation Methods
-    isCurrentPageValid() {
-        this.clearErrors();
-        
-        switch (this.currentStep) {
-            case '1':
-                return this.validatePage1();
-            case '2':
-                return this.validatePage2();
-            case '3':
-                return this.validatePage3();
-            case '4':
-                return this.validatePage4();
-            case '5':
-                return this.validatePage5();
-            default:
-                return false;
-        }
-    }
-
-    validatePage1() {
-        let isValid = true;
-        
-        if (!this.formData.solvencyConcern) {
-            this.errors.solvencyConcern = 'Please answer the solvency concern question';
-            isValid = false;
-        }
-        
-        if (!this.formData.solvencyFuture) {
-            this.errors.solvencyFuture = 'Please answer the future solvency question';
-            isValid = false;
-        }
-        
-        if (!this.formData.operationalLoss) {
-            this.errors.operationalLoss = 'Please answer the operational loss question';
-            isValid = false;
-        }
-        
-        return isValid;
-    }
-
-    validatePage2() {
-        let isValid = true;
-        
-        if (!this.contactData.contactName) {
-            this.errors.contactName = 'Contact name is required';
-            isValid = false;
-        }
-        
-        if (!this.contactData.email || !this.isValidEmail(this.contactData.email)) {
-            this.errors.email = 'Valid email address is required';
-            isValid = false;
-        }
-        
-        if (!this.contactData.phone) {
-            this.errors.phone = 'Phone number is required';
-            isValid = false;
-        }
-        
-        return isValid;
-    }
-
-    validatePage3() {
-        let isValid = true;
-        const hasSelectedStructure = Object.keys(this.businessStructure)
-            .filter(key => key !== 'qaComments' && key !== 'otherDescription' && key !== 'workforceType' && !key.includes('Services'))
-            .some(key => this.businessStructure[key] === true);
-        
-        if (!hasSelectedStructure) {
-            this.errors.businessStructure = 'Please select at least one business structure';
-            isValid = false;
-        }
-        
-        if (!this.businessStructure.workforceType) {
-            this.errors.workforceType = 'Please select workforce engagement method';
-            isValid = false;
-        }
-        
-        return isValid;
-    }
-
-    validatePage4() {
-        const hasData = this.labourData.data.some(row => row.total > 0 || row.centrallyHeld > 0);
-        return hasData;
-    }
-
-    validatePage5() {
-        return this.uploadedDocuments.length > 0;
-    }
-
-    isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-
-    clearErrors() {
-        this.errors = {};
+    get hasUploadedFiles() {
+        return this.uploadedFiles.length > 0;
     }
 
     // Event Handlers
@@ -356,202 +245,178 @@ export default class QfrFormTest2 extends LightningElement {
         this.openSections = openSections;
     }
 
-    handleInputChange(event) {
-        const { name, value } = event.target;
-        
-        if (name in this.formData) {
-            this.formData = { ...this.formData, [name]: value };
-        } else if (name in this.businessStructure) {
-            this.businessStructure = { ...this.businessStructure, [name]: value };
-        }
-        
-        this.saveFormData();
+    handleSolvencyConcernChange(event) {
+        this.solvencyConcern = event.detail.value;
     }
 
-    handleStructureToggle(event) {
-        const { name, checked } = event.target;
-        this.businessStructure = { ...this.businessStructure, [name]: checked };
-        
-        // Clear services when structure is disabled
-        if (!checked) {
-            const servicesKey = name + 'Services';
-            if (servicesKey in this.businessStructure) {
-                this.businessStructure = { ...this.businessStructure, [servicesKey]: [] };
-            }
-        }
-        
-        this.saveFormData();
+    handleSolvencyFutureChange(event) {
+        this.solvencyFuture = event.detail.value;
     }
 
-    handleServiceTypeChange(event) {
-        const { name, value } = event.target;
-        this.businessStructure = { ...this.businessStructure, [name]: value };
-        this.saveFormData();
+    handleOperationalLossChange(event) {
+        this.operationalLoss = event.detail.value;
     }
 
-    handleContactChange(event) {
-        const { name, value } = event.target;
-        this.contactData = { ...this.contactData, [name]: value };
+    handleContactNameChange(event) {
+        this.contactInfo.name = event.target.value;
+    }
+
+    handleContactPositionChange(event) {
+        this.contactInfo.position = event.target.value;
+    }
+
+    handleContactPhoneChange(event) {
+        this.contactInfo.phone = event.target.value;
+    }
+
+    handleContactEmailChange(event) {
+        this.contactInfo.email = event.target.value;
     }
 
     handleEditContact() {
-        this.isEditingContact = !this.isEditingContact;
-    }
-
-    handleSaveContact() {
-        if (this.validateContactData()) {
-            this.isEditingContact = false;
-            this.saveFormData();
+        if (this.isContactEditMode) {
+            // Save changes
+            this.isContactEditMode = false;
+            this.isContactReadOnly = true;
             this.showToast('Success', 'Contact information updated successfully', 'success');
+        } else {
+            // Enter edit mode
+            this.isContactEditMode = true;
+            this.isContactReadOnly = false;
         }
     }
 
     handleCancelEdit() {
-        this.isEditingContact = false;
-        // Reset contact data to original values if needed
+        this.isContactEditMode = false;
+        this.isContactReadOnly = true;
+        // Reset to original values if needed
     }
 
-    validateContactData() {
-        let isValid = true;
+    handleBusinessStructureChange(event) {
+        const structureName = event.target.name;
+        const isSelected = event.target.checked;
         
-        if (!this.contactData.contactName) {
-            this.showToast('Error', 'Contact name is required', 'error');
-            isValid = false;
-        }
+        this.businessStructures = this.businessStructures.map(structure => {
+            if (structure.name === structureName) {
+                return { ...structure, selected: isSelected };
+            }
+            return structure;
+        });
+    }
+
+    handleServiceTypeChange(event) {
+        const structureName = event.target.dataset.structure;
+        const selectedValues = event.detail.value;
         
-        if (!this.contactData.email || !this.isValidEmail(this.contactData.email)) {
-            this.showToast('Error', 'Valid email address is required', 'error');
-            isValid = false;
-        }
+        this.businessStructures = this.businessStructures.map(structure => {
+            if (structure.name === structureName) {
+                return { ...structure, serviceTypes: selectedValues };
+            }
+            return structure;
+        });
+    }
+
+    handleAdditionalInfoChange(event) {
+        const structureName = event.target.dataset.structure;
+        const value = event.target.value;
         
-        return isValid;
+        this.businessStructures = this.businessStructures.map(structure => {
+            if (structure.name === structureName) {
+                return { ...structure, additionalInfo: value };
+            }
+            return structure;
+        });
     }
 
-    handleFilterChange(event) {
-        const { name, value } = event.target;
-        this.tableFilters = { ...this.tableFilters, [name]: value };
+    handleWorkforceChange(event) {
+        this.workforceEngagement = event.detail.value;
     }
 
-    handleSectionJump(event) {
-        const sectionId = event.target.value;
-        if (sectionId) {
-            // Scroll to section logic would go here
-            console.log('Jumping to section:', sectionId);
-        }
+    handleViewAllChange(event) {
+        this.viewAllFilter = event.detail.value;
+        this.filterLabourData();
     }
 
-    handleColumnJump(event) {
-        const columnName = event.target.value;
-        if (columnName) {
-            // Focus column logic would go here
-            console.log('Jumping to column:', columnName);
-        }
+    handleJumpToSectionChange(event) {
+        this.jumpToSection = event.detail.value;
+        this.scrollToSection(event.detail.value);
     }
 
-    handleCentrallyHeldToggle(event) {
-        this.labourData = { ...this.labourData, centrallyHeld: event.target.checked };
-        this.saveFormData();
+    handleJumpToColumnChange(event) {
+        this.jumpToColumn = event.detail.value;
+        this.scrollToColumn(event.detail.value);
     }
 
-    handleCellChange(event) {
+    handleLabourCostChange(event) {
         const draftValues = event.detail.draftValues;
-        
-        draftValues.forEach(draft => {
-            const rowIndex = this.labourData.data.findIndex(row => row.id === draft.id);
-            if (rowIndex !== -1) {
-                this.labourData.data[rowIndex] = { ...this.labourData.data[rowIndex], ...draft };
+        // Update the labour cost data
+        this.updateLabourCosts(draftValues);
+    }
+
+    handleCategoryToggle(event) {
+        const categoryId = event.currentTarget.dataset.category;
+        this.labourCategories = this.labourCategories.map(category => {
+            if (category.id === categoryId) {
+                const expanded = !category.expanded;
+                return {
+                    ...category,
+                    expanded: expanded,
+                    expandIcon: expanded ? 'utility:chevrondown' : 'utility:chevronright'
+                };
             }
+            return category;
         });
-        
-        this.calculateTotals();
-        this.saveFormData();
     }
 
-    calculateTotals() {
-        // Calculate total rows based on component entries
-        let totalInternal = 0;
-        let totalCentrallyHeld = 0;
-        
-        this.labourData.data.forEach(row => {
-            if (!row.employeeCategory.includes('Total')) {
-                totalInternal += parseFloat(row.total || 0);
-                totalCentrallyHeld += parseFloat(row.centrallyHeld || 0);
+    handleChildAmountChange(event) {
+        const childId = event.target.dataset.child;
+        const categoryId = event.target.dataset.category;
+        const amount = parseFloat(event.target.value) || 0;
+
+        this.labourCategories = this.labourCategories.map(category => {
+            if (category.id === categoryId) {
+                const updatedChildren = category.children.map(child => {
+                    if (child.id === childId) {
+                        return { ...child, amount: amount };
+                    }
+                    return child;
+                });
+                
+                const total = updatedChildren.reduce((sum, child) => sum + child.amount, 0);
+                
+                return {
+                    ...category,
+                    children: updatedChildren,
+                    total: total
+                };
             }
+            return category;
         });
-        
-        // Update total row
-        const totalRowIndex = this.labourData.data.findIndex(row => 
-            row.employeeCategory.includes('Total labour - internal direct care')
-        );
-        
-        if (totalRowIndex !== -1) {
-            this.labourData.data[totalRowIndex].total = totalInternal;
-            this.labourData.data[totalRowIndex].centrallyHeld = totalCentrallyHeld;
-        }
     }
 
-    handleConfigChange(event) {
-        const { name, value } = event.target;
-        this.uploadConfig = { ...this.uploadConfig, [name]: value };
+    handleDocumentCategoryChange(event) {
+        this.selectedDocumentCategory = event.detail.value;
     }
 
-    handleFileDrop(event) {
-        event.preventDefault();
-        const files = event.dataTransfer.files;
-        this.processFiles(files);
-    }
-
-    handleDragOver(event) {
-        event.preventDefault();
+    handleDocumentTypeChange(event) {
+        this.selectedDocumentType = event.detail.value;
     }
 
     handleBrowseFiles() {
-        const fileInput = this.template.querySelector('.file-input');
+        const fileInput = this.template.querySelector('.file-input-hidden');
         fileInput.click();
     }
 
-    handleFileSelect(event) {
+    handleFileSelection(event) {
         const files = event.target.files;
         this.processFiles(files);
     }
 
-    processFiles(files) {
-        if (!this.uploadConfig.category || !this.uploadConfig.type) {
-            this.showToast('Error', 'Please select document category and type before uploading', 'error');
-            return;
-        }
-        
-        this.isUploading = true;
-        
-        // Simulate file upload
-        setTimeout(() => {
-            Array.from(files).forEach((file, index) => {
-                const newDoc = {
-                    id: Date.now() + index,
-                    name: file.name,
-                    category: this.uploadConfig.category,
-                    type: this.uploadConfig.type,
-                    status: 'Uploaded',
-                    uploadDate: new Date().toISOString().split('T')[0]
-                };
-                
-                this.uploadedDocuments = [...this.uploadedDocuments, newDoc];
-            });
-            
-            this.isUploading = false;
-            this.showToast('Success', `${files.length} file(s) uploaded successfully`, 'success');
-        }, 2000);
-    }
-
-    handleDocumentSearch(event) {
-        this.documentSearch = event.target.value;
-    }
-
     handleDocumentAction(event) {
-        const action = event.detail.action;
+        const actionName = event.detail.action.name;
         const row = event.detail.row;
         
-        switch (action.name) {
+        switch (actionName) {
             case 'view':
                 this.viewDocument(row);
                 break;
@@ -564,22 +429,6 @@ export default class QfrFormTest2 extends LightningElement {
         }
     }
 
-    viewDocument(document) {
-        console.log('Viewing document:', document.name);
-        this.showToast('Info', `Viewing ${document.name}`, 'info');
-    }
-
-    downloadDocument(document) {
-        console.log('Downloading document:', document.name);
-        this.showToast('Success', `Downloading ${document.name}`, 'success');
-    }
-
-    deleteDocument(document) {
-        this.uploadedDocuments = this.uploadedDocuments.filter(doc => doc.id !== document.id);
-        this.showToast('Success', `${document.name} deleted successfully`, 'success');
-    }
-
-    // Navigation Methods
     handlePrevious() {
         if (this.currentStep > '1') {
             this.currentStep = String(parseInt(this.currentStep) - 1);
@@ -589,50 +438,154 @@ export default class QfrFormTest2 extends LightningElement {
     handleNext() {
         if (this.isCurrentPageValid()) {
             if (this.currentStep === '5') {
-                this.handleSubmit();
+                this.submitForm();
             } else {
                 this.currentStep = String(parseInt(this.currentStep) + 1);
             }
-        } else {
-            this.showToast('Error', 'Please complete all required fields before proceeding', 'error');
         }
     }
 
-    handleSubmit() {
+    // Helper Methods
+    isCurrentPageValid() {
+        switch (this.currentStep) {
+            case '1':
+                return this.solvencyConcern && this.solvencyFuture && this.operationalLoss;
+            case '2':
+                return this.contactInfo.name && this.contactInfo.position && 
+                       this.contactInfo.phone && this.contactInfo.email;
+            case '3':
+                return this.businessStructures.some(structure => structure.selected) && 
+                       this.workforceEngagement;
+            case '4':
+                return this.labourCategories.some(category => category.total > 0);
+            case '5':
+                return this.uploadedFiles.length > 0;
+            default:
+                return false;
+        }
+    }
+
+    filterLabourData() {
+        // Implement filtering logic based on viewAllFilter
+        switch (this.viewAllFilter) {
+            case 'categories':
+                this.filteredLabourData = this.filteredLabourData.filter(row => 
+                    row.category.includes('Categories'));
+                break;
+            case 'totals':
+                this.filteredLabourData = this.filteredLabourData.filter(row => 
+                    row.category.includes('Total'));
+                break;
+            case 'calculated':
+                this.filteredLabourData = this.filteredLabourData.filter(row => 
+                    row.total > 0 || row.centrallyHeld > 0);
+                break;
+            default:
+                this.initializeLabourData();
+                break;
+        }
+    }
+
+    scrollToSection(sectionValue) {
+        // Implement smooth scrolling to section
+        const element = this.template.querySelector(`[data-section="${sectionValue}"]`);
+        if (element) {
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            element.style.border = '2px solid #0176d3';
+            setTimeout(() => {
+                element.style.border = '';
+            }, 3000);
+        }
+    }
+
+    scrollToColumn(columnValue) {
+        // Implement horizontal scrolling to column
+        const table = this.template.querySelector('lightning-datatable');
+        if (table) {
+            // Focus management for accessibility
+            table.focus();
+        }
+    }
+
+    updateLabourCosts(draftValues) {
+        draftValues.forEach(draft => {
+            this.filteredLabourData = this.filteredLabourData.map(row => {
+                if (row.id === draft.id) {
+                    return { ...row, ...draft };
+                }
+                return row;
+            });
+        });
+    }
+
+    processFiles(files) {
+        if (!this.selectedDocumentCategory || !this.selectedDocumentType) {
+            this.showToast('Error', 'Please select document category and type before uploading', 'error');
+            return;
+        }
+
+        this.isUploading = true;
+        
+        Array.from(files).forEach(file => {
+            const fileData = {
+                id: this.generateId(),
+                name: file.name,
+                category: this.selectedDocumentCategory,
+                type: this.selectedDocumentType,
+                size: this.formatFileSize(file.size),
+                status: 'Uploaded'
+            };
+            
+            this.uploadedFiles = [...this.uploadedFiles, fileData];
+        });
+
+        setTimeout(() => {
+            this.isUploading = false;
+            this.showToast('Success', `${files.length} file(s) uploaded successfully`, 'success');
+        }, 2000);
+    }
+
+    viewDocument(row) {
+        this.showToast('Info', `Viewing document: ${row.name}`, 'info');
+    }
+
+    downloadDocument(row) {
+        this.showToast('Info', `Downloading document: ${row.name}`, 'info');
+    }
+
+    deleteDocument(row) {
+        this.uploadedFiles = this.uploadedFiles.filter(file => file.id !== row.id);
+        this.showToast('Success', `Document ${row.name} deleted successfully`, 'success');
+    }
+
+    submitForm() {
         this.isLoading = true;
         
         // Simulate form submission
         setTimeout(() => {
             this.isLoading = false;
-            this.showToast('Success', 'QFR Form submitted successfully!', 'success');
-            
-            // Reset form or redirect as needed
-            this.resetForm();
+            this.showToast('Success', 'QFR Form submitted successfully', 'success');
         }, 3000);
     }
 
-    // Utility Methods
-    saveFormData() {
-        // Simulate auto-save functionality
-        console.log('Auto-saving form data...');
+    generateId() {
+        return Math.random().toString(36).substr(2, 9);
     }
 
-    resetForm() {
-        this.currentStep = '1';
-        this.formData = {
-            solvencyConcern: '',
-            solvencyFuture: '',
-            operationalLoss: ''
-        };
-        this.clearErrors();
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
     showToast(title, message, variant) {
-        const evt = new ShowToastEvent({
+        const event = new ShowToastEvent({
             title: title,
             message: message,
             variant: variant
         });
-        this.dispatchEvent(evt);
+        this.dispatchEvent(event);
     }
 }
