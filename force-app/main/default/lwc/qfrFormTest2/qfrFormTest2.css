@@ -1,0 +1,452 @@
+.qfr-form-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+    background-color: #f8f9fa;
+}
+
+.page-content {
+    margin: 2rem 0;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #0176d3;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* Card Styling */
+.card-content {
+    padding: 1rem;
+}
+
+.info-content {
+    padding: 1rem;
+    background-color: #f3f3f3;
+    border-radius: 0.25rem;
+    border-left: 4px solid #0176d3;
+}
+
+.info-contentp {
+    margin: 0.5rem 0;
+    line-height: 1.5;
+}
+
+.info-content ul {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+}
+
+.info-content li {
+    margin: 0.25rem 0;
+}
+
+/* Question Groups */
+.question-group {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.25rem;
+    background-color: #ffffff;
+}
+
+.question-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #333333;
+}
+
+.question-label::after {
+    content: " *";
+    color: #c23934;
+}
+
+/* Contact Information */
+.contact-display,
+.contact-edit {
+    padding: 1rem;
+}
+
+.info-row {
+    display: flex;
+    margin: 0.75rem 0;
+    align-items: center;
+}
+
+.info-label {
+    font-weight: 600;
+    min-width: 120px;
+    color: #333333;
+}
+
+.info-value {
+    color: #666666;
+    margin-left: 1rem;
+}
+
+.input-group {
+    margin: 1rem 0;
+}
+
+.button-group {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    justify-content: flex-end;
+}
+
+/* Business Structure */
+.structure-toggle-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.toggle-item {
+    border: 1px solid #e5e5e5;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    background-color: #ffffff;
+}
+
+.toggle-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.toggle-label {
+    font-weight: 600;
+    color: #333333;
+}
+
+.conditional-content {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    border-left: 3px solid #0176d3;
+}
+
+.qa-comments-section {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: #f3f3f3;
+    border-radius: 0.25rem;
+}
+
+/* Labour Costs */
+.labour-costs-section {
+    margin: 1rem 0;
+}
+
+.table-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: end;
+    flex-wrap: wrap;
+}
+
+.table-controls lightning-combobox {
+    min-width: 200px;
+}
+
+.centrally-held-section {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    border: 1px solid #e5e5e5;
+}
+
+/* Document Management */
+.upload-config-section,
+.file-upload-section,
+.document-management-section {
+    margin: 1.5rem 0;
+}
+
+.config-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.config-row lightning-combobox {
+    flex: 1;
+    min-width: 250px;
+}
+
+.upload-area {
+    border: 2px dashed #0176d3;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    text-align: center;
+    background-color: #f8f9fa;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-area:hover {
+    background-color: #e8f4fd;
+}
+
+.upload-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.upload-icon {
+    color: #0176d3;
+}
+
+.upload-text {
+    font-size: 1.1rem;
+    color: #666666;
+    margin: 0;
+}
+
+.file-input {
+    display: none;
+}
+
+.upload-progress {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #f3f3f3;
+    border-radius: 0.25rem;
+}
+
+.progress-text {
+    color: #666666;
+    font-weight: 500;
+}
+
+.search-section {
+    margin-bottom: 1rem;
+}
+
+/* Navigation */
+.navigation-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 2rem 0;
+    padding: 1rem;
+    background-color: #ffffff;
+    border-top: 1px solid #e5e5e5;
+    position: sticky;
+    bottom: 0;
+    z-index: 100;
+}
+
+.nav-button {
+    min-width: 120px;
+}
+
+.previous-button {
+    margin-right: auto;
+}
+
+.next-button {
+    margin-left: auto;
+}
+
+/* Error Handling */
+.error-message {
+    color: #c23934;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.error-message::before {
+    content: "⚠";
+    font-weight: bold;
+}
+
+/* Loading States */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .qfr-form-container {
+        padding: 0.5rem;
+    }
+    
+    .page-title {
+        font-size: 1.25rem;
+    }
+    
+    .table-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .table-controls lightning-combobox {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .config-row {
+        flex-direction: column;
+    }
+    
+    .config-row lightning-combobox {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .navigation-section {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .nav-button {
+        width: 100%;
+        margin: 0;
+    }
+    
+    .button-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .info-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+    
+    .info-label {
+        min-width: auto;
+    }
+    
+    .info-value {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .upload-area {
+        padding: 1rem;
+    }
+    
+    .upload-content {
+        gap: 0.5rem;
+    }
+    
+    .upload-text {
+        font-size: 1rem;
+    }
+    
+    .card-content {
+        padding: 0.5rem;
+    }
+    
+    .question-group {
+        padding: 0.75rem;
+        margin: 1rem 0;
+    }
+}
+
+/* Focus States */
+lightning-input:focus-within,
+lightning-textarea:focus-within,
+lightning-combobox:focus-within {
+    box-shadow: 0 0 0 2px #0176d3;
+}
+
+/* Hover States */
+.toggle-item:hover {
+    border-color: #0176d3;
+    box-shadow: 0 2px 4px rgba(1, 118, 211, 0.1);
+}
+
+.upload-area:hover {
+    border-color: #014486;
+}
+
+/* Accessibility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* High Contrast Mode Support */
+@media (prefers-contrast: high) {
+    .info-content {
+        border-left-width: 6px;
+    }
+    
+    .conditional-content {
+        border-left-width: 4px;
+    }
+    
+    .error-message {
+        font-weight: 600;
+    }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    .page-content {
+        animation: none;
+    }
+    
+    .upload-area {
+        transition: none;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .navigation-section,
+    .loading-overlay {
+        display: none;
+    }
+    
+    .page-content {
+        break-inside: avoid;
+    }
+    
+    .qfr-form-container {
+        background-color: white;
+    }
+}
