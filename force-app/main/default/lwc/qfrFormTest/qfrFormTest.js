@@ -1,318 +1,355 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, track, api } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class QfrFormTest extends LightningElement {
-    @track openSections = ['aboutSection'];
-    @track providerContactSections = [];
-    @track isLoading = false;
-    
-    // Form data properties
+    @track openSections = ['orgInfo'];
+    @track isProcessing = false;
+    @track showSuccessMessage = false;
+    @track showErrorMessage = false;
+    @track successMessage = '';
+    @track errorMessage = '';
+    @track draftValues = [];
+
+    // Organization Information
+    @track organizationName = '';
+    @track registrationNumber = '';
+    @track organizationType = '';
+    @track financialYearEnd = '';
+    @track businessAddress = '';
+
+    // Contact Information
+    @track primaryContactName = '';
+    @track jobTitle = '';
+    @track emailAddress = '';
+    @track phoneNumber = '';
+
+    // Financial Information
+    @track totalRevenue = 0;
+    @track totalExpenses = 0;
+    @track netProfitLoss = 0;
+    @track cashFlow = 0;
     @track solvencyConcern = '';
-    @track solvencyIssues = '';
-    @track operationalLoss = '';
-    
-    // Business structure toggles
-    @track inHouseDelivery = true;
-    @track franchisee = true;
-    @track franchisor = false;
-    @track brokerage = false;
-    @track subcontractor = false;
-    @track selfEmploy = false;
-    @track otherStructure = false;
-    
-    // Care services
-    @track inHouseCareServices = ['Clinical care'];
-    @track franchiseeCareServices = ['Personal care'];
-    @track inHouseAdditionalInfo = 'Test';
-    @track franchiseeAdditionalInfo = 'Test';
-    
-    // Workforce and file management
-    @track workforceEngagement = 'Individual agreements';
-    @track documentCategory = 'Other';
-    @track documentType = 'Other';
-    @track searchTerm = '';
-    @track showArchived = false;
-    
-    // Options for form fields
-    yesNoOptions = [
-        { label: 'Yes', value: 'Yes' },
-        { label: 'No', value: 'No' }
-    ];
-    
-    careServiceOptions = [
-        { label: 'Clinical care', value: 'Clinical care' },
-        { label: 'Personal care', value: 'Personal care' },
-        { label: 'Allied health', value: 'Allied health' },
-        { label: 'Diversional therapy', value: 'Diversional therapy' },
-        { label: 'Lifestyle / recreation / activities officer', value: 'Lifestyle / recreation / activities officer' },
-        { label: 'Other', value: 'Other' }
-    ];
-    
-    workforceOptions = [
-        { label: 'Individual agreements', value: 'Individual agreements' },
-        { label: 'Enterprise agreements', value: 'Enterprise agreements' },
-        { label: 'Award rates', value: 'Award rates' },
-        { label: 'Other', value: 'Other' }
-    ];
-    
-    documentCategoryOptions = [
-        { label: 'Other', value: 'Other' },
-        { label: 'QFR', value: 'QFR' },
-        { label: 'Financial', value: 'Financial' },
-        { label: 'Compliance', value: 'Compliance' }
-    ];
-    
-    documentTypeOptions = [
-        { label: 'Other', value: 'Other' },
-        { label: 'Submission', value: 'Submission' },
-        { label: 'Report', value: 'Report' },
-        { label: 'Declaration', value: 'Declaration' }
-    ];
-    
-    // Document table data
-    @track documentData = [
+    @track solvencyDetails = '';
+
+    // Risk Assessment
+    @track overallRiskLevel = '';
+    @track selectedRiskFactors = [];
+    @track riskMitigationStrategies = '';
+
+    // Financial Data Table
+    @track financialData = [
         {
             id: '1',
-            title: 'QFRDeclaratio...',
-            owner: 'Test2 Account...',
-            category: 'Other',
-            type: 'Other',
-            created: '30 Sept 2024',
-            size: '0.7MB',
-            status: 'Available'
+            category: 'Revenue',
+            q1: 250000,
+            q2: 275000,
+            q3: 300000,
+            q4: 325000,
+            total: 1150000
         },
         {
             id: '2',
-            title: 'QFR_PRV-714...',
-            owner: 'Test2 Account...',
-            category: 'QFR',
-            type: 'Submission',
-            created: '30 Sept 2024',
-            size: '33.2KB',
-            status: 'Available'
+            category: 'Operating Expenses',
+            q1: 180000,
+            q2: 195000,
+            q3: 210000,
+            q4: 225000,
+            total: 810000
         },
         {
             id: '3',
-            title: 'QFRDeclaratio...',
-            owner: 'Test2 Account...',
-            category: 'Other',
-            type: 'Other',
-            created: '30 Sept 2024',
-            size: '0.7MB',
-            status: 'File scanning i...'
-        }
-    ];
-    
-    documentColumns = [
-        { label: 'Title', fieldName: 'title', type: 'text', sortable: true },
-        { label: 'Owner', fieldName: 'owner', type: 'text', sortable: true },
-        { label: 'Category', fieldName: 'category', type: 'text', sortable: true },
-        { label: 'Type', fieldName: 'type', type: 'text', sortable: true },
-        { label: 'Created', fieldName: 'created', type: 'text', sortable: true },
-        { label: 'Size', fieldName: 'size', type: 'text', sortable: true },
-        { label: 'Status', fieldName: 'status', type: 'text', sortable: true },
+            category: 'Marketing Expenses',
+            q1: 25000,
+            q2: 30000,
+            q3: 35000,
+            q4: 40000,
+            total: 130000
+        },
         {
-            type: 'action',
-            typeAttributes: {
-                rowActions: [
-                    { label: 'View', name: 'view' },
-                    { label: 'Download', name: 'download' },
-                    { label: 'Delete', name: 'delete' }
-                ]
-            }
+            id: '4',
+            category: 'Administrative Expenses',
+            q1: 15000,
+            q2: 18000,
+            q3: 20000,
+            q4: 22000,
+            total: 75000
         }
     ];
-    
-    // Computed properties for toggle labels
-    get inHouseDeliveryLabel() {
-        return this.inHouseDelivery ? 'Yes' : 'No';
+
+    // Options for dropdowns and radio groups
+    organizationTypeOptions = [
+        { label: 'Corporation', value: 'corporation' },
+        { label: 'Partnership', value: 'partnership' },
+        { label: 'Sole Proprietorship', value: 'sole_proprietorship' },
+        { label: 'Non-Profit', value: 'non_profit' },
+        { label: 'Government Entity', value: 'government' }
+    ];
+
+    solvencyOptions = [
+        { label: 'Yes', value: 'yes' },
+        { label: 'No', value: 'no' },
+        { label: 'Uncertain', value: 'uncertain' }
+    ];
+
+    riskLevelOptions = [
+        { label: 'Low', value: 'low' },
+        { label: 'Medium', value: 'medium' },
+        { label: 'High', value: 'high' },
+        { label: 'Critical', value: 'critical' }
+    ];
+
+    riskFactorOptions = [
+        { label: 'Market Volatility', value: 'market_volatility' },
+        { label: 'Credit Risk', value: 'credit_risk' },
+        { label: 'Operational Risk', value: 'operational_risk' },
+        { label: 'Regulatory Changes', value: 'regulatory_changes' },
+        { label: 'Technology Risk', value: 'technology_risk' },
+        { label: 'Liquidity Risk', value: 'liquidity_risk' }
+    ];
+
+    financialColumns = [
+        {
+            label: 'Category',
+            fieldName: 'category',
+            type: 'text',
+            editable: false
+        },
+        {
+            label: 'Q1',
+            fieldName: 'q1',
+            type: 'currency',
+            editable: true,
+            typeAttributes: { currencyCode: 'USD, minimumFractionDigits: 0 }
+        },
+        {
+            label: 'Q2',
+            fieldName: 'q2',
+            type: 'currency',
+            editable: true,
+            typeAttributes: { currencyCode: 'USD', minimumFractionDigits: 0 }
+        },
+        {
+            label: 'Q3',
+            fieldName: 'q3',
+            type: 'currency',
+            editable: true,
+            typeAttributes: { currencyCode: 'USD', minimumFractionDigits: 0 }
+        },
+        {
+            label: 'Q4',
+            fieldName: 'q4',
+            type: 'currency',
+            editable: true,
+            typeAttributes: { currencyCode: 'USD', minimumFractionDigits: 0 }
+        },
+        {
+            label: 'Total',
+            fieldName: 'total',
+            type: 'currency',
+            editable: false,
+            typeAttributes: { currencyCode: 'USD', minimumFractionDigits: 0 }
+        }
+    ];
+
+    connectedCallback() {
+        this.calculateNetProfitLoss();
     }
-    
-    get franchiseeLabel() {
-        return this.franchisee ? 'Yes' : 'No';
+
+    get showSolvencyDetails() {
+        return this.solvencyConcern === 'yes' || this.solvencyConcern === 'uncertain';
     }
-    
-    get franchisorLabel() {
-        return this.franchisor ? 'Yes' : 'No';
+
+    get submitDisabled() {
+        return this.isProcessing || !this.isFormValid();
     }
-    
-    get brokerageLabel() {
-        return this.brokerage ? 'Yes' : 'No';
-    }
-    
-    get subcontractorLabel() {
-        return this.subcontractor ? 'Yes' : 'No';
-    }
-    
-    get selfEmployLabel() {
-        return this.selfEmploy ? 'Yes' : 'No';
-    }
-    
-    get otherStructureLabel() {
-        return this.otherStructure ? 'Yes' : 'No';
-    }
-    
-    // Event handlers
+
     handleAccordionToggle(event) {
         this.openSections = event.detail.openSections;
     }
-    
-    handleProviderContactToggle(event) {
-        this.providerContactSections = event.detail.openSections;
+
+    handleInputChange(event) {
+        const field = event.target.dataset.field;
+        const value = event.target.value;
+        
+        this[field] = value;
+
+        // Calculate net profit/loss when revenue or expenses change
+        if (field === 'totalRevenue' || field === 'totalExpenses') {
+            this.calculateNetProfitLoss();
+        }
+
+        // Clear messages when user starts typing
+        this.clearMessages();
     }
-    
-    handleSolvencyConcernChange(event) {
-        this.solvencyConcern = event.detail.value;
+
+    handleRiskFactorChange(event) {
+        this.selectedRiskFactors = event.detail.value;
+        this.clearMessages();
     }
-    
-    handleSolvencyIssuesChange(event) {
-        this.solvencyIssues = event.detail.value;
+
+    handleCellChange(event) {
+        this.draftValues = event.detail.draftValues;
     }
-    
-    handleOperationalLossChange(event) {
-        this.operationalLoss = event.detail.value;
-    }
-    
-    handleInHouseDeliveryChange(event) {
-        this.inHouseDelivery = event.target.checked;
-    }
-    
-    handleFranchiseeChange(event) {
-        this.franchisee = event.target.checked;
-    }
-    
-    handleFranchisorChange(event) {
-        this.franchisor = event.target.checked;
-    }
-    
-    handleBrokerageChange(event) {
-        this.brokerage = event.target.checked;
-    }
-    
-    handleSubcontractorChange(event) {
-        this.subcontractor = event.target.checked;
-    }
-    
-    handleSelfEmployChange(event) {
-        this.selfEmploy = event.target.checked;
-    }
-    
-    handleOtherStructureChange(event) {
-        this.otherStructure = event.target.checked;
-    }
-    
-    handleInHouseCareServicesChange(event) {
-        this.inHouseCareServices = event.detail.value;
-    }
-    
-    handleFranchiseeCareServicesChange(event) {
-        this.franchiseeCareServices = event.detail.value;
-    }
-    
-    handleInHouseAdditionalInfoChange(event) {
-        this.inHouseAdditionalInfo = event.target.value;
-    }
-    
-    handleFranchiseeAdditionalInfoChange(event) {
-        this.franchiseeAdditionalInfo = event.target.value;
-    }
-    
-    handleWorkforceEngagementChange(event) {
-        this.workforceEngagement = event.detail.value;
-    }
-    
-    handleDocumentCategoryChange(event) {
-        this.documentCategory = event.detail.value;
-    }
-    
-    handleDocumentTypeChange(event) {
-        this.documentType = event.detail.value;
-    }
-    
-    handleSearchChange(event) {
-        this.searchTerm = event.target.value;
-        this.filterDocuments();
-    }
-    
-    handleShowArchivedChange(event) {
-        this.showArchived = event.target.checked;
-        this.filterDocuments();
-    }
-    
-    handleDocumentCellChange(event) {
-        const draftValues = event.detail.draftValues;
-        // Handle document table cell changes
-        console.log('Document cell changed:', draftValues);
-    }
-    
-    handleEditContact() {
-        // Handle edit contact functionality
-        console.log('Edit contact clicked');
-    }
-    
-    handleFileUpload() {
-        // Handle file upload functionality
-        console.log('File upload clicked');
-    }
-    
-    handleViewAll() {
-        // Handle view all documents
-        console.log('View all clicked');
-    }
-    
-    handlePrevious() {
-        // Handle previous button
-        console.log('Previous clicked');
-    }
-    
-    handleSubmit() {
-        this.isLoading = true;
+
+    handleSaveTableData() {
+        this.isProcessing = true;
         
         try {
-            // Validate form
-            if (!this.validateForm()) {
-                this.isLoading = false;
-                return;
-            }
+            // Process draft values and update financial data
+            const updatedData = [...this.financialData];
             
-            // Simulate form submission
-            setTimeout(() => {
-                this.isLoading = false;
-                console.log('Form submitted successfully');
-                // Show success message or redirect
-            }, 2000);
+            this.draftValues.forEach(draft => {
+                const recordIndex = updatedData.findIndex(record => record.id === draft.id);
+                if (recordIndex !== -1) {
+                    Object.keys(draft).forEach(field => {
+                        if (field !== 'id') {
+                            updatedData[recordIndex][field] = draft[field];
+                        }
+                    });
+                    
+                    // Recalculate total for the row
+                    const record = updatedData[recordIndex];
+                    record.total = (record.q1 || 0) + (record.q2 || 0) + (record.q3 || 0) + (record.q4 || 0);
+                }
+            });
+
+            this.financialData = updatedData;
+            this.draftValues = [];
             
+            this.showSuccess('Financial data saved successfully');
         } catch (error) {
-            this.isLoading = false;
-            console.error('Error submitting form:', error);
+            this.showError('Error saving financial data: ' + error.message);
+        } finally {
+            this.isProcessing = false;
         }
     }
-    
-    validateForm() {
-        let isValid = true;
-        const inputs = this.template.querySelectorAll('lightning-input, lightning-combobox, lightning-textarea, lightning-radio-group, lightning-checkbox-group');
+
+    handleCancelTableChanges() {
+        this.draftValues = [];
+        this.showSuccess('Changes cancelled');
+    }
+
+    handleSaveDraft() {
+        this.isProcessing = true;
         
-        inputs.forEach(input => {
-            if (input.required && !input.value) {
-                input.setCustomValidity('This field is required');
-                input.reportValidity();
-                isValid = false;
-            } else {
-                input.setCustomValidity('');
-                input.reportValidity();
+        setTimeout(() => {
+            this.showSuccess('Draft saved successfully');
+            this.isProcessing = false;
+        }, 1000);
+    }
+
+    handleSubmitForm() {
+        if (!this.isFormValid()) {
+            this.showError('Please complete all required fields before submitting');
+            return;
+        }
+
+        this.isProcessing = true;
+        
+        setTimeout(() => {
+            this.showSuccess('Form submitted successfully');
+            this.isProcessing = false;
+            this.resetForm();
+        }, 2000);
+    }
+
+    calculateNetProfitLoss() {
+        const revenue = parseFloat(this.totalRevenue) || 0;
+        const expenses = parseFloat(this.totalExpenses) || 0;
+        this.netProfitLoss = revenue - expenses;
+    }
+
+    isFormValid() {
+        const requiredFields = [
+            'organizationName', 'registrationNumber', 'organizationType', 
+            'financialYearEnd', 'businessAddress', 'primaryContactName', 
+            'jobTitle', 'emailAddress', 'phoneNumber', 'totalRevenue', 
+            'totalExpenses', 'cashFlow', 'solvencyConcern', 
+            'overallRiskLevel', 'riskMitigationStrategies'
+        ];
+
+        for (let field of requiredFields) {
+            if (!this[field] || this[field] === '') {
+                return false;
             }
-        });
+        }
+
+        // Check if risk factors are selected
+        if (!this.selectedRiskFactors || this.selectedRiskFactors.length === 0) {
+            return false;
+        }
+
+        // Check solvency details if concern is yes or uncertain
+        if (this.showSolvencyDetails && (!this.solvencyDetails || this.solvencyDetails === '')) {
+            return false;
+        }
+
+        return true;
+    }
+
+    showSuccess(message) {
+        this.successMessage = message;
+        this.showSuccessMessage = true;
+        this.showErrorMessage = false;
         
-        return isValid;
+        setTimeout(() => {
+            this.clearMessages();
+        }, 5000);
+
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: 'Success',
+                message: message,
+                variant: 'success'
+            })
+        );
     }
-    
-    filterDocuments() {
-        // Filter documents based on search term and archived status
-        // This would typically filter the documentData array
-        console.log('Filtering documents with term:', this.searchTerm, 'Show archived:', this.showArchived);
+
+    showError(message) {
+        this.errorMessage = message;
+        this.showErrorMessage = true;
+        this.showSuccessMessage = false;
+        
+        setTimeout(() => {
+            this.clearMessages();
+        }, 5000);
+
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: 'Error',
+                message: message,
+                variant: 'error'
+            })
+        );
     }
-    
-    connectedCallback() {
-        // Initialize component
-        console.log('QFR Form Test component loaded');
+
+    clearMessages() {
+        this.showSuccessMessage = false;
+        this.showErrorMessage = false;
+        this.successMessage = '';
+        this.errorMessage = '';
+    }
+
+    resetForm() {
+        // Reset all form fields
+        this.organizationName = '';
+        this.registrationNumber = '';
+        this.organizationType = '';
+        this.financialYearEnd = '';
+        this.businessAddress = '';
+        this.primaryContactName = '';
+        this.jobTitle = '';
+        this.emailAddress = '';
+        this.phoneNumber = '';
+        this.totalRevenue = 0;
+        this.totalExpenses = 0;
+        this.netProfitLoss = 0;
+        this.cashFlow = 0;
+        this.solvencyConcern = '';
+        this.solvencyDetails = '';
+        this.overallRiskLevel = '';
+        this.selectedRiskFactors = [];
+        this.riskMitigationStrategies = '';
+        this.draftValues = [];
     }
 }
