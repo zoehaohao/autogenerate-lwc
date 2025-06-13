@@ -1,267 +1,396 @@
 <template>
     <div class="qfr-form-container">
-        <div class="form-header">
-            <h1 class="form-title">Quarterly Financial Review Form</h1>
-            <p class="form-description">Please complete all sections of this quarterly financial review assessment.</p>
-        </div>
-
+        <!-- Progress Indicator -->
         <lightning-progress-indicator 
-            current-step={currentStep} 
+            current-step={{currentStep}} 
             type="path" 
             variant="base">
             <lightning-progress-step 
-                label="Financial Health" 
-                value="step1">
+                label="Residential Viability" 
+                value="1">
             </lightning-progress-step>
             <lightning-progress-step 
-                label="Risk Assessment" 
-                value="step2">
+                label="Contact Information" 
+                value="2">
             </lightning-progress-step>
             <lightning-progress-step 
-                label="Performance Metrics" 
-                value="step3">
+                label="Business Structure" 
+                value="3">
             </lightning-progress-step>
             <lightning-progress-step 
-                label="Review & Submit" 
-                value="step4">
+                label="Labour Costs" 
+                value="4">
+            </lightning-progress-step>
+            <lightning-progress-step 
+                label="Document Management" 
+                value="5">
             </lightning-progress-step>
         </lightning-progress-indicator>
 
-        <div class="form-content">
-            <template if:true={isStep1}>
-                <div class="step-section">
-                    <h2 class="section-title">Financial Health Assessment</h2>
-                    
-                    <lightning-accordion 
-                        active-section-name={openSections} 
-                        allow-multiple-sections-open="true"
-                        onselect={handleAccordionToggle}>
-                        
-                        <lightning-accordion-section name="happiness" label="General Assessment">
-                            <div class="form-group">
-                                <lightning-radio-group 
-                                    name="happinessLevel"
-                                    label="Are you happy ?"
-                                    options={happinessOptions}
-                                    value={formData.happinessLevel}
-                                    onchange={handleInputChange}
-                                    required="true"
-                                    class="required-field">
-                                </lightning-radio-group>
-                            </div>
+        <!-- Page 1: Residential Viability and Prudential Reporting -->
+        <div if:true={isPage1} class="page-content">
+            <h2 class="page-title">Residential Viability and Prudential Reporting</h2>
+            
+            <!-- About this section accordion -->
+            <lightning-accordion 
+                active-section-name={openSections} 
+                allow-multiple-sections-open="true"
+                onselect={handleAccordionToggle}>
+                <lightning-accordion-section name="about-section" label="About this section">
+                    <div class="about-content">
+                        <p>This section collects information about the financial health and viability of residential care services to identify providers who may need additional support or intervention.</p>
+                        <p>The data collected helps the department provide appropriate support and ensure quality care continues to be delivered.</p>
+                    </div>
+                </lightning-accordion-section>
+            </lightning-accordion>
 
-                            <div class="form-group">
-                                <lightning-textarea 
-                                    name="happinessComments"
-                                    label="Please provide additional comments about your current satisfaction level"
-                                    value={formData.happinessComments}
-                                    onchange={handleInputChange}
-                                    placeholder="Enter your comments here..."
-                                    rows="4">
-                                </lightning-textarea>
-                            </div>
-                        </lightning-accordion-section>
-
-                        <lightning-accordion-section name="financial" label="Financial Position">
-                            <div class="form-group">
-                                <lightning-input 
-                                    type="number"
-                                    name="currentRevenue"
-                                    label="Current Quarter Revenue"
-                                    value={formData.currentRevenue}
-                                    onchange={handleInputChange}
-                                    formatter="currency"
-                                    required="true"
-                                    class="required-field">
-                                </lightning-input>
-                            </div>
-
-                            <div class="form-group">
-                                <lightning-input 
-                                    type="number"
-                                    name="previousRevenue"
-                                    label="Previous Quarter Revenue"
-                                    value={formData.previousRevenue}
-                                    onchange={handleInputChange}
-                                    formatter="currency"
-                                    required="true"
-                                    class="required-field">
-                                </lightning-input>
-                            </div>
-
-                            <div class="form-group">
-                                <lightning-combobox 
-                                    name="cashFlowStatus"
-                                    label="Cash Flow Status"
-                                    value={formData.cashFlowStatus}
-                                    placeholder="Select cash flow status"
-                                    options={cashFlowOptions}
-                                    onchange={handleInputChange}
-                                    required="true"
-                                    class="required-field">
-                                </lightning-combobox>
-                            </div>
-                        </lightning-accordion-section>
-                    </lightning-accordion>
+            <!-- Solvency Section -->
+            <div class="section-card">
+                <h3 class="section-title">Solvency</h3>
+                <div class="question-group">
+                    <label class="question-label">Are you currently concerned about the solvency of your organisation? *</label>
+                    <lightning-radio-group 
+                        name="solvencyConcern"
+                        options={yesNoOptions}
+                        value={formData.solvencyConcern}
+                        onchange={handleInputChange}
+                        type="button"
+                        required="true">
+                    </lightning-radio-group>
                 </div>
-            </template>
+                
+                <div class="question-group">
+                    <label class="question-label">Do you envisage any solvency issues arising in the next six months? *</label>
+                    <lightning-radio-group 
+                        name="solvencyFuture"
+                        options={yesNoOptions}
+                        value={formData.solvencyFuture}
+                        onchange={handleInputChange}
+                        type="button"
+                        required="true">
+                    </lightning-radio-group>
+                </div>
+            </div>
 
-            <template if:true={isStep2}>
-                <div class="step-section">
-                    <h2 class="section-title">Risk Assessment</h2>
+            <!-- Financial Performance Section -->
+            <div class="section-card">
+                <h3 class="section-title">Financial Performance</h3>
+                <div class="question-group">
+                    <label class="question-label">Do you forecast an operational loss for the current year? *</label>
+                    <lightning-helptext 
+                        content="An operational loss occurs when operating expenses exceed operating revenues from your core care services. Consider your year-to-date performance, budget forecasts, and any extraordinary items that may impact this year's results. This excludes investment income or one-time asset sales.">
+                    </lightning-helptext>
+                    <lightning-radio-group 
+                        name="operationalLoss"
+                        options={yesNoOptions}
+                        value={formData.operationalLoss}
+                        onchange={handleInputChange}
+                        type="button"
+                        required="true">
+                    </lightning-radio-group>
+                </div>
+            </div>
+
+            <div if:true={page1Errors.length} class="error-section">
+                <div class="slds-notify slds-notify_alert slds-alert_error">
+                    <h4>Please complete the following required fields:</h4>
+                    <ul>
+                        <li for:each={page1Errors} for:item="error" key={error}>{error}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 2: Provider Contact Information -->
+        <div if:true={isPage2} class="page-content">
+            <h2 class="page-title">Provider Contact Information</h2>
+            
+            <!-- Account Information -->
+            <div class="section-card">
+                <h3 class="section-title">Account Information</h3>
+                <div class="info-display">
+                    <div class="info-row">
+                        <span class="info-label">Organisation Name:</span>
+                        <span class="info-value">{accountInfo.name}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">NAPS ID:</span>
+                        <span class="info-value">{accountInfo.napsId}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Primary Contact -->
+            <div class="section-card">
+                <h3 class="section-title">Primary Contact</h3>
+                <div class="contact-header">
+                    <lightning-button 
+                        label={editButtonLabel}
+                        variant="neutral"
+                        onclick={handleEditContact}>
+                    </lightning-button>
+                </div>
+
+                <div if:false={isEditingContact} class="contact-display">
+                    <div class="info-row">
+                        <span class="info-label">Name:</span>
+                        <span class="info-value">{formData.contactName}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Position:</span>
+                        <span class="info-value">{formData.contactPosition}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Phone:</span>
+                        <span class="info-value">{formData.contactPhone}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value">{formData.contactEmail}</span>
+                    </div>
+                </div>
+
+                <div if:true={isEditingContact} class="contact-edit">
+                    <lightning-input 
+                        label="Name"
+                        name="contactName"
+                        value={formData.contactName}
+                        onchange={handleInputChange}
+                        required="true">
+                    </lightning-input>
                     
-                    <lightning-accordion 
-                        active-section-name={openSections} 
-                        allow-multiple-sections-open="true"
-                        onselect={handleAccordionToggle}>
+                    <lightning-input 
+                        label="Position"
+                        name="contactPosition"
+                        value={formData.contactPosition}
+                        onchange={handleInputChange}
+                        required="true">
+                    </lightning-input>
+                    
+                    <lightning-input 
+                        label="Phone"
+                        name="contactPhone"
+                        type="tel"
+                        value={formData.contactPhone}
+                        onchange={handleInputChange}
+                        required="true">
+                    </lightning-input>
+                    
+                    <lightning-input 
+                        label="Email"
+                        name="contactEmail"
+                        type="email"
+                        value={formData.contactEmail}
+                        onchange={handleInputChange}
+                        required="true">
+                    </lightning-input>
+
+                    <div class="edit-actions">
+                        <lightning-button 
+                            label="Save"
+                            variant="brand"
+                            onclick={handleSaveContact}>
+                        </lightning-button>
+                        <lightning-button 
+                            label="Cancel"
+                            variant="neutral"
+                            onclick={handleCancelEdit}>
+                        </lightning-button>
+                    </div>
+                </div>
+            </div>
+
+            <div if:true={page2Errors.length} class="error-section">
+                <div class="slds-notify slds-notify_alert slds-alert_error">
+                    <h4>Please complete the following required fields:</h4>
+                    <ul>
+                        <li for:each={page2Errors} for:item="error" key={error}>{error}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 3: Business Structure Configuration -->
+        <div if:true={isPage3} class="page-content">
+            <h2 class="page-title">Business Structure Configuration</h2>
+            
+            <div class="section-card">
+                <h3 class="section-title">Business Structure Types</h3>
+                <p class="section-description">Select all business structure types that apply to your organisation:</p>
+                
+                <div class="structure-toggles">
+                    <div for:each={businessStructures} for:item="structure" key={structure.name} class="structure-item">
+                        <div class="toggle-header">
+                            <span class="structure-label">{structure.label}</span>
+                            <lightning-input 
+                                type="toggle"
+                                name={structure.name}
+                                checked={structure.selected}
+                                onchange={handleStructureToggle}>
+                            </lightning-input>
+                        </div>
                         
-                        <lightning-accordion-section name="risks" label="Risk Factors">
-                            <div class="form-group">
+                        <div if:true={structure.selected} class="structure-details">
+                            <div class="service-types">
+                                <label class="detail-label">Service Types:</label>
                                 <lightning-checkbox-group 
-                                    name="riskFactors"
-                                    label="Select all applicable risk factors"
-                                    options={riskFactorOptions}
-                                    value={formData.riskFactors}
-                                    onchange={handleInputChange}>
+                                    name={structure.serviceTypesName}
+                                    options={serviceTypeOptions}
+                                    value={structure.serviceTypes}
+                                    onchange={handleServiceTypeChange}>
                                 </lightning-checkbox-group>
                             </div>
-
-                            <div class="form-group">
-                                <lightning-combobox 
-                                    name="overallRiskLevel"
-                                    label="Overall Risk Level"
-                                    value={formData.overallRiskLevel}
-                                    placeholder="Select risk level"
-                                    options={riskLevelOptions}
-                                    onchange={handleInputChange}
-                                    required="true"
-                                    class="required-field">
-                                </lightning-combobox>
-                            </div>
-                        </lightning-accordion-section>
-                    </lightning-accordion>
-                </div>
-            </template>
-
-            <template if:true={isStep3}>
-                <div class="step-section">
-                    <h2 class="section-title">Performance Metrics</h2>
-                    
-                    <div class="metrics-table">
-                        <lightning-datatable 
-                            key-field="id"
-                            data={performanceData}
-                            columns={performanceColumns}
-                            oncellchange={handleCellChange}
-                            draft-values={draftValues}
-                            hide-checkbox-column="true">
-                        </lightning-datatable>
-                    </div>
-
-                    <div class="form-group">
-                        <lightning-textarea 
-                            name="performanceNotes"
-                            label="Performance Analysis Notes"
-                            value={formData.performanceNotes}
-                            onchange={handleInputChange}
-                            placeholder="Enter your analysis of the performance metrics..."
-                            rows="6">
-                        </lightning-textarea>
+                            
+                            <lightning-textarea 
+                                label="Additional Information (percentage breakdown, explanations)"
+                                name={structure.additionalInfoName}
+                                value={structure.additionalInfo}
+                                onchange={handleAdditionalInfoChange}
+                                placeholder="Please provide percentage breakdown and any relevant explanations">
+                            </lightning-textarea>
+                        </div>
                     </div>
                 </div>
-            </template>
+            </div>
 
-            <template if:true={isStep4}>
-                <div class="step-section">
-                    <h2 class="section-title">Review & Submit</h2>
-                    
-                    <div class="review-summary">
-                        <h3>Form Summary</h3>
-                        <div class="summary-item">
-                            <strong>Happiness Level:</strong> {formData.happinessLevel}
-                        </div>
-                        <div class="summary-item">
-                            <strong>Current Revenue:</strong> {formattedCurrentRevenue}
-                        </div>
-                        <div class="summary-item">
-                            <strong>Cash Flow Status:</strong> {formData.cashFlowStatus}
-                        </div>
-                        <div class="summary-item">
-                            <strong>Risk Level:</strong> {formData.overallRiskLevel}
-                        </div>
-                    </div>
+            <!-- Workforce Section -->
+            <div class="section-card">
+                <h3 class="section-title">Workforce</h3>
+                <lightning-combobox 
+                    label="How are your direct care workers engaged? *"
+                    name="workforceEngagement"
+                    value={formData.workforceEngagement}
+                    options={workforceOptions}
+                    onchange={handleInputChange}
+                    required="true">
+                </lightning-combobox>
+            </div>
 
-                    <div class="form-group">
-                        <lightning-input 
-                            type="checkbox"
-                            name="confirmAccuracy"
-                            label="I confirm that all information provided is accurate and complete"
-                            checked={formData.confirmAccuracy}
-                            onchange={handleInputChange}
-                            required="true"
-                            class="required-field">
-                        </lightning-input>
-                    </div>
+            <div if:true={page3Errors.length} class="error-section">
+                <div class="slds-notify slds-notify_alert slds-alert_error">
+                    <h4>Please complete the following required fields:</h4>
+                    <ul>
+                        <li for:each={page3Errors} for:item="error" key={error}>{error}</li>
+                    </ul>
                 </div>
-            </template>
+            </div>
         </div>
 
-        <div class="form-actions">
-            <template if:false={isFirstStep}>
-                <lightning-button 
-                    variant="neutral"
-                    label="Previous"
-                    onclick={handlePrevious}
-                    disabled={isLoading}>
-                </lightning-button>
-            </template>
+        <!-- Page 4: Labour Costs Data Management -->
+        <div if:true={isPage4} class="page-content">
+            <h2 class="page-title">Labour Costs Data Management</h2>
+            
+            <div class="section-card">
+                <h3 class="section-title">Internal Direct Care Labour Costs</h3>
+                <p class="section-description">Enter detailed breakdown of internal direct care labour costs by staff category:</p>
+                
+                <lightning-datatable 
+                    key-field="id"
+                    data={labourCostData}
+                    columns={labourCostColumns}
+                    oncellchange={handleLabourCostChange}
+                    hide-checkbox-column="true">
+                </lightning-datatable>
+            </div>
 
-            <template if:false={isLastStep}>
-                <lightning-button 
-                    variant="brand"
-                    label="Next"
-                    onclick={handleNext}
-                    disabled={nextButtonDisabled}>
-                </lightning-button>
-            </template>
-
-            <template if:true={isLastStep}>
-                <lightning-button 
-                    variant="brand"
-                    label="Submit Form"
-                    onclick={handleSubmit}
-                    disabled={submitButtonDisabled}>
-                </lightning-button>
-            </template>
-
-            <template if:true={isLoading}>
-                <lightning-spinner 
-                    alternative-text="Processing..."
-                    size="small">
-                </lightning-spinner>
-            </template>
+            <div if:true={page4Errors.length} class="error-section">
+                <div class="slds-notify slds-notify_alert slds-alert_error">
+                    <h4>Please complete the following required fields:</h4>
+                    <ul>
+                        <li for:each={page4Errors} for:item="error" key={error}>{error}</li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
-        <template if:true={showSuccessMessage}>
-            <div class="success-message">
-                <lightning-icon 
-                    icon-name="utility:success"
-                    size="small"
-                    variant="success">
-                </lightning-icon>
-                <span>Form submitted successfully!</span>
-            </div>
-        </template>
+        <!-- Page 5: Document Management and Submission -->
+        <div if:true={isPage5} class="page-content">
+            <h2 class="page-title">Document Management and Submission</h2>
+            
+            <div class="section-card">
+                <h3 class="section-title">Document Upload</h3>
+                
+                <div class="upload-controls">
+                    <lightning-combobox 
+                        label="Document Category *"
+                        name="documentCategory"
+                        value={selectedDocumentCategory}
+                        options={documentCategoryOptions}
+                        onchange={handleDocumentCategoryChange}
+                        required="true">
+                    </lightning-combobox>
+                    
+                    <lightning-combobox 
+                        label="Document Type *"
+                        name="documentType"
+                        value={selectedDocumentType}
+                        options={documentTypeOptions}
+                        onchange={handleDocumentTypeChange}
+                        required="true">
+                    </lightning-combobox>
+                </div>
 
-        <template if:true={errorMessage}>
-            <div class="error-message">
-                <lightning-icon 
-                    icon-name="utility:error"
-                    size="small"
-                    variant="error">
-                </lightning-icon>
-                <span>{errorMessage}</span>
+                <div class="file-upload-area" ondrop={handleFileDrop} ondragover={handleDragOver}>
+                    <lightning-input 
+                        type="file"
+                        label="Upload Documents"
+                        name="fileUpload"
+                        accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
+                        onchange={handleFileUpload}
+                        multiple="true">
+                    </lightning-input>
+                    <div class="upload-instructions">
+                        <p>Drag and drop files here or click to browse</p>
+                        <p class="file-types">Supported formats: PDF, Word, Excel, Images</p>
+                    </div>
+                </div>
             </div>
-        </template>
+
+            <!-- Uploaded Documents -->
+            <div if:true={uploadedDocuments.length} class="section-card">
+                <h3 class="section-title">Uploaded Documents</h3>
+                <lightning-datatable 
+                    key-field="id"
+                    data={uploadedDocuments}
+                    columns={documentColumns}
+                    onrowaction={handleDocumentAction}
+                    hide-checkbox-column="true">
+                </lightning-datatable>
+            </div>
+
+            <div if:true={page5Errors.length} class="error-section">
+                <div class="slds-notify slds-notify_alert slds-alert_error">
+                    <h4>Please complete the following required fields:</h4>
+                    <ul>
+                        <li for:each={page5Errors} for:item="error" key={error}>{error}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="navigation-buttons">
+            <lightning-button 
+                label="Previous"
+                variant="neutral"
+                onclick={handlePrevious}
+                disabled={isPreviousDisabled}>
+            </lightning-button>
+            
+            <lightning-button 
+                label={nextButtonLabel}
+                variant="brand"
+                onclick={handleNext}
+                disabled={isNextDisabled}>
+            </lightning-button>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div if:true={isLoading} class="loading-overlay">
+            <lightning-spinner 
+                alternative-text="Processing..."
+                size="large">
+            </lightning-spinner>
+        </div>
     </div>
 </template>
