@@ -242,9 +242,7 @@ export default class QfrFormTest extends LightningElement {
 
     get isPage4() {
         return this.currentStep === '4';
-    }
-
-    get isPage5() {
+    }get isPage5() {
         return this.currentStep === '5';
     }
 
