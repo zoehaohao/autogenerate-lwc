@@ -5,24 +5,7 @@
 }
 
 .page-content {
-    margin-top: 2rem;
-}
-
-.page-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: #080707;
-}
-
-.info-accordion {
-    margin-bottom: 1.5rem;
-}
-
-.info-content p {
-    margin: 0;
-    line-height: 1.5;
-    color: #3e3e3c;
+    margin-top: 1rem;
 }
 
 .required-asterisk {
@@ -30,111 +13,71 @@
     margin-right: 0.25rem;
 }
 
-.radio-button-group {
-    margin-top: 0.5rem;
-}
-
-.business-structure-item {
-    border-bottom: 1px solid #dddbda;
-    padding: 1rem 0;
-}
-
-.business-structure-item:last-child {
-    border-bottom: none;
+.structure-item {
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    background-color: #fafaf9;
 }
 
 .conditional-content {
-    margin-top: 1rem;
-    padding-left: 1rem;
-    border-left: 3px solid #0176d3;
-    background-color: #f3f3f3;
+    background-color: white;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    border: 1px solid #dddbda;
+}
+
+.table-controls {
+    background-color: #f3f2f2;
     padding: 1rem;
     border-radius: 0.25rem;
+    margin-bottom: 1rem;
 }
 
-.contact-display,
-.contact-edit {
-    margin-top: 1rem;
-}
-
-.edit-button {
-    margin-left: auto;
-}
-
-.qa-comments {
-    font-style: italic;
-    color: #706e6b;
-    padding: 1rem;
-    background-color: #f3f3f3;
+.labour-costs-table {
+    border: 1px solid #dddbda;
     border-radius: 0.25rem;
-}
-
-.upload-section {
-    margin-bottom: 2rem;
+    overflow: hidden;
 }
 
 .file-upload-area {
-    border: 2px dashed #dddbda;
+    border: 2px dashed #0176d3;
     border-radius: 0.5rem;
     padding: 2rem;
     text-align: center;
-    background-color: #fafaf9;
-    transition: border-color 0.2s ease;
-    position: relative;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .file-upload-area:hover {
-    border-color: #0176d3;
-    background-color: #f3f3f3;
+    background-color: #f3f2f2;
+    border-color: #014486;
 }
 
 .upload-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
-}
-
-.upload-icon {
-    color: #706e6b;
-}
-
-.upload-text {
-    font-size: 1.125rem;
-    color: #3e3e3c;
-    margin: 0;
-}
-
-.upload-help {
-    font-size: 0.875rem;
-    color: #706e6b;
-    margin: 0;
+    justify-content: center;
 }
 
 .file-input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
+    display: none;
 }
 
 .navigation-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 2rem;
-    padding-top: 1rem;
     border-top: 1px solid #dddbda;
-}
-
-.nav-button {
-    min-width: 120px;
+    padding-top: 1rem;
+    margin-top: 2rem;
 }
 
 .loading-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
+    width: 100%;
+    height: 100%;
     background-color: rgba(255, 255, 255, 0.8);
     display: flex;
     justify-content: center;
@@ -142,77 +85,21 @@
     z-index: 9999;
 }
 
-/* Progress Indicator Styling */
-.slds-progress {
-    margin-bottom: 2rem;
-}
-
-/* Card Styling */
-.slds-card {
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
-    border: 1px solid #dddbda;
-}
-
-.slds-card__header {
-    background-color: #f3f3f3;
+.contact-display .slds-form-element__control {
+    padding-top: 0.5rem;
     border-bottom: 1px solid #dddbda;
+    margin-bottom: 1rem;
 }
 
-.slds-card__header-title {
+.account-name {
+    font-size: 1.125rem;
     font-weight: 600;
-    color: #080707;
+    color: #181818;
 }
 
-/* Form Element Styling */
-.slds-form-element__label {
-    font-weight: 500;
-    color: #3e3e3c;
-}
-
-.slds-form-element__static {
-    color: #080707;
-    font-weight: 500;
-}
-
-/* Button Group Styling */
-.slds-radio_button-group .slds-button {
-    margin-right: 0.5rem;
-}
-
-/* Toggle Switch Styling */
-.slds-form-element .slds-checkbox_toggle {
-    margin-left: auto;
-}
-
-/* Datatable Styling */
-.slds-table {
-    border: 1px solid #dddbda;
-}
-
-.slds-table th {
-    background-color: #f3f3f3;
-    font-weight: 600;
-    color: #3e3e3c;
-}
-
-/* Accordion Styling */
-.slds-accordion__section {
-    border-bottom: 1px solid #dddbda;
-}
-
-.slds-accordion__summary {
-    background-color: #f3f3f3;
-}
-
-.slds-accordion__summary:hover {
-    background-color: #ecebea;
-}
-
-/* Error Styling */
-.slds-notify_alert.slds-theme_error {
-    background-color: #feded8;
-    border-left: 3px solid #c23934;
-    color: #8c1b1b;
+.naps-id {
+    font-size: 0.875rem;
+    color: #706e6b;
 }
 
 /* Responsive Design */
@@ -221,92 +108,101 @@
         padding: 0.5rem;
     }
     
-    .slds-grid.slds-gutters {
-        flex-direction: column;
+    .table-controls .slds-col {
+        margin-bottom: 0.5rem;
     }
     
-    .slds-col {
-        width: 100%;
-        margin-bottom: 1rem;
-    }
-    
-    .navigation-buttons {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .nav-button {
-        width: 100%;
-    }
-    
-    .file-upload-area {
-        padding: 1rem;
-    }
-    
-    .upload-content {
-        gap: 0.5rem;
+    .navigation-buttons .slds-col {
+        text-align: center;
+        margin-bottom: 0.5rem;
     }
 }
 
-/* Focus and Accessibility */
-.slds-button:focus,
+/* Progress Indicator Styling */
+.slds-progress__item.slds-is-completed .slds-progress__marker {
+    background-color: #04844b;
+    border-color: #04844b;
+}
+
+.slds-progress__item.slds-is-active .slds-progress__marker {
+    background-color: #0176d3;
+    border-color: #0176d3;
+}
+
+/* Form Section Styling */
+.slds-section__title {
+    background-color: #f3f2f2;
+    border: 1px solid #dddbda;
+    border-bottom: none;
+    font-weight: 600;
+}
+
+.slds-section__content {
+    border: 1px solid #dddbda;
+    border-top: none;
+}
+
+/* Button Group Styling */
+.slds-radio_button-group .slds-button {
+    margin-right: 0.5rem;
+}
+
+/* Data Table Styling */
+.slds-table th {
+    background-color: #f3f2f2;
+    font-weight: 600;
+}
+
+.slds-table td {
+    vertical-align: middle;
+}
+
+/* Toggle Switch Styling */
+.slds-form-element .slds-checkbox_toggle {
+    margin-left: auto;
+}
+
+/* Accordion Styling */
+.slds-accordion__summary-content {
+    font-weight: 500;
+}
+
+.slds-accordion__content {
+    background-color: #fafaf9;
+}
+
+/* Error State Styling */
+.slds-has-error .slds-form-element__control {
+    border-color: #c23934;
+}
+
+.slds-form-element__help {
+    color: #c23934;
+    font-size: 0.75rem;
+}
+
+/* Success State Styling */
+.slds-form-element.slds-has-success .slds-form-element__control {
+    border-color: #04844b;
+}
+
+/* Focus States */
 .slds-input:focus,
-.slds-combobox:focus {
-    outline: 2px solid #0176d3;
-    outline-offset: 2px;
+.slds-textarea:focus,
+.slds-select:focus {
+    border-color: #0176d3;
+    box-shadow: 0 0 3px #0176d3;
 }
 
-/* Animation for smooth transitions */
-.conditional-content {
-    animation: slideDown 0.2s ease-out;
+/* Disabled States */
+.slds-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Print Styles */
-@media print {
-    .navigation-buttons,
-    .loading-overlay {
-        display: none;
-    }
-    
-    .page-content {
-        page-break-inside: avoid;
-    }
-}
-
-/* High Contrast Mode Support */
-@media (prefers-contrast: high) {
-    .slds-card {
-        border: 2px solid #000;
-    }
-    
-    .required-asterisk {
-        color: #000;
-        font-weight: bold;
-    }
-    
-    .file-upload-area {
-        border: 2px solid #000;
-    }
-}
-
-/* Reduced Motion Support */
-@media (prefers-reduced-motion: reduce) {
-    .conditional-content {
-        animation: none;
-    }
-    
-    .file-upload-area {
-        transition: none;
-    }
+.slds-input:disabled,
+.slds-textarea:disabled,
+.slds-select:disabled {
+    background-color: #f3f2f2;
+    cursor: not-allowed;
 }
