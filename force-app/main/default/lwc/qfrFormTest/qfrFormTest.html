@@ -30,43 +30,38 @@
         <!-- Page 1: Residential Viability and Prudential Reporting -->
         <div if:true={isPage1} class="page-content">
             <div class="slds-card">
-                <div class="slds-card__header">
-                    <h2 class="slds-card__header-title">
-                        <span>Residential Viability and Prudential Reporting</span>
-                    </h2>
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">
+                                <span>Residential Viability and Prudential Reporting</span>
+                            </h2>
+                        </div>
+                    </header>
                 </div>
                 <div class="slds-card__body slds-card__body_inner">
-                    <!-- About this section accordion -->
+                    <!-- Information Section -->
                     <lightning-accordion 
                         active-section-name={openSections} 
                         allow-multiple-sections-open="true"
                         onselect={handleAccordionToggle}>
-                        <lightning-accordion-section name="about-section" label="About this section">
-                            <div class="slds-p-around_medium">
-                                <p class="slds-m-bottom_small">This section collects information about the financial health and viability of residential care services to identify providers who may need additional support or intervention.</p>
-                                <p class="slds-m-bottom_small">The data helps ensure appropriate regulatory oversight and support for healthcare providers. All questions marked with an asterisk (*) are mandatory.</p>
-                                <div class="slds-notify slds-notify_alert slds-theme_info" role="alert">
-                                    <span class="slds-assistive-text">Information</span>
-                                    <lightning-icon icon-name="utility:info" size="x-small" variant="inverse"></lightning-icon>
-                                    <p><strong>Please note:</strong> Your responses will be treated confidentially and used only for regulatory assessment purposes.</p>
-                                </div>
+                        <lightning-accordion-section name="about" label="About this section">
+                            <div class="slds-text-body_regular">
+                                <p>This section collects information about the financial health and viability of residential care services to identify providers who may need additional support or intervention.</p>
+                                <p>The data collected helps the department understand your organization's current financial position and forecast any potential issues that may require assistance.</p>
                             </div>
                         </lightning-accordion-section>
                     </lightning-accordion>
 
-                    <!-- Solvency Questions -->
-                    <div class="slds-section slds-m-top_large">
+                    <!-- Solvency Assessment -->
+                    <div class="slds-section slds-is-open slds-m-top_large">
                         <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">Current Financial Position</span>
+                            <span class="slds-truncate slds-p-horizontal_small" title="Solvency Assessment">Solvency Assessment</span>
                         </h3>
                         <div class="slds-section__content slds-p-around_medium">
                             <div class="slds-form-element slds-m-bottom_medium">
-                                <label class="slds-form-element__label">
-                                    <span class="required-asterisk">*</span>
-                                    Are you happy?
-                                    <lightning-helptext 
-                                        content="Please indicate your current happiness level regarding your organisation's overall situation.">
-                                    </lightning-helptext>
+                                <label class="slds-form-element__label slds-text-heading_small">
+                                    Are you currently concerned about the solvency of your organisation? *
                                 </label>
                                 <lightning-radio-group 
                                     name="solvencyConcern"
@@ -78,54 +73,32 @@
                                 </lightning-radio-group>
                             </div>
                             
-                            <div class="slds-form-element slds-m-bottom_medium">
-                                <label class="slds-form-element__label">
-                                    <span class="required-asterisk">*</span>
-                                    Do you envisage any solvency issues arising in the next six months?
-                                    <lightning-helptext 
-                                        content="Consider upcoming major expenses, contract renewals, funding changes, or other factors that might affect your ability to meet financial obligations.">
-                                    </lightning-helptext>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label slds-text-heading_small">
+                                    Do you envisage any solvency issues arising in the next six months? *
                                 </label>
                                 <lightning-radio-group 
-                                    name="futureSolvencyIssues"
+                                    name="solvencyFuture"
                                     options={yesNoOptions}
-                                    value={formData.futureSolvencyIssues}
+                                    value={formData.solvencyFuture}
                                     onchange={handleInputChange}
                                     type="button"
-                                    required="true">
-                                </lightning-radio-group>
-                            </div>
-
-                            <div class="slds-form-element slds-m-bottom_medium">
-                                <label class="slds-form-element__label">
-                                    <span class="required-asterisk">*</span>
-                                    What is your current cash flow position?
-                                </label>
-                                <lightning-radio-group 
-                                    name="cashFlowPosition"
-                                    options={cashFlowOptions}
-                                    value={formData.cashFlowPosition}
-                                    onchange={handleInputChange}
-                                    type="radio"
                                     required="true">
                                 </lightning-radio-group>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Financial Performance -->
-                    <div class="slds-section slds-m-top_large">
+                    <!-- Financial Performance Assessment -->
+                    <div class="slds-section slds-is-open slds-m-top_large">
                         <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">Financial Performance Assessment</span>
+                            <span class="slds-truncate slds-p-horizontal_small" title="Financial Performance">Financial Performance</span>
                         </h3>
                         <div class="slds-section__content slds-p-around_medium">
-                            <div class="slds-form-element slds-m-bottom_medium">
-                                <label class="slds-form-element__label">
-                                    <span class="required-asterisk">*</span>
-                                    Do you forecast an operational loss for the current year?
-                                    <lightning-helptext 
-                                        content="An operational loss occurs when operating expenses exceed operating revenues from your core care services. Consider your year-to-date performance, budget forecasts, and any extraordinary items that may impact this year's results. This excludes investment income or one-time asset sales.">
-                                    </lightning-helptext>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label slds-text-heading_small">
+                                    Do you forecast an operational loss for the current year? *
+                                    <lightning-helptext content="An operational loss occurs when operating expenses exceed operating revenues from your core care services. Consider your year-to-date performance, budget forecasts, and any extraordinary items that may impact this year's results. This excludes investment income or one-time asset sales."></lightning-helptext>
                                 </label>
                                 <lightning-radio-group 
                                     name="operationalLoss"
@@ -136,79 +109,6 @@
                                     required="true">
                                 </lightning-radio-group>
                             </div>
-
-                            <div class="slds-form-element slds-m-bottom_medium">
-                                <label class="slds-form-element__label">
-                                    <span class="required-asterisk">*</span>
-                                    What is your occupancy rate trend over the past 12 months?
-                                </label>
-                                <lightning-combobox 
-                                    name="occupancyTrend"
-                                    value={formData.occupancyTrend}
-                                    placeholder="Select occupancy trend..."
-                                    options={occupancyTrendOptions}
-                                    onchange={handleInputChange}
-                                    required="true">
-                                </lightning-combobox>
-                            </div>
-
-                            <div class="slds-form-element slds-m-bottom_medium">
-                                <label class="slds-form-element__label">
-                                    Have you experienced any significant changes in government funding in the past 12 months?
-                                </label>
-                                <lightning-radio-group 
-                                    name="fundingChanges"
-                                    options={yesNoOptions}
-                                    value={formData.fundingChanges}
-                                    onchange={handleInputChange}
-                                    type="button">
-                                </lightning-radio-group>
-                            </div>
-
-                            <div if:true={showFundingDetails} class="slds-form-element slds-m-bottom_medium slds-p-left_large">
-                                <lightning-textarea 
-                                    label="Please describe the funding changes and their impact"
-                                    name="fundingChangesDetails"
-                                    value={formData.fundingChangesDetails}
-                                    onchange={handleInputChange}
-                                    placeholder="Describe the nature of funding changes, amounts involved, and impact on operations..."
-                                    rows="3">
-                                </lightning-textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Risk Assessment -->
-                    <div class="slds-section slds-m-top_large">
-                        <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">Risk Assessment</span>
-                        </h3>
-                        <div class="slds-section__content slds-p-around_medium">
-                            <div class="slds-form-element slds-m-bottom_medium">
-                                <label class="slds-form-element__label">
-                                    <span class="required-asterisk">*</span>
-                                    Rate your organisation's overall financial risk level
-                                </label>
-                                <lightning-radio-group 
-                                    name="riskLevel"
-                                    options={riskLevelOptions}
-                                    value={formData.riskLevel}
-                                    onchange={handleInputChange}
-                                    type="radio"
-                                    required="true">
-                                </lightning-radio-group>
-                            </div>
-
-                            <div class="slds-form-element">
-                                <lightning-textarea 
-                                    label="Additional comments or concerns (Optional)"
-                                    name="additionalComments"
-                                    value={formData.additionalComments}
-                                    onchange={handleInputChange}
-                                    placeholder="Please provide any additional information about your financial position or concerns..."
-                                    rows="4">
-                                </lightning-textarea>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -218,55 +118,36 @@
         <!-- Page 2: Provider Contact Information -->
         <div if:true={isPage2} class="page-content">
             <div class="slds-card">
-                <div class="slds-card__header">
-                    <h2 class="slds-card__header-title">
-                        <span>Provider Contact Information</span>
-                    </h2>
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">
+                                <span>Provider Contact Information</span>
+                            </h2>
+                        </div>
+                    </header>
                 </div>
                 <div class="slds-card__body slds-card__body_inner">
-                    <!-- Instructions -->
-                    <div class="slds-notify slds-notify_alert slds-theme_info slds-m-bottom_medium" role="alert">
-                        <span class="slds-assistive-text">Information</span>
-                        <lightning-icon icon-name="utility:info" size="x-small" variant="inverse"></lightning-icon>
-                        <p>Please ensure all contact information is current and accurate. This information will be used for official correspondence regarding your QFR submission.</p>
-                    </div>
-
-                    <!-- Organisation Information -->
-                    <div class="slds-section slds-m-bottom_large">
+                    <!-- Account Information -->
+                    <div class="slds-section slds-is-open">
                         <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">Organisation Details</span>
+                            <span class="slds-truncate slds-p-horizontal_small" title="Account Information">Account Information</span>
                         </h3>
                         <div class="slds-section__content slds-p-around_medium">
-                            <div class="slds-grid slds-gutters slds-wrap">
+                            <div class="slds-grid slds-wrap slds-gutters">
                                 <div class="slds-col slds-size_1-of-2">
                                     <div class="slds-form-element">
-                                        <label class="slds-form-element__label">Organisation Name</label>
-                                        <div class="slds-form-element__static account-name">
-                                            {accountInfo.name}
+                                        <label class="slds-form-element__label">Organization Name</label>
+                                        <div class="slds-form-element__control">
+                                            <div class="slds-form-element__static">{formData.organizationName}</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="slds-col slds-size_1-of-2">
                                     <div class="slds-form-element">
-                                        <label class="slds-form-element__label">NAPS Provider ID</label>
-                                        <div class="slds-form-element__static naps-id">
-                                            {accountInfo.napsId}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="slds-col slds-size_1-of-2">
-                                    <div class="slds-form-element">
-                                        <label class="slds-form-element__label">ABN</label>
-                                        <div class="slds-form-element__static">
-                                            {accountInfo.abn}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="slds-col slds-size_1-of-2">
-                                    <div class="slds-form-element">
-                                        <label class="slds-form-element__label">ACN</label>
-                                        <div class="slds-form-element__static">
-                                            {accountInfo.acn}
+                                        <label class="slds-form-element__label">NAPS ID</label>
+                                        <div class="slds-form-element__control">
+                                            <div class="slds-form-element__static">{formData.napsId}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -275,190 +156,109 @@
                     </div>
 
                     <!-- Primary Contact -->
-                    <div class="slds-section slds-m-bottom_large">
-                        <div class="slds-section__title-action-bar">
-                            <h3 class="slds-section__title">Primary Contact Person</h3>
-                            <lightning-button 
-                                label={editButtonLabel}
-                                variant={editButtonVariant}
-                                onclick={handleEditContact}
-                                class="edit-contact-btn">
-                            </lightning-button>
-                        </div>
+                    <div class="slds-section slds-is-open slds-m-top_large">
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small" title="Primary Contact">Primary Contact</span>
+                        </h3>
                         <div class="slds-section__content slds-p-around_medium">
-                            <div if:false={isEditingContact} class="contact-display">
-                                <div class="slds-grid slds-gutters slds-wrap">
+                            <div class="slds-grid slds-grid_align-end slds-m-bottom_medium">
+                                <lightning-button 
+                                    label={editButtonLabel}
+                                    variant={editButtonVariant}
+                                    onclick={handleEditContact}>
+                                </lightning-button>
+                            </div>
+                            
+                            <div if:false={isEditingContact}>
+                                <div class="slds-grid slds-wrap slds-gutters">
                                     <div class="slds-col slds-size_1-of-2">
                                         <div class="slds-form-element">
-                                            <label class="slds-form-element__label">Full Name</label>
-                                            <div class="slds-form-element__static">
-                                                {contactInfo.name}
+                                            <label class="slds-form-element__label">Name</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-form-element__static">{formData.contactName}</div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="slds-col slds-size_1-of-2">
                                         <div class="slds-form-element">
-                                            <label class="slds-form-element__label">Position/Title</label>
-                                            <div class="slds-form-element__static">
-                                                {contactInfo.position}
+                                            <label class="slds-form-element__label">Position</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-form-element__static">{formData.contactPosition}</div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="slds-col slds-size_1-of-2">
                                         <div class="slds-form-element">
-                                            <label class="slds-form-element__label">Phone Number</label>
-                                            <div class="slds-form-element__static">
-                                                {contactInfo.phone}
+                                            <label class="slds-form-element__label">Phone</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-form-element__static">{formData.contactPhone}</div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="slds-col slds-size_1-of-2">
                                         <div class="slds-form-element">
-                                <label class="slds-form-element__label">Email Address</label><div class="slds-form-element__static">
-                                                {contactInfo.email}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="slds-col slds-size_1-of-2">
-                                        <div class="slds-form-element">
-                                            <label class="slds-form-element__label">Mobile Number</label>
-                                            <div class="slds-form-element__static">
-                                                {contactInfo.mobile}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="slds-col slds-size_1-of-2">
-                                        <div class="slds-form-element">
-                                            <label class="slds-form-element__label">Department</label>
-                                            <div class="slds-form-element__static">
-                                                {contactInfo.department}
+                                            <label class="slds-form-element__label">Email</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-form-element__static">{formData.contactEmail}</div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div if:true={isEditingContact} class="contact-edit">
-                                <div class="slds-grid slds-gutters slds-wrap">
+                            <div if:true={isEditingContact}>
+                                <div class="slds-grid slds-wrap slds-gutters">
                                     <div class="slds-col slds-size_1-of-2">
                                         <lightning-input 
-                                            label="Full Name"
+                                            label="Name *"
                                             name="contactName"
-                                            value={contactInfo.name}
-                                            onchange={handleContactChange}
+                                            value={formData.contactName}
+                                            onchange={handleInputChange}
                                             required="true">
                                         </lightning-input>
                                     </div>
                                     <div class="slds-col slds-size_1-of-2">
                                         <lightning-input 
-                                            label="Position/Title"
+                                            label="Position *"
                                             name="contactPosition"
-                                            value={contactInfo.position}
-                                            onchange={handleContactChange}
+                                            value={formData.contactPosition}
+                                            onchange={handleInputChange}
                                             required="true">
                                         </lightning-input>
                                     </div>
                                     <div class="slds-col slds-size_1-of-2">
                                         <lightning-input 
-                                            label="Phone Number"
+                                            label="Phone *"
                                             name="contactPhone"
                                             type="tel"
-                                            value={contactInfo.phone}
-                                            onchange={handleContactChange}
+                                            value={formData.contactPhone}
+                                            onchange={handleInputChange}
                                             required="true">
                                         </lightning-input>
                                     </div>
                                     <div class="slds-col slds-size_1-of-2">
                                         <lightning-input 
-                                            label="Email Address"
+                                            label="Email *"
                                             name="contactEmail"
                                             type="email"
-                                            value={contactInfo.email}
-                                            onchange={handleContactChange}
+                                            value={formData.contactEmail}
+                                            onchange={handleInputChange}
                                             required="true">
                                         </lightning-input>
                                     </div>
-                                    <div class="slds-col slds-size_1-of-2">
-                                        <lightning-input 
-                                            label="Mobile Number"
-                                            name="contactMobile"
-                                            type="tel"
-                                            value={contactInfo.mobile}
-                                            onchange={handleContactChange}>
-                                        </lightning-input>
-                                    </div>
-                                    <div class="slds-col slds-size_1-of-2">
-                                        <lightning-combobox 
-                                            label="Department"
-                                            name="contactDepartment"
-                                            value={contactInfo.department}
-                                            placeholder="Select department..."
-                                            options={departmentOptions}
-                                            onchange={handleContactChange}>
-                                        </lightning-combobox>
-                                    </div>
                                 </div>
-                                <div class="slds-m-top_medium">
-                                    <lightning-button 
-                                        label="Save Changes"
-                                        variant="brand"
-                                        onclick={handleSaveContact}
-                                        class="slds-m-right_small">
-                                    </lightning-button>
+                                <div class="slds-grid slds-grid_align-end slds-m-top_medium">
                                     <lightning-button 
                                         label="Cancel"
                                         variant="neutral"
-                                        onclick={handleCancelEdit}>
+                                        onclick={handleCancelEdit}
+                                        class="slds-m-right_x-small">
                                     </lightning-button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Alternative Contact -->
-                    <div class="slds-section">
-                        <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">Alternative Contact Person (Optional)</span>
-                        </h3>
-                        <div class="slds-section__content slds-p-around_medium">
-                            <div class="slds-grid slds-gutters slds-wrap">
-                                <div class="slds-col slds-size_1-of-2">
-                                    <lightning-input 
-                                        label="Full Name"
-                                        name="altContactName"
-                                        value={formData.altContactName}
-                                        onchange={handleInputChange}
-                                        placeholder="Enter alternative contact name">
-                                    </lightning-input>
-                                </div>
-                                <div class="slds-col slds-size_1-of-2">
-                                    <lightning-input 
-                                        label="Position/Title"
-                                        name="altContactPosition"
-                                        value={formData.altContactPosition}
-                                        onchange={handleInputChange}
-                                        placeholder="Enter position or title">
-                                    </lightning-input>
-                                </div>
-                                <div class="slds-col slds-size_1-of-2">
-                                    <lightning-input 
-                                        label="Phone Number"
-                                        name="altContactPhone"
-                                        type="tel"
-                                        value={formData.altContactPhone}
-                                        onchange={handleInputChange}
-                                        placeholder="Enter phone number">
-                                    </lightning-input>
-                                </div>
-                                <div class="slds-col slds-size_1-of-2">
-                                    <lightning-input 
-                                        label="Email Address"
-                                        name="altContactEmail"
-                                        type="email"
-                                        value={formData.altContactEmail}
-                                        onchange={handleInputChange}
-                                        placeholder="Enter email address">
-                                    </lightning-input>
+                                    <lightning-button 
+                                        label="Save"
+                                        variant="brand"
+                                        onclick={handleSaveContact}>
+                                    </lightning-button>
                                 </div>
                             </div>
                         </div>
@@ -470,79 +270,66 @@
         <!-- Page 3: Business Structure Configuration -->
         <div if:true={isPage3} class="page-content">
             <div class="slds-card">
-                <div class="slds-card__header">
-                    <h2 class="slds-card__header-title">
-                        <span>Business Structure and Service Delivery</span>
-                    </h2>
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">
+                                <span>Business Structure Configuration</span>
+                            </h2>
+                        </div>
+                    </header>
                 </div>
                 <div class="slds-card__body slds-card__body_inner">
-                    <!-- Instructions -->
-                    <div class="slds-notify slds-notify_alert slds-theme_info slds-m-bottom_medium" role="alert">
-                        <span class="slds-assistive-text">Information</span>
-                        <lightning-icon icon-name="utility:info" size="x-small" variant="inverse"></lightning-icon>
-                        <p><strong>Instructions:</strong> Select all business structure types that apply to your organisation. For each selected type, specify the service types and provide percentage breakdowns where applicable.</p>
-                    </div>
-
-                    <!-- Business Structure Selection -->
-                    <div class="slds-section slds-m-bottom_large">
+                    <!-- Business Structure Types -->
+                    <div class="slds-section slds-is-open">
                         <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">Business Structure Types</span>
+                            <span class="slds-truncate slds-p-horizontal_small" title="Business Structure Types">Business Structure Types</span>
                         </h3>
                         <div class="slds-section__content slds-p-around_medium">
                             <template for:each={businessStructureTypes} for:item="structureType">
-                                <div key={structureType.name} class="structure-type-container slds-m-bottom_medium">
-                                    <div class="slds-form-element">
-                                        <label class="slds-form-element__label toggle-label">
-                                            {structureType.label}
-                                            <lightning-helptext 
-                                                content={structureType.helpText}>
-                                            </lightning-helptext>
-                                        </label>
-                                        <lightning-input 
-                                            type="toggle"
-                                            name={structureType.name}
-                                            checked={structureType.selected}
-                                            onchange={handleStructureToggle}
-                                            message-toggle-active="Yes"
-                                            message-toggle-inactive="No">
-                                        </lightning-input>
+                                <div key={structureType.name} class="business-structure-item slds-m-bottom_medium">
+                                    <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
+                                        <div class="slds-col">
+                                            <span class="slds-text-heading_small">{structureType.label}</span>
+                                        </div>
+                                        <div class="slds-col slds-no-flex">
+                                            <lightning-input 
+                                                type="toggle"
+                                                name={structureType.name}
+                                                checked={structureType.selected}
+                                                onchange={handleStructureToggle}
+                                                message-toggle-active="Yes"
+                                                message-toggle-inactive="No">
+                                            </lightning-input>
+                                        </div>
                                     </div>
                                     
-                                    <div if:true={structureType.selected} class="conditional-content slds-m-top_small slds-p-left_large">
-                                        <div class="slds-form-element slds-m-bottom_small">
+                                    <div if:true={structureType.selected} class="slds-m-top_medium">
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label">Service Types *</label>
                                             <lightning-checkbox-group 
-                                                label="Service Types Delivered"
+                                                name={structureType.serviceTypesName}
                                                 options={serviceTypeOptions}
                                                 value={structureType.serviceTypes}
-                                                onchange={handleServiceTypeChange}
-                                                data-structure={structureType.name}
-                                                required="true">
+                                                onchange={handleServiceTypeChange}>
                                             </lightning-checkbox-group>
                                         </div>
                                         
-                                        <div class="slds-form-element slds-m-bottom_small">
-                                            <lightning-input 
-                                                label="Percentage of Total Revenue (%)"
-                                                name="revenuePercentage"
-                                                type="number"
-                                                min="0"
-                                                max="100"
-                                                value={structureType.revenuePercentage}
-                                                onchange={handleRevenuePercentageChange}
-                                                data-structure={structureType.name}
-                                                placeholder="Enter percentage">
-                                            </lightning-input>
-                                        </div>
-                                        
-                                        <div class="slds-form-element">
+                                        <div class="slds-form-element slds-m-top_medium">
                                             <lightning-textarea 
-                                                label="Additional Information and Explanations"
-                                                placeholder="Please provide details about this business structure, including specific arrangements, partnerships, or other relevant information..."
+                                                label="Additional Information"
+                                                name={structureType.additionalInfoName}
                                                 value={structureType.additionalInfo}
                                                 onchange={handleAdditionalInfoChange}
-                                                data-structure={structureType.name}
-                                                rows="3">
+                                                placeholder="Please provide percentage breakdowns and explanations">
                                             </lightning-textarea>
+                                        </div>
+                                        
+                                        <div class="slds-form-element slds-m-top_medium">
+                                            <label class="slds-form-element__label">QA Assessor Comments</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-form-element__static slds-text-color_weak">No comments available</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -551,94 +338,20 @@
                     </div>
 
                     <!-- Workforce Configuration -->
-                    <div class="slds-section slds-m-bottom_large">
+                    <div class="slds-section slds-is-open slds-m-top_large">
                         <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">Workforce Engagement</span>
+                            <span class="slds-truncate slds-p-horizontal_small" title="Workforce Configuration">Workforce Configuration</span>
                         </h3>
                         <div class="slds-section__content slds-p-around_medium">
-                            <div class="slds-form-element slds-m-bottom_medium">
+                            <div class="slds-form-element">
                                 <lightning-combobox 
-                                    label="Primary Workforce Engagement Method"
-                                    name="workforceType"
-                                    value={formData.workforceType}
-                                    placeholder="Select workforce engagement type..."
+                                    label="How are your direct care workers engaged? *"
+                                    name="workforceEngagement"
+                                    value={formData.workforceEngagement}
                                     options={workforceOptions}
                                     onchange={handleInputChange}
                                     required="true">
                                 </lightning-combobox>
-                            </div>
-
-                            <div class="slds-form-element slds-m-bottom_medium">
-                                <label class="slds-form-element__label">
-                                    <span class="required-asterisk">*</span>
-                                    Do you engage contractors or subcontractors for service delivery?
-                                </label>
-                                <lightning-radio-group 
-                                    name="usesContractors"
-                                    options={yesNoOptions}
-                                    value={formData.usesContractors}
-                                    onchange={handleInputChange}
-                                    type="button"
-                                    required="true">
-                                </lightning-radio-group>
-                            </div>
-
-                            <div if:true={showContractorDetails} class="slds-form-element slds-m-bottom_medium slds-p-left_large">
-                                <lightning-textarea 
-                                    label="Contractor Engagement Details"
-                                    name="contractorDetails"
-                                    value={formData.contractorDetails}
-                                    onchange={handleInputChange}
-                                    placeholder="Describe the types of contractors used, services they provide, and approximate percentage of service delivery..."
-                                    rows="3"
-                                    required="true">
-                                </lightning-textarea>
-                            </div>
-
-                            <div class="slds-form-element">
-                                <lightning-input 
-                                    label="Total Number of Employees (FTE)"
-                                    name="totalEmployees"
-                                    type="number"
-                                    min="0"
-                                    value={formData.totalEmployees}
-                                    onchange={handleInputChange}
-                                    placeholder="Enter total full-time equivalent employees"
-                                    required="true">
-                                </lightning-input>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Service Delivery Locations -->
-                    <div class="slds-section">
-                        <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">Service Delivery Information</span>
-                        </h3>
-                        <div class="slds-section__content slds-p-around_medium">
-                            <div class="slds-grid slds-gutters slds-wrap">
-                                <div class="slds-col slds-size_1-of-2">
-                                    <lightning-input 
-                                        label="Number of Service Locations"
-                                        name="serviceLocations"
-                                        type="number"
-                                        min="1"
-                                        value={formData.serviceLocations}
-                                        onchange={handleInputChange}
-                                        required="true">
-                                    </lightning-input>
-                                </div>
-                                <div class="slds-col slds-size_1-of-2">
-                                    <lightning-combobox 
-                                        label="Primary Service Area"
-                                        name="primaryServiceArea"
-                                        value={formData.primaryServiceArea}
-                                        placeholder="Select primary area..."
-                                        options={serviceAreaOptions}
-                                        onchange={handleInputChange}
-                                        required="true">
-                                    </lightning-combobox>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -649,150 +362,28 @@
         <!-- Page 4: Labour Costs Data Management -->
         <div if:true={isPage4} class="page-content">
             <div class="slds-card">
-                <div class="slds-card__header">
-                    <h2 class="slds-card__header-title">
-                        <span>Labour Costs and Workforce Data</span>
-                    </h2>
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">
+                                <span>Labour Costs Data Management</span>
+                            </h2>
+                        </div>
+                    </header>
                 </div>
                 <div class="slds-card__body slds-card__body_inner">
-                    <!-- Instructions -->
-                    <div class="slds-notify slds-notify_alert slds-theme_info slds-m-bottom_medium" role="alert">
-                        <span class="slds-assistive-text">Information</span>
-                        <lightning-icon icon-name="utility:info" size="x-small" variant="inverse"></lightning-icon>
-                        <p><strong>Instructions:</strong> Enter your annual labour costs for each employee category. Include all direct costs such as wages, salaries, superannuation, and other employment-related expenses. Centrally held costs refer to expenses managed at head office level.</p>
-                </div>
-
-                    <!-- Labour Cost Data Table -->
-                    <div class="slds-section slds-m-bottom_large">
+                    <div class="slds-section slds-is-open">
                         <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">Internal Direct Care Labour Costs</span>
+                            <span class="slds-truncate slds-p-horizontal_small" title="Internal Direct Care Labour Costs">Internal Direct Care Labour Costs</span>
                         </h3>
-                        <div class="slds-section__content">
+                        <div class="slds-section__content slds-p-around_medium">
                             <lightning-datatable 
                                 key-field="id"
                                 data={labourCostData}
                                 columns={labourCostColumns}
                                 oncellchange={handleCellChange}
-                                draft-values={draftValues}
-                                hide-checkbox-column="true"
-                                show-row-number-column="false">
+                                hide-checkbox-column="true">
                             </lightning-datatable>
-                        </div>
-                    </div>
-
-                    <!-- Additional Labour Information -->
-                    <div class="slds-section slds-m-bottom_large">
-                        <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">Additional Labour Cost Information</span>
-                        </h3>
-                        <div class="slds-section__content slds-p-around_medium">
-                            <div class="slds-grid slds-gutters slds-wrap">
-                                <div class="slds-col slds-size_1-of-2">
-                                    <lightning-input 
-                                        label="Total Agency Staff Costs ($)"
-                                        name="agencyStaffCosts"
-                                        type="number"
-                                        min="0"
-                                        formatter="currency"
-                                        value={formData.agencyStaffCosts}
-                                        onchange={handleInputChange}
-                                        placeholder="Enter total agency costs">
-                                    </lightning-input>
-                                </div>
-                                <div class="slds-col slds-size_1-of-2">
-                                    <lightning-input 
-                                        label="Total Contractor Costs ($)"
-                                        name="contractorCosts"
-                                        type="number"
-                                        min="0"
-                                        formatter="currency"
-                                        value={formData.contractorCosts}
-                                        onchange={handleInputChange}
-                                        placeholder="Enter total contractor costs">
-                                    </lightning-input>
-                                </div>
-                                <div class="slds-col slds-size_1-of-2">
-                                    <lightning-input 
-                                        label="Training and Development Costs ($)"
-                                        name="trainingCosts"
-                                        type="number"
-                                        min="0"
-                                        formatter="currency"
-                                        value={formData.trainingCosts}
-                                        onchange={handleInputChange}
-                                        placeholder="Enter training costs">
-                                    </lightning-input>
-                                </div>
-                                <div class="slds-col slds-size_1-of-2">
-                                    <lightning-input 
-                                        label="Recruitment Costs ($)"
-                                        name="recruitmentCosts"
-                                        type="number"
-                                        min="0"
-                                        formatter="currency"
-                                        value={formData.recruitmentCosts}
-                                        onchange={handleInputChange}
-                                        placeholder="Enter recruitment costs">
-                                    </lightning-input>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Workforce Challenges -->
-                    <div class="slds-section">
-                        <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">Workforce Challenges and Trends</span>
-                        </h3>
-                        <div class="slds-section__content slds-p-around_medium">
-                            <div class="slds-form-element slds-m-bottom_medium">
-                                <label class="slds-form-element__label">
-                                    <span class="required-asterisk">*</span>
-                                    Are you experiencing workforce shortage challenges?
-                                </label>
-                                <lightning-radio-group 
-                                    name="workforceShortage"
-                                    options={yesNoOptions}
-                                    value={formData.workforceShortage}
-                                    onchange={handleInputChange}
-                                    type="button"
-                                    required="true">
-                                </lightning-radio-group>
-                            </div>
-
-                            <div if:true={showWorkforceDetails} class="slds-form-element slds-m-bottom_medium slds-p-left_large">
-                                <lightning-checkbox-group 
-                                    label="Which roles are most affected by shortages?"
-                                    options={workforceShortageOptions}
-                                    value={formData.shortageRoles}
-                                    onchange={handleInputChange}
-                                    name="shortageRoles">
-                                </lightning-checkbox-group>
-                            </div>
-
-                            <div class="slds-form-element slds-m-bottom_medium">
-                                <lightning-input 
-                                    label="Average Staff Turnover Rate (%)"
-                                    name="turnoverRate"
-                                    type="number"
-                                    min="0"
-                                    max="100"
-                                    value={formData.turnoverRate}
-                                    onchange={handleInputChange}
-                                    placeholder="Enter annual turnover percentage">
-                                </lightning-input>
-                            </div>
-
-                            <div class="slds-form-element">
-                                <lightning-textarea 
-                                    label="Additional Workforce Comments"
-                                    name="workforceComments"
-                                    value={formData.workforceComments}
-                                    onchange={handleInputChange}
-                                    placeholder="Describe any significant workforce trends, challenges, or initiatives..."
-                                    rows="3">
-                                </lightning-textarea>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -802,48 +393,28 @@
         <!-- Page 5: Document Management and Submission -->
         <div if:true={isPage5} class="page-content">
             <div class="slds-card">
-                <div class="slds-card__header">
-                    <h2 class="slds-card__header-title">
-                        <span>Document Management and Final Submission</span>
-                    </h2>
+                <div class="slds-card__header slds-grid">
+                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                        <div class="slds-media__body">
+                            <h2 class="slds-card__header-title">
+                                <span>Document Management and Submission</span>
+                            </h2>
+                        </div>
+                    </header>
                 </div>
                 <div class="slds-card__body slds-card__body_inner">
-                    <!-- Instructions -->
-                    <div class="slds-notify slds-notify_alert slds-theme_info slds-m-bottom_medium" role="alert">
-                        <span class="slds-assistive-text">Information</span>
-                        <lightning-icon icon-name="utility:info" size="x-small" variant="inverse"></lightning-icon>
-                        <p><strong>Document Requirements:</strong> Please upload all required supporting documents. Accepted formats: PDF, Word, Excel, and image files (JPG, PNG). Maximum file size: 10MB per file.</p>
-                    </div>
-
-                    <!-- Required Documents Checklist -->
-                    <div class="slds-section slds-m-bottom_large">
+                    <!-- Document Upload -->
+                    <div class="slds-section slds-is-open">
                         <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">Required Documents Checklist</span>
+                            <span class="slds-truncate slds-p-horizontal_small" title="Document Upload">Document Upload</span>
                         </h3>
                         <div class="slds-section__content slds-p-around_medium">
-                            <lightning-checkbox-group 
-                                label="Please confirm you have the following documents ready for upload:"
-                                options={requiredDocumentOptions}
-                                value={formData.requiredDocuments}
-                                onchange={handleInputChange}
-                                name="requiredDocuments">
-                            </lightning-checkbox-group>
-                        </div>
-                    </div>
-
-                    <!-- Document Upload Configuration -->
-                    <div class="slds-section slds-m-bottom_large">
-                        <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">Document Upload</span>
-                        </h3>
-                        <div class="slds-section__content slds-p-around_medium">
-                            <div class="slds-grid slds-gutters slds-wrap">
+                            <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_medium">
                                 <div class="slds-col slds-size_1-of-2">
                                     <lightning-combobox 
-                                        label="Document Category"
+                                        label="Document Category *"
                                         name="documentCategory"
                                         value={selectedDocumentCategory}
-                                        placeholder="Select category..."
                                         options={documentCategoryOptions}
                                         onchange={handleDocumentCategoryChange}
                                         required="true">
@@ -851,10 +422,9 @@
                                 </div>
                                 <div class="slds-col slds-size_1-of-2">
                                     <lightning-combobox 
-                                        label="Document Type"
+                                        label="Document Type *"
                                         name="documentType"
                                         value={selectedDocumentType}
-                                        placeholder="Select type..."
                                         options={documentTypeOptions}
                                         onchange={handleDocumentTypeChange}
                                         required="true">
@@ -862,38 +432,35 @@
                                 </div>
                             </div>
                             
-                            <!-- File Upload Interface -->
-                            <div class="slds-m-top_medium">
-                                <div class="file-upload-container">
-                                    <div class="slds-file-selector slds-file-selector_files">
-                                        <div class="slds-file-selector__dropzone">
-                                            <input 
-                                                type="file" 
-                                                class="slds-file-selector__input slds-assistive-text" 
-                                                accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.png" 
-                                                id="file-upload-input" 
-                                                onchange={handleFileUpload}
-                                                multiple />
-                                            <label class="slds-file-selector__body" for="file-upload-input">
-                                                <span class="slds-file-selector__button slds-button slds-button_neutral">
-                                                    <lightning-icon icon-name="utility:upload" size="x-small"></lightning-icon>
-                                                    Upload Files
-                                                </span>
-                                                <span class="slds-file-selector__text slds-medium-show">or drop files here</span>
-                                            </label>
-                                        </div>
+                            <div class="file-upload-area" ondrop={handleFileDrop} ondragover={handleDragOver}>
+                                <div class="slds-align_absolute-center slds-p-around_large">
+                                    <div class="slds-text-align_center">
+                                        <lightning-icon icon-name="utility:upload" size="large" class="slds-m-bottom_small"></lightning-icon>
+                                        <p class="slds-text-heading_medium">Drag and drop files here</p>
+                                        <p class="slds-text-body_regular slds-text-color_weak">or</p>
+                                        <lightning-button 
+                                            label="Browse Files"
+                                            variant="brand"
+                                            onclick={handleBrowseFiles}>
+                                        </lightning-button>
+                                        <input 
+                                            type="file" 
+                                            class="slds-hide" 
+                                            multiple 
+                                            accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
+                                            onchange={handleFileSelect}>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Document Management Table -->
-                    <div class="slds-section slds-m-bottom_large">
+                    <!-- Document Management -->
+                    <div class="slds-section slds-is-open slds-m-top_large">
                         <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">Uploaded Documents</span>
+                            <span class="slds-truncate slds-p-horizontal_small" title="Uploaded Documents">Uploaded Documents</span>
                         </h3>
-                        <div class="slds-section__content">
+                        <div class="slds-section__content slds-p-around_medium">
                             <lightning-datatable 
                                 key-field="id"
                                 data={uploadedDocuments}
@@ -903,189 +470,30 @@
                             </lightning-datatable>
                         </div>
                     </div>
-
-                    <!-- Declaration and Certification -->
-                    <div class="slds-section slds-m-bottom_large">
-                        <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">Declaration and Certification</span>
-                        </h3>
-                        <div class="slds-section__content slds-p-around_medium">
-                            <div class="slds-notify slds-notify_alert slds-theme_warning slds-m-bottom_medium" role="alert">
-                                <span class="slds-assistive-text">Warning</span>
-                                <lightning-icon icon-name="utility:warning" size="x-small" variant="inverse"></lightning-icon>
-                                <p><strong>Important:</strong> By submitting this form, you are making a legal declaration. Please ensure all information provided is accurate and complete.</p>
-                            </div>
-
-                            <div class="slds-form-element slds-m-bottom_medium">
-                                <lightning-input 
-                                    type="checkbox"
-                                    label="I declare that the information provided in this QFR submission is true and correct to the best of my knowledge"
-                                    name="declarationAccuracy"
-                                    checked={formData.declarationAccuracy}
-                                    onchange={handleInputChange}
-                                    required="true">
-                                </lightning-input>
-                            </div>
-
-                            <div class="slds-form-element slds-m-bottom_medium">
-                                <lightning-input 
-                                    type="checkbox"
-                                    label="I understand that providing false or misleading information may result in regulatory action"
-                                    name="declarationConsequences"
-                                    checked={formData.declarationConsequences}
-                                    onchange={handleInputChange}
-                                    required="true">
-                                </lightning-input>
-                            </div>
-
-                            <div class="slds-form-element slds-m-bottom_medium">
-                                <lightning-input 
-                                    type="checkbox"
-                                    label="I authorise the regulatory body to contact our organisation regarding this submission"
-                                    name="declarationContact"
-                                    checked={formData.declarationContact}
-                                    onchange={handleInputChange}
-                                    required="true">
-                                </lightning-input>
-                            </div>
-
-                            <div class="slds-grid slds-gutters slds-wrap">
-                                <div class="slds-col slds-size_1-of-2">
-                                    <lightning-input 
-                                        label="Authorised Person Name"
-                                        name="authorisedPersonName"
-                                        value={formData.authorisedPersonName}
-                                        onchange={handleInputChange}
-                                        required="true"
-                                        placeholder="Enter full name">
-                                    </lightning-input>
-                                </div>
-                                <div class="slds-col slds-size_1-of-2">
-                                    <lightning-input 
-                                        label="Position/Title"
-                                        name="authorisedPersonTitle"
-                                        value={formData.authorisedPersonTitle}
-                                        onchange={handleInputChange}
-                                        required="true"
-                                        placeholder="Enter position or title">
-                                    </lightning-input>
-                                </div>
-                                <div class="slds-col slds-size_1-of-2">
-                                    <lightning-input 
-                                        label="Date of Submission"
-                                        name="submissionDate"
-                                        type="date"
-                                        value={formData.submissionDate}
-                                        onchange={handleInputChange}
-                                        required="true">
-                                    </lightning-input>
-                                </div>
-                                <div class="slds-col slds-size_1-of-2">
-                                    <lightning-input 
-                                        label="Digital Signature"
-                                        name="digitalSignature"
-                                        value={formData.digitalSignature}
-                                        onchange={handleInputChange}
-                                        required="true"
-                                        placeholder="Type your full name as digital signature">
-                                    </lightning-input>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Submission Summary -->
-                    <div class="slds-section">
-                        <h3 class="slds-section__title slds-theme_shade">
-                            <span class="slds-truncate slds-p-horizontal_small">Submission Summary</span>
-                        </h3>
-                        <div class="slds-section__content slds-p-around_medium">
-                            <div class="submission-summary">
-                                <div class="slds-grid slds-gutters slds-wrap"><div class="slds-col slds-size_1-of-3">
-                                        <div class="slds-form-element">
-                                            <label class="slds-form-element__label">Total Pages Completed</label>
-                                            <div class="slds-form-element__static summary-stat">
-                                                {completedPages} of 5
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="slds-col slds-size_1-of-3">
-                                        <div class="slds-form-element">
-                                            <label class="slds-form-element__label">Documents Uploaded</label>
-                                            <div class="slds-form-element__static summary-stat">
-                                                {uploadedDocuments.length}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="slds-col slds-size_1-of-3">
-                                        <div class="slds-form-element">
-                                            <label class="slds-form-element__label">Submission Status</label>
-                                            <div class="slds-form-element__static summary-stat">
-                                                {submissionStatus}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Navigation Controls -->
-        <div class="navigation-controls slds-m-top_large">
-            <div class="slds-grid slds-grid_align-spread">
-                <div class="slds-col">
-                    <lightning-button 
-                        label="Previous"
-                        variant="neutral"
-                        onclick={handlePrevious}
-                        disabled={isPreviousDisabled}
-                        icon-name="utility:chevronleft"
-                        icon-position="left">
-                    </lightning-button>
-                </div>
-                <div class="slds-col">
-                    <lightning-button 
-                        label={nextButtonLabel}
-                        variant="brand"
-                        onclick={handleNext}
-                        disabled={isNextDisabled}
-                        icon-name={nextButtonIcon}
-                        icon-position="right">
-                    </lightning-button>
-                </div>
-            </div>
+        <!-- Navigation Buttons -->
+        <div class="navigation-buttons slds-grid slds-grid_align-spread slds-m-top_large">
+            <lightning-button 
+                label="Previous"
+                variant="neutral"
+                onclick={handlePrevious}
+                disabled={isPreviousDisabled}>
+            </lightning-button>
+            
+            <lightning-button 
+                label={nextButtonLabel}
+                variant="brand"
+                onclick={handleNext}
+                disabled={isNextDisabled}>
+            </lightning-button>
         </div>
 
         <!-- Loading Spinner -->
-        <div if:true={isLoading} class="slds-spinner_container">
-            <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
-        </div>
-
-        <!-- Error Messages -->
-        <div if:true={hasErrors} class="slds-m-top_medium">
-            <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
-                <span class="slds-assistive-text">Error</span>
-                <lightning-icon icon-name="utility:error" size="x-small" variant="inverse"></lightning-icon>
-                <h2>Please correct the following errors:</h2>
-                <ul>
-                    <template for:each={errorMessages} for:item="error">
-                        <li key={error.id}>{error.message}</li>
-                    </template>
-                </ul>
-            </div>
-        </div>
-
-        <!-- Success Message -->
-        <div if:true={showSuccessMessage} class="slds-m-top_medium">
-            <div class="slds-notify slds-notify_alert slds-theme_success" role="alert">
-                <span class="slds-assistive-text">Success</span>
-                <lightning-icon icon-name="utility:success" size="x-small" variant="inverse"></lightning-icon>
-                <h2>QFR Form Submitted Successfully!</h2>
-                <p>Your submission has been received and will be processed within 5-10 business days. You will receive a confirmation email shortly.</p>
-            </div>
+        <div if:true={isLoading} class="slds-is-relative">
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
         </div>
     </div>
 </template>
