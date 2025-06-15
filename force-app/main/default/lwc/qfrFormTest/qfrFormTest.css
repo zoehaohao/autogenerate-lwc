@@ -5,298 +5,166 @@
 }
 
 .page-content {
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     margin-bottom: 2rem;
-}
-
-.slds-card {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 0.25rem;
-}
-
-.slds-card__header {
-    background-color: #f3f3f3;
-    border-bottom: 1px solid #dddbda;
-    padding: 1rem 1.5rem;
-}
-
-.slds-card__header-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #181818;
-    margin: 0;
-}
-
-.slds-card__body {
-    padding: 1.5rem;
-}
-
-.slds-section {
-    margin-bottom: 1.5rem;
-}
-
-.slds-section__title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: #181818;
-    margin-bottom: 0.75rem;
-    border-bottom: 1px solid #dddbda;
-    padding-bottom: 0.5rem;
-}
-
-.structure-type-section {
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
-    padding: 1rem;
-    background-color: #fafaf9;
-}
-
-.structure-details {
-    background-color: white;
-    border-radius: 0.25rem;
-    padding: 1rem;
-    border: 1px solid #dddbda;
-}
-
-.contact-display .slds-col {
-    padding: 0.5rem;
-}
-
-.contact-display .slds-text-heading_small {
-    font-weight: 600;
-    color: #181818;
-}
-
-.contact-display .slds-text-body_small {
-    color: #706e6b;
-    margin-top: 0.25rem;
-}
-
-.contact-edit {
-    background-color: #f8f9fa;
-    padding: 1rem;
-    border-radius: 0.25rem;
-    border: 1px solid #dddbda;
-}
-
-.labour-cost-table {
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
-}
-
-.file-upload-area {
-    border: 2px dashed #dddbda;
-    border-radius: 0.25rem;
-    padding: 2rem;
-    text-align: center;
-    background-color: #fafaf9;
-    transition: border-color 0.2s ease;
-}
-
-.file-upload-area:hover {
-    border-color: #0176d3;
-    background-color: #f3f9ff;
-}
-
-.slds-file-selector__dropzone {
-    min-height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.slds-file-selector__body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-}
-
-.slds-file-selector__button {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.document-table {
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
 }
 
 .navigation-buttons {
     border-top: 1px solid #dddbda;
     padding-top: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    margin-top: 2rem;
 }
 
-.slds-spinner_container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.8);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Progress indicator styling */
-.slds-progress-indicator {
-    margin-bottom: 2rem;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    .qfr-form-container {
-        padding: 0.5rem;
-    }
-    
-    .slds-card__body {
-        padding: 1rem;
-    }
-    
-    .slds-grid.slds-wrap .slds-col {
-        width: 100%;
-        margin-bottom: 0.5rem;
-    }
-    
-    .navigation-buttons {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .slds-float_left,
-    .slds-float_right {
-        float: none !important;
-        width: 100%;
-    }
-}
-
-/* Form validation styling */
-.slds-has-error .slds-form-element__control {
-    border-color: #c23934;
-}
-
-.slds-form-element__help {
+.error-message {
     color: #c23934;
     font-size: 0.75rem;
     margin-top: 0.25rem;
 }
 
-/* Toggle switch customization */
-.slds-checkbox_toggle .slds-checkbox_faux {
-    background-color: #dddbda;
-}
-
-.slds-checkbox_toggle .slds-checkbox_faux:after {
-    background-color: white;
-}
-
-.slds-checkbox_toggle [type="checkbox"]:checked + .slds-checkbox_faux {
-    background-color: #0176d3;
-}
-
-/* Radio group button styling */
-.slds-radio_button-group .slds-button {
-    margin-right: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-/* Accordion customization */
-.slds-accordion__section {
+.contact-display,
+.contact-edit {
+    background-color: #fafaf9;
     border: 1px solid #dddbda;
     border-radius: 0.25rem;
-    margin-bottom: 0.5rem;
+    padding: 1rem;
 }
 
-.slds-accordion__summary {
-    background-color: #f8f9fa;
+.labour-costs-table {
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    overflow-x: auto;
+}
+
+.file-upload-area {
+    border: 2px dashed #0176d3;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.file-upload-area:hover {
+    border-color: #014486;
+    background-color: #f3f3f3;
+}
+
+.slds-section__title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1.25;
+}
+
+.slds-form-element__label {
+    font-weight: 400;
+    font-size: 0.75rem;
+    line-height: 1.25;
+    color: #3e3e3c;
+}
+
+.slds-required {
+    color: #c23934;
+    margin-left: 0.125rem;
+}
+
+:host lightning-datatable {
+    --slds-c-datatable-cell-spacing-block: 0.5rem;
+    --slds-c-datatable-cell-spacing-inline: 0.75rem;
+}
+
+:host lightning-progress-indicator {
+    margin-bottom: 1.5rem;
+}
+
+:host lightning-accordion {
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+}
+
+:host lightning-button {
+    margin: 0 0.25rem;
+}
+
+.slds-grid.slds-gutters {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+}
+
+.slds-grid.slds-gutters > .slds-col {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.slds-card {
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+    border: 1px solid #dddbda;
+}
+
+.slds-card__header {
+    background-color: #fafaf9;
+    border-bottom: 1px solid #dddbda;
     padding: 0.75rem 1rem;
 }
 
-.slds-accordion__content {
+.slds-card__body {
     padding: 1rem;
-    background-color: white;
 }
 
-/* Data table customization */
-.slds-table {
-    border-collapse: separate;
-    border-spacing: 0;
+.slds-theme_shade {
+    background-color: #f3f2f2;
 }
 
-.slds-table thead th {
-    background-color: #f8f9fa;
-    border-bottom: 2px solid #dddbda;
-    font-weight: 600;
+.slds-text-align_center {
+    text-align: center;
 }
 
-.slds-table tbody td {
-    border-bottom: 1px solid #dddbda;
-    padding: 0.75rem;
+.slds-p-around_large {
+    padding: 1.5rem;
 }
 
-.slds-table tbody tr:hover {
-    background-color: #f8f9fa;
+.slds-p-around_medium {
+    padding: 1rem;
 }
 
-/* Button hover effects */
-.slds-button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
+.slds-m-top_medium {
+    margin-top: 1rem;
 }
 
-.slds-button:active {
-    transform: translateY(0);
+.slds-m-bottom_medium {
+    margin-bottom: 1rem;
 }
 
-/* Loading states */
-.slds-is-loading {
-    opacity: 0.6;
-    pointer-events: none;
+.slds-m-right_x-small {
+    margin-right: 0.5rem;
 }
 
-/* Focus states for accessibility */
-.slds-button:focus,
-.slds-input:focus,
-.slds-select:focus,
-.slds-textarea:focus {
-    outline: 2px solid #0176d3;
-    outline-offset: 2px;
+@media (max-width: 768px) {
+    .qfr-form-container {
+        padding: 0.5rem;
+    }
+    
+    .slds-col.slds-size_1-of-2 {
+        width: 100%;
+    }
+    
+    .navigation-buttons .slds-grid {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .navigation-buttons .slds-grid > * {
+        width: 100%;
+    }
 }
 
-/* Error message styling */
-.error-message {
-    color: #c23934;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.error-message::before {
-    content: "⚠";
-    font-weight: bold;
-}
-
-/* Success message styling */
-.success-message {
-    color: #2e844a;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.success-message::before {
-    content: "✓";
-    font-weight: bold;
+@media (max-width: 480px) {
+    :host lightning-progress-indicator {
+        font-size: 0.75rem;
+    }
+    
+    .slds-card__body {
+        padding: 0.5rem;
+    }
+    
+    .labour-costs-table {
+        font-size: 0.75rem;
+    }
 }
