@@ -5,85 +5,55 @@
 }
 
 .page-content {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
 }
 
-.slds-section {
-    margin-bottom: 1.5rem;
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-top: 1px solid #e5e5e5;
 }
 
-.slds-section__title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: #080707;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid #dddbda;
-    padding-bottom: 0.5rem;
-}
-
-.structure-type-section {
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
+.contact-display,
+.contact-edit {
     padding: 1rem;
-    background-color: #fafaf9;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    border: 1px solid #e5e5e5;
 }
 
-.structure-details {
-    background-color: #ffffff;
-    border-radius: 0.25rem;
-    padding: 1rem;
-    border: 1px solid #dddbda;
-}
-
-.table-controls {
-    background-color: #f3f2f2;
-    padding: 1rem;
-    border-radius: 0.25rem;
-    margin-bottom: 1rem;
-}
-
-.file-upload-section {
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
-    background-color: #fafaf9;
-}
-
-.upload-dropzone {
-    border: 2px dashed #dddbda;
-    border-radius: 0.25rem;
+.file-upload-area {
+    border: 2px dashed #d0d0d0;
+    border-radius: 0.5rem;
     padding: 2rem;
     text-align: center;
+    background-color: #fafafa;
     transition: all 0.3s ease;
     cursor: pointer;
 }
 
-.upload-dropzone:hover,
-.upload-dropzone.drag-over {
+.file-upload-area:hover,
+.file-upload-area.drag-over {
     border-color: #0176d3;
-    background-color: #f3f8ff;
+    background-color: #f0f8ff;
+}
+
+.upload-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .file-input {
     display: none;
 }
 
-.upload-content {
-    color: #706e6b;
-}
-
-.contact-display p {
-    margin-bottom: 0.5rem;
-    line-height: 1.5;
-}
-
-.contact-edit .slds-grid {
-    margin-bottom: 1rem;
-}
-
-.navigation-buttons {
-    padding: 2rem 0;
-    border-top: 1px solid #dddbda;
-    margin-top: 2rem;
+.labour-costs-container {
+    max-height: 600px;
+    overflow-y: auto;
 }
 
 .loading-overlay {
@@ -92,59 +62,17 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
 }
 
-.slds-card {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border: 1px solid #dddbda;
-}
-
-.slds-card__header {
-    background-color: #f3f2f2;
-    border-bottom: 1px solid #dddbda;
-}
-
-.slds-card__header-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #080707;
-}
-
-.slds-form-element__label {
-    font-weight: 600;
-    color: #080707;
-}
-
-lightning-radio-group[type="button"] {
-    --sds-c-radio-group-button-color-background: #ffffff;
-    --sds-c-radio-group-button-color-border: #dddbda;
-}
-
-lightning-input[type="toggle"] {
-    --sds-c-input-toggle-color-background-checked: #0176d3;
-}
-
-lightning-datatable {
-    --sds-c-datatable-cell-spacing: 0.75rem;
-    --sds-c-datatable-header-color-background: #f3f2f2;
-}
-
+/* Responsive Design */
 @media (max-width: 768px) {
     .qfr-form-container {
         padding: 0.5rem;
-    }
-    
-    .slds-grid.slds-wrap .slds-col {
-        width: 100%;
-    }
-    
-    .table-controls .slds-col {
-        margin-bottom: 0.5rem;
     }
     
     .navigation-buttons {
@@ -152,21 +80,144 @@ lightning-datatable {
         gap: 1rem;
     }
     
-    .navigation-buttons lightning-button {
-        width: 100%;
+    .navigation-buttons .slds-float_right {
+        float: none !important;
+    }
+    
+    .slds-grid.slds-wrap .slds-col {
+        flex-basis: 100%;
+        max-width: 100%;
     }
 }
 
-@media (max-width: 480px) {
-    .slds-card__body {
-        padding: 0.75rem;
+/* Custom Toggle Styling */
+.slds-form-element .slds-grid_align-spread {
+    align-items: center;
+    padding: 0.75rem;
+    background-color: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.slds-form-element .slds-grid_align-spread:hover {
+    background-color: #f8f9fa;
+}
+
+/* Progress Indicator Styling */
+lightning-progress-indicator {
+    margin-bottom: 2rem;
+}
+
+/* Card Styling */
+.slds-card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+}
+
+.slds-card__header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/* Section Styling */
+.slds-section__title {
+    font-weight: 600;
+    color: #0176d3;
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Button Group Styling */
+.slds-radio_button-group .slds-button {
+    margin-right: 0.5rem;
+}
+
+/* Data Table Styling */
+lightning-datatable {
+    border: 1px solid #e5e5e5;
+    border-radius: 0.25rem;
+}
+
+/* File Management Table */
+.slds-table th,
+.slds-table td {
+    padding: 0.75rem;
+    vertical-align: middle;
+}
+
+/* Accordion Styling */
+lightning-accordion-section {
+    border: 1px solid #e5e5e5;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Form Element Spacing */
+.slds-form-element {
+    margin-bottom: 1rem;
+}
+
+.slds-form-element__label {
+    font-weight: 600;
+    color: #333;
+}
+
+/* Help Text Styling */
+lightning-helptext {
+    margin-left: 0.5rem;
+}
+
+/* Status Indicators */
+.status-uploaded {
+    color: #4bca81;
+    font-weight: 600;
+}
+
+.status-processing {
+    color: #ff9500;
+    font-weight: 600;
+}
+
+.status-error {
+    color: #ea001e;
+    font-weight: 600;
+}
+
+/* Animation for smooth transitions */
+.page-content {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
     }
-    
-    .upload-dropzone {
-        padding: 1rem;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
-    
-    .structure-type-section {
-        padding: 0.75rem;
-    }
+}
+
+/* Focus States */
+.slds-input:focus,
+.slds-textarea:focus,
+.slds-select:focus {
+    border-color: #0176d3;
+    box-shadow: 0 0 0 2px rgba(1, 118, 211, 0.1);
+}
+
+/* Error States */
+.slds-has-error .slds-input,
+.slds-has-error .slds-textarea,
+.slds-has-error .slds-select {
+    border-color: #ea001e;
+}
+
+.slds-form-element__help {
+    color: #ea001e;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
 }
