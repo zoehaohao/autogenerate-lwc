@@ -5,135 +5,133 @@
 }
 
 .page-content {
-    margin-top: 1rem;
-    margin-bottom: 2rem;
-}
-
-.navigation-buttons {
-    border-top: 1px solid #dddbda;
-    padding-top: 1rem;
     margin-top: 2rem;
 }
 
-.error-message {
-    color: #c23934;
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-}
-
-.contact-display,
-.contact-edit {
-    background-color: #fafaf9;
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
-    padding: 1rem;
-}
-
-.labour-costs-table {
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
-    overflow-x: auto;
-}
-
-.file-upload-area {
-    border: 2px dashed #0176d3;
-    border-radius: 0.25rem;
-    transition: all 0.2s ease;
-    cursor: pointer;
-}
-
-.file-upload-area:hover {
-    border-color: #014486;
-    background-color: #f3f3f3;
-}
-
-.slds-section__title {
-    font-weight: 600;
-    font-size: 0.875rem;
-    line-height: 1.25;
-}
-
-.slds-form-element__label {
-    font-weight: 400;
-    font-size: 0.75rem;
-    line-height: 1.25;
-    color: #3e3e3c;
-}
-
-.slds-required {
-    color: #c23934;
-    margin-left: 0.125rem;
-}
-
-:host lightning-datatable {
-    --slds-c-datatable-cell-spacing-block: 0.5rem;
-    --slds-c-datatable-cell-spacing-inline: 0.75rem;
-}
-
-:host lightning-progress-indicator {
+.slds-section {
     margin-bottom: 1.5rem;
 }
 
-:host lightning-accordion {
+.slds-section__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #080707;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #dddbda;
+    padding-bottom: 0.5rem;
+}
+
+.structure-type-section {
     border: 1px solid #dddbda;
     border-radius: 0.25rem;
+    padding: 1rem;
+    background-color: #fafaf9;
 }
 
-:host lightning-button {
-    margin: 0 0.25rem;
+.structure-details {
+    background-color: #ffffff;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    border: 1px solid #dddbda;
 }
 
-.slds-grid.slds-gutters {
-    margin-left: -0.5rem;
-    margin-right: -0.5rem;
+.table-controls {
+    background-color: #f3f2f2;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
 }
 
-.slds-grid.slds-gutters > .slds-col {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+.file-upload-section {
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    background-color: #fafaf9;
+}
+
+.upload-dropzone {
+    border: 2px dashed #dddbda;
+    border-radius: 0.25rem;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-dropzone:hover,
+.upload-dropzone.drag-over {
+    border-color: #0176d3;
+    background-color: #f3f8ff;
+}
+
+.file-input {
+    display: none;
+}
+
+.upload-content {
+    color: #706e6b;
+}
+
+.contact-display p {
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+}
+
+.contact-edit .slds-grid {
+    margin-bottom: 1rem;
+}
+
+.navigation-buttons {
+    padding: 2rem 0;
+    border-top: 1px solid #dddbda;
+    margin-top: 2rem;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
 }
 
 .slds-card {
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border: 1px solid #dddbda;
 }
 
 .slds-card__header {
-    background-color: #fafaf9;
-    border-bottom: 1px solid #dddbda;
-    padding: 0.75rem 1rem;
-}
-
-.slds-card__body {
-    padding: 1rem;
-}
-
-.slds-theme_shade {
     background-color: #f3f2f2;
+    border-bottom: 1px solid #dddbda;
 }
 
-.slds-text-align_center {
-    text-align: center;
+.slds-card__header-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #080707;
 }
 
-.slds-p-around_large {
-    padding: 1.5rem;
+.slds-form-element__label {
+    font-weight: 600;
+    color: #080707;
 }
 
-.slds-p-around_medium {
-    padding: 1rem;
+lightning-radio-group[type="button"] {
+    --sds-c-radio-group-button-color-background: #ffffff;
+    --sds-c-radio-group-button-color-border: #dddbda;
 }
 
-.slds-m-top_medium {
-    margin-top: 1rem;
+lightning-input[type="toggle"] {
+    --sds-c-input-toggle-color-background-checked: #0176d3;
 }
 
-.slds-m-bottom_medium {
-    margin-bottom: 1rem;
-}
-
-.slds-m-right_x-small {
-    margin-right: 0.5rem;
+lightning-datatable {
+    --sds-c-datatable-cell-spacing: 0.75rem;
+    --sds-c-datatable-header-color-background: #f3f2f2;
 }
 
 @media (max-width: 768px) {
@@ -141,30 +139,34 @@
         padding: 0.5rem;
     }
     
-    .slds-col.slds-size_1-of-2 {
+    .slds-grid.slds-wrap .slds-col {
         width: 100%;
     }
     
-    .navigation-buttons .slds-grid {
+    .table-controls .slds-col {
+        margin-bottom: 0.5rem;
+    }
+    
+    .navigation-buttons {
         flex-direction: column;
         gap: 1rem;
     }
     
-    .navigation-buttons .slds-grid > * {
+    .navigation-buttons lightning-button {
         width: 100%;
     }
 }
 
 @media (max-width: 480px) {
-    :host lightning-progress-indicator {
-        font-size: 0.75rem;
-    }
-    
     .slds-card__body {
-        padding: 0.5rem;
+        padding: 0.75rem;
     }
     
-    .labour-costs-table {
-        font-size: 0.75rem;
+    .upload-dropzone {
+        padding: 1rem;
+    }
+    
+    .structure-type-section {
+        padding: 0.75rem;
     }
 }
