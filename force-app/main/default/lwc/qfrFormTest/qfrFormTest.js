@@ -337,8 +337,7 @@ export default class QfrFormTest extends LightningElement {
         const totalCentrallyHeld = editableRows.reduce((sum, item) => sum + (parseFloat(item.centrallyHeld) || 0), 0);
         
         // Update calculated rows
-        this.labourCostData = this.labourCostData.map(item => {
-            if (item.isCalculated){
+        this.labourCostData = this.labourCostData.map(item => {if (item.isCalculated){
                 return { ...item, total: totalAmount, centrallyHeld: totalCentrallyHeld };
             }
             return item;
