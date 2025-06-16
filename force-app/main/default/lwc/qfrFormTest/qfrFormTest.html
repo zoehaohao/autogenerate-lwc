@@ -55,7 +55,7 @@
                         </h3>
                         <div class="slds-section__content">
                             <div class="slds-form-element slds-m-bottom_medium">
-                                <label class="slds-form-element__label">Are you currently concerned about the solvency of your organisation?</label>
+                                <label class="slds-form-element__label">Are you happy?</label>
                                 <div class="slds-form-element__control">
                                     <lightning-radio-group 
                                         name="solvencyConcern"
@@ -325,7 +325,7 @@
                                 <lightning-datatable
                                     key-field="id"
                                     data={labourCostData}
-                                    columns={labourCostColumnscolumns}
+                                    columns={labourCostColumns}
                                     onrowaction={handleRowAction}
                                     oncellchange={handleCellChange}
                                     draft-values={draftValues}

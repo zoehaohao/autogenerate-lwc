@@ -263,9 +263,7 @@ export default class QfrFormTest extends LightningElement {
             this.isEditingContact = false;
             this.showToast('Success', 'Contact information updated successfully', 'success');
         }
-    }
-
-    handleCancelEdit() {
+    }handleCancelEdit() {
         this.isEditingContact = false;
         // Reset contact info if needed
     }
