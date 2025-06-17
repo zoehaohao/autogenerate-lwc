@@ -4,75 +4,210 @@
     padding: 1rem;
 }
 
-.page-content {
+.page-container {
     margin-top: 1.5rem;
 }
 
-.navigation-buttons {
+.page-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e5e5e5;
+}
+
+.info-accordion {
+    margin-bottom: 1.5rem;
+}
+
+.radio-button-group {
+    margin-top: 0.5rem;
+}
+
+.radio-button-group lightning-radio-group {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 0;
-    border-top: 1px solid #e5e5e5;
+    gap: 1rem;
 }
 
 .contact-display,
 .contact-edit {
-    padding: 1rem;
-    background-color: #f8f9fa;
-    border-radius: 0.25rem;
+    padding: 1rem 0;
+}
+
+.edit-button {
+    min-width: 80px;
+}
+
+.structure-type-section {
     border: 1px solid #e5e5e5;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    background-color: #fafaf9;
+}
+
+.structure-details {
+    background-color: white;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-top: 0.75rem;
+    border: 1px solid #dddbda;
+}
+
+.qa-comments {
+    background-color: #f3f2f2;
+    border-left: 3px solid #0176d3;
+}
+
+.table-controls {
+    align-items: flex-end;
+}
+
+.table-controls .slds-col {
+    min-width: 150px;
+}
+
+.labour-costs-table {
+    margin-top: 1rem;
+}
+
+.labour-costs-table .slds-table th,
+.labour-costs-table .slds-table td {
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.labour-costs-table .slds-table th:first-child,
+.labour-costs-table .slds-table td:first-child {
+    width: 60%;
+}
+
+.labour-costs-table .slds-table th:nth-child(2),
+.labour-costs-table .slds-table td:nth-child(2),
+.labour-costs-table .slds-table th:nth-child(3),
+.labour-costs-table .slds-table td:nth-child(3) {
+    width: 20%;
+    text-align: right;
 }
 
 .file-upload-area {
-    border: 2px dashed #d0d0d0;
-    border-radius: 0.5rem;
-    padding: 2rem;
-    text-align: center;
-    background-color: #fafafa;
-    transition: all 0.3s ease;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 2px dashed #c9c7c5;
+    border-radius: 0.25rem;
+    transition: border-color 0.2s ease;
     cursor: pointer;
 }
 
-.file-upload-area:hover,
-.file-upload-area.drag-over {
+.file-upload-area:hover {
     border-color: #0176d3;
-    background-color: #f0f8ff;
+    background-color: #f3f3f3;
 }
 
-.upload-content {
+.upload-instructions {
+    pointer-events: none;
+}
+
+.navigation-buttons {
+    padding: 1.5rem 0;
+    border-top: 1px solid #e5e5e5;
+    margin-top: 2rem;
+}
+
+.previous-button {
+    min-width: 100px;
+}
+
+.next-button-container {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
 }
 
-.file-input {
-    display: none;
+.next-button {
+    min-width: 100px;
 }
 
-.labour-costs-container {
-    max-height: 600px;
-    overflow-y: auto;
+.slds-notify_alert {
+    margin-top: 1rem;
 }
 
-.loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
+.slds-list_dotted {
+    margin-left: 1rem;
 }
 
-/* Responsive Design */
+/* Progress indicator styling */
+.slds-progress__item {
+    font-size: 0.875rem;
+}
+
+.slds-progress__item.slds-is-active .slds-progress__marker {
+    background-color: #0176d3;
+    border-color: #0176d3;
+}
+
+.slds-progress__item.slds-is-completed .slds-progress__marker {
+    background-color: #4bca81;
+    border-color: #4bca81;
+}
+
+/* Card styling enhancements */
+.slds-card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e5e5;
+}
+
+.slds-card__header {
+    background-color: #fafaf9;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/* Form element spacing */
+.slds-form-element {
+    margin-bottom: 1rem;
+}
+
+.slds-form-element__label {
+    font-weight: 600;
+    color: #3e3e3c;
+}
+
+/* Toggle switch styling */
+lightning-input[type="toggle"] {
+    --slds-c-input-toggle-color-background: #c9c7c5;
+    --slds-c-input-toggle-color-background-checked: #0176d3;
+}
+
+/* Checkbox group styling */
+lightning-checkbox-group {
+    margin-top: 0.5rem;
+}
+
+/* Datatable enhancements */
+.slds-table_bordered {
+    border: 1px solid #e5e5e5;
+}
+
+.slds-table thead th {
+    background-color: #fafaf9;
+    font-weight: 600;
+    color: #3e3e3c;
+}
+
+/* Responsive design */
 @media (max-width: 768px) {
     .qfr-form-container {
         padding: 0.5rem;
+    }
+    
+    .slds-grid.slds-wrap .slds-col.slds-size_1-of-2 {
+        width: 100%;
+        padding: 0;
+        margin-bottom: 1rem;
+    }
+    
+    .table-controls .slds-col {
+        min-width: 120px;
+        margin-bottom: 0.5rem;
     }
     
     .navigation-buttons {
@@ -80,144 +215,104 @@
         gap: 1rem;
     }
     
-    .navigation-buttons .slds-float_right {
-        float: none !important;
-    }
-    
-    .slds-grid.slds-wrap .slds-col {
-        flex-basis: 100%;
-        max-width: 100%;
+    .navigation-buttons .slds-grid_align-spread {
+        align-items: stretch;
     }
 }
 
-/* Custom Toggle Styling */
-.slds-form-element .slds-grid_align-spread {
-    align-items: center;
-    padding: 0.75rem;
-    background-color: #ffffff;
-    border: 1px solid #e5e5e5;
-    border-radius: 0.25rem;
-    margin-bottom: 0.5rem;
+/* Loading state styling */
+.slds-spinner_container {
+    position: relative;
 }
 
-.slds-form-element .slds-grid_align-spread:hover {
-    background-color: #f8f9fa;
+/* Error state styling */
+.slds-has-error .slds-form-element__control {
+    border-color: #c23934;
 }
 
-/* Progress Indicator Styling */
-lightning-progress-indicator {
-    margin-bottom: 2rem;
+.slds-form-element__help {
+    color: #c23934;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
 }
 
-/* Card Styling */
-.slds-card {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 0.5rem;
+/* Success state styling */
+.slds-form-element.slds-has-success .slds-form-element__control {
+    border-color: #4bca81;
 }
 
-.slds-card__header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #e5e5e5;
-}
-
-/* Section Styling */
-.slds-section__title {
-    font-weight: 600;
-    color: #0176d3;
-    border-bottom: 1px solid #e5e5e5;
-    padding-bottom: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-/* Button Group Styling */
-.slds-radio_button-group .slds-button {
-    margin-right: 0.5rem;
-}
-
-/* Data Table Styling */
-lightning-datatable {
-    border: 1px solid #e5e5e5;
-    border-radius: 0.25rem;
-}
-
-/* File Management Table */
-.slds-table th,
-.slds-table td {
-    padding: 0.75rem;
-    vertical-align: middle;
-}
-
-/* Accordion Styling */
-lightning-accordion-section {
-    border: 1px solid #e5e5e5;
-    border-radius: 0.25rem;
-    margin-bottom: 0.5rem;
-}
-
-/* Form Element Spacing */
-.slds-form-element {
-    margin-bottom: 1rem;
-}
-
-.slds-form-element__label {
-    font-weight: 600;
-    color: #333;
-}
-
-/* Help Text Styling */
-lightning-helptext {
-    margin-left: 0.5rem;
-}
-
-/* Status Indicators */
-.status-uploaded {
-    color: #4bca81;
-    font-weight: 600;
-}
-
-.status-processing {
-    color: #ff9500;
-    font-weight: 600;
-}
-
-.status-error {
-    color: #ea001e;
-    font-weight: 600;
-}
-
-/* Animation for smooth transitions */
-.page-content {
-    animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Focus States */
+/* Focus states */
 .slds-input:focus,
 .slds-textarea:focus,
 .slds-select:focus {
     border-color: #0176d3;
-    box-shadow: 0 0 0 2px rgba(1, 118, 211, 0.1);
+    box-shadow: 0 0 3px #0176d3;
 }
 
-/* Error States */
-.slds-has-error .slds-input,
-.slds-has-error .slds-textarea,
-.slds-has-error .slds-select {
-    border-color: #ea001e;
+/* Button hover states */
+.slds-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
 }
 
-.slds-form-element__help {
-    color: #ea001e;
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
+/* Accordion styling */
+.slds-accordion__section {
+    border: 1px solid #e5e5e5;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.slds-accordion__summary {
+    background-color: #fafaf9;
+    padding: 1rem;
+    font-weight: 600;
+}
+
+.slds-accordion__content {
+    padding: 1rem;
+    background-color: white;
+}
+
+/* Custom utility classes */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.no-margin {
+    margin: 0;
+}
+
+.no-padding {
+    padding: 0;
+}
+
+/* Print styles */
+@media print {
+    .navigation-buttons,
+    .edit-button,
+    .slds-button {
+        display: none;
+    }
+    
+    .slds-card {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+    
+    .page-container {
+        page-break-inside: avoid;
+    }
 }
