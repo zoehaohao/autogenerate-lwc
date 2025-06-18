@@ -1,295 +1,108 @@
 .qfr-form-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
-    font-family: 'Salesforce Sans', Arial, sans-serif;
+    padding: 1rem;
 }
 
 .page-content {
-    margin-top: 20px;
-    margin-bottom: 40px;
+    margin-top: 1rem;
 }
 
-.page-title {
-    font-size: 24px;
-    font-weight: 600;
-    color: #080707;
-    margin-bottom: 20px;
-    border-bottom: 2px solid #0176d3;
-    padding-bottom: 10px;
-}
-
-.section-card {
-    background: #ffffff;
-    border: 1px solid #d8dde6;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.section-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #080707;
-    margin-bottom: 16px;
-}
-
-.info-content {
-    color: #3e3e3c;
-    line-height: 1.5;
-}
-
-.info-content p {
-    margin-bottom: 12px;
-}
-
-.question-group {
-    margin-bottom: 24px;
-}
-
-.question-label {
-    display: block;
-    font-weight: 600;
-    color: #080707;
-    margin-bottom: 12px;
-    font-size: 14px;
-}
-
-.question-with-tooltip {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
-.button-group {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 8px;
-}
-
-.answer-button {
-    background: #ffffff;
-    border: 2px solid #d8dde6;
-    border-radius: 6px;
-    padding: 8px 24px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    min-width: 80px;
-}
-
-.answer-button:hover {
-    border-color: #0176d3;
-    background: #f3f9ff;
-}
-
-.answer-button.selected {
-    background: #0176d3;
-    border-color: #0176d3;
-    color: #ffffff;
+.required-asterisk {
+    color: #c23934;
+    margin-right: 0.25rem;
 }
 
 .error-message {
     color: #c23934;
-    font-size: 12px;
-    margin-top: 4px;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
 }
 
-/* Page 2 - Contact Information */
-.account-info, .contact-display {
-    background: #f8f9fa;
-    padding: 16px;
-    border-radius: 6px;
-    margin-bottom: 16px;
-}
-
-.info-row {
-    display: flex;
-    margin-bottom: 8px;
-}
-
-.info-label {
+.organization-name {
+    font-size: 1.125rem;
     font-weight: 600;
-    color: #3e3e3c;
-    min-width: 120px;
+    color: #181818;
 }
 
-.info-value {
-    color: #080707;
+.naps-id {
+    font-size: 0.875rem;
+    color: #706e6b;
 }
 
-.edit-button, .save-button, .cancel-button, .browse-button {
-    background: #0176d3;
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 16px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.edit-button:hover, .save-button:hover {
-    background: #014486;
-}
-
-.cancel-button {
-    background: #706e6b;
-    margin-left: 8px;
-}
-
-.cancel-button:hover {
-    background: #514f4d;
-}
-
+.contact-display,
 .contact-edit {
-    display: grid;
-    gap: 16px;
-}
-
-/* Page 3 - Business Structure */
-.structure-item {
+    background: #f3f3f3;
+    padding: 1rem;
+    border-radius: 0.25rem;
     border: 1px solid #d8dde6;
-    border-radius: 6px;
-    margin-bottom: 16px;
-    overflow: hidden;
 }
 
-.structure-header {
+.button-group {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.structure-type-container {
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    background: #ffffff;
+}
+
+.service-types-section {
     background: #f8f9fa;
-    border-bottom: 1px solid #d8dde6;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    border-left: 3px solid #0176d3;
 }
 
-.structure-label {
-    font-weight: 600;
-    color: #080707;
-    font-size: 14px;
+.qa-comments {
+    background: #fef7e0;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    border-left: 3px solid #ffb75d;
 }
 
-.toggle-container {
-    display: flex;
-    align-items: center;
-}
-
-.toggle-button {
-    background: #ffffff;
-    border: 2px solid #d8dde6;
-    border-radius: 20px;
-    padding: 4px 16px;
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    min-width: 60px;
-}
-
-.toggle-button:hover {
-    border-color: #0176d3;
-}
-
-.toggle-button.active {
-    background: #0176d3;
-    border-color: #0176d3;
-    color: #ffffff;
-}
-
-.structure-details {
-    padding: 16px;
-    background: #ffffff;
-}
-
-/* Page 4 - Labour Costs */
 .table-controls {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 20px;
-    align-items: end;
-}
-
-.table-controls lightning-combobox {
-    flex: 1;
-}
-
-.centrally-held-section {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-    padding: 16px;
     background: #f8f9fa;
-    border-radius: 6px;
-}
-
-.toggle-label {
-    font-weight: 600;
-    color: #080707;
-    font-size: 14px;
-}
-
-.data-table-container {
-    background: #ffffff;
+    padding: 1rem;
+    border-radius: 0.25rem;
     border: 1px solid #d8dde6;
-    border-radius: 6px;
-    overflow: hidden;
 }
 
-/* Page 5 - Document Management */
-.upload-config {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 20px;
-}
-
-.upload-area {
+.file-upload-area {
     border: 2px dashed #d8dde6;
-    border-radius: 8px;
-    padding: 40px;
+    border-radius: 0.5rem;
+    padding: 2rem;
     text-align: center;
-    background: #f8f9fa;
+    background: #fafaf9;
+    transition: all 0.3s ease;
     cursor: pointer;
-    transition: all 0.2s ease;
-    margin-bottom: 20px;
 }
 
-.upload-area:hover {
+.file-upload-area:hover,
+.file-upload-area.drag-over {
     border-color: #0176d3;
-    background: #f3f9ff;
+    background: #f3f8ff;
 }
 
 .upload-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 1rem;
 }
 
 .upload-icon {
-    font-size: 48px;
-    opacity: 0.6;
+    color: #706e6b;
 }
 
 .upload-text {
-    color: #3e3e3c;
+    color: #706e6b;
     margin: 0;
-}
-
-.browse-button {
-    background: #0176d3;
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    padding: 8px 16px;
-    font-size: 14px;
-    cursor: pointer;
+    font-size: 1rem;
 }
 
 .file-input {
@@ -297,77 +110,40 @@
 }
 
 .upload-progress {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px;
-    background: #f3f9ff;
-    border-radius: 6px;
-    margin-bottom: 20px;
-}
-
-.document-table {
-    background: #ffffff;
-    border: 1px solid #d8dde6;
-    border-radius: 6px;
-    overflow: hidden;
-}
-
-.no-files-message {
     text-align: center;
-    padding: 40px;
-    color: #706e6b;
-    font-style: italic;
+    padding: 1rem;
+    background: #f3f8ff;
+    border-radius: 0.25rem;
+    border: 1px solid #0176d3;
 }
 
-/* Navigation */
+.no-documents {
+    text-align: center;
+    padding: 2rem;
+    background: #fafaf9;
+    border-radius: 0.25rem;
+    border: 1px solid #d8dde6;
+}
+
 .navigation-buttons {
     display: flex;
     justify-content: space-between;
-    margin-top: 40px;
-    padding-top: 20px;
+    align-items: center;
+    padding: 1rem 0;
     border-top: 1px solid #d8dde6;
 }
 
-.nav-button {
-    background: #0176d3;
-    color: #ffffff;
-    border: none;
-    border-radius: 6px;
-    padding: 12px 24px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    min-width: 100px;
+.next-button-container {
+    margin-left: auto;
 }
 
-.nav-button:hover:not(:disabled) {
-    background: #014486;
-}
-
-.nav-button:disabled {
-    background: #d8dde6;
-    color: #706e6b;
-    cursor: not-allowed;
-}
-
-.previous-button {
-    background: #706e6b;
-}
-
-.previous-button:hover:not(:disabled) {
-    background: #514f4d;
-}
-
-/* Loading Overlay */
 .loading-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -377,67 +153,117 @@
 /* Responsive Design */
 @media (max-width: 768px) {
     .qfr-form-container {
-        padding: 10px;
+        padding: 0.5rem;
     }
     
-    .upload-config {
-        grid-template-columns: 1fr;
-    }
-    
-    .table-controls {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .button-group {
+    .slds-grid.slds-gutters {
         flex-direction: column;
     }
     
-    .answer-button {
+    .slds-col {
         width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .table-controls .slds-grid {
+        flex-direction: column;
     }
     
     .navigation-buttons {
         flex-direction: column;
-        gap: 12px;
+        gap: 1rem;
     }
     
-    .nav-button {
+    .next-button-container {
+        margin-left: 0;
         width: 100%;
     }
 }
 
-/* Accessibility */
-.answer-button:focus,
-.toggle-button:focus,
-.nav-button:focus,
-.edit-button:focus,
-.save-button:focus,
-.cancel-button:focus {
-    outline: 2px solid #0176d3;
-    outline-offset: 2px;
+/* Lightning Datatable Customizations */
+.slds-table {
+    font-size: 0.875rem;
+}
+
+.slds-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+}
+
+.slds-table td {
+    vertical-align: middle;
 }
 
 /* Progress Indicator Styling */
 lightning-progress-indicator {
-    margin-bottom: 30px;
+    margin-bottom: 2rem;
 }
 
 /* Accordion Styling */
 lightning-accordion {
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
 }
 
-/* Form Field Spacing */
-lightning-input,
-lightning-textarea,
-lightning-combobox,
-lightning-checkbox-group {
-    margin-bottom: 16px;
+/* Form Element Spacing */
+.slds-form-element {
+    margin-bottom: 1rem;
 }
 
-/* Datatable Styling */
-lightning-datatable {
-    --slds-table-color-background: #ffffff;
-    --slds-table-color-background-hover: #f8f9fa;
+/* Card Styling */
+.slds-card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.slds-card__header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #d8dde6;
+}
+
+/* Toggle Switch Styling */
+.slds-checkbox_toggle {
+    margin-bottom: 0.5rem;
+}
+
+/* Help Text Styling */
+lightning-helptext {
+    margin-left: 0.25rem;
+}
+
+/* Section Styling */
+.slds-section {
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.slds-section__title {
+    background: #f8f9fa;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #d8dde6;
+    font-weight: 600;
+}
+
+.slds-section__content {
+    padding: 1rem;
+}
+
+/* Button Styling */
+lightning-button {
+    margin-right: 0.5rem;
+}
+
+/* Input Field Focus States */
+lightning-input:focus-within,
+lightning-textarea:focus-within,
+lightning-combobox:focus-within {
+    box-shadow: 0 0 0 2px #0176d3;
+}
+
+/* Validation Error Styling */
+.slds-has-error .slds-form-element__control {
+    border-color: #c23934;
+}
+
+.slds-has-error .slds-form-element__help {
+    color: #c23934;
 }
