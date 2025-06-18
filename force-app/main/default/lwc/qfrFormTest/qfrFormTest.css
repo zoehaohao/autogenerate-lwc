@@ -5,74 +5,111 @@
 }
 
 .page-container {
-    min-height: 600px;
+    min-height: 500px;
+    margin-bottom: 2rem;
 }
 
 .page-header {
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 2px solid #e5e5e5;
 }
 
-.info-accordion {
-    margin-bottom: 1.5rem;
+.page-header h2 {
+    color: #0176d3;
+    font-weight: 600;
 }
 
-.business-structure-item {
-    padding: 1rem;
+.structure-type-section {
     border: 1px solid #e5e5e5;
     border-radius: 0.25rem;
+    padding: 1rem;
     background-color: #fafaf9;
 }
 
-.business-structure-item:hover {
-    background-color: #f4f4f4;
+.structure-type-section h4 {
+    color: #3e3e3c;
+    font-weight: 500;
+}
+
+.structure-details {
+    background-color: white;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    border-left: 3px solid #0176d3;
 }
 
 .table-controls {
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 .table-controls lightning-combobox {
     min-width: 150px;
 }
 
-.file-upload-area {
+.contact-display .slds-grid {
+    border: 1px solid #e5e5e5;
+    border-radius: 0.25rem;
+    padding: 1rem;
     background-color: #fafaf9;
-    border: 2px dashed #c9c9c9;
+}
+
+.contact-edit {
+    background-color: white;
+    border: 1px solid #0176d3;
+    border-radius: 0.25rem;
+    padding: 1rem;
+}
+
+.file-upload-area {
+    border: 2px dashed #0176d3;
     border-radius: 0.5rem;
+    background-color: #f8f9fa;
     transition: all 0.3s ease;
     cursor: pointer;
 }
 
 .file-upload-area:hover {
-    border-color: #1589ee;
-    background-color: #f3f9ff;
+    border-color: #014486;
+    background-color: #f3f4f6;
 }
 
 .file-upload-area.drag-over {
-    border-color: #1589ee;
-    background-color: #f3f9ff;
-    transform: scale(1.02);
+    border-color: #014486;
+    background-color: #e8f4fd;
+}
+
+.file-input {
+    display: none;
 }
 
 .navigation-buttons {
-    padding: 2rem 0;
     border-top: 1px solid #e5e5e5;
-    margin-top: 2rem;
+    padding-top: 1rem;
+    position: relative;
+    min-height: 50px;
 }
 
-.highlighted-row {
-    background-color: #fff2e5 !important;
-    transition: background-color 0.3s ease;
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
 }
 
-/* Progress indicator styling */
-.slds-progress-indicator {
-    margin-bottom: 2rem;
+.error-message {
+    color: #c23934;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
 }
 
-/* Card styling enhancements */
 .slds-card {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border: 1px solid #e5e5e5;
@@ -83,31 +120,49 @@
     border-bottom: 1px solid #e5e5e5;
 }
 
-/* Form element spacing */
-.slds-form-element {
+.slds-card__header-title {
+    color: #0176d3;
+    font-weight: 600;
+}
+
+lightning-datatable {
+    border: 1px solid #e5e5e5;
+    border-radius: 0.25rem;
+}
+
+lightning-progress-indicator {
+    margin-bottom: 2rem;
+}
+
+lightning-accordion {
     margin-bottom: 1rem;
 }
 
-/* Button styling */
-lightning-button {
-    margin: 0.25rem;
+lightning-accordion-section {
+    border: 1px solid #e5e5e5;
 }
 
-/* Error message styling */
-.slds-form-element__help {
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
+.slds-form-element__label {
+    font-weight: 500;
+    color: #3e3e3c;
 }
 
-/* Responsive design */
+lightning-input[type="toggle"] {
+    --slds-c-toggle-color-background: #0176d3;
+}
+
+lightning-button[variant="brand"] {
+    --slds-c-button-brand-color-background: #0176d3;
+    --slds-c-button-brand-color-background-hover: #014486;
+}
+
+lightning-radio-group[type="button"] {
+    --slds-c-radio-button-color-background-checked: #0176d3;
+}
+
 @media (max-width: 768px) {
     .qfr-form-container {
         padding: 0.5rem;
-    }
-    
-    .slds-grid.slds-wrap .slds-col {
-        flex-basis: 100%;
-        max-width: 100%;
     }
     
     .table-controls {
@@ -115,55 +170,95 @@ lightning-button {
         gap: 0.5rem;
     }
     
-    .navigation-buttons {
-        padding: 1rem 0;
+    .table-controls lightning-combobox {
+        width: 100%;
+    }
+    
+    .slds-grid.slds-wrap .slds-col {
+        width: 100%;
+        padding: 0;
+        margin-bottom: 0.5rem;
+    }
+    
+    .navigation-buttons lightning-button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .navigation-buttons .slds-float_left,
+    .navigation-buttons .slds-float_right {
+        float: none;
     }
 }
 
-/* Loading spinner overlay */
-.slds-is-relative {
-    position: relative;
+@media (max-width: 480px) {
+    .page-header h2 {
+        font-size: 1.25rem;
+    }
+    
+    .slds-card__body {
+        padding: 0.75rem;
+    }
+    
+    .structure-type-section {
+        padding: 0.75rem;
+    }
+    
+    .file-upload-area .slds-p-around_large {
+        padding: 1rem;
+    }
 }
 
-/* Accordion content styling */
-.slds-accordion__content {
-    background-color: #ffffff;
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .slds-card {
+        border-width: 2px;
+    }
+    
+    .file-upload-area {
+        border-width: 3px;
+    }
+    
+    .error-message {
+        font-weight: 600;
+    }
 }
 
-/* Toggle switch styling */
-lightning-input[type="toggle"] {
-    --slds-c-toggle-color-background: #e5e5e5;
-    --slds-c-toggle-color-background-checked: #1589ee;
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .file-upload-area {
+        transition: none;
+    }
+    
+    * {
+        scroll-behavior: auto !important;
+    }
 }
 
-/* Data table styling */
-lightning-datatable {
-    --slds-c-datatable-cell-spacing: 0.75rem;
+/* Focus styles for accessibility */
+lightning-input:focus-within,
+lightning-combobox:focus-within,
+lightning-textarea:focus-within {
+    outline: 2px solid #0176d3;
+    outline-offset: 2px;
 }
 
-/* File input hidden */
-.slds-hide {
-    display: none !important;
-}
-
-/* Contact info display styling */
-.slds-form-element__static {
-    padding: 0.5rem 0;
-    font-weight: 500;
-    color: #3e3e3c;
-}
-
-/* Checkbox group styling */
-lightning-checkbox-group {
-    margin-top: 0.5rem;
-}
-
-/* Help text styling */
-lightning-helptext {
-    margin-left: 0.5rem;
-}
-
-/* Radio group button styling */
-lightning-radio-group[type="button"] {
-    --slds-c-radio-button-spacing-inline: 0.5rem;
+/* Print styles */
+@media print {
+    .navigation-buttons,
+    lightning-button,
+    .file-upload-area {
+        display: none;
+    }
+    
+    .qfr-form-container {
+        max-width: none;
+        padding: 0;
+    }
+    
+    .slds-card {
+        box-shadow: none;
+        border: 1px solid #000;
+        page-break-inside: avoid;
+    }
 }
