@@ -1,157 +1,112 @@
 <template>
     <div class="form-container">
-        <form class="qfr-form">
+        <form class="slds-form slds-form_stacked">
             <!-- Personal Information Section -->
             <div class="form-section">
                 <h2 class="section-heading">Personal Information</h2>
-                <div class="field-container">
-                    <div class="field-row">
-                        <div class="field-label-container">
-                            <span class="required-asterisk">*</span>
-                            <label class="field-label">First Name</label>
-                        </div>
-                        <lightning-input
-                            type="text"
-                            value={firstName}
-                            onchange={handleFirstNameChange}
-                            class="form-field"
-                            variant="label-hidden"
-                            required>
-                        </lightning-input>
+                
+                <div class="field-row">
+                    <div class="field-label-container">
+                        <span class="required-asterisk">*</span>
+                        <label class="field-label">First name</label>
                     </div>
-                    
-                    <div class="field-row">
-                        <div class="field-label-container">
-                            <label class="field-label">Middle Name</label>
-                        </div>
-                        <lightning-input
-                            type="text"
-                            value={middleName}
-                            onchange={handleMiddleNameChange}
-                            class="form-field"
-                            variant="label-hidden">
-                        </lightning-input>
+                    <lightning-input
+                        type="text"
+                        value={firstName}
+                        onchange={handleFirstNameChange}
+                        class="form-field"
+                        variant="label-hidden"
+                        required>
+                    </lightning-input>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-label-container">
+                        <label class="field-label">Middle name</label>
                     </div>
-                    
-                    <div class="field-row">
-                        <div class="field-label-container">
-                            <span class="required-asterisk">*</span>
-                            <label class="field-label">Last Name</label>
-                        </div>
-                        <lightning-input
-                            type="text"
-                            value={lastName}
-                            onchange={handleLastNameChange}
-                            class="form-field"
-                            variant="label-hidden"
-                            required>
-                        </lightning-input>
+                    <lightning-input
+                        type="text"
+                        value={middleName}
+                        onchange={handleMiddleNameChange}
+                        class="form-field"
+                        variant="label-hidden">
+                    </lightning-input>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-label-container">
+                        <span class="required-asterisk">*</span>
+                        <label class="field-label">Last name</label>
                     </div>
-                    
-                    <div class="field-row">
-                        <div class="field-label-container">
-                            <span class="required-asterisk">*</span>
-                            <label class="field-label">Birthdate</label>
-                        </div>
-                        <lightning-input
-                            type="date"
-                            value={birthdate}
-                            onchange={handleBirthdateChange}
-                            class="form-field"
-                            variant="label-hidden"
-                            required>
-                        </lightning-input>
-                    </div>
+                    <lightning-input
+                        type="text"
+                        value={lastName}
+                        onchange={handleLastNameChange}
+                        class="form-field"
+                        variant="label-hidden"
+                        required>
+                    </lightning-input>
                 </div>
             </div>
 
             <!-- Address Section -->
             <div class="form-section">
                 <h2 class="section-heading">Address</h2>
-                <div class="field-container">
-                    <div class="field-row">
-                        <div class="field-label-container">
-                            <label class="field-label">Address</label>
-                        </div>
-                        <lightning-input
-                            type="text"
-                            value={address}
-                            onchange={handleAddressChange}
-                            class="form-field"
-                            variant="label-hidden">
-                        </lightning-input>
+                
+                <div class="field-row">
+                    <div class="field-label-container">
+                        <label class="field-label">Address</label>
                     </div>
-                    
-                    <div class="field-row">
-                        <div class="field-label-container">
-                            <label class="field-label">City or Town</label>
-                        </div>
-                        <lightning-input
-                            type="text"
-                            value={city}
-                            onchange={handleCityChange}
-                            class="form-field"
-                            variant="label-hidden">
-                        </lightning-input>
+                    <lightning-input
+                        type="text"
+                        value={address}
+                        onchange={handleAddressChange}
+                        class="form-field"
+                        variant="label-hidden">
+                    </lightning-input>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-label-container">
+                        <label class="field-label">City or Town</label>
                     </div>
-                    
-                    <div class="field-row">
-                        <div class="field-label-container">
-                            <label class="field-label">State</label>
-                        </div>
-                        <lightning-combobox
-                            value={state}
-                            placeholder="Choose a State"
-                            options={stateOptions}
-                            onchange={handleStateChange}
-                            class="form-field">
-                        </lightning-combobox>
+                    <lightning-input
+                        type="text"
+                        value={city}
+                        onchange={handleCityChange}
+                        class="form-field"
+                        variant="label-hidden">
+                    </lightning-input>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-label-container">
+                        <label class="field-label">State</label>
                     </div>
-                    
-                    <div class="field-row">
-                        <div class="field-label-container">
-                            <span class="required-asterisk">*</span>
-                            <label class="field-label">Zip Code</label>
-                        </div>
-                        <lightning-input
-                            type="text"
-                            value={zipCode}
-                            onchange={handleZipCodeChange}
-                            class="form-field"
-                            variant="label-hidden"
-                            required>
-                        </lightning-input>
+                    <lightning-combobox
+                        value={selectedState}
+                        placeholder="Choose a State"
+                        options={stateOptions}
+                        onchange={handleStateChange}
+                        class="form-field"
+                        variant="label-hidden"
+                        dropdown-alignment="auto">
+                    </lightning-combobox>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-label-container">
+                        <span class="required-asterisk">*</span>
+                        <label class="field-label">Zip code</label>
                     </div>
-                    
-                    <div class="field-row">
-                        <div class="field-label-container">
-                            <span class="required-asterisk">*</span>
-                            <label class="field-label">Start Date</label>
-                        </div>
-                        <lightning-input
-                            type="date"
-                            value={startDate}
-                            onchange={handleStartDateChange}
-                            class="form-field"
-                            variant="label-hidden"
-                            required>
-                        </lightning-input>
-                    </div>
-                    
-                    <div class="field-row">
-                        <div class="field-label-container">
-                            <span class="required-asterisk">*</span>
-                            <label class="field-label">End Date</label>
-                        </div>
-                        <lightning-input
-                            type="date"
-                            value={endDate}
-                            onchange={handleEndDateChange}
-                            class="form-field"
-                            variant="label-hidden"
-                            required>
-                        </lightning-input>
-                    </div>
+                    <lightning-input
+                        type="text"
+                        value={zipCode}
+                        onchange={handleZipCodeChange}
+                        class="form-field"
+                        variant="label-hidden"
+                        required>
+                    </lightning-input>
                 </div>
             </div>
 
@@ -167,18 +122,10 @@
                     variant="brand"
                     label="Submit"
                     onclick={handleSubmit}
-                    disabled={isSubmitDisabled}
-                    class="action-button">
+                    class="action-button"
+                    disabled={isSubmitDisabled}>
                 </lightning-button>
             </div>
-
-            <!-- Loading Spinner -->
-            <template if:true={isLoading}>
-                <lightning-spinner
-                    alternative-text="Processing..."
-                    size="medium">
-                </lightning-spinner>
-            </template>
         </form>
     </div>
 </template>

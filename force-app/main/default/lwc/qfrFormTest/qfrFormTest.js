@@ -5,14 +5,10 @@ export default class QfrFormTest extends LightningElement {
     @track firstName = '';
     @track middleName = '';
     @track lastName = '';
-    @track birthdate = '';
     @track address = '';
     @track city = '';
-    @track state = '';
+    @track selectedState = '';
     @track zipCode = '';
-    @track startDate = '';
-    @track endDate = '';
-    @track isLoading = false;
 
     stateOptions = [
         { label: 'Alabama', value: 'AL' },
@@ -68,8 +64,7 @@ export default class QfrFormTest extends LightningElement {
     ];
 
     get isSubmitDisabled() {
-        return !this.firstName || !this.lastName || !this.birthdate || 
-               !this.zipCode || !this.startDate || !this.endDate || this.isLoading;
+        return !this.firstName || !this.lastName || !this.zipCode;
     }
 
     handleFirstNameChange(event) {
@@ -84,11 +79,6 @@ export default class QfrFormTest extends LightningElement {
         this.lastName = event.target.value;
     }
 
-    handleBirthdateChange(event) {
-        this.birthdate = event.target.value;
-        this.validateBirthdate();
-    }
-
     handleAddressChange(event) {
         this.address = event.target.value;
     }
@@ -98,146 +88,92 @@ export default class QfrFormTest extends LightningElement {
     }
 
     handleStateChange(event) {
-        this.state = event.target.value;
+        this.selectedState = event.detail.value;
     }
 
     handleZipCodeChange(event) {
         this.zipCode = event.target.value;
-        this.validateZipCode();
     }
 
-    handleStartDateChange(event) {
-        this.startDate = event.target.value;
-        this.validateDateRange();
-    }
+    handleReset() {
+        try {
+            this.firstName = '';
+            this.middleName = '';
+            this.lastName = '';
+            this.address = '';
+            this.city = '';
+            this.selectedState = '';
+            this.zipCode = '';
 
-    handleEndDateChange(event) {
-        this.endDate = event.target.value;
-        this.validateDateRange();
-    }
-
-    validateBirthdate() {
-        if (this.birthdate) {
-            const today = new Date();
-            const birthDate = new Date(this.birthdate);
-            
-            if (birthDate > today) {
-                this.showToast('Error', 'Birthdate cannot be in the future', 'error');
-                return false;
-            }
+            this.showToast('Success', 'Form has been reset successfully.', 'success');
+        } catch (error) {
+            this.showToast('Error', 'An error occurred while resetting the form.', 'error');
         }
-        return true;
     }
 
-    validateZipCode() {
-        if (this.zipCode) {
-            const zipPattern = /^\d{5}(-\d{4})?$/;
-            if (!zipPattern.test(this.zipCode)) {
-                this.showToast('Error', 'Please enter a valid ZIP code (e.g., 12345 or 12345-6789)', 'error');
-                return false;
-            }
-        }
-        return true;
-    }
+    handleSubmit() {
+        try {
+            if (this.validateForm()) {
+                const formData = {
+                    firstName: this.firstName,
+                    middleName: this.middleName,
+                    lastName: this.lastName,
+                    address: this.address,
+                    city: this.city,
+                    state: this.selectedState,
+                    zipCode: this.zipCode
+                };
 
-    validateDateRange() {
-        if (this.startDate && this.endDate) {
-            const start = new Date(this.startDate);
-            const end = new Date(this.endDate);
-            
-            if (start >= end) {
-                this.showToast('Error', 'End date must be after start date', 'error');
-                return false;
+                console.log('Form submitted with data:', formData);
+                this.showToast('Success', 'Form submitted successfully!', 'success');
             }
+        } catch (error) {
+            this.showToast('Error', 'An error occurred while submitting the form.', 'error');
         }
-        return true;
     }
 
     validateForm() {
         let isValid = true;
-        const requiredFields = [
-            { field: 'firstName', label: 'First Name' },
-            { field: 'lastName', label: 'Last Name' },
-            { field: 'birthdate', label: 'Birthdate' },
-            { field: 'zipCode', label: 'Zip Code' },
-            { field: 'startDate', label: 'Start Date' },
-            { field: 'endDate', label: 'End Date' }
-        ];
-
-        // Check required fields
-        for (let fieldInfo of requiredFields) {
-            if (!this[fieldInfo.field]) {
-                this.showToast('Error', `${fieldInfo.label} is required`, 'error');
+        const inputFields = this.template.querySelectorAll('lightning-input');
+        
+        inputFields.forEach(field => {
+            if (!field.checkValidity()) {
+                field.reportValidity();
                 isValid = false;
-                break;
             }
+        });
+
+        // Additional validation for required fields
+        if (!this.firstName) {
+            this.showToast('Error', 'First name is required.', 'error');
+            isValid = false;
         }
 
-        // Validate specific field formats
-        if (isValid) {
-            isValid = this.validateBirthdate() && 
-                     this.validateZipCode() && 
-                     this.validateDateRange();
+        if (!this.lastName) {
+            this.showToast('Error', 'Last name is required.', 'error');
+            isValid = false;
+        }
+
+        if (!this.zipCode) {
+            this.showToast('Error', 'Zip code is required.', 'error');
+            isValid = false;
+        }
+
+        // Validate zip code format (basic US zip code validation)
+        if (this.zipCode && !/^\d{5}(-\d{4})?$/.test(this.zipCode)) {
+            this.showToast('Error', 'Please enter a valid zip code (e.g., 12345 or 12345-6789).', 'error');
+            isValid = false;
         }
 
         return isValid;
-    }
-
-    handleSubmit() {
-        if (!this.validateForm()) {
-            return;
-        }
-
-        this.isLoading = true;
-
-        try {
-            // Simulate form submission
-            setTimeout(() => {
-                this.isLoading = false;
-                this.showToast('Success', 'Form submitted successfully!', 'success');
-                
-                // Log form data for demonstration
-                console.log('Form Data Submitted:', {
-                    firstName: this.firstName,
-                    middleName: this.middleName,
-                    lastName: this.lastName,
-                    birthdate: this.birthdate,
-                    address: this.address,
-                    city: this.city,
-                    state: this.state,
-                    zipCode: this.zipCode,
-                    startDate: this.startDate,
-                    endDate: this.endDate
-                });
-            }, 2000);
-        } catch (error) {
-            this.isLoading = false;
-            this.showToast('Error', 'An error occurred while submitting the form', 'error');
-            console.error('Form submission error:', error);
-        }
-    }
-
-    handleReset() {
-        this.firstName = '';
-        this.middleName = '';
-        this.lastName = '';
-        this.birthdate = '';
-        this.address = '';
-        this.city = '';
-        this.state = '';
-        this.zipCode = '';
-        this.startDate = '';
-        this.endDate = '';
-        this.isLoading = false;
-        
-        this.showToast('Info', 'Form has been reset', 'info');
     }
 
     showToast(title, message, variant) {
         const event = new ShowToastEvent({
             title: title,
             message: message,
-            variant: variant
+            variant: variant,
+            mode: 'dismissable'
         });
         this.dispatchEvent(event);
     }
