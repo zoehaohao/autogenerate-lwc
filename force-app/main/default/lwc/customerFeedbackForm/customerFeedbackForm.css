@@ -1,30 +1,31 @@
-:host {
-    --qfr-primary-color: rgb(0, 112, 210);
-    --qfr-error-color: rgb(194, 57, 52);
-}
-
 .qfr-form-container {
-    max-width: 1200px;
-    margin: 0 auto;
     padding: 1rem;
-}
-
-lightning-accordion-section {
     background: #ffffff;
-    border-radius: 0.25rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-lightning-radio-group {
+.form-section {
+    margin: 1rem 0;
+    padding: 1rem;
+    background: #ffffff;
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+}
+
+.table-controls {
+    display: flex;
+    gap: 1rem;
     margin-bottom: 1rem;
 }
 
-.slds-progress-bar {
-    background: var(--qfr-primary-color);
+.form-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #d8dde6;
 }
 
-.error-message {
-    color: var(--qfr-error-color);
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
+:host {
+    --slds-c-button-brand-color-background: #0070d2;
+    --slds-c-button-brand-color-background-hover: #005fb2;
 }
