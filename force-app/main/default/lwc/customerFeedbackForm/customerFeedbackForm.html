@@ -1,124 +1,120 @@
 <template>
-    <div class="slds-p-around_medium">
+    <div class="qfr-form-container">
         <lightning-progress-indicator 
             current-step={currentStep} 
             type="path"
             variant="base"
-            steps={steps}>
+            has-error={hasErrors}>
+            <template for:each={steps} for:item="step">
+                <lightning-progress-step 
+                    key={step.value}
+                    label={step.label}
+                    value={step.value}>
+                </lightning-progress-step>
+            </template>
         </lightning-progress-indicator>
 
-        <div class="slds-m-top_medium">
-            <!-- Page 1: Residential Viability -->
-            <div if:true={isPage1}>
-                <lightning-accordion 
-                    allow-multiple-sections-open="true"
-                    active-section-name={openSections}>
-                    <lightning-accordion-section name="info" label="About this section">
-                        <p>This section collects information about financial health and viability of residential care services.</p>
-                    </lightning-accordion-section>
-                </lightning-accordion>
+        <!-- Page 1: Residential Viability -->
+        <div if:true={isPageOne}>
+            <lightning-accordion 
+                allow-multiple-sections-open="true"
+                active-section-name={activeSections}>
+                <lightning-accordion-section name="info" label="About this section">
+                    <p>This section collects information about financial health and viability of residential care services.</p>
+                </lightning-accordion-section>
+            </lightning-accordion>
 
-                <div class="slds-card slds-m-top_medium">
-                    <div class="slds-card__header">
-                        <h2 class="slds-card__header-title">Solvency Assessment</h2>
-                    </div>
-                    <div class="slds-card__body slds-p-around_medium">
-                        <lightning-radio-group
-                            name="solvencyConcern"
-                            label="Are you currently concerned about the solvency of your organisation?"
-                            options={yesNoOptions}
-                            value={solvencyConcern}
-                            onchange={handleSolvencyConcernChange}
-                            required>
-                        </lightning-radio-group>
+            <div class="slds-p-around_medium">
+                <lightning-radio-group
+                    name="solvencyConcern"
+                    label="Are you currently concerned about the solvency of your organisation?"
+                    options={yesNoOptions}
+                    value={solvencyConcern}
+                    onchange={handleSolvencyChange}
+                    required>
+                </lightning-radio-group>
 
-                        <lightning-radio-group
-                            name="futureSolvency"
-                            label="Do you envisage any solvency issues arising in the next six months?"
-                            options={yesNoOptions}
-                            value={futureSolvency}
-                            onchange={handleFutureSolvencyChange}
-                            required
-                            class="slds-m-top_medium">
-                        </lightning-radio-group>
-                    </div>
-                </div>
+                <lightning-radio-group
+                    name="futureSolvency"
+                    label="Do you envisage any solvency issues arising in the next six months?"
+                    options={yesNoOptions}
+                    value={futureSolvency}
+                    onchange={handleFutureSolvencyChange}
+                    required>
+                </lightning-radio-group>
 
-                <div class="slds-card slds-m-top_medium">
-                    <div class="slds-card__header">
-                        <h2 class="slds-card__header-title">Financial Performance Assessment</h2>
-                    </div>
-                    <div class="slds-card__body slds-p-around_medium">
-                        <lightning-radio-group
-                            name="operationalLoss"
-                            label="Do you forecast an operational loss for the current year?"
-                            options={yesNoOptions}
-                            value={operationalLoss}
-                            onchange={handleOperationalLossChange}
-                            required>
-                            <lightning-helptext
-                                content="An operational loss occurs when operating expenses exceed operating revenues from your core care services.">
-                            </lightning-helptext>
-                        </lightning-radio-group>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Labor Costs Data Table -->
-            <div if:true={isLaborCostsPage}>
-                <div class="slds-grid slds-gutters slds-m-bottom_medium">
-                    <div class="slds-col">
-                        <lightning-combobox
-                            name="viewFilter"
-                            label="View"
-                            value={selectedView}
-                            options={viewOptions}
-                            onchange={handleViewChange}>
-                        </lightning-combobox>
-                    </div>
-                    <div class="slds-col">
-                        <lightning-combobox
-                            name="jumpSection"
-                            label="Jump to Section"
-                            value={selectedSection}
-                            options={sectionOptions}
-                            onchange={handleSectionJump}>
-                        </lightning-combobox>
-                    </div>
-                    <div class="slds-col">
-                        <lightning-combobox
-                            name="jumpColumn"
-                            label="Jump to Column"
-                            value={selectedColumn}
-                            options={columnOptions}
-                            onchange={handleColumnJump}>
-                        </lightning-combobox>
-                    </div>
-                </div>
-
-                <lightning-datatable
-                    key-field="id"
-                    data={laborCostsData}
-                    columns={columns}
-                    hide-checkbox-column
-                    oncellchange={handleCellChange}>
-                </lightning-datatable>
-            </div>
-
-            <!-- Navigation Buttons -->
-            <div class="slds-m-top_medium slds-grid slds-grid_align-spread">
-                <lightning-button 
-                    label="Previous"
-                    onclick={handlePrevious}
-                    disabled={isPreviousDisabled}>
-                </lightning-button>
-                <lightning-button 
-                    label={nextButtonLabel}
-                    variant="brand"
-                    onclick={handleNext}
-                    disabled={isNextDisabled}>
-                </lightning-button>
+                <lightning-radio-group
+                    name="operationalLoss"
+                    label="Do you forecast an operational loss for the current year?"
+                    options={yesNoOptions}
+                    value={operationalLoss}
+                    onchange={handleOperationalLossChange}
+                    required>
+                </lightning-radio-group>
             </div>
         </div>
+
+        <!-- Labour Costs Data Table -->
+        <div if:true={isLabourCostsPage} class="labour-costs-section">
+            <div class="slds-grid slds-gutters table-controls">
+                <div class="slds-col">
+                    <lightning-combobox
+                        name="viewFilter"
+                        label="View"
+                        value={selectedView}
+                        options={viewOptions}
+                        onchange={handleViewChange}>
+                    </lightning-combobox>
+                </div>
+                <div class="slds-col">
+                    <lightning-combobox
+                        name="jumpSection"
+                        label="Jump to Section"
+                        value={selectedSection}
+                        options={sectionOptions}
+                        onchange={handleSectionJump}>
+                    </lightning-combobox>
+                </div>
+                <div class="slds-col">
+                    <lightning-combobox
+                        name="jumpColumn"
+                        label="Jump to Column"
+                        value={selectedColumn}
+                        options={columnOptions}
+                        onchange={handleColumnJump}>
+                    </lightning-combobox>
+                </div>
+            </div>
+
+            <lightning-datatable
+                key-field="id"
+                data={labourCostsData}
+                columns={labourCostsColumns}
+                hide-checkbox-column
+                oncellchange={handleCellChange}>
+            </lightning-datatable>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="slds-p-around_medium navigation-buttons">
+            <lightning-button 
+                label="Previous"
+                onclick={handlePrevious}
+                disabled={isFirstPage}
+                variant="neutral">
+            </lightning-button>
+            <lightning-button 
+                label={nextButtonLabel}
+                onclick={handleNext}
+                variant="brand"
+                class="slds-m-left_x-small"
+                disabled={isNextDisabled}>
+            </lightning-button>
+        </div>
+
+        <!-- Loading Spinner -->
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </template>
     </div>
 </template>

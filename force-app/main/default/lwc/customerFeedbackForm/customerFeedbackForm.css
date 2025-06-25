@@ -1,25 +1,35 @@
 :host {
-    --slds-c-button-brand-color-background: rgb(0, 112, 210);
-    --slds-c-button-brand-color-background-hover: rgb(0, 95, 178);
-    --slds-c-button-brand-color-border: rgb(0, 112, 210);
-    --slds-c-button-brand-text-color: rgb(255, 255, 255);
+    display: block;
+    padding: 1rem;
 }
 
-.slds-card {
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+.qfr-form-container {
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.slds-card__header {
-    background-color: #f3f2f2;
-    padding: 0.75rem;
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
 }
 
-.slds-card__header-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: rgb(62, 62, 60);
+.table-controls {
+    margin-bottom: 1rem;
 }
 
-.slds-card__body {
-    background-color: white;
+.labour-costs-section {
+    margin-top: 2rem;
+}
+
+lightning-datatable {
+    margin-top: 1rem;
+}
+
+lightning-accordion-section {
+    background: #f3f3f3;
+}
+
+lightning-radio-group {
+    margin-bottom: 1.5rem;
 }
