@@ -1,35 +1,38 @@
 :host {
-    display: block;
-    padding: 1rem;
+    --qfr-primary-color: rgb(0, 112, 210);
+    --qfr-error-color: rgb(194, 57, 52);
 }
 
 .qfr-form-container {
     max-width: 1200px;
     margin: 0 auto;
+    padding: 1rem;
 }
 
-.navigation-buttons {
+.form-section {
+    background: white;
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button-container {
     display: flex;
     justify-content: space-between;
-    margin-top: 2rem;
+    padding: 1rem 0;
 }
 
 .table-controls {
+    display: flex;
+    gap: 1rem;
     margin-bottom: 1rem;
 }
 
-.labour-costs-section {
-    margin-top: 2rem;
+lightning-radio-group {
+    margin-bottom: 1rem;
 }
 
 lightning-datatable {
     margin-top: 1rem;
-}
-
-lightning-accordion-section {
-    background: #f3f3f3;
-}
-
-lightning-radio-group {
-    margin-bottom: 1.5rem;
 }

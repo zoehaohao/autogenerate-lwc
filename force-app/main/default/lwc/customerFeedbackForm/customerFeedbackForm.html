@@ -7,57 +7,57 @@
             has-error={hasErrors}>
             <template for:each={steps} for:item="step">
                 <lightning-progress-step 
-                    key={step.value}
+                    key={step.label}
                     label={step.label}
                     value={step.value}>
                 </lightning-progress-step>
             </template>
         </lightning-progress-indicator>
 
-        <!-- Page 1: Residential Viability -->
-        <div if:true={isPageOne}>
-            <lightning-accordion 
-                allow-multiple-sections-open="true"
-                active-section-name={activeSections}>
-                <lightning-accordion-section name="info" label="About this section">
-                    <p>This section collects information about financial health and viability of residential care services.</p>
-                </lightning-accordion-section>
-            </lightning-accordion>
+        <div class="form-section">
+            <!-- Page 1: Residential Viability -->
+            <template if:true={isPage1}>
+                <lightning-accordion 
+                    allow-multiple-sections-open="true"
+                    active-section-name={activeSections}>
+                    <lightning-accordion-section name="info" label="About this section">
+                        <p>This section collects information about financial health and viability.</p>
+                    </lightning-accordion-section>
+                </lightning-accordion>
 
-            <div class="slds-p-around_medium">
-                <lightning-radio-group
-                    name="solvencyConcern"
-                    label="Are you currently concerned about the solvency of your organisation?"
-                    options={yesNoOptions}
-                    value={solvencyConcern}
-                    onchange={handleSolvencyChange}
-                    required>
-                </lightning-radio-group>
+                <div class="slds-p-around_medium">
+                    <lightning-radio-group
+                        name="solvencyConcern"
+                        label="Are you currently concerned about the solvency of your organisation?"
+                        options={yesNoOptions}
+                        value={solvencyConcern}
+                        required
+                        onchange={handleSolvencyChange}>
+                    </lightning-radio-group>
 
-                <lightning-radio-group
-                    name="futureSolvency"
-                    label="Do you envisage any solvency issues arising in the next six months?"
-                    options={yesNoOptions}
-                    value={futureSolvency}
-                    onchange={handleFutureSolvencyChange}
-                    required>
-                </lightning-radio-group>
+                    <lightning-radio-group
+                        name="futureSolvency"
+                        label="Do you envisage any solvency issues arising in the next six months?"
+                        options={yesNoOptions}
+                        value={futureSolvency}
+                        required
+                        onchange={handleFutureSolvencyChange}>
+                    </lightning-radio-group>
 
-                <lightning-radio-group
-                    name="operationalLoss"
-                    label="Do you forecast an operational loss for the current year?"
-                    options={yesNoOptions}
-                    value={operationalLoss}
-                    onchange={handleOperationalLossChange}
-                    required>
-                </lightning-radio-group>
-            </div>
-        </div>
+                    <lightning-radio-group
+                        name="operationalLoss"
+                        label="Do you forecast an operational loss for the current year?"
+                        options={yesNoOptions}
+                        value={operationalLoss}
+                        required
+                        onchange={handleOperationalLossChange}>
+                    </lightning-radio-group>
+                </div>
+            </template>
 
-        <!-- Labour Costs Data Table -->
-        <div if:true={isLabourCostsPage} class="labour-costs-section">
-            <div class="slds-grid slds-gutters table-controls">
-                <div class="slds-col">
+            <!-- Labour Costs Data Table -->
+            <template if:true={isLabourCostsPage}>
+                <div class="table-controls slds-p-around_medium">
                     <lightning-combobox
                         name="viewFilter"
                         label="View"
@@ -65,8 +65,7 @@
                         options={viewOptions}
                         onchange={handleViewChange}>
                     </lightning-combobox>
-                </div>
-                <div class="slds-col">
+
                     <lightning-combobox
                         name="jumpSection"
                         label="Jump to Section"
@@ -75,46 +74,30 @@
                         onchange={handleSectionJump}>
                     </lightning-combobox>
                 </div>
-                <div class="slds-col">
-                    <lightning-combobox
-                        name="jumpColumn"
-                        label="Jump to Column"
-                        value={selectedColumn}
-                        options={columnOptions}
-                        onchange={handleColumnJump}>
-                    </lightning-combobox>
-                </div>
-            </div>
 
-            <lightning-datatable
-                key-field="id"
-                data={labourCostsData}
-                columns={labourCostsColumns}
-                hide-checkbox-column
-                oncellchange={handleCellChange}>
-            </lightning-datatable>
+                <lightning-datatable
+                    key-field="id"
+                    data={labourCostsData}
+                    columns={labourColumns}
+                    hide-checkbox-column
+                    oncellchange={handleCellChange}>
+                </lightning-datatable>
+            </template>
         </div>
 
         <!-- Navigation Buttons -->
-        <div class="slds-p-around_medium navigation-buttons">
+        <div class="button-container slds-p-around_medium">
             <lightning-button 
                 label="Previous"
                 onclick={handlePrevious}
-                disabled={isFirstPage}
-                variant="neutral">
+                disabled={isFirstPage}>
             </lightning-button>
             <lightning-button 
                 label={nextButtonLabel}
-                onclick={handleNext}
                 variant="brand"
-                class="slds-m-left_x-small"
+                onclick={handleNext}
                 disabled={isNextDisabled}>
             </lightning-button>
         </div>
-
-        <!-- Loading Spinner -->
-        <template if:true={isLoading}>
-            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
-        </template>
     </div>
 </template>
