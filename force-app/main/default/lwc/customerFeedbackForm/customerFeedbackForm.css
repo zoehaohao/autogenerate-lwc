@@ -9,30 +9,22 @@
     padding: 1rem;
 }
 
-.form-section {
-    background: white;
-    padding: 1rem;
-    margin: 1rem 0;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.button-container {
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem 0;
-}
-
-.table-controls {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
+lightning-accordion-section {
+    background: #ffffff;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 lightning-radio-group {
     margin-bottom: 1rem;
 }
 
-lightning-datatable {
-    margin-top: 1rem;
+.slds-progress-bar {
+    background: var(--qfr-primary-color);
+}
+
+.error-message {
+    color: var(--qfr-error-color);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
 }
