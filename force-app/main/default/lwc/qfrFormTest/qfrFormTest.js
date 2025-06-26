@@ -7,50 +7,66 @@ export default class QfrFormTest extends LightningElement {
     @track birthdate = '';
     @track address = '';
     @track city = '';
-    @track state = '';
+    @track selectedState = '';
     @track zipCode = '';
     @track startDate = '';
     @track endDate = '';
 
     get stateOptions() {
         return [
+            { label: 'Choose a State', value: '' },
             { label: 'Alabama', value: 'AL' },
             { label: 'Alaska', value: 'AK' },
             { label: 'Arizona', value: 'AZ' },
-            { label: 'Arkansas', value: 'AR' },
-            { label: 'California', value: 'CA' },
             // Add all other states here
         ];
     }
 
-    handleInputChange(event) {
-        const field = event.target.name;
-        const value = event.target.value;
-        
-        this[field] = value;
-
-        // Validate dates if both are populated
-        if (field === 'startDate' || field === 'endDate') {
-            this.validateDates();
-        }
+    handleFirstNameChange(event) {
+        this.firstName = event.target.value;
     }
 
-    validateDates() {
-        if (this.startDate && this.endDate) {
-            const start = new Date(this.startDate);
-            const end = new Date(this.endDate);
-            
-            if (end < start) {
-                // Show error using lightning-notifications (implementation not shown)
-                console.error('End date must be after start date');
-            }
-        }
+    handleMiddleNameChange(event) {
+        this.middleName = event.target.value;
     }
 
-    validateForm() {
+    handleLastNameChange(event) {
+        this.lastName = event.target.value;
+    }
+
+    handleBirthdateChange(event) {
+        this.birthdate = event.target.value;
+    }
+
+    handleAddressChange(event) {
+        this.address = event.target.value;
+    }
+
+    handleCityChange(event) {
+        this.city = event.target.value;
+    }
+
+    handleStateChange(event) {
+        this.selectedState = event.target.value;
+    }
+
+    handleZipCodeChange(event) {
+        this.zipCode = event.target.value;
+    }
+
+    handleStartDateChange(event) {
+        this.startDate = event.target.value;
+    }
+
+    handleEndDateChange(event) {
+        this.endDate = event.target.value;
+    }
+
+    @api
+    validateFields() {
+        const inputFields = this.template.querySelectorAll('lightning-input');
         let isValid = true;
-        const inputFields = this.template.querySelectorAll('lightning-input, lightning-combobox');
-        
+
         inputFields.forEach(field => {
             if (field.required && !field.value) {
                 field.reportValidity();
@@ -59,28 +75,5 @@ export default class QfrFormTest extends LightningElement {
         });
 
         return isValid;
-    }
-
-    @api
-    submitForm() {
-        if (this.validateForm()) {
-            const formData = {
-                firstName: this.firstName,
-                middleName: this.middleName,
-                lastName: this.lastName,
-                birthdate: this.birthdate,
-                address: this.address,
-                city: this.city,
-                state: this.state,
-                zipCode: this.zipCode,
-                startDate: this.startDate,
-                endDate: this.endDate
-            };
-            
-            // Dispatch form submission event
-            this.dispatchEvent(new CustomEvent('formsubmit', {
-                detail: formData
-            }));
-        }
     }
 }
