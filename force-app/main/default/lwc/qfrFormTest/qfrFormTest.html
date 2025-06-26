@@ -1,106 +1,111 @@
 <template>
     <div class="form-container">
         <lightning-card>
-            <div class="slds-p-around_medium">
+            <lightning-accordion allow-multiple-sections-open>
                 <!-- Personal Information Section -->
-                <div class="section-header slds-m-bottom_medium">Personal Information</div>
-                <div class="slds-form">
-                    <lightning-input 
-                        label="First Name" 
-                        required
-                        class="form-input"
-                        name="firstName"
-                        value={firstName}
-                        onchange={handleInputChange}>
-                    </lightning-input>
-
-                    <lightning-input 
-                        label="Middle Name"
-                        class="form-input"
-                        name="middleName"
-                        value={middleName}
-                        onchange={handleInputChange}>
-                    </lightning-input>
-
-                    <lightning-input 
-                        label="Last Name"
-                        required
-                        class="form-input"
-                        name="lastName"
-                        value={lastName}
-                        onchange={handleInputChange}>
-                    </lightning-input>
-
-                    <lightning-input 
-                        type="date"
-                        label="Birthdate"
-                        required
-                        class="form-input"
-                        name="birthdate"
-                        value={birthdate}
-                        onchange={handleInputChange}>
-                    </lightning-input>
-                </div>
+                <lightning-accordion-section name="personal" label="Personal Information">
+                    <div class="slds-form">
+                        <lightning-input 
+                            type="text"
+                            label="First Name"
+                            name="firstName"
+                            required
+                            class="required-field"
+                            value={firstName}
+                            onchange={handleInputChange}>
+                        </lightning-input>
+                        
+                        <lightning-input 
+                            type="text"
+                            label="Middle Name"
+                            name="middleName"
+                            value={middleName}
+                            onchange={handleInputChange}>
+                        </lightning-input>
+                        
+                        <lightning-input 
+                            type="text"
+                            label="Last Name"
+                            name="lastName"
+                            required
+                            class="required-field"
+                            value={lastName}
+                            onchange={handleInputChange}>
+                        </lightning-input>
+                        
+                        <lightning-input 
+                            type="date"
+                            label="Birthdate"
+                            name="birthdate"
+                            required
+                            class="required-field"
+                            value={birthdate}
+                            onchange={handleInputChange}>
+                        </lightning-input>
+                    </div>
+                </lightning-accordion-section>
 
                 <!-- Address Section -->
-                <div class="section-header slds-m-top_large slds-m-bottom_medium">Address</div>
-                <div class="slds-form">
-                    <lightning-input 
-                        label="Address"
-                        class="form-input"
-                        name="address"
-                        value={address}
-                        onchange={handleInputChange}>
-                    </lightning-input>
-
-                    <lightning-input 
-                        label="City or Town"
-                        class="form-input"
-                        name="city"
-                        value={city}
-                        onchange={handleInputChange}>
-                    </lightning-input>
-
-                    <lightning-combobox
-                        label="State"
-                        placeholder="Choose a State"
-                        options={stateOptions}
-                        class="form-input"
-                        name="state"
-                        value={state}
-                        onchange={handleInputChange}>
-                    </lightning-combobox>
-
-                    <lightning-input 
-                        label="Zip Code"
-                        required
-                        class="form-input"
-                        name="zipCode"
-                        value={zipCode}
-                        onchange={handleInputChange}>
-                    </lightning-input>
-
-                    <lightning-input 
-                        type="date"
-                        label="Start Date"
-                        required
-                        class="form-input"
-                        name="startDate"
-                        value={startDate}
-                        onchange={handleInputChange}>
-                    </lightning-input>
-
-                    <lightning-input 
-                        type="date"
-                        label="End Date"
-                        required
-                        class="form-input"
-                        name="endDate"
-                        value={endDate}
-                        onchange={handleInputChange}>
-                    </lightning-input>
-                </div>
-            </div>
+                <lightning-accordion-section name="address" label="Address">
+                    <div class="slds-form">
+                        <lightning-input 
+                            type="text"
+                            label="Address"
+                            name="address"
+                            value={address}
+                            onchange={handleInputChange}>
+                        </lightning-input>
+                        
+                        <lightning-input 
+                            type="text"
+                            label="City or Town"
+                            name="city"
+                            value={city}
+                            onchange={handleInputChange}>
+                        </lightning-input>
+                        
+                        <lightning-combobox
+                            name="state"
+                            label="State"
+                            value={state}
+                            placeholder="Choose a State"
+                            options={stateOptions}
+                            onchange={handleInputChange}>
+                        </lightning-combobox>
+                        
+                        <lightning-input 
+                            type="text"
+                            label="Zip Code"
+                            name="zipCode"
+                            required
+                            class="required-field"
+                            pattern="[0-9]{5}"
+                            value={zipCode}
+                            onchange={handleInputChange}>
+                        </lightning-input>
+                        
+                        <lightning-input 
+                            type="date"
+                            label="Start Date"
+                            name="startDate"
+                            required
+                            class="required-field"
+                            value={startDate}
+                            onchange={handleInputChange}>
+                        </lightning-input>
+                        
+                        <lightning-input 
+                            type="date"
+                            label="End Date"
+                            name="endDate"
+                            required
+                            class="required-field"
+                            value={endDate}
+                            onchange={handleInputChange}>
+                        </lightning-input>
+                    </div>
+                </lightning-accordion-section>
+            </lightning-accordion>
         </lightning-card>
     </div>
 </template>

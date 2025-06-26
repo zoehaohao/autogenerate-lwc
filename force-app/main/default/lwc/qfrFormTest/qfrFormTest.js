@@ -26,38 +26,61 @@ export default class QfrFormTest extends LightningElement {
     handleInputChange(event) {
         const field = event.target.name;
         const value = event.target.value;
+        
         this[field] = value;
 
-        // Validate required fields
-        if (event.target.required && !value) {
-            event.target.setCustomValidity('This field is required');
-        } else {
-            event.target.setCustomValidity('');
+        // Validate dates if both are populated
+        if (field === 'startDate' || field === 'endDate') {
+            this.validateDates();
         }
-        event.target.reportValidity();
+    }
 
-        // Additional date validation for start and end dates
-        if (field === 'endDate' && this.startDate && value) {
-            if (new Date(value) < new Date(this.startDate)) {
-                event.target.setCustomValidity('End date must be after start date');
-                event.target.reportValidity();
+    validateDates() {
+        if (this.startDate && this.endDate) {
+            const start = new Date(this.startDate);
+            const end = new Date(this.endDate);
+            
+            if (end < start) {
+                // Show error using lightning-notifications (implementation not shown)
+                console.error('End date must be after start date');
             }
         }
     }
 
-    // Method to validate all fields
     validateForm() {
         let isValid = true;
         const inputFields = this.template.querySelectorAll('lightning-input, lightning-combobox');
         
         inputFields.forEach(field => {
             if (field.required && !field.value) {
-                field.setCustomValidity('This field is required');
                 field.reportValidity();
                 isValid = false;
             }
         });
 
         return isValid;
+    }
+
+    @api
+    submitForm() {
+        if (this.validateForm()) {
+            const formData = {
+                firstName: this.firstName,
+                middleName: this.middleName,
+                lastName: this.lastName,
+                birthdate: this.birthdate,
+                address: this.address,
+                city: this.city,
+                state: this.state,
+                zipCode: this.zipCode,
+                startDate: this.startDate,
+                endDate: this.endDate
+            };
+            
+            // Dispatch form submission event
+            this.dispatchEvent(new CustomEvent('formsubmit', {
+                detail: formData
+            }));
+        }
     }
 }
