@@ -1,193 +1,50 @@
+:host {
+    --navy-blue: #1a3668;
+    --dark-grey: #514f4d;
+}
+
 .form-container {
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
-    padding: 2rem;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.form-section {
-    margin-bottom: 2rem;
-}
-
-.section-heading {
-    font-family: 'Salesforce Sans', Arial, sans-serif;
+.section-header {
+    color: var(--navy-blue);
     font-size: 1.25rem;
-    font-weight: 600;
-    color: #1b396b;
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #e5e5e5;
-}
-
-.field-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-    min-height: 2.5rem;
-}
-
-.field-label-container {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    width: 150px;
-    margin-right: 1rem;
-    flex-shrink: 0;
-}
-
-.field-label {
-    font-family: 'Salesforce Sans', Arial, sans-serif;
-    font-size: 0.875rem;
-    font-weight: 400;
-    color: #3e3e3c;
-    text-align: right;
-    margin: 0;
-}
-
-.required-asterisk {
-    color: #c23934;
     font-weight: bold;
-    margin-right: 0.25rem;
-    font-size: 0.875rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #dddbda;
 }
 
-.form-field {
-    flex: 1;
-    max-width: 300px;
+.form-input {
+    margin-bottom: 1rem;
 }
 
-.form-field lightning-input,
-.form-field lightning-combobox {
-    --sds-c-input-sizing-border: 1px solid #d8dde6;
-    --sds-c-input-color-border-focus: #1b96ff;
-    --sds-c-input-sizing-min-height: 2.25rem;
+/* Right align labels */
+:host .slds-form-element__label {
+    text-align: right;
+    color: var(--dark-grey);
+    padding-right: 0.75rem;
 }
 
-.form-field lightning-input input,
-.form-field lightning-combobox input {
-    font-family: 'Salesforce Sans', Arial, sans-serif;
-    font-size: 0.875rem;
-    padding: 0.5rem 0.75rem;
+/* Style for required fields */
+:host .slds-required {
+    color: rgb(194, 57, 52);
 }
 
-.form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #e5e5e5;
+/* Consistent input widths */
+:host lightning-input,
+:host lightning-combobox {
+    max-width: 100%;
 }
 
-.action-button {
-    min-width: 100px;
-}
-
-/* Responsive behavior */
-@media (max-width: 768px) {
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
     .form-container {
-        padding: 1rem;
-        margin: 0 1rem;
+        padding: 0 1rem;
     }
-    
-    .field-row {
-        flex-direction: column;
-        align-items: flex-start;
+
+    :host .slds-form-element__label {
+        text-align: left;
     }
-    
-    .field-label-container {
-        width: 100%;
-        justify-content: flex-start;
-        margin-right: 0;
-        margin-bottom: 0.5rem;
-    }
-    
-    .form-field {
-        width: 100%;
-        max-width: none;
-    }
-    
-    .form-actions {
-        flex-direction: column;
-    }
-    
-    .action-button {
-        width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .form-container {
-        padding: 0.75rem;
-    }
-    
-    .section-heading {
-        font-size: 1.125rem;
-    }
-    
-    .field-label {
-        font-size: 0.8125rem;
-    }
-}
-
-/* Focus and hover states */
-.form-field lightning-input:focus-within,
-.form-field lightning-combobox:focus-within {
-    --sds-c-input-color-border: #1b96ff;
-    --sds-c-input-shadow: 0 0 3px #1b96ff;
-}
-
-/* Error state styling */
-.form-field lightning-input.slds-has-error,
-.form-field lightning-combobox.slds-has-error {
-    --sds-c-input-color-border: #c23934;
-}
-
-/* Disabled state */
-.action-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-/* Custom styling for combobox dropdown arrow */
-.form-field lightning-combobox::part(combobox) {
-    position: relative;
-}
-
-.form-field lightning-combobox::after {
-    content: '';
-    position: absolute;
-    right: 0.75rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 4px solid #706e6b;
-    pointer-events: none;
-}
-
-/* Consistent field width */
-.form-field lightning-input,
-.form-field lightning-combobox {
-    width: 100%;
-}
-
-/* Loading state */
-.form-container.loading {
-    pointer-events: none;
-    opacity: 0.7;
-}
-
-/* Success state */
-.form-container.success .section-heading {
-    color: #2e844a;
-}
-
-/* Error state */
-.form-container.error .section-heading {
-    color: #c23934;
 }
