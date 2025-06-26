@@ -1,33 +1,20 @@
 :host {
-    display: block;
-    padding: 1rem;
+    --slds-c-card-color-background: #ffffff;
 }
 
-.qfr-form-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    position: relative;
-}
-
-.labour-costs-section {
-    margin-top: 1rem;
-}
-
-.table-controls {
-    margin-bottom: 1rem;
-}
-
-lightning-accordion-section {
-    --sds-c-accordion-heading-font-size: 1rem;
-    --sds-c-accordion-heading-text-color: #16325c;
+.slds-progress-bar {
+    background: #f3f2f2;
 }
 
 lightning-datatable {
-    --sds-c-table-sizing-border: 1px;
-    --sds-c-table-color-border: #d8dde6;
+    --slds-c-table-heading-font-weight: 700;
 }
 
-lightning-button {
-    --sds-c-button-brand-color-background: #0070d2;
-    --sds-c-button-brand-color-border: #0070d2;
+lightning-card {
+    --slds-c-card-shadow: none;
+    --slds-c-card-color-border: #d8dde6;
+}
+
+.slds-radio-group {
+    margin-bottom: 1rem;
 }
