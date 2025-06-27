@@ -1,17 +1,15 @@
-:host {
-    --slds-c-button-brand-color-background: rgb(0, 112, 210);
-    --slds-c-button-brand-color-background-hover: rgb(0, 95, 178);
-    --slds-c-button-brand-color-border: rgb(0, 112, 210);
-    --slds-c-button-brand-text-color: rgb(255, 255, 255);
-}
-
-.slds-card {
-    background: white;
-    border: 1px solid rgb(221, 219, 218);
-    border-radius: .25rem;
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.1);
-}
-
-.slds-card__body_inner {
+.qfr-form-container {
     padding: 1rem;
+    background: #ffffff;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table-controls {
+    margin-bottom: 1rem;
+}
+
+:host {
+    --slds-c-button-brand-color-background: #0070d2;
+    --slds-c-button-brand-color-background-hover: #005fb2;
 }
