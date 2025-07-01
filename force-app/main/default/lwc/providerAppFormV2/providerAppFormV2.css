@@ -7,156 +7,210 @@
     margin-bottom: 2rem;
 }
 
-.slds-section__title {
-    background-color: #f3f2f2;
-    padding: 0.75rem 1rem;
-    border-left: 4px solid #0176d3;
+.slds-section__title{
     font-weight: 600;
+    color: #0176d3;
+    border-bottom: 2px solid #0176d3;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .slds-section__content {
-    padding: 1rem;
-}
-
-.slds-accordion__section {
-    border: 1px solid #dddbda;
-    margin-bottom: 1rem;
-}
-
-.slds-accordion__summary {
-    background-color: #f7f9fb;
-    padding: 1rem;
-    cursor: pointer;
-}
-
-.slds-accordion__content {
-    padding: 1rem;
+    padding-top: 1rem;
 }
 
 .slds-notify {
-    margin-bottom: 1rem;
+    border-radius: 0.25rem;
 }
 
-.slds-box {
-    padding: 1rem;
-    background-color: #f7f9fb;
-    border: 1px solid #dddbda;
+.slds-notify_alert.slds-theme_warning {
+    background-color: #fef7e0;
+    border-left: 4px solid #fe9339;
 }
 
-.slds-table th,
-.slds-table td {
-    padding: 0.5rem;
-    vertical-align: top;
+.slds-notify_alert.slds-theme_info {
+    background-color: #e8f4fd;
+    border-left: 4px solid #0176d3;
 }
 
-.slds-checkbox {
-    display: flex;
-    align-items: flex-start;
+.slds-notify_alert.slds-theme_error {
+    background-color: #fdf2f2;
+    border-left: 4px solid #ea001e;
+}
+
+.slds-notify_alert.slds-theme_success {
+    background-color: #f0f9ff;
+    border-left: 4px solid #04844b;
+}
+
+.slds-text-longform ul {
+    margin-left: 1.5rem;
+}
+
+.slds-text-longform li {
     margin-bottom: 0.5rem;
-}
-
-.slds-checkbox input[type="checkbox"] {
-    margin-right: 0.5rem;
-    margin-top: 0.125rem;
-}
-
-.slds-checkbox__label {
-    display: flex;
-    align-items: flex-start;
-    cursor: pointer;
-    font-size: 0.875rem;
     line-height: 1.5;
 }
 
-.slds-list_horizontal dt {
-    font-weight: 600;
-    margin-right: 0.5rem;
+.slds-card .slds-card__body {
+    min-height: 400px;
 }
 
-.slds-list_horizontal dd {
-    margin-bottom: 0.5rem;
+.slds-form-element {
+    margin-bottom: 1rem;
 }
 
-.slds-card__footer {
-    padding: 1rem;
-    border-top: 1px solid #dddbda;
-    background-color: #f7f9fb;
+.slds-grid.slds-gutters .slds-col {
+    padding: 0.5rem;
 }
 
-.validation-error {
-    color: #c23934;
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
+.key-personnel-card {
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    background-color: #fafaf9;
+}
+
+.key-personnel-card .slds-card__header {
+    background-color: #f3f2f2;
+    border-bottom: 1px solid #d8dde6;
+}
+
+.navigation-buttons {
+    border-top: 1px solid #d8dde6;
+    padding-top: 1.5rem;
+    margin-top: 2rem;
+}
+
+.slds-progress-indicator .slds-progress__item {
+    font-size: 0.875rem;
+}
+
+.slds-progress-indicator .slds-progress__marker {
+    width: 2rem;
+    height: 2rem;
 }
 
 .required-field::after {
-    content: " *";
-    color: #c23934;
+    content: ' *';
+    color: #ea001e;
+}
+
+.field-help-text {
+    font-size: 0.75rem;
+    color: #706e6b;
+    margin-top: 0.25rem;
+}
+
+.section-divider {
+    border-top: 1px solid #d8dde6;
+    margin: 2rem 0;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.form-section:last-child {
+    margin-bottom: 0;
+}
+
+.checkbox-group-custom .slds-checkbox {
+    margin-bottom: 0.75rem;
+}
+
+.checkbox-group-custom .slds-checkbox:last-child {
+    margin-bottom: 0;
+}
+
+.declaration-section {
+    background-color: #f8f9fa;
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    padding: 1.5rem;
+    margin: 1rem 0;
+}
+
+.officer-signature-section {
+    background-color: #ffffff;
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    padding: 1rem;
+}
+
+.care-type-section {
+    background-color: #f8f9fa;
+    border-left: 4px solid #0176d3;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.validation-error {
+    color: #ea001e;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.loading-overlay {
+    position: relative;
+}
+
+.loading-overlay .slds-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.success-message {
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.success-message .slds-notify {
+    display: inline-block;
+    text-align: left;
+    max-width: 600px;
 }
 
 @media (max-width: 768px) {
-    .slds-grid.slds-gutters .slds-col {
-        padding: 0.5rem 0;
+    .slds-grid.slds-wrap .slds-col {
+        width: 100%;
+    }
+    
+    .slds-progress-indicator {
+        font-size: 0.75rem;
     }
     
     .slds-card__body {
         padding: 1rem;
     }
     
-    .slds-section__content {
-        padding: 0.5rem;
+    .officer-signature-section {
+        margin-bottom: 1rem;
     }
 }
 
-:host {
-    display: block;
-    font-family: 'Salesforce Sans', Arial, sans-serif;
-}
-
-.slds-spinner_container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.8);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.page-transition {
-    animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
+@media (max-width: 480px) {
+    .slds-card {
+        margin: 0;
+        border-radius: 0;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    
+    .slds-card__body {
+        padding: 0.75rem;
     }
-}
-
-.slds-form-element__help {
-    font-size: 0.75rem;
-    color: #706e6b;
-    margin-top: 0.25rem;
-}
-
-.declaration-section {
-    background-color: #fafaf9;
-    border: 1px solid #dddbda;
-    padding: 1rem;
-    border-radius: 0.25rem;
-}
-
-.summary-section {
-    background-color: #f7f9fb;
-    border: 1px solid #0176d3;
-    padding: 1rem;
-    border-radius: 0.25rem;
+    
+    .slds-grid.slds-grid_align-spread {
+        display: block;
+    }
+    
+    .slds-grid.slds-grid_align-spread .slds-button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .slds-grid.slds-grid_align-spread .slds-button:last-child {
+        margin-bottom: 0;
+    }
 }
