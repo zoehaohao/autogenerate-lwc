@@ -1,100 +1,731 @@
 <template>
-    <div class="form-container">
-        <lightning-card>
-            <div class="slds-p-around_medium">
-                <!-- Personal Information Section -->
-                <div class="section-header slds-m-bottom_medium">Personal Information</div>
-                <div class="slds-form">
-                    <lightning-input 
-                        type="text"
-                        label="First Name"
-                        required
-                        class="required-field"
-                        value={firstName}
-                        onchange={handleFirstNameChange}>
-                    </lightning-input>
+    <div class="slds-card">
+        <!-- Header -->
+        <div class="slds-card__header slds-border_bottom">
+            <h1 class="slds-text-heading_large slds-text-align_center">
+                APPLICATION FOR APPROVAL TO PROVIDE AGED CARE - NEW APPLICANT
+            </h1>
+            <div class="slds-m-top_medium">
+                <div class="slds-notify slds-notify_alert slds-theme_info" role="alert">
+                    <h2 class="slds-text-heading_small">Important Information</h2>
+                    <p>Before completing this application form, you must understand what it means to be an approved provider. 
+                    Read the Aged Care Approved Provider Application Guide and ensure you are aware of the responsibilities 
+                    and obligations of an approved provider prescribed in the Aged Care Act 1997.</p>
+                </div>
+            </div>
+        </div>
 
-                    <lightning-input 
-                        type="text"
-                        label="Middle Name"
-                        value={middleName}
-                        onchange={handleMiddleNameChange}>
-                    </lightning-input>
+        <!-- Progress Indicator -->
+        <div class="slds-card__body slds-p-horizontal_large slds-p-top_large">
+            <lightning-progress-indicator 
+                current-step={currentPageString}
+                type="path"
+                variant="base">
+                <lightning-progress-step 
+                    label="Key Personnel Declaration" 
+                    value="1">
+                </lightning-progress-step>
+                <lightning-progress-step 
+                    label="Applicant Details" 
+                    value="2">
+                </lightning-progress-step>
+                <lightning-progress-step 
+                    label="Key Personnel Details" 
+                    value="3">
+                </lightning-progress-step>
+                <lightning-progress-step 
+                    label="Suitability Assessment" 
+                    value="4">
+                </lightning-progress-step>
+                <lightning-progress-step 
+                    label="Care Type Specific" 
+                    value="5">
+                </lightning-progress-step>
+            </lightning-progress-indicator>
+        </div>
 
-                    <lightning-input 
-                        type="text"
-                        label="Last Name"
-                        required
-                        class="required-field"
-                        value={lastName}
-                        onchange={handleLastNameChange}>
-                    </lightning-input>
+        <!-- Page 1: Key Personnel Declaration -->
+        <div if:true={isPage1} class="slds-card__body slds-p-around_large">
+            <h2 class="slds-text-heading_medium slds-m-bottom_medium">Key Personnel Declaration</h2>
+            
+            <div class="slds-notify slds-notify_alert slds-theme_warning slds-theme_alert-texture slds-m-bottom_large" role="alert">
+                <h3 class="slds-text-heading_small">Important Information</h3>
+                <p>Giving false and misleading information is a serious offence. There are offences established by the Commission Act 
+                and the Criminal Code Act 1995 (Cth) relating to providing false and misleading information.</p>
+            </div>
 
+            <div class="slds-text-body_regular slds-m-bottom_large">
+                <p><strong>Only persons who are lawfully authorised to act on behalf of/represent the organisation 
+                (for instance, to enter into contracts) can sign this application form.</strong></p>
+            </div>
+
+            <h3 class="slds-text-heading_small slds-m-bottom_medium">Key Personnel Declaration</h3>
+            <p class="slds-m-bottom_medium">I/we declare that I/we:</p>
+
+            <div class="slds-form-element slds-m-bottom_medium">
+                <div class="slds-form-element__control">
+                    <lightning-checkbox-group 
+                        name="declarations"
+                        options={declarationOptions}
+                        value={selectedDeclarations}
+                        onchange={handleDeclarationChange}
+                        required>
+                    </lightning-checkbox-group>
+                </div>
+                <div if:true={declarationError} class="slds-form-element__help slds-text-color_error">
+                    {declarationError}
+                </div>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-m-top_large">
+                <div class="slds-col slds-size_1-of-2">
+                    <h4 class="slds-text-heading_small slds-m-bottom_small">Declaring Officer 1 – Key Personnel</h4>
                     <lightning-input 
+                        label="Name" 
+                        value={officer1Name}
+                        onchange={handleOfficer1NameChange}
+                        required>
+                    </lightning-input>
+                    <lightning-input 
+                        label="Position" 
+                        value={officer1Position}
+                        onchange={handleOfficer1PositionChange}
+                        required>
+                    </lightning-input>
+                    <lightning-input 
+                        label="Date" 
                         type="date"
-                        label="Birthdate"
-                        required
-                        class="required-field"
-                        value={birthdate}
-                        onchange={handleBirthdateChange}>
+                        value={officer1Date}
+                        onchange={handleOfficer1DateChange}
+                        required>
                     </lightning-input>
                 </div>
-
-                <!-- Address Section -->
-                <div class="section-header slds-m-top_large slds-m-bottom_medium">Address</div>
-                <div class="slds-form">
+                <div class="slds-col slds-size_1-of-2">
+                    <h4 class="slds-text-heading_small slds-m-bottom_small">Declaring Officer 2 – Key Personnel</h4>
                     <lightning-input 
-                        type="text"
-                        label="Address"
-                        value={address}
-                        onchange={handleAddressChange}>
+                        label="Name" 
+                        value={officer2Name}
+                        onchange={handleOfficer2NameChange}>
                     </lightning-input>
-
                     <lightning-input 
-                        type="text"
-                        label="City or Town"
-                        value={city}
-                        onchange={handleCityChange}>
+                        label="Position" 
+                        value={officer2Position}
+                        onchange={handleOfficer2PositionChange}>
                     </lightning-input>
-
-                    <lightning-combobox
-                        label="State"
-                        placeholder="Choose a State"
-                        options={stateOptions}
-                        value={selectedState}
-                        onchange={handleStateChange}>
-                    </lightning-combobox>
-
                     <lightning-input 
-                        type="text"
-                        label="Zip Code"
-                        required
-                        class="required-field"
-                        pattern="[0-9]{5}"
-                        message-when-pattern-mismatch="Please enter a valid 5-digit zip code"
-                        value={zipCode}
-                        onchange={handleZipCodeChange}>
-                    </lightning-input>
-
-                    <lightning-input 
+                        label="Date" 
                         type="date"
-                        label="Start Date"
-                        required
-                        class="required-field"
-                        value={startDate}
-                        onchange={handleStartDateChange}>
-                    </lightning-input>
-
-                    <lightning-input 
-                        type="date"
-                        label="End Date"
-                        required
-                        class="required-field"
-                        value={endDate}
-                        onchange={handleEndDateChange}>
+                        value={officer2Date}
+                        onchange={handleOfficer2DateChange}>
                     </lightning-input>
                 </div>
             </div>
-        </lightning-card>
+
+            <!-- Navigation -->
+            <div class="slds-m-top_x-large slds-text-align_center">
+                <lightning-button 
+                    label="Cancel" 
+                    variant="neutral" 
+                    onclick={handleCancel}
+                    class="slds-m-right_small">
+                </lightning-button>
+                <lightning-button 
+                    label="Next" 
+                    variant="brand" 
+                    onclick={handleNext}>
+                </lightning-button>
+            </div>
+        </div>
+
+        <!-- Page 2: Applicant Details -->
+        <div if:true={isPage2} class="slds-card__body slds-p-around_large">
+            <h2 class="slds-text-heading_medium slds-m-bottom_medium">About the Applicant</h2>
+            
+            <h3 class="slds-text-heading_small slds-m-bottom_medium">Organisation Details</h3>
+            
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col slds-size_1-of-1">
+                    <lightning-input 
+                        label="Applicant's (Company) Legal Name" 
+                        value={companyLegalName}
+                        onchange={handleCompanyLegalNameChange}
+                        required>
+                    </lightning-input>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col slds-size_1-of-3">
+                    <lightning-input 
+                        label="Applicant's (Company) ACN, IAN or ICN" 
+                        value={companyACN}
+                        onchange={handleCompanyACNChange}
+                        required>
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-3">
+                    <lightning-input 
+                        label="Applicant's (Company) ABN" 
+                        value={companyABN}
+                        onchange={handleCompanyABNChange}
+                        required>
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-3">
+                    <lightning-input 
+                        label="Business Name (if applicable)" 
+                        value={businessName}
+                        onchange={handleBusinessNameChange}>
+                    </lightning-input>
+                </div>
+            </div>
+
+            <h4 class="slds-text-heading_small slds-m-bottom_small slds-m-top_medium">Registered Business Address</h4>
+            <p class="slds-text-color_weak slds-m-bottom_small">Street number and name (must be the registered physical address of the organisation)</p>
+            
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col slds-size_1-of-1">
+                    <lightning-input 
+                        label="Street Address" 
+                        value={registeredStreetAddress}
+                        onchange={handleRegisteredStreetAddressChange}
+                        required>
+                    </lightning-input>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col slds-size_1-of-3">
+                    <lightning-input 
+                        label="Suburb/Town" 
+                        value={registeredSuburb}
+                        onchange={handleRegisteredSuburbChange}
+                        required>
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-3">
+                    <lightning-combobox 
+                        label="State/Territory" 
+                        value={registeredState}
+                        options={stateOptions}
+                        onchange={handleRegisteredStateChange}
+                        required>
+                    </lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_1-of-3">
+                    <lightning-input 
+                        label="Postcode" 
+                        value={registeredPostcode}
+                        onchange={handleRegisteredPostcodeChange}
+                        required>
+                    </lightning-input>
+                </div>
+            </div>
+
+            <h4 class="slds-text-heading_small slds-m-bottom_small slds-m-top_medium">Postal Address</h4>
+            
+            <div class="slds-form-element slds-m-bottom_small">
+                <div class="slds-form-element__control">
+                    <lightning-input 
+                        type="checkbox"
+                        label="Same as registered address"
+                        checked={postalSameAsRegistered}
+                        onchange={handlePostalSameAsRegisteredChange}>
+                    </lightning-input>
+                </div>
+            </div>
+
+            <div if:false={postalSameAsRegistered}>
+                <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                    <div class="slds-col slds-size_1-of-1">
+                        <lightning-input 
+                            label="Street Address/PO Box" 
+                            value={postalStreetAddress}
+                            onchange={handlePostalStreetAddressChange}>
+                        </lightning-input>
+                    </div>
+                </div>
+
+                <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                    <div class="slds-col slds-size_1-of-3">
+                        <lightning-input 
+                            label="Suburb/Town" 
+                            value={postalSuburb}
+                            onchange={handlePostalSuburbChange}>
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <lightning-combobox 
+                            label="State/Territory" 
+                            value={postalState}
+                            options={stateOptions}
+                            onchange={handlePostalStateChange}>
+                        </lightning-combobox>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3">
+                        <lightning-input 
+                            label="Postcode" 
+                            value={postalPostcode}
+                            onchange={handlePostalPostcodeChange}>
+                        </lightning-input>
+                    </div>
+                </div>
+            </div>
+
+            <h4 class="slds-text-heading_small slds-m-bottom_small slds-m-top_medium">Care Type You Are Applying For</h4>
+            <p class="slds-text-color_weak slds-m-bottom_small">Select the type(s) of care for which approval is sought.</p>
+            
+            <div class="slds-form-element slds-m-bottom_medium">
+                <div class="slds-form-element__control">
+                    <lightning-checkbox-group 
+                        name="careTypes"
+                        options={careTypeOptions}
+                        value={selectedCareTypes}
+                        onchange={handleCareTypeChange}
+                        required>
+                    </lightning-checkbox-group>
+                </div>
+                <div if:true={careTypeError} class="slds-form-element__help slds-text-color_error">
+                    {careTypeError}
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="slds-m-top_x-large slds-text-align_center">
+                <lightning-button 
+                    label="Previous" 
+                    variant="neutral" 
+                    onclick={handlePrevious}
+                    class="slds-m-right_small">
+                </lightning-button>
+                <lightning-button 
+                    label="Next" 
+                    variant="brand" 
+                    onclick={handleNext}>
+                </lightning-button>
+            </div>
+        </div>
+
+        <!-- Page 3: Key Personnel Details -->
+        <div if:true={isPage3} class="slds-card__body slds-p-around_large">
+            <h2 class="slds-text-heading_medium slds-m-bottom_medium">Your Key Personnel</h2>
+            
+            <div class="slds-notify slds-notify_alert slds-theme_info slds-m-bottom_large" role="alert">
+                <h3 class="slds-text-heading_small">Important Information</h3>
+                <p>You must have an understanding of key personnel requirements and who in your organisation would meet 
+                the definition set out under 8B of the Commission Act. Your application will be invalid if you do not 
+                complete all key personnel fields and submit required documentation.</p>
+            </div>
+
+            <h3 class="slds-text-heading_small slds-m-bottom_medium">Key Personnel 1</h3>
+            
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col slds-size_1-of-4">
+                    <lightning-combobox 
+                        label="Title" 
+                        value={kp1Title}
+                        options={titleOptions}
+                        onchange={handleKP1TitleChange}>
+                    </lightning-combobox>
+                </div>
+                <div class="slds-col slds-size_3-of-4">
+                    <lightning-input 
+                        label="First and Last Name" 
+                        value={kp1Name}
+                        onchange={handleKP1NameChange}
+                        required>
+                    </lightning-input>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input 
+                        label="Former Name (as applicable)" 
+                        value={kp1FormerName}
+                        onchange={handleKP1FormerNameChange}>
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-2<lightning-input 
+                        label="Preferred Name" 
+                        value={kp1PreferredName}
+                        onchange={handleKP1PreferredNameChange}>
+                    </lightning-input>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input 
+                        label="Date of Birth" 
+                        type="date"
+                        value={kp1DateOfBirth}
+                        onchange={handleKP1DateOfBirthChange}
+                        required>
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input 
+                        label="Position Title" 
+                        value={kp1PositionTitle}
+                        onchange={handleKP1PositionTitleChange}
+                        required>
+                    </lightning-input>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input 
+                        label="Contact Email Address" 
+                        type="email"
+                        value={kp1Email}
+                        onchange={handleKP1EmailChange}
+                        required>
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input 
+                        label="Contact Phone Number - Mobile" 
+                        type="tel"
+                        value={kp1Mobile}
+                        onchange={handleKP1MobileChange}
+                        required>
+                    </lightning-input>
+                </div>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input 
+                        label="Contact Phone Number - Landline" 
+                        type="tel"
+                        value={kp1Landline}
+                        onchange={handleKP1LandlineChange}>
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-combobox 
+                        label="Preferred Method of Contact" 
+                        value={kp1PreferredContact}
+                        options={contactMethodOptions}
+                        onchange={handleKP1PreferredContactChange}>
+                    </lightning-combobox>
+                </div>
+            </div>
+
+            <div class="slds-m-bottom_medium">
+                <lightning-textarea 
+                    label="Principal Duties of Position" 
+                    value={kp1PrincipalDuties}
+                    onchange={handleKP1PrincipalDutiesChange}
+                    required>
+                </lightning-textarea>
+            </div>
+
+            <h4 class="slds-text-heading_small slds-m-bottom_small">Qualifications</h4>
+            <p class="slds-text-color_weak slds-m-bottom_small">You must show why you are suitable for the role you have detailed, including relevant qualifications for that role and to the delivery of aged care.</p>
+            
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col slds-size_2-of-3">
+                    <lightning-input 
+                        label="Qualification Title and Educational Facility" 
+                        value={kp1Qualification1}
+                        onchange={handleKP1Qualification1Change}
+                        placeholder="e.g. Bachelor of Science, University of Sydney">
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-3">
+                    <lightning-input 
+                        label="Date Obtained" 
+                        type="date"
+                        value={kp1Qualification1Date}
+                        onchange={handleKP1Qualification1DateChange}>
+                    </lightning-input>
+                </div>
+            </div>
+
+            <h4 class="slds-text-heading_small slds-m-bottom_small">Experience</h4>
+            <p class="slds-text-color_weak slds-m-bottom_small">List your previous experience that is relevant to providing aged care.</p>
+            
+            <div class="slds-m-bottom_medium">
+                <lightning-textarea 
+                    label="Employer Name and Address" 
+                    value={kp1Experience1Employer}
+                    onchange={handleKP1Experience1EmployerChange}>
+                </lightning-textarea>
+            </div>
+
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input 
+                        label="Employment From" 
+                        type="date"
+                        value={kp1Experience1From}
+                        onchange={handleKP1Experience1FromChange}>
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                    <lightning-input 
+                        label="Employment To" 
+                        type="date"
+                        value={kp1Experience1To}
+                        onchange={handleKP1Experience1ToChange}>
+                    </lightning-input>
+                </div>
+            </div>
+
+            <div class="slds-m-bottom_medium">
+                <lightning-textarea 
+                    label="Role Description Including How It Is Relevant to Providing Aged Care" 
+                    value={kp1Experience1Description}
+                    onchange={handleKP1Experience1DescriptionChange}>
+                </lightning-textarea>
+            </div>
+
+            <!-- Navigation -->
+            <div class="slds-m-top_x-large slds-text-align_center">
+                <lightning-button 
+                    label="Previous" 
+                    variant="neutral" 
+                    onclick={handlePrevious}
+                    class="slds-m-right_small">
+                </lightning-button>
+                <lightning-button 
+                    label="Next" 
+                    variant="brand" 
+                    onclick={handleNext}>
+                </lightning-button>
+            </div>
+        </div>
+
+        <!-- Page 4: Suitability Assessment -->
+        <div if:true={isPage4} class="slds-card__body slds-p-around_large">
+            <h2 class="slds-text-heading_medium slds-m-bottom_medium">Your Suitability to be an Approved Provider</h2>
+            
+            <div class="slds-notify slds-notify_alert slds-theme_info slds-m-bottom_large" role="alert">
+                <p>Section 63D of the Commission Act requires certain matters to be considered when deciding whether an applicant is suitable to provide aged care. Please ensure the responses given below clearly establish why you are suitable to provide aged care.</p>
+            </div>
+
+            <h3 class="slds-text-heading_small slds-m-bottom_medium">Experience, Conduct and Compliance</h3>
+            
+            <div class="slds-m-bottom_medium">
+                <lightning-textarea 
+                    label="Describe your organisation's current experience in the delivery of aged care, or if you have no aged care experience, describe your experience delivering other care relevant to the care type you are applying for" 
+                    value={experienceDescription}
+                    onchange={handleExperienceDescriptionChange}
+                    required>
+                </lightning-textarea>
+                <div class="slds-text-color_weak slds-m-top_small">
+                    <p>Relevant care may include (but is not limited to) the delivery of care under the CHSP, National Disability Insurance Scheme (NDIS), sub-contract or private fee for service care.</p>
+                </div>
+            </div>
+
+            <h4 class="slds-text-heading_small slds-m-bottom_small">Governance Systems</h4>
+            
+            <div class="slds-m-bottom_medium">
+                <lightning-textarea 
+                    label="Information Management - Detail your current or proposed information management systems, including electronic and off-line systems" 
+                    value={informationManagement}
+                    onchange={handleInformationManagementChange}
+                    required>
+                </lightning-textarea>
+            </div>
+
+            <div class="slds-m-bottom_medium">
+                <lightning-textarea 
+                    label="Continuous Improvement - Detail your current or proposed continuous improvement system" 
+                    value={continuousImprovement}
+                    onchange={handleContinuousImprovementChange}
+                    required>
+                </lightning-textarea>
+            </div>
+
+            <div class="slds-m-bottom_medium">
+                <lightning-textarea 
+                    label="Financial Governance - Detail your current or proposed financial governance system, including electronic or off-line systems" 
+                    value={financialGovernance}
+                    onchange={handleFinancialGovernanceChange}
+                    required>
+                </lightning-textarea>
+            </div>
+
+            <div class="slds-m-bottom_medium">
+                <lightning-textarea 
+                    label="Workforce Governance - Detail your current or proposed workforce governance system to develop and support your aged care workforce" 
+                    value={workforceGovernance}
+                    onchange={handleWorkforceGovernanceChange}
+                    required>
+                </lightning-textarea>
+            </div>
+
+            <div class="slds-m-bottom_medium">
+                <lightning-textarea 
+                    label="Risk and Incident Management - What is your current or proposed risk management and incident management system, and how is it or will it be applied in practice?" 
+                    value={riskManagement}
+                    onchange={handleRiskManagementChange}
+                    required>
+                </lightning-textarea>
+            </div>
+
+            <div class="slds-m-bottom_medium">
+                <lightning-textarea 
+                    label="Clinical Governance - What is your current or proposed clinical governance system?" 
+                    value={clinicalGovernance}
+                    onchange={handleClinicalGovernanceChange}
+                    required>
+                </lightning-textarea>
+            </div>
+
+            <!-- Navigation -->
+            <div class="slds-m-top_x-large slds-text-align_center">
+                <lightning-button 
+                    label="Previous" 
+                    variant="neutral" 
+                    onclick={handlePrevious}
+                    class="slds-m-right_small">
+                </lightning-button>
+                <lightning-button 
+                    label="Next" 
+                    variant="brand" 
+                    onclick={handleNext}>
+                </lightning-button>
+            </div>
+        </div>
+
+        <!-- Page 5: Care Type Specific -->
+        <div if:true={isPage5} class="slds-card__body slds-p-around_large">
+            <h2 class="slds-text-heading_medium slds-m-bottom_medium">Your Ability to Meet Care Type Specific Matters</h2>
+            
+            <div class="slds-text-color_weak slds-m-bottom_large">
+                <p>When seeking approval to provide a certain type of care, the applicant must demonstrate how it will meet the requirements that relate to the delivery of that type of care.</p>
+            </div>
+
+            <!-- Residential Care Section -->
+            <div if:true={showResidentialCare} class="slds-m-bottom_large">
+                <h3 class="slds-text-heading_small slds-m-bottom_medium">Residential Care</h3>
+                
+                <div class="slds-m-bottom_medium">
+                    <lightning-textarea 
+                        label="Describe what systems, policies, or procedures you have/will develop, implement, and monitor to ensure you comply with the Prudential Standards" 
+                        value={residentialPrudentialStandards}
+                        onchange={handleResidentialPrudentialStandardsChange}
+                        required>
+                    </lightning-textarea>
+                </div>
+
+                <div class="slds-m-bottom_medium">
+                    <lightning-textarea 
+                        label="Describe how you will finance the purchase, construction and/or lease of a residential aged care facility and describe the associated risks" 
+                        value={residentialFinancing}
+                        onchange={handleResidentialFinancingChange}
+                        required>
+                    </lightning-textarea>
+                </div>
+
+                <div class="slds-m-bottom_medium">
+                    <lightning-textarea 
+                        label="Describe the responsibilities of an approved provider of residential care under section 54-1(1)(f) of the Aged Care Act regarding restrictive practices" 
+                        value={residentialRestrictivePractices}
+                        onchange={handleResidentialRestrictivePracticesChange}
+                        required>
+                    </lightning-textarea>
+                </div>
+            </div>
+
+            <!-- Home Care Section -->
+            <div if:true={showHomeCare} class="slds-m-bottom_large">
+                <h3 class="slds-text-heading_small slds-m-bottom_medium">Home Care</h3>
+                
+                <div class="slds-m-bottom_medium">
+                    <lightning-textarea 
+                        label="Detail the systems, policies, or procedures you have/will develop, implement and monitor to deliver home care from referral to delivery" 
+                        value={homeCareDeliverySystem}
+                        onchange={handleHomeCareDeliverySystemChange}
+                        required>
+                    </lightning-textarea>
+                </div>
+
+                <div class="slds-m-bottom_medium">
+                    <lightning-textarea 
+                        label="What tools or methods will you implement to accurately capture care recipient current and future health status?" 
+                        value={homeCareHealthTracking}
+                        onchange={handleHomeCareHealthTrackingChange}
+                        required>
+                    </lightning-textarea>
+                </div>
+
+                <div class="slds-m-bottom_medium">
+                    <lightning-textarea 
+                        label="Describe how you will provide choice and flexibility of care to care recipients in their home care package" 
+                        value={homeCareChoiceFlexibility}
+                        onchange={handleHomeCareChoiceFlexibilityChange}
+                        required>
+                    </lightning-textarea>
+                </div>
+
+                <div class="slds-m-bottom_medium">
+                    <lightning-textarea 
+                        label="Detail the systems, policies, or procedures you have/will develop to manage medication correctly and safely" 
+                        value={homeCareMedicationManagement}
+                        onchange={handleHomeCareMedicationManagementChange}
+                        required>
+                    </lightning-textarea>
+                </div>
+            </div>
+
+            <!-- Flexible Care Section -->
+            <div if:true={showFlexibleCare} class="slds-m-bottom_large">
+                <h3 class="slds-text-heading_small slds-m-bottom_medium">Flexible Care</h3>
+                
+                <div class="slds-m-bottom_medium">
+                    <lightning-textarea 
+                        label="Describe from an experience perspective, how flexible care is to be provided" 
+                        value={flexibleCareDescription}
+                        onchange={handleFlexibleCareDescriptionChange}
+                        required>
+                    </lightning-textarea>
+                </div>
+
+                <div class="slds-m-bottom_medium">
+                    <lightning-textarea 
+                        label="Describe what policies, procedures, or forms you have or will develop to effectively deliver short-term restorative care" 
+                        value={flexibleCareRestorativeCare}
+                        onchange={handleFlexibleCareRestorativeCareChange}
+                        required>
+                    </lightning-textarea>
+                </div>
+
+                <div class="slds-m-bottom_medium">
+                    <lightning-textarea 
+                        label="Describe the responsibilities of an approved provider in relation to multi-disciplinary teams in the delivery of flexible care" 
+                        value={flexibleCareMultiDisciplinary}
+                        onchange={handleFlexibleCareMultiDisciplinaryChange}
+                        required>
+                    </lightning-textarea>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="slds-m-top_x-large slds-text-align_center">
+                <lightning-button 
+                    label="Previous" 
+                    variant="neutral" 
+                    onclick={handlePrevious}
+                    class="slds-m-right_small">
+                </lightning-button>
+                <lightning-button 
+                    label="Submit Application" 
+                    variant="brand" 
+                    onclick={handleSubmit}
+                    disabled={isSubmitting}>
+                </lightning-button>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div if:true={isLoading} class="slds-is-relative">
+            <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+        </div>
     </div>
 </template>
