@@ -1,98 +1,113 @@
-.slds-card {
-    max-width: 1200px;
-    margin: 0 auto;
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.slds-section__title {
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    background-color: #f3f2f2;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.slds-section__content {
+    padding: 0 1rem;
 }
 
 .slds-progress-indicator {
     margin-bottom: 2rem;
 }
 
-.slds-section__title{
-    font-weight: 600;
-    color: #0176d3;
-    border-bottom: 2px solid #0176d3;
-    padding-bottom: 0.5rem;
+.slds-card__header {
+    background-color: #0176d3;
+    color: white;
+}
+
+.slds-card__header .slds-card__header-title {
+    color: white;
+}
+
+.slds-card__header .slds-text-color_weak {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.slds-notify_alert {
     margin-bottom: 1rem;
-}
-
-.slds-section__content {
-    padding-top: 1rem;
-}
-
-.slds-notify {
-    border-radius: 0.25rem;
-}
-
-.slds-notify_alert.slds-theme_warning {
-    background-color: #fef7e0;
-    border-left: 4px solid #fe9339;
-}
-
-.slds-notify_alert.slds-theme_info {
-    background-color: #e8f4fd;
-    border-left: 4px solid #0176d3;
-}
-
-.slds-notify_alert.slds-theme_error {
-    background-color: #fdf2f2;
-    border-left: 4px solid #ea001e;
-}
-
-.slds-notify_alert.slds-theme_success {
-    background-color: #f0f9ff;
-    border-left: 4px solid #04844b;
-}
-
-.slds-text-longform ul {
-    margin-left: 1.5rem;
-}
-
-.slds-text-longform li {
-    margin-bottom: 0.5rem;
-    line-height: 1.5;
-}
-
-.slds-card .slds-card__body {
-    min-height: 400px;
 }
 
 .slds-form-element {
     margin-bottom: 1rem;
 }
 
-.slds-grid.slds-gutters .slds-col {
-    padding: 0.5rem;
+.slds-grid {
+    margin-bottom: 1rem;
 }
 
-.key-personnel-card {
-    border: 1px solid #d8dde6;
-    border-radius: 0.25rem;
-    background-color: #fafaf9;
+.slds-card__footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dddbda;
+    padding: 1rem 1.5rem;
 }
 
-.key-personnel-card .slds-card__header {
+.slds-button + .slds-button {
+    margin-left: 0.5rem;
+}
+
+.slds-text-longform p {
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+.slds-list_dotted {
+    padding-left: 1rem;
+}
+
+.slds-list_dotted li {
+    margin-bottom: 0.25rem;
+}
+
+.slds-spinner_container {
+    position: relative;
+    min-height: 6rem;
+}
+
+:host {
+    display: block;
+    max-width: 100%;
+}
+
+@media (max-width: 768px) {
+    .slds-col {
+        flex-basis: 100%;
+        max-width: 100%;
+    }
+    
+    .slds-grid_align-spread {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .slds-grid_align-spread .slds-col {
+        margin-bottom: 0.5rem;
+    }
+    
+    .slds-button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+.slds-theme_shade {
     background-color: #f3f2f2;
-    border-bottom: 1px solid #d8dde6;
 }
 
-.navigation-buttons {
-    border-top: 1px solid #d8dde6;
-    padding-top: 1.5rem;
-    margin-top: 2rem;
+.slds-section.slds-is-open .slds-section__content {
+    display: block;
 }
 
-.slds-progress-indicator .slds-progress__item {
-    font-size: 0.875rem;
-}
-
-.slds-progress-indicator .slds-progress__marker {
-    width: 2rem;
-    height: 2rem;
-}
-
-.required-field::after {
-    content: ' *';
-    color: #ea001e;
+.required-asterisk {
+    color: #c23934;
+    margin-left: 0.125rem;
 }
 
 .field-help-text {
@@ -101,116 +116,12 @@
     margin-top: 0.25rem;
 }
 
-.section-divider {
-    border-top: 1px solid #d8dde6;
-    margin: 2rem 0;
-}
-
-.form-section {
-    margin-bottom: 2rem;
-}
-
-.form-section:last-child {
-    margin-bottom: 0;
-}
-
-.checkbox-group-custom .slds-checkbox {
-    margin-bottom: 0.75rem;
-}
-
-.checkbox-group-custom .slds-checkbox:last-child {
-    margin-bottom: 0;
-}
-
-.declaration-section {
-    background-color: #f8f9fa;
-    border: 1px solid #d8dde6;
-    border-radius: 0.25rem;
-    padding: 1.5rem;
-    margin: 1rem 0;
-}
-
-.officer-signature-section {
-    background-color: #ffffff;
-    border: 1px solid #d8dde6;
-    border-radius: 0.25rem;
-    padding: 1rem;
-}
-
-.care-type-section {
-    background-color: #f8f9fa;
-    border-left: 4px solid #0176d3;
-    padding: 1rem;
-    margin: 1rem 0;
-}
-
 .validation-error {
-    color: #ea001e;
-    font-size: 0.875rem;
+    border-color: #c23934;
+}
+
+.validation-error-message {
+    color: #c23934;
+    font-size: 0.75rem;
     margin-top: 0.25rem;
-}
-
-.loading-overlay {
-    position: relative;
-}
-
-.loading-overlay .slds-spinner {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-}
-
-.success-message {
-    text-align: center;
-    padding: 3rem 2rem;
-}
-
-.success-message .slds-notify {
-    display: inline-block;
-    text-align: left;
-    max-width: 600px;
-}
-
-@media (max-width: 768px) {
-    .slds-grid.slds-wrap .slds-col {
-        width: 100%;
-    }
-    
-    .slds-progress-indicator {
-        font-size: 0.75rem;
-    }
-    
-    .slds-card__body {
-        padding: 1rem;
-    }
-    
-    .officer-signature-section {
-        margin-bottom: 1rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .slds-card {
-        margin: 0;
-        border-radius: 0;
-    }
-    
-    .slds-card__body {
-        padding: 0.75rem;
-    }
-    
-    .slds-grid.slds-grid_align-spread {
-        display: block;
-    }
-    
-    .slds-grid.slds-grid_align-spread .slds-button {
-        width: 100%;
-        margin-bottom: 0.5rem;
-    }
-    
-    .slds-grid.slds-grid_align-spread .slds-button:last-child {
-        margin-bottom: 0;
-    }
 }
