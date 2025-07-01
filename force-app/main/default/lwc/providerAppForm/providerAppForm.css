@@ -1,32 +1,16 @@
-.provider-app-form {
-    position: relative;
-}
-
-.provider-app-form lightning-card {
-    margin: 1rem;
-}
-
-.provider-app-form lightning-accordion-section {
-    margin-bottom: 1rem;
-}
-
-.provider-app-form lightning-input,
-.provider-app-form lightning-textarea {
-    margin-bottom: 1rem;
-}
-
-.provider-app-form lightning-datatable {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-}
-
-.provider-app-form lightning-button-group {
-    margin-top: 2rem;
-}
-
 :host {
-    --sds-c-button-brand-color-background: rgb(0, 112, 210);
-    --sds-c-button-brand-color-background-hover: rgb(0, 95, 178);
-    --sds-c-button-brand-color-border: rgb(0, 112, 210);
-    --sds-c-button-brand-color-border-hover: rgb(0, 95, 178);
+    --slds-c-card-color-background: #ffffff;
+}
+
+.slds-p-around_medium {
+    background-color: #f3f3f3;
+}
+
+lightning-input.required {
+    --slds-c-input-color-border: #ff0000;
+}
+
+lightning-button.submit-button {
+    --slds-c-button-brand-color-background: #0070d2;
+    --slds-c-button-brand-color-border: #0070d2;
 }
