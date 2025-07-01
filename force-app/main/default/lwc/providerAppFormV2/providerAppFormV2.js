@@ -3,538 +3,665 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class ProviderAppFormV2 extends LightningElement {
     @track currentPage = 1;
-    @track totalPages = 5;
     @track isLoading = false;
+    @track errorMessages = [];
 
-    @track formData = {
-        // Page 1 - Applicant Details
-        companyLegalName: '',
-        companyNumber: '',
-        abn: '',
-        businessName: '',
-        registeredStreet: '',
-        registeredSuburb: '',
-        registeredState: '',
-        registeredPostcode: '',
-        sameAsRegistered: false,
-        postalStreet: '',
-        postalSuburb: '',
-        postalState: '',
-        postalPostcode: '',
-        careTypes: [],
-        organisationType: '',
-        notForProfitType: '',
-        stockExchangeListed: '',
-        
-        // Page 2 - Key Personnel
-        primaryContactName: '',
-        primaryContactPosition: '',
-        primaryContactPhone: '',
-        primaryContactMobile: '',
-        primaryContactBestTime: '',
-        primaryContactEmail: '',
-        altContactName: '',
-        altContactPosition: '',
-        altContactPhone: '',
-        altContactMobile: '',
-        altContactBestTime: '',
-        altContactEmail: '',
-        
-        // Page 3 - Suitability
-        careExperience: '',
-        informationManagement: '',
-        continuousImprovement: '',
-        financialGovernance: '',
-        workforceGovernance: '',
-        riskManagement: '',
-        clinicalGovernance: '',
-        financialStrategy: '',
-        financialCapital: '',
-        indictableOffence: '',
-        indictableOffenceDetails: '',
-        civilPenalty: '',
-        civilPenaltyDetails: '',
-        
-        // Page 4 - Care Type Details
-        prudentialStandards: '',
-        facilityFinancing: '',
-        restrictivePractices: '',
-        homeCareDelivery: '',
-        healthStatusCapture: '',
-        careChoiceFlexibility: '',
-        feeManagement: '',
-        packagePortability: '',
-        flexibleCareExperience: '',
-        restorativeCare: '',
-        multiDisciplinaryTeams: '',
-        standard1Compliance: '',
-        standard2Compliance: '',
-        standard3Compliance: '',
-        
-        // Page 5 - Review & Submit
-        declarationAccepted: false,
-        falseInfoUnderstood: false
-    };
+    // Page 1 - Key Personnel Declaration
+    @track declaringOfficer1Name = '';
+    @track declaringOfficer1Position = '';
+    @track declaringOfficer1Date = '';
+    @track declaringOfficer2Name = '';
+    @track declaringOfficer2Position = '';
+    @track declaringOfficer2Date = '';
 
-    @track keyPersonnelList = [
-        {
-            id: '1',
-            number: 1,
-            title: '',
-            fullName: '',
-            formerName: '',
-            preferredName: '',
-            dateOfBirth: '',
-            positionTitle: '',
-            email: '',
-            mobile: '',
-            principalDuties: ''
-        }
+    // Page 2 - About the Applicant
+    @track companyLegalName = '';
+    @track companyACN = '';
+    @track companyABN = '';
+    @track businessName = '';
+    @track registeredStreetAddress = '';
+    @track registeredSuburb = '';
+    @track registeredState = '';
+    @track registeredPostcode = '';
+    @track postalSameAsRegistered = false;
+    @track postalStreetAddress = '';
+    @track postalSuburb = '';
+    @track postalState = '';
+    @track postalPostcode = '';
+    @track primaryContactName = '';
+    @track primaryContactPosition = '';
+    @track primaryContactPhone = '';
+    @track primaryContactMobile = '';
+    @track primaryContactBestTime = '';
+    @track primaryContactEmail = '';
+    @track selectedCareTypes = [];
+    @track selectedFlexibleCareSetting = '';
+
+    // Page 3 - Key Personnel
+    @track kp1Title = '';
+    @track kp1Name = '';
+    @track kp1FormerName = '';
+    @track kp1PreferredName = '';
+    @track kp1DateOfBirth = '';
+    @track kp1PositionTitle = '';
+    @track kp1Email = '';
+    @track kp1Mobile = '';
+    @track kp1PrincipalDuties = '';
+
+    // Page 4 - Suitability Assessment
+    @track experienceDescription = '';
+    @track service1Type = '';
+    @track service1Period = '';
+    @track service1Recipients = '';
+    @track informationManagementSystem = '';
+    @track continuousImprovementSystem = '';
+    @track financialGovernanceSystem = '';
+    @track financialManagementStrategy = '';
+    @track financialCapitalDescription = '';
+
+    // Page 5 - Care Type Specific
+    @track prudentialStandardsCompliance = '';
+    @track refundableDepositsManagement = '';
+    @track facilityFinancingPlan = '';
+    @track homeCareDeliverySystem = '';
+    @track healthStatusTracking = '';
+    @track medicationManagement = '';
+    @track choiceFlexibilityProvision = '';
+    @track flexibleCareExperience = '';
+    @track restorativeCarePolicies = '';
+    @track multidisciplinaryTeams = '';
+
+    // Options
+    stateOptions = [
+        { label: 'Australian Capital Territory', value: 'ACT' },
+        { label: 'New South Wales', value: 'NSW' },
+        { label: 'Northern Territory', value: 'NT' },
+        { label: 'Queensland', value: 'QLD' },
+        { label: 'South Australia', value: 'SA' },
+        { label: 'Tasmania', value: 'TAS' },
+        { label: 'Victoria', value: 'VIC' },
+        { label: 'Western Australia', value: 'WA' }
     ];
 
-    @track servicesList = [
-        {
-            id: '1',
-            serviceType: '',
-            deliveryPeriod: '',
-            recipientCount: ''
-        }
+    careTypeOptions = [
+        { label: 'Residential Care', value: 'residential' },
+        { label: 'Home Care', value: 'home' },
+        { label: 'Flexible Care', value: 'flexible' }
     ];
 
-    @track validationErrors = {};
+    flexibleCareOptions = [
+        { label: 'In a residential care setting', value: 'residential_setting' },
+        { label: 'In a home care setting', value: 'home_setting' }
+    ];
 
+    titleOptions = [
+        { label: 'Mr', value: 'Mr' },
+        { label: 'Mrs', value: 'Mrs' },
+        { label: 'Ms', value: 'Ms' },
+        { label: 'Dr', value: 'Dr' },
+        { label: 'Prof', value: 'Prof' }
+    ];
+
+    // Computed Properties
     get currentPageString() {
         return this.currentPage.toString();
     }
 
-    get showPage1() {
+    get isPage1() {
         return this.currentPage === 1;
     }
 
-    get showPage2() {
+    get isPage2() {
         return this.currentPage === 2;
     }
 
-    get showPage3() {
+    get isPage3() {
         return this.currentPage === 3;
     }
 
-    get showPage4() {
+    get isPage4() {
         return this.currentPage === 4;
     }
 
-    get showPage5() {
+    get isPage5() {
         return this.currentPage === 5;
     }
 
-    get showNotForProfitOptions() {
-        return this.formData.organisationType === 'Not-For-Profit';
+    get isFirstPage() {
+        return this.currentPage === 1;
     }
 
-    get showIndictableOffenceDetails() {
-        return this.formData.indictableOffence === 'Yes';
+    get isLastPage() {
+        return this.currentPage === 5;
     }
 
-    get showCivilPenaltyDetails() {
-        return this.formData.civilPenalty === 'Yes';
+    get hasErrors() {
+        return this.errorMessages.length > 0;
+    }
+
+    get showFlexibleCareOptions() {
+        return this.selectedCareTypes.includes('flexible');
     }
 
     get showResidentialCare() {
-        return this.formData.careTypes.includes('Residential Care');
+        return this.selectedCareTypes.includes('residential');
     }
 
     get showHomeCare() {
-        return this.formData.careTypes.includes('Home Care');
+        return this.selectedCareTypes.includes('home');
     }
 
     get showFlexibleCare() {
-        return this.formData.careTypes.includes('Flexible Care');
+        return this.selectedCareTypes.includes('flexible');
     }
 
-    get careTypesDisplay() {
-        return this.formData.careTypes.join(', ');
+    // Event Handlers - Page 1
+    handleDeclaringOfficer1NameChange(event) {
+        this.declaringOfficer1Name = event.target.value;
     }
 
-    get submitDisabled() {
-        return !this.formData.declarationAccepted || !this.formData.falseInfoUnderstood;
+    handleDeclaringOfficer1PositionChange(event) {
+        this.declaringOfficer1Position = event.target.value;
     }
 
-    get stateOptions() {
-        return [
-            { label: 'Australian Capital Territory', value: 'ACT' },
-            { label: 'New South Wales', value: 'NSW' },
-            { label: 'Northern Territory', value: 'NT' },
-            { label: 'Queensland', value: 'QLD' },
-            { label: 'South Australia', value: 'SA' },
-            { label: 'Tasmania', value: 'TAS' },
-            { label: 'Victoria', value: 'VIC' },
-            { label: 'Western Australia', value: 'WA' }
-        ];
+    handleDeclaringOfficer1DateChange(event) {
+        this.declaringOfficer1Date = event.target.value;
     }
 
-    get careTypeOptions() {
-        return [
-            { label: 'Residential Care', value: 'Residential Care' },
-            { label: 'Home Care', value: 'Home Care' },
-            { label: 'Flexible Care', value: 'Flexible Care' }
-        ];
+    handleDeclaringOfficer2NameChange(event) {
+        this.declaringOfficer2Name = event.target.value;
     }
 
-    get organisationTypeOptions() {
-        return [
-            { label: 'For Profit', value: 'For Profit' },
-            { label: 'Not-For-Profit', value: 'Not-For-Profit' }
-        ];
+    handleDeclaringOfficer2PositionChange(event) {
+        this.declaringOfficer2Position = event.target.value;
     }
 
-    get notForProfitOptions() {
-        return [
-            { label: 'Religious', value: 'Religious' },
-            { label: 'Community Based', value: 'Community Based' },
-            { label: 'Charitable', value: 'Charitable' }
-        ];
+    handleDeclaringOfficer2DateChange(event) {
+        this.declaringOfficer2Date = event.target.value;
     }
 
-    get yesNoOptions() {
-        return [
-            { label: 'Yes', value: 'Yes' },
-            { label: 'No', value: 'No' }
-        ];
+    // Event Handlers - Page 2
+    handleCompanyLegalNameChange(event) {
+        this.companyLegalName = event.target.value;
     }
 
-    get titleOptions() {
-        return [
-            { label: 'Mr', value: 'Mr' },
-            { label: 'Mrs', value: 'Mrs' },
-            { label: 'Ms', value: 'Ms' },
-            { label: 'Miss', value: 'Miss' },
-            { label: 'Dr', value: 'Dr' },
-            { label: 'Prof', value: 'Prof' }
-        ];
+    handleCompanyACNChange(event) {
+        this.companyACN = event.target.value;
     }
 
-    handleFieldChange(event) {
-        const fieldName = event.target.name;
-        const fieldValue = event.target.value;
-        this.formData[fieldName] = fieldValue;
-        
-        // Clear validation error when field is updated
-        if (this.validationErrors[fieldName]) {
-            delete this.validationErrors[fieldName];
+    handleCompanyABNChange(event) {
+        this.companyABN = event.target.value;
+    }
+
+    handleBusinessNameChange(event) {
+        this.businessName = event.target.value;
+    }
+
+    handleRegisteredStreetAddressChange(event) {
+        this.registeredStreetAddress = event.target.value;
+    }
+
+    handleRegisteredSuburbChange(event) {
+        this.registeredSuburb = event.target.value;
+    }
+
+    handleRegisteredStateChange(event) {
+        this.registeredState = event.target.value;
+    }
+
+    handleRegisteredPostcodeChange(event) {
+        this.registeredPostcode = event.target.value;
+    }
+
+    handlePostalSameAsRegisteredChange(event) {
+        this.postalSameAsRegistered = event.target.checked;
+        if (this.postalSameAsRegistered) {
+            this.postalStreetAddress = this.registeredStreetAddress;
+            this.postalSuburb = this.registeredSuburb;
+            this.postalState = this.registeredState;
+            this.postalPostcode = this.registeredPostcode;
         }
     }
 
-    handleSameAddressChange(event) {
-        this.formData.sameAsRegistered = event.target.checked;
-        
-        if (this.formData.sameAsRegistered) {
-            this.formData.postalStreet = this.formData.registeredStreet;
-            this.formData.postalSuburb = this.formData.registeredSuburb;
-            this.formData.postalState = this.formData.registeredState;
-            this.formData.postalPostcode = this.formData.registeredPostcode;
-        } else {
-            this.formData.postalStreet = '';
-            this.formData.postalSuburb = '';
-            this.formData.postalState = '';
-            this.formData.postalPostcode = '';
-        }
+    handlePostalStreetAddressChange(event) {
+        this.postalStreetAddress = event.target.value;
+    }
+
+    handlePostalSuburbChange(event) {
+        this.postalSuburb = event.target.value;
+    }
+
+    handlePostalStateChange(event) {
+        this.postalState = event.target.value;
+    }
+
+    handlePostalPostcodeChange(event) {
+        this.postalPostcode = event.target.value;
+    }
+
+    handlePrimaryContactNameChange(event) {
+        this.primaryContactName = event.target.value;
+    }
+
+    handlePrimaryContactPositionChange(event) {
+        this.primaryContactPosition = event.target.value;
+    }
+
+    handlePrimaryContactPhoneChange(event) {
+        this.primaryContactPhone = event.target.value;
+    }
+
+    handlePrimaryContactMobileChange(event) {
+        this.primaryContactMobile = event.target.value;
+    }
+
+    handlePrimaryContactBestTimeChange(event) {
+        this.primaryContactBestTime = event.target.value;
+    }
+
+    handlePrimaryContactEmailChange(event) {
+        this.primaryContactEmail = event.target.value;
     }
 
     handleCareTypeChange(event) {
-        this.formData.careTypes = event.detail.value;
+        this.selectedCareTypes = event.target.value;
     }
 
-    handlePersonnelChange(event) {
-        const index = parseInt(event.target.dataset.index);
-        const fieldName = event.target.name;
-        const fieldValue = event.target.value;
-        
-        this.keyPersonnelList[index][fieldName] = fieldValue;
+    handleFlexibleCareSettingChange(event) {
+        this.selectedFlexibleCareSetting = event.target.value;
     }
 
-    handleAddPersonnel() {
-        const newPersonnel = {
-            id: (this.keyPersonnelList.length + 1).toString(),
-            number: this.keyPersonnelList.length + 1,
-            title: '',
-            fullName: '',
-            formerName: '',
-            preferredName: '',
-            dateOfBirth: '',
-            positionTitle: '',
-            email: '',
-            mobile: '',
-            principalDuties: ''
-        };
-        
-        this.keyPersonnelList = [...this.keyPersonnelList, newPersonnel];
+    // Event Handlers - Page 3
+    handleKp1TitleChange(event) {
+        this.kp1Title = event.target.value;
     }
 
-    handleServiceChange(event) {
-        const index = parseInt(event.target.dataset.index);
-        const fieldName = event.target.name;
-        const fieldValue = event.target.value;
-        
-        this.servicesList[index][fieldName] = fieldValue;
+    handleKp1NameChange(event) {
+        this.kp1Name = event.target.value;
     }
 
-    handleAddService() {
-        const newService = {
-            id: (this.servicesList.length + 1).toString(),
-            serviceType: '',
-            deliveryPeriod: '',
-            recipientCount: ''
-        };
-        
-        this.servicesList = [...this.servicesList, newService];
+    handleKp1FormerNameChange(event) {
+        this.kp1FormerName = event.target.value;
     }
 
-    handlePrevious() {
-        this.saveCurrentPageData();
-        this.currentPage--;
+    handleKp1PreferredNameChange(event) {
+        this.kp1PreferredName = event.target.value;
     }
 
+    handleKp1DateOfBirthChange(event) {
+        this.kp1DateOfBirth = event.target.value;
+    }
+
+    handleKp1PositionTitleChange(event) {
+        this.kp1PositionTitle = event.target.value;
+    }
+
+    handleKp1EmailChange(event) {
+        this.kp1Email = event.target.value;
+    }
+
+    handleKp1MobileChange(event) {
+        this.kp1Mobile = event.target.value;
+    }
+
+    handleKp1PrincipalDutiesChange(event) {
+        this.kp1PrincipalDuties = event.target.value;
+    }
+
+    // Event Handlers - Page 4
+    handleExperienceDescriptionChange(event) {
+        this.experienceDescription = event.target.value;
+    }
+
+    handleService1TypeChange(event) {
+        this.service1Type = event.target.value;
+    }
+
+    handleService1PeriodChange(event) {
+        this.service1Period = event.target.value;
+    }
+
+    handleService1RecipientsChange(event) {
+        this.service1Recipients = event.target.value;
+    }
+
+    handleInformationManagementSystemChange(event) {
+        this.informationManagementSystem = event.target.value;
+    }
+
+    handleContinuousImprovementSystemChange(event) {
+        this.continuousImprovementSystem = event.target.value;
+    }
+
+    handleFinancialGovernanceSystemChange(event) {
+        this.financialGovernanceSystem = event.target.value;
+    }
+
+    handleFinancialManagementStrategyChange(event) {
+        this.financialManagementStrategy = event.target.value;
+    }
+
+    handleFinancialCapitalDescriptionChange(event) {
+        this.financialCapitalDescription = event.target.value;
+    }
+
+    // Event Handlers - Page 5
+    handlePrudentialStandardsComplianceChange(event) {
+        this.prudentialStandardsCompliance = event.target.value;
+    }
+
+    handleRefundableDepositsManagementChange(event) {
+        this.refundableDepositsManagement = event.target.value;
+    }
+
+    handleFacilityFinancingPlanChange(event) {
+        this.facilityFinancingPlan = event.target.value;
+    }
+
+    handleHomeCareDeliverySystemChange(event) {
+        this.homeCareDeliverySystem = event.target.value;
+    }
+
+    handleHealthStatusTrackingChange(event) {
+        this.healthStatusTracking = event.target.value;
+    }
+
+    handleMedicationManagementChange(event) {
+        this.medicationManagement = event.target.value;
+    }
+
+    handleChoiceFlexibilityProvisionChange(event) {
+        this.choiceFlexibilityProvision = event.target.value;
+    }
+
+    handleFlexibleCareExperienceChange(event) {
+        this.flexibleCareExperience = event.target.value;
+    }
+
+    handleRestorativeCarePoliciesChange(event) {
+        this.restorativeCarePolicies = event.target.value;
+    }
+
+    handleMultidisciplinaryTeamsChange(event) {
+        this.multidisciplinaryTeams = event.target.value;
+    }
+
+    // Navigation Methods
     handleNext() {
         if (this.validateCurrentPage()) {
-            this.saveCurrentPageData();
             this.currentPage++;
-        } else {
-            this.showToast('Error', 'Please fix all errors before proceeding', 'error');
+            this.scrollToTop();
         }
     }
 
+    handlePrevious() {
+        this.currentPage--;
+        this.scrollToTop();
+    }
+
     handleCancel() {
-        this.resetForm();
-        const cancelEvent = new CustomEvent('cancel');
-        this.dispatchEvent(cancelEvent);
+        if (confirm('Are you sure you want to cancel? All unsaved data will be lost.')) {
+            this.resetForm();
+        }
     }
 
     handleSubmit() {
         if (this.validateAllPages()) {
             this.isLoading = true;
-            this.processFormSubmission();
-        } else {
-            this.showToast('Error', 'Please fix all errors before submitting', 'error');
+            this.submitApplication();
         }
     }
 
-    saveCurrentPageData() {
-        const inputs = this.template.querySelectorAll('lightning-input, lightning-textarea, lightning-combobox, lightning-checkbox-group, lightning-radio-group');
-        inputs.forEach(input => {
-            if (input.name && this.formData.hasOwnProperty(input.name)) {
-                this.formData[input.name] = input.value;
-            }
-        });
-    }
-
+    // Validation Methods
     validateCurrentPage() {
+        this.errorMessages = [];
         let isValid = true;
-        const errors = [];
 
         switch (this.currentPage) {
             case 1:
-                isValid = this.validatePage1(errors);
+                isValid = this.validatePage1();
                 break;
             case 2:
-                isValid = this.validatePage2(errors);
+                isValid = this.validatePage2();
                 break;
             case 3:
-                isValid = this.validatePage3(errors);
+                isValid = this.validatePage3();
                 break;
             case 4:
-                isValid = this.validatePage4(errors);
+                isValid = this.validatePage4();
                 break;
             case 5:
-                isValid = this.validatePage5(errors);
+                isValid = this.validatePage5();
                 break;
         }
 
-        if (!isValid) {
-            this.showValidationErrors(errors);
+        return isValid;
+    }
+
+    validatePage1() {
+        let isValid = true;
+
+        if (!this.declaringOfficer1Name) {
+            this.errorMessages.push('Declaring Officer 1 Name is required');
+            isValid = false;
+        }
+
+        if (!this.declaringOfficer1Position) {
+            this.errorMessages.push('Declaring Officer 1 Position is required');
+            isValid = false;
+        }
+
+        if (!this.declaringOfficer1Date) {
+            this.errorMessages.push('Declaring Officer 1 Date is required');
+            isValid = false;
         }
 
         return isValid;
     }
 
-    validatePage1(errors) {
+    validatePage2() {
         let isValid = true;
 
-        // Required field validations
-        const requiredFields = [
-            'companyLegalName', 'companyNumber', 'abn', 'registeredStreet',
-            'registeredSuburb', 'registeredState', 'registeredPostcode',
-            'organisationType', 'stockExchangeListed'
-        ];
-
-        requiredFields.forEach(field => {
-            if (!this.formData[field] || this.formData[field].trim() === '') {
-                isValid = false;
-                errors.push(`${this.getFieldLabel(field)} is required`);
-            }
-        });
-
-        // Care types validation
-        if (!this.formData.careTypes || this.formData.careTypes.length === 0) {
+        if (!this.companyLegalName) {
+            this.errorMessages.push('Company Legal Name is required');
             isValid = false;
-            errors.push('At least one care type must be selected');
         }
 
-        // Postal address validation if not same as registered
-        if (!this.formData.sameAsRegistered) {
-            const postalFields = ['postalStreet', 'postalSuburb', 'postalState', 'postalPostcode'];
-            postalFields.forEach(field => {
-                if (!this.formData[field] || this.formData[field].trim() === '') {
-                    isValid = false;
-                    errors.push(`${this.getFieldLabel(field)} is required`);
-                }
-            });
+        if (!this.companyACN) {
+            this.errorMessages.push('Company ACN/IAN/ICN is required');
+            isValid = false;
         }
 
-        // Not-for-profit type validation
-        if (this.formData.organisationType === 'Not-For-Profit' && !this.formData.notForProfitType) {
+        if (!this.companyABN) {
+            this.errorMessages.push('Company ABN is required');
             isValid = false;
-            errors.push('Not-for-profit type is required');
+        }
+
+        if (!this.validateABN(this.companyABN)) {
+            this.errorMessages.push('Please enter a valid ABN');
+            isValid = false;
+        }
+
+        if (!this.registeredStreetAddress) {
+            this.errorMessages.push('Registered Street Address is required');
+            isValid = false;
+        }
+
+        if (!this.registeredSuburb) {
+            this.errorMessages.push('Registered Suburb/Town is required');
+            isValid = false;
+        }
+
+        if (!this.registeredState) {
+            this.errorMessages.push('Registered State/Territory is required');
+            isValid = false;
+        }
+
+        if (!this.registeredPostcode) {
+            this.errorMessages.push('Registered Postcode is required');
+            isValid = false;
+        }
+
+        if (!this.validatePostcode(this.registeredPostcode)) {
+            this.errorMessages.push('Please enter a valid postcode');
+            isValid = false;
+        }
+
+        if (!this.primaryContactName) {
+            this.errorMessages.push('Primary Contact Name is required');
+            isValid = false;
+        }
+
+        if (!this.primaryContactPosition) {
+            this.errorMessages.push('Primary Contact Position is required');
+            isValid = false;
+        }
+
+        if (!this.primaryContactPhone) {
+            this.errorMessages.push('Primary Contact Phone is required');
+            isValid = false;
+        }
+
+        if (!this.primaryContactEmail) {
+            this.errorMessages.push('Primary Contact Email is required');
+            isValid = false;
+        }
+
+        if (!this.validateEmail(this.primaryContactEmail)) {
+            this.errorMessages.push('Please enter a valid email address');
+            isValid = false;
+        }
+
+        if (this.selectedCareTypes.length === 0) {
+            this.errorMessages.push('Please select at least one care type');
+            isValid = false;
         }
 
         return isValid;
     }
 
-    validatePage2(errors) {
+    validatePage3() {
         let isValid = true;
 
-        // Primary contact validation
-        const primaryContactFields = [
-            'primaryContactName', 'primaryContactPosition', 
-            'primaryContactPhone', 'primaryContactEmail'
-        ];
-
-        primaryContactFields.forEach(field => {
-            if (!this.formData[field] || this.formData[field].trim() === '') {
-                isValid = false;
-                errors.push(`${this.getFieldLabel(field)} is required`);
-            }
-        });
-
-        // Email validation
-        if (this.formData.primaryContactEmail && !this.validateEmail(this.formData.primaryContactEmail)) {
+        if (!this.kp1Name) {
+            this.errorMessages.push('Key Personnel 1 Name is required');
             isValid = false;
-            errors.push('Primary contact email is not valid');
         }
 
-        // Key personnel validation
-        this.keyPersonnelList.forEach((person, index) => {
-            if (!person.fullName || person.fullName.trim() === '') {
-                isValid = false;
-                errors.push(`Key Personnel ${index + 1}: Full name is required`);
-            }
-            if (!person.positionTitle || person.positionTitle.trim() === '') {
-                isValid = false;
-                errors.push(`Key Personnel ${index + 1}: Position title is required`);
-            }
-            if (!person.email || person.email.trim() === '') {
-                isValid = false;
-                errors.push(`Key Personnel ${index + 1}: Email is required`);
-            } else if (!this.validateEmail(person.email)) {
-                isValid = false;
-                errors.push(`Key Personnel ${index + 1}: Email is not valid`);
-            }
-            if (!person.dateOfBirth) {
-                isValid = false;
-                errors.push(`Key Personnel ${index + 1}: Date of birth is required`);
-            }
-        });
-
-        return isValid;
-    }
-
-    validatePage3(errors) {
-        let isValid = true;
-
-        const requiredFields = [
-            'careExperience', 'informationManagement', 'continuousImprovement',
-            'financialGovernance', 'workforceGovernance', 'riskManagement',
-            'clinicalGovernance', 'financialStrategy', 'financialCapital',
-            'indictableOffence', 'civilPenalty'
-        ];
-
-        requiredFields.forEach(field => {
-            if (!this.formData[field] || this.formData[field].trim() === '') {
-                isValid = false;
-                errors.push(`${this.getFieldLabel(field)} is required`);
-            }
-        });
-
-        // Conditional validations
-        if (this.formData.indictableOffence === 'Yes' && (!this.formData.indictableOffenceDetails || this.formData.indictableOffenceDetails.trim() === '')) {
+        if (!this.kp1DateOfBirth) {
+            this.errorMessages.push('Key Personnel 1 Date of Birth is required');
             isValid = false;
-            errors.push('Indictable offence details are required');
         }
 
-        if (this.formData.civilPenalty === 'Yes' && (!this.formData.civilPenaltyDetails || this.formData.civilPenaltyDetails.trim() === '')) {
+        if (!this.kp1PositionTitle) {
+            this.errorMessages.push('Key Personnel 1 Position Title is required');
             isValid = false;
-            errors.push('Civil penalty details are required');
+        }
+
+        if (!this.kp1Email) {
+            this.errorMessages.push('Key Personnel 1 Email is required');
+            isValid = false;
+        }
+
+        if (!this.validateEmail(this.kp1Email)) {
+            this.errorMessages.push('Please enter a valid email address for Key Personnel 1');
+            isValid = false;
+        }
+
+        if (!this.kp1PrincipalDuties) {
+            this.errorMessages.push('Key Personnel 1 Principal Duties is required');
+            isValid = false;
         }
 
         return isValid;
     }
 
-    validatePage4(errors) {
+    validatePage4() {
         let isValid = true;
 
-        // Quality standards validation
-        const qualityStandardFields = ['standard1Compliance', 'standard2Compliance', 'standard3Compliance'];
-        qualityStandardFields.forEach(field => {
-            if (!this.formData[field] || this.formData[field].trim() === '') {
-                isValid = false;
-                errors.push(`${this.getFieldLabel(field)} is required`);
-            }
-        });
+        if (!this.experienceDescription) {
+            this.errorMessages.push('Experience Description is required');
+            isValid = false;
+        }
 
-        // Care type specific validations
+        if (!this.informationManagementSystem) {
+            this.errorMessages.push('Information Management System description is required');
+            isValid = false;
+        }
+
+        if (!this.continuousImprovementSystem) {
+            this.errorMessages.push('Continuous Improvement System description is required');
+            isValid = false;
+        }
+
+        if (!this.financialGovernanceSystem) {
+            this.errorMessages.push('Financial Governance System description is required');
+            isValid = false;
+        }
+
+        if (!this.financialManagementStrategy) {
+            this.errorMessages.push('Financial Management Strategy is required');
+            isValid = false;
+        }
+
+        if (!this.financialCapitalDescription) {
+            this.errorMessages.push('Financial Capital Description is required');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    validatePage5() {
+        let isValid = true;
+
         if (this.showResidentialCare) {
-            const residentialFields = ['prudentialStandards', 'facilityFinancing', 'restrictivePractices'];
-            residentialFields.forEach(field => {
-                if (!this.formData[field] || this.formData[field].trim() === '') {
-                    isValid = false;
-                    errors.push(`${this.getFieldLabel(field)} is required`);
-                }
-            });
+            if (!this.prudentialStandardsCompliance) {
+                this.errorMessages.push('Prudential Standards Compliance description is required');
+                isValid = false;
+            }
+            if (!this.refundableDepositsManagement) {
+                this.errorMessages.push('Refundable Deposits Management description is required');
+                isValid = false;
+            }
+            if (!this.facilityFinancingPlan) {
+                this.errorMessages.push('Facility Financing Plan is required');
+                isValid = false;
+            }
         }
 
         if (this.showHomeCare) {
-            const homeCareFields = ['homeCareDelivery', 'healthStatusCapture', 'careChoiceFlexibility', 'feeManagement', 'packagePortability'];
-            homeCareFields.forEach(field => {
-                if (!this.formData[field] || this.formData[field].trim() === '') {
-                    isValid = false;
-                    errors.push(`${this.getFieldLabel(field)} is required`);
-                }
-            });
+            if (!this.homeCareDeliverySystem) {
+                this.errorMessages.push('Home Care Delivery System description is required');
+                isValid = false;
+            }
+            if (!this.healthStatusTracking) {
+                this.errorMessages.push('Health Status Tracking description is required');
+                isValid = false;
+            }
+            if (!this.medicationManagement) {
+                this.errorMessages.push('Medication Management description is required');
+                isValid = false;
+            }
+            if (!this.choiceFlexibilityProvision) {
+                this.errorMessages.push('Choice and Flexibility Provision description is required');
+                isValid = false;
+            }
         }
 
         if (this.showFlexibleCare) {
-            const flexibleCareFields = ['flexibleCareExperience', 'restorativeCare', 'multiDisciplinaryTeams'];
-            flexibleCareFields.forEach(field => {
-                if (!this.formData[field] || this.formData[field].trim() === '') {
-                    isValid = false;
-                    errors.push(`${this.getFieldLabel(field)} is required`);
-                }
-            });
-        }
-
-        return isValid;
-    }
-
-    validatePage5(errors) {
-        let isValid = true;
-
-        if (!this.formData.declarationAccepted) {
-            isValid = false;
-            errors.push('You must accept the declaration to submit');
-        }
-
-        if (!this.formData.falseInfoUnderstood) {
-            isValid = false;
-            errors.push('You must acknowledge understanding of false information consequences');
+            if (!this.flexibleCareExperience) {
+                this.errorMessages.push('Flexible Care Experience description is required');
+                isValid = false;
+            }
+            if (!this.restorativeCarePolicies) {
+                this.errorMessages.push('Restorative Care Policies description is required');
+                isValid = false;
+            }
+            if (!this.multidisciplinaryTeams) {
+                this.errorMessages.push('Multi-disciplinary Teams description is required');
+                isValid = false;
+            }
         }
 
         return isValid;
@@ -542,181 +669,66 @@ export default class ProviderAppFormV2 extends LightningElement {
 
     validateAllPages() {
         let isValid = true;
-        const errors = [];
-
-        for (let page = 1; page <= this.totalPages; page++) {
-            switch (page) {
-                case 1:
-                    if (!this.validatePage1(errors)) isValid = false;
-                    break;
-                case 2:
-                    if (!this.validatePage2(errors)) isValid = false;
-                    break;
-                case 3:
-                    if (!this.validatePage3(errors)) isValid = false;
-                    break;
-                case 4:
-                    if (!this.validatePage4(errors)) isValid = false;
-                    break;
-                case 5:
-                    if (!this.validatePage5(errors)) isValid = false;
-                    break;
+        for (let i = 1; i <= 5; i++) {
+            this.currentPage = i;
+            if (!this.validateCurrentPage()) {
+                isValid = false;
+                break;
             }
         }
-
-        if (!isValid) {
-            this.showValidationErrors(errors);
-        }
-
         return isValid;
     }
 
+    // Utility Validation Methods
     validateEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
     }
 
-    validatePhone(phone) {
-        const phoneRegex = /^\d{10}$/;
-        return phoneRegex.test(phone.replace(/\D/g, ''));
+    validateABN(abn) {
+        const abnRegex = /^\d{11}$/;
+        return abnRegex.test(abn.replace(/\s/g, ''));
     }
 
-    getFieldLabel(fieldName) {
-        const fieldLabels = {
-            companyLegalName: 'Company Legal Name',
-            companyNumber: 'ACN/IAN/ICN',
-            abn: 'ABN',
-            registeredStreet: 'Registered Street Address',
-            registeredSuburb: 'Registered Suburb/Town',
-            registeredState: 'Registered State/Territory',
-            registeredPostcode: 'Registered Postcode',
-            postalStreet: 'Postal Street Address',
-            postalSuburb: 'Postal Suburb/Town',
-            postalState: 'Postal State/Territory',
-            postalPostcode: 'Postal Postcode',
-            organisationType: 'Organisation Type',
-            stockExchangeListed: 'Stock Exchange Listed',
-            primaryContactName: 'Primary Contact Name',
-            primaryContactPosition: 'Primary Contact Position',
-            primaryContactPhone: 'Primary Contact Phone',
-            primaryContactEmail: 'Primary Contact Email',
-            careExperience: 'Care Experience',
-            informationManagement: 'Information Management System',
-            continuousImprovement: 'Continuous Improvement System',
-            financialGovernance: 'Financial Governance System',
-            workforceGovernance: 'Workforce Governance System',
-            riskManagement: 'Risk Management System',
-            clinicalGovernance: 'Clinical Governance System',
-            financialStrategy: 'Financial Strategy',
-            financialCapital: 'Financial Capital',
-            indictableOffence: 'Indictable Offence Status',
-            civilPenalty: 'Civil Penalty Status',
-            standard1Compliance: 'Standard 1 Compliance',
-            standard2Compliance: 'Standard 2 Compliance',
-            standard3Compliance: 'Standard 3 Compliance',
-            prudentialStandards: 'Prudential Standards Compliance',
-            facilityFinancing: 'Facility Financing',
-            restrictivePractices: 'Restrictive Practices Compliance',
-            homeCareDelivery: 'Home Care Delivery System',
-            healthStatusCapture: 'Health Status Capture Methods',
-            careChoiceFlexibility: 'Care Choice and Flexibility',
-            feeManagement: 'Fee Management System',
-            packagePortability: 'Package Portability',
-            flexibleCareExperience: 'Flexible Care Experience',
-            restorativeCare: 'Restorative Care Policies',
-            multiDisciplinaryTeams: 'Multi-disciplinary Teams'
-        };
-        
-        return fieldLabels[fieldName] || fieldName;
+    validatePostcode(postcode) {
+        const postcodeRegex = /^\d{4}$/;
+        return postcodeRegex.test(postcode);
     }
 
-    showValidationErrors(errors) {
-        const errorMessage = errors.join('\n');
-        this.showToast('Validation Errors', errorMessage, 'error');
-    }
-
-    showToast(title, message, variant) {
-        const evt = new ShowToastEvent({
-            title: title,
-            message: message,
-            variant: variant,
-            mode: 'sticky'
-        });
-        this.dispatchEvent(evt);
+    // Utility Methods
+    scrollToTop() {
+        window.scrollTo(0, 0);
     }
 
     resetForm() {
-        // Reset form data to initial state
-        Object.keys(this.formData).forEach(key => {
-            if (typeof this.formData[key] === 'boolean') {
-                this.formData[key] = false;
-            } else if (Array.isArray(this.formData[key])) {
-                this.formData[key] = [];
-            } else {
-                this.formData[key] = '';
-            }
-        });
-
-        // Reset key personnel to initial state
-        this.keyPersonnelList = [
-            {
-                id: '1',
-                number: 1,
-                title: '',
-                fullName: '',
-                formerName: '',
-                preferredName: '',
-                dateOfBirth: '',
-                positionTitle: '',
-                email: '',
-                mobile: '',
-                principalDuties: ''
-            }
-        ];
-
-        // Reset services to initial state
-        this.servicesList = [
-            {
-                id: '1',
-                serviceType: '',
-                deliveryPeriod: '',
-                recipientCount: ''
-            }
-        ];
-
+        // Reset all form fields to initial state
         this.currentPage = 1;
-        this.validationErrors = {};
+        this.declaringOfficer1Name = '';
+        this.declaringOfficer1Position = '';
+        this.declaringOfficer1Date = '';
+        // ... reset all other fields
     }
 
-    async processFormSubmission() {
+    async submitApplication() {
         try {
             // Simulate API call
-            await this.submitApplication();
+            await new Promise(resolve => setTimeout(resolve, 2000));
             
-            this.showToast('Success', 'Application submitted successfully! You will receive a confirmation email shortly.', 'success');
-            
-            // Reset form after successful submission
+            this.showToast('Success', 'Application submitted successfully!', 'success');
             this.resetForm();
-            
         } catch (error) {
             this.showToast('Error', 'Failed to submit application. Please try again.', 'error');
-            console.error('Submission error:', error);
         } finally {
             this.isLoading = false;
         }
     }
 
-    async submitApplication() {
-        // Simulate API call delay
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                // Simulate successful submission
-                resolve({
-                    success: true,
-                    applicationId: 'APP-' + Date.now(),
-                    message: 'Application submitted successfully'
-                });
-            }, 2000);
+    showToast(title, message, variant) {
+        const event = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant
         });
+        this.dispatchEvent(event);
     }
 }
