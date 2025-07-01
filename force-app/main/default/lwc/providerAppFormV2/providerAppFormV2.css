@@ -1,0 +1,231 @@
+.slds-card {
+    margin: 1rem;
+    max-width: 1200px;
+}
+
+.slds-card__header-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #080707;
+}
+
+.slds-notify {
+    margin-bottom: 1rem;
+}
+
+.slds-notify h2,
+.slds-notify h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.slds-form {
+    max-width: 100%;
+}
+
+.slds-form-element {
+    margin-bottom: 1rem;
+}
+
+.slds-text-heading_medium {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #080707;
+    border-bottom: 2px solid #0176d3;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.slds-text-heading_small {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #080707;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.slds-box {
+    background-color: #f3f3f3;
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    padding: 1rem;
+}
+
+.slds-box_x-small {
+    padding: 0.75rem;
+}
+
+.slds-progress-indicator {
+    margin-bottom: 2rem;
+}
+
+.slds-accordion {
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+}
+
+.slds-accordion-section {
+    border-bottom: 1px solid #d8dde6;
+}
+
+.slds-accordion-section:last-child {
+    border-bottom: none;
+}
+
+.slds-datatable {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.slds-button-group {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #d8dde6;
+}
+
+.slds-checkbox {
+    margin-bottom: 0.5rem;
+}
+
+.slds-checkbox__label {
+    display: flex;
+    align-items: flex-start;
+    font-size: 0.875rem;
+    line-height: 1.25;
+}
+
+.slds-checkbox_faux {
+    margin-right: 0.5rem;
+    margin-top: 0.125rem;
+    flex-shrink: 0;
+}
+
+.slds-grid {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.slds-gutters {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+}
+
+.slds-gutters > .slds-col {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.slds-col {
+    flex: 1;
+}
+
+.slds-size_1-of-2 {
+    width: 50%;
+    flex: none;
+}
+
+.slds-size_1-of-3 {
+    width: 33.333333%;
+    flex: none;
+}
+
+.slds-size_2-of-3 {
+    width: 66.666667%;
+    flex: none;
+}
+
+.slds-size_1-of-4 {
+    width: 25%;
+    flex: none;
+}
+
+.slds-size_3-of-4 {
+    width: 75%;
+    flex: none;
+}
+
+.slds-m-top_small {
+    margin-top: 0.5rem;
+}
+
+.slds-m-top_medium {
+    margin-top: 1rem;
+}
+
+.slds-m-top_large {
+    margin-top: 1.5rem;
+}
+
+.slds-m-bottom_small {
+    margin-bottom: 0.5rem;
+}
+
+.slds-m-bottom_medium {
+    margin-bottom: 1rem;
+}
+
+.slds-m-bottom_large {
+    margin-bottom: 1.5rem;
+}
+
+.slds-m-left_small {
+    margin-left: 0.5rem;
+}
+
+.slds-m-right_x-small {
+    margin-right: 0.25rem;
+}
+
+.slds-spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+:host {
+    display: block;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+}
+
+@media (max-width: 768px) {
+    .slds-grid {
+        flex-direction: column;
+    }
+    
+    .slds-size_1-of-2,
+    .slds-size_1-of-3,
+    .slds-size_2-of-3,
+    .slds-size_1-of-4,
+    .slds-size_3-of-4 {
+        width: 100%;
+    }
+    
+    .slds-button-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .slds-card {
+        margin: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .slds-card__header-title {
+        font-size: 1rem;
+    }
+    
+    .slds-text-heading_medium {
+        font-size: 1rem;
+    }
+    
+    .slds-form-element {
+        margin-bottom: 0.75rem;
+    }
+}
