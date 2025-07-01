@@ -1,77 +1,965 @@
 <template>
-    <div class="slds-p-around_medium">
-        <!-- Progress Indicator (unchanged) -->
-        <lightning-progress-indicator 
-            current-step={currentPageString}
-            type="path"
-            variant="base">
-            <lightning-progress-step label="Application Checklist" value="1"></lightning-progress-step>
-            <lightning-progress-step label="Key Personnel Declaration" value="2"></lightning-progress-step>
-            <lightning-progress-step label="About the Applicant" value="3"></lightning-progress-step>
-            <lightning-progress-step label="Key Personnel Details" value="4"></lightning-progress-step>
-            <lightning-progress-step label="Provider Suitability" value="5"></lightning-progress-step>
-            <lightning-progress-step label="Care Type Details" value="6"></lightning-progress-step>
-        </lightning-progress-indicator>
+    <div class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <span>Application for Approval to Provide Aged Care - New Applicant</span>
+                    </h2>
+                </div>
+            </header>
+        </div>
 
-        <!-- Page 1: Application Checklist -->
-        <template if:true={isPage1}>
-            <div class="slds-box slds-m-top_medium">
-                <h2 class="slds-text-heading_medium">Required Documents Checklist</h2>
-                <div class="slds-m-top_medium">
-                    <lightning-checkbox-group
-                        name="requiredDocs"
-                        label="Please confirm you have the following documents ready:"
-                        options={requiredDocuments}
-                        value={selectedDocuments}
-                        onchange={handleDocumentSelection}>
-                    </lightning-checkbox-group>
-                </div>
-                <!-- Section Navigation -->
-                <div class="slds-m-top_medium slds-border_top slds-p-top_medium">
-                    <lightning-button-group class="slds-float_right">
-                        <lightning-button label="Cancel" variant="neutral" onclick={handleCancel}></lightning-button>
-                        <lightning-button label="Next" variant="brand" onclick={handleNext} disabled={isNextDisabled}></lightning-button>
-                    </lightning-button-group>
-                </div>
-            </div>
-        </template>
+        <!-- Progress Indicator -->
+        <div class="slds-card__body slds-card__body_inner">
+            <lightning-progress-indicator 
+                current-step={currentPageString}
+                type="path"
+                variant="base">
+                <lightning-progress-step 
+                    label="Key Personnel Declaration" 
+                    value="1">
+                </lightning-progress-step>
+                <lightning-progress-step 
+                    label="Applicant Details" 
+                    value="2">
+                </lightning-progress-step>
+                <lightning-progress-step 
+                    label="Key Personnel Details" 
+                    value="3">
+                </lightning-progress-step>
+                <lightning-progress-step 
+                    label="Suitability Assessment" 
+                    value="4">
+                </lightning-progress-step>
+                <lightning-progress-step 
+                    label="Care Type Specific" 
+                    value="5">
+                </lightning-progress-step>
+            </lightning-progress-indicator>
 
-        <!-- Page 2: Key Personnel Declaration -->
-        <template if:true={isPage2}>
-            <div class="slds-box slds-m-top_medium">
-                <h2 class="slds-text-heading_medium">Key Personnel Declaration</h2>
-                <!-- Existing Declaration Fields -->
-                <div class="slds-grid slds-wrap slds-m-top_medium">
-                    <!-- ... existing declaration fields ... -->
-                </div>
-                <!-- Section Navigation -->
-                <div class="slds-m-top_medium slds-border_top slds-p-top_medium">
-                    <lightning-button-group class="slds-float_right">
-                        <lightning-button label="Previous" variant="neutral" onclick={handlePrevious}></lightning-button>
-                        <lightning-button label="Cancel" variant="neutral" onclick={handleCancel}></lightning-button>
-                        <lightning-button label="Next" variant="brand" onclick={handleNext} disabled={isNextDisabled}></lightning-button>
-                    </lightning-button-group>
-                </div>
-            </div>
-        </template>
+            <!-- Page 1: Key Personnel Declaration -->
+            <template if:true={showPage1}>
+                <div class="slds-section slds-is-open">
+                    <h3 class="slds-section__title slds-theme_shade">
+                        <span class="slds-truncate slds-p-horizontal_small">Key Personnel Declaration</span>
+                    </h3>
+                    
+                    <div class="slds-box slds-theme_shade slds-m-bottom_medium">
+                        <p class="slds-text-heading_small slds-m-bottom_small">Important Information</p>
+                        <p>Giving false and misleading information is a serious offence. There are offences established by the Commission Act and the Criminal Code Act 1995 (Cth) (Criminal Code) relating to providing false and misleading information.</p>
+                        <p class="slds-m-top_small">An approval of an approved provider may be subject to revocation under section 63J(1)(c) of the Commission Act if the Commissioner is satisfied that the provider's application for approval contained information that was false or misleading in a material particular.</p>
+                    </div>
 
-        <!-- Page 3: About the Applicant -->
-        <template if:true={isPage3}>
-            <div class="slds-box slds-m-top_medium">
-                <h2 class="slds-text-heading_medium">Organization Details</h2>
-                <div class="slds-grid slds-wrap slds-m-top_medium">
-                    <!-- ... existing organization fields ... -->
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col slds-size_1-of-1">
+                            <h4 class="slds-text-heading_small slds-m-bottom_medium">I/we declare that I/we:</h4>
+                            
+                            <lightning-checkbox-group
+                                name="declarations"
+                                label="Required Declarations"
+                                options={declarationOptions}
+                                value={selectedDeclarations}
+                                onchange={handleDeclarationChange}
+                                required>
+                            </lightning-checkbox-group>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-2">
+                            <h4 class="slds-text-heading_small slds-m-bottom_medium">Declaring Officer 1 - Key Personnel</h4>
+                            <lightning-input
+                                label="Name"
+                                value={officer1Name}
+                                onchange={handleFieldChange}
+                                data-field="officer1Name"
+                                required
+                                message-when-value-missing="Officer 1 Name is required">
+                            </lightning-input>
+                            
+                            <lightning-input
+                                label="Position"
+                                value={officer1Position}
+                                onchange={handleFieldChange}
+                                data-field="officer1Position"
+                                required
+                                message-when-value-missing="Officer 1 Position is required">
+                            </lightning-input>
+                            
+                            <lightning-input
+                                type="date"
+                                label="Date"
+                                value={officer1Date}
+                                onchange={handleFieldChange}
+                                data-field="officer1Date"
+                                required
+                                message-when-value-missing="Officer 1 Date is required">
+                            </lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-2">
+                            <h4 class="slds-text-heading_small slds-m-bottom_medium">Declaring Officer 2 - Key Personnel</h4>
+                            <lightning-input
+                                label="Name"
+                                value={officer2Name}
+                                onchange={handleFieldChange}
+                                data-field="officer2Name">
+                            </lightning-input>
+                            
+                            <lightning-input
+                                label="Position"
+                                value={officer2Position}
+                                onchange={handleFieldChange}
+                                data-field="officer2Position">
+                            </lightning-input>
+                            
+                            <lightning-input
+                                type="date"
+                                label="Date"
+                                value={officer2Date}
+                                onchange={handleFieldChange}
+                                data-field="officer2Date">
+                            </lightning-input>
+                        </div>
+                    </div>
                 </div>
-                <!-- Section Navigation -->
-                <div class="slds-m-top_medium slds-border_top slds-p-top_medium">
-                    <lightning-button-group class="slds-float_right">
-                        <lightning-button label="Previous" variant="neutral" onclick={handlePrevious}></lightning-button>
-                        <lightning-button label="Cancel" variant="neutral" onclick={handleCancel}></lightning-button>
-                        <lightning-button label="Save" variant="success" onclick={handleSave} disabled={isSaveDisabled}></lightning-button>
-                        <lightning-button label="Next" variant="brand" onclick={handleNext} disabled={isNextDisabled}></lightning-button>
-                    </lightning-button-group>
+            </template>
+
+            <!-- Page 2: Applicant Details -->
+            <template if:true={showPage2}>
+                <div class="slds-section slds-is-open">
+                    <h3 class="slds-section__title slds-theme_shade">
+                        <span class="slds-truncate slds-p-horizontal_small">About the Applicant</span>
+                    </h3>
+                    
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col slds-size_1-of-1">
+                            <h4 class="slds-text-heading_small slds-m-bottom_medium">Organisation Details</h4>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-input
+                                label="Applicant's (Company) Legal Name"
+                                value={companyLegalName}
+                                onchange={handleFieldChange}
+                                data-field="companyLegalName"
+                                required
+                                message-when-value-missing="Company Legal Name is required">
+                            </lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-input
+                                label="Applicant's (Company) ACN, IAN or ICN"
+                                value={companyACN}
+                                onchange={handleFieldChange}
+                                data-field="companyACN"
+                                required
+                                message-when-value-missing="Company ACN/IAN/ICN is required">
+                            </lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-input
+                                label="Applicant's (Company) ABN"
+                                value={companyABN}
+                                onchange={handleFieldChange}
+                                data-field="companyABN"
+                                required
+                                message-when-value-missing="Company ABN is required">
+                            </lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-input
+                                label="Business Name (if applicable)"
+                                value={businessName}
+                                onchange={handleFieldChange}
+                                data-field="businessName">
+                            </lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <h4 class="slds-text-heading_small slds-m-top_large slds-m-bottom_medium">Registered Business Address</h4>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-input
+                                label="Street number and name (must be the registered physical address of the organisation)"
+                                value={registeredStreetAddress}
+                                onchange={handleFieldChange}
+                                data-field="registeredStreetAddress"
+                                required
+                                message-when-value-missing="Registered street address is required">
+                            </lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-3">
+                            <lightning-input
+                                label="Suburb/Town"
+                                value={registeredSuburb}
+                                onchange={handleFieldChange}
+                                data-field="registeredSuburb"
+                                required
+                                message-when-value-missing="Suburb/Town is required">
+                            </lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-3">
+                            <lightning-combobox
+                                label="State/Territory"
+                                value={registeredState}
+                                options={stateOptions}
+                                onchange={handleFieldChange}
+                                data-field="registeredState"
+                                required
+                                message-when-value-missing="State/Territory is required">
+                            </lightning-combobox>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-3">
+                            <lightning-input
+                                label="Postcode"
+                                value={registeredPostcode}
+                                onchange={handleFieldChange}
+                                data-field="registeredPostcode"
+                                required
+                                message-when-value-missing="Postcode is required">
+                            </lightning-input>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <h4 class="slds-text-heading_small slds-m-top_large slds-m-bottom_medium">Postal Address</h4>
+                            <lightning-input
+                                type="checkbox"
+                                label="Same as registered address"
+                                checked={sameAsRegistered}
+                                onchange={handleSameAsRegisteredChange}>
+                            </lightning-input>
+                        </div>
+
+                        <template if:false={sameAsRegistered}>
+                            <div class="slds-col slds-size_1-of-1">
+                                <lightning-input
+                                    label="Street number and name/PO Box"
+                                    value={postalStreetAddress}
+                                    onchange={handleFieldChange}
+                                    data-field="postalStreetAddress">
+                                </lightning-input>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-3">
+                                <lightning-input
+                                    label="Suburb/Town"
+                                    value={postalSuburb}
+                                    onchange={handleFieldChange}
+                                    data-field="postalSuburb">
+                                </lightning-input>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-3">
+                                <lightning-combobox
+                                    label="State/Territory"
+                                    value={postalState}
+                                    options={stateOptions}
+                                    onchange={handleFieldChange}
+                                    data-field="postalState">
+                                </lightning-combobox>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-3">
+                                <lightning-input
+                                    label="Postcode"
+                                    value={postalPostcode}
+                                    onchange={handleFieldChange}
+                                    data-field="postalPostcode">
+                                </lightning-input>
+                            </div>
+                        </template>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <h4 class="slds-text-heading_small slds-m-top_large slds-m-bottom_medium">Care Type You Are Applying For</h4>
+                            <lightning-checkbox-group
+                                name="careTypes"
+                                label="Select the type(s) of care for which approval is sought"
+                                options={careTypeOptions}
+                                value={selectedCareTypes}
+                                onchange={handleCareTypeChange}
+                                required>
+                            </lightning-checkbox-group>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <h4 class="slds-text-heading_small slds-m-top_large slds-m-bottom_medium">Organisation Type</h4>
+                            <lightning-radio-group
+                                name="orgType"
+                                label="What is your organisation type?"
+                                options={organisationTypeOptions}
+                                value={organisationType}
+                                onchange={handleFieldChange}
+                                data-field="organisationType"
+                                required>
+                            </lightning-radio-group>
+                        </div>
+
+                        <template if:true={showNotForProfitOptions}>
+                            <div class="slds-col slds-size_1-of-1">
+                                <lightning-radio-group
+                                    name="notForProfitType"
+                                    label="Not-For-Profit Type"
+                                    options={notForProfitOptions}
+                                    value={notForProfitType}
+                                    onchange={handleFieldChange}
+                                    data-field="notForProfitType"
+                                    required>
+                                </lightning-radio-group>
+                            </div>
+                        </template>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-radio-group
+                                name="stockExchange"
+                                label="Is your organisation or its parent body listed on the Australian Stock Exchange?"
+                                options={yesNoOptions}
+                                value={listedOnStockExchange}
+                                onchange={handleFieldChange}
+                                data-field="listedOnStockExchange"
+                                required>
+                            </lightning-radio-group>
+                        </div>
+                    </div>
                 </div>
+            </template>
+
+            <!-- Page 3: Key Personnel Details -->
+            <template if:true={showPage3}>
+                <div class="slds-section slds-is-open">
+                    <h3 class="slds-section__title slds-theme_shade">
+                        <span class="slds-truncate slds-p-horizontal_small">Your Key Personnel</span>
+                    </h3>
+                    
+                    <div class="slds-box slds-theme_shade slds-m-bottom_medium">
+                        <p class="slds-text-heading_small slds-m-bottom_small">Important Information</p>
+                        <p>You must have an understanding of key personnel requirements and who in your organisation would meet the definition set out under 8B of the Commission Act.</p>
+                        <p class="slds-m-top_small">Your application will be invalid if you do not complete all key personnel fields, have each key personnel sign their individual details, and submit required documentation.</p>
+                    </div>
+
+                    <lightning-accordion allow-multiple-sections-open>
+                        <lightning-accordion-section name="keyPersonnel1" label="Key Personnel 1">
+                            <div class="slds-grid slds-wrap slds-gutters">
+                                <div class="slds-col slds-size_1-of-4">
+                                    <lightning-combobox
+                                        label="Title"
+                                        value={kp1Title}
+                                        options={titleOptions}
+                                        onchange={handleFieldChange}
+                                        data-field="kp1Title">
+                                    </lightning-combobox>
+                                </div>
+
+                                <div class="slds-col slds-size_3-of-4">
+                                    <lightning-input
+                                        label="First and Last Name"
+                                        value={kp1Name}
+                                        onchange={handleFieldChange}
+                                        data-field="kp1Name"
+                                        required
+                                        message-when-value-missing="Key Personnel 1 Name is required">
+                                    </lightning-input>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input
+                                        label="Former Name (as applicable)"
+                                        value={kp1FormerName}
+                                        onchange={handleFieldChange}
+                                        data-field="kp1FormerName">
+                                    </lightning-input>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input
+                                        label="Preferred Name"
+                                        value={kp1PreferredName}
+                                        onchange={handleFieldChange}
+                                        data-field="kp1PreferredName">
+                                    </lightning-input>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input
+                                        type="date"
+                                        label="Date of Birth"
+                                        value={kp1DateOfBirth}
+                                        onchange={handleFieldChange}
+                                        data-field="kp1DateOfBirth"
+                                        required
+                                        message-when-value-missing="Date of Birth is required">
+                                    </lightning-input>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input
+                                        label="Position Title"
+                                        value={kp1PositionTitle}
+                                        onchange={handleFieldChange}
+                                        data-field="kp1PositionTitle"
+                                        required
+                                        message-when-value-missing="Position Title is required">
+                                    </lightning-input>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input
+                                        type="email"
+                                        label="Contact Email Address"
+                                        value={kp1Email}
+                                        onchange={handleFieldChange}
+                                        data-field="kp1Email"
+                                        required
+                                        message-when-value-missing="Email is required">
+                                    </lightning-input>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input
+                                        type="tel"
+                                        label="Contact Phone Number - Mobile"
+                                        value={kp1Mobile}
+                                        onchange={handleFieldChange}
+                                        data-field="kp1Mobile"
+                                        required
+                                        message-when-value-missing="Mobile number is required">
+                                    </lightning-input>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-1">
+                                    <lightning-textarea
+                                        label="Principal Duties of Position"
+                                        value={kp1PrincipalDuties}
+                                        onchange={handleFieldChange}
+                                        data-field="kp1PrincipalDuties"
+                                        required
+                                        message-when-value-missing="Principal duties are required">
+                                    </lightning-textarea>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-1">
+                                    <h5 class="slds-text-heading_small slds-m-top_medium slds-m-bottom_small">Qualifications</h5>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-1">
+                                    <lightning-input
+                                        label="Qualification 1 - Title and Educational Facility"
+                                        value={kp1Qualification1}
+                                        onchange={handleFieldChange}
+                                        data-field="kp1Qualification1">
+                                    </lightning-input>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input
+                                        type="date"
+                                        label="Date Obtained"
+                                        value={kp1Qual1DateObtained}
+                                        onchange={handleFieldChange}
+                                        data-field="kp1Qual1DateObtained">
+                                    </lightning-input>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input
+                                        type="date"
+                                        label="Date Started (if still studying)"
+                                        value={kp1Qual1DateStarted}
+                                        onchange={handleFieldChange}
+                                        data-field="kp1Qual1DateStarted">
+                                    </lightning-input>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-1">
+                                    <h5 class="slds-text-heading_small slds-m-top_medium slds-m-bottom_small">Experience</h5>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-1">
+                                    <lightning-textarea
+                                        label="Employer 1 - Name and Address"
+                                        value={kp1Employer1}
+                                        onchange={handleFieldChange}
+                                        data-field="kp1Employer1">
+                                    </lightning-textarea>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input
+                                        type="date"
+                                        label="Employment From"
+                                        value={kp1Emp1From}
+                                        onchange={handleFieldChange}
+                                        data-field="kp1Emp1From">
+                                    </lightning-input>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input
+                                        type="date"
+                                        label="Employment To"
+                                        value={kp1Emp1To}
+                                        onchange={handleFieldChange}
+                                        data-field="kp1Emp1To">
+                                    </lightning-input>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-1">
+                                    <lightning-textarea
+                                        label="Role Description including how it is relevant to providing aged care"
+                                        value={kp1Emp1Role}
+                                        onchange={handleFieldChange}
+                                        data-field="kp1Emp1Role">
+                                    </lightning-textarea>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-1">
+                                    <h5 class="slds-text-heading_small slds-m-top_medium slds-m-bottom_small">Required Attachments</h5>
+                                    <lightning-checkbox-group
+                                        name="kp1Attachments"
+                                        label="Confirm you have the following attachments ready"
+                                        options={requiredAttachmentsOptions}
+                                        value={kp1Attachments}
+                                        onchange={handleKP1AttachmentsChange}>
+                                    </lightning-checkbox-group>
+                                </div>
+                            </div>
+                        </lightning-accordion-section>
+
+                        <lightning-accordion-section name="keyPersonnel2" label="Key Personnel 2">
+                            <div class="slds-grid slds-wrap slds-gutters">
+                                <div class="slds-col slds-size_1-of-4">
+                                    <lightning-combobox
+                                        label="Title"
+                                        value={kp2Title}
+                                        options={titleOptions}
+                                        onchange={handleFieldChange}
+                                        data-field="kp2Title">
+                                    </lightning-combobox>
+                                </div>
+
+                                <div class="slds-col slds-size_3-of-4">
+                                    <lightning-input
+                                        label="First and Last Name"
+                                        value={kp2Name}
+                                        onchange={handleFieldChange}
+                                        data-field="kp2Name">
+                                    </lightning-input>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input
+                                        type="email"
+                                        label="Contact Email Address"
+                                        value={kp2Email}
+                                        onchange={handleFieldChange}
+                                        data-field="kp2Email">
+                                    </lightning-input>
+                                </div>
+
+                                <div class="slds-col slds-size_1-of-2">
+                                    <lightning-input
+                                        label="Position Title"
+                                        value={kp2PositionTitle}
+                                        onchange={handleFieldChange}
+                                        data-field="kp2PositionTitle">
+                                    </lightning-input>
+                                </div>
+                            </div>
+                        </lightning-accordion-section>
+                    </lightning-accordion>
+                </div>
+            </template>
+
+            <!-- Page 4: Suitability Assessment -->
+            <template if:true={showPage4}>
+                <div class="slds-section slds-is-open">
+                    <h3 class="slds-section__title slds-theme_shade">
+                        <span class="slds-truncate slds-p-horizontal_small">Your Suitability to be an Approved Provider</span>
+                    </h3>
+                    
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col slds-size_1-of-1">
+                            <h4 class="slds-text-heading_small slds-m-bottom_medium">Experience, Conduct and Compliance</h4>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-textarea
+                                label="Describe your organisation's current experience in the delivery of aged care, or if you have no aged care experience, describe your experience delivering other care relevant to the care type you are applying for"
+                                value={organisationExperience}
+                                onchange={handleFieldChange}
+                                data-field="organisationExperience"
+                                required
+                                message-when-value-missing="Organisation experience is required">
+                            </lightning-textarea>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <h4 class="slds-text-heading_small slds-m-top_large slds-m-bottom_medium">Governance Systems</h4>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-textarea
+                                label="Information Management - Detail your current or proposed information management systems"
+                                value={informationManagement}
+                                onchange={handleFieldChange}
+                                data-field="informationManagement"
+                                required
+                                message-when-value-missing="Information management details are required">
+                            </lightning-textarea>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-textarea
+                                label="Continuous Improvement - Detail your current or proposed continuous improvement system"
+                                value={continuousImprovement}
+                                onchange={handleFieldChange}
+                                data-field="continuousImprovement"
+                                required
+                                message-when-value-missing="Continuous improvement details are required">
+                            </lightning-textarea>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-textarea
+                                label="Financial Governance - Detail your current or proposed financial governance system"
+                                value={financialGovernance}
+                                onchange={handleFieldChange}
+                                data-field="financialGovernance"
+                                required
+                                message-when-value-missing="Financial governance details are required">
+                            </lightning-textarea>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-textarea
+                                label="Workforce Governance - Detail your current or proposed workforce governance system"
+                                value={workforceGovernance}
+                                onchange={handleFieldChange}
+                                data-field="workforceGovernance"
+                                required
+                                message-when-value-missing="Workforce governance details are required">
+                            </lightning-textarea>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-textarea
+                                label="Risk and Incident Management - What is your current or proposed risk management and incident management system"
+                                value={riskManagement}
+                                onchange={handleFieldChange}
+                                data-field="riskManagement"
+                                required
+                                message-when-value-missing="Risk management details are required">
+                            </lightning-textarea>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-textarea
+                                label="Clinical Governance - What is your current or proposed clinical governance system"
+                                value={clinicalGovernance}
+                                onchange={handleFieldChange}
+                                data-field="clinicalGovernance"
+                                required
+                                message-when-value-missing="Clinical governance details are required">
+                            </lightning-textarea>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <h4 class="slds-text-heading_small slds-m-top_large slds-m-bottom_medium">Financial Management</h4>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-textarea
+                                label="Provide a detailed description of the policies and procedures you have in place or will develop to ensure sound financial management"
+                                value={financialManagementPolicies}
+                                onchange={handleFieldChange}
+                                data-field="financialManagementPolicies"
+                                required
+                                message-when-value-missing="Financial management policies are required">
+                            </lightning-textarea>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-textarea
+                                label="Describe your financial management strategy and detail how you plan to become and remain financially viable"
+                                value={financialStrategy}
+                                onchange={handleFieldChange}
+                                data-field="financialStrategy"
+                                required
+                                message-when-value-missing="Financial strategy is required">
+                            </lightning-textarea>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <h4 class="slds-text-heading_small slds-m-top_large slds-m-bottom_medium">Responsibilities as a Provider</h4>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-textarea
+                                label="Describe the responsibilities set out under section 54-1 of the Aged Care Act and how you will embed these into the delivery of care"
+                                value={providerResponsibilities}
+                                onchange={handleFieldChange}
+                                data-field="providerResponsibilities"
+                                required
+                                message-when-value-missing="Provider responsibilities description is required">
+                            </lightning-textarea>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-textarea
+                                label="Describe how you will develop, implement, and maintain the care and services specified in the Quality of Care Principles"
+                                value={qualityOfCarePrinciples}
+                                onchange={handleFieldChange}
+                                data-field="qualityOfCarePrinciples"
+                                required
+                                message-when-value-missing="Quality of Care Principles description is required">
+                            </lightning-textarea>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-textarea
+                                label="Describe how you will meet the legislated requirements regarding staffing as set out under section 54-1(1)(b)"
+                                value={staffingRequirements}
+                                onchange={handleFieldChange}
+                                data-field="staffingRequirements"
+                                required
+                                message-when-value-missing="Staffing requirements description is required">
+                            </lightning-textarea>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-textarea
+                                label="Describe how you will meet the legislative requirements for managing incidents"
+                                value={incidentManagement}
+                                onchange={handleFieldChange}
+                                data-field="incidentManagement"
+                                required
+                                message-when-value-missing="Incident management description is required">
+                            </lightning-textarea>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Page 5: Care Type Specific -->
+            <template if:true={showPage5}>
+                <div class="slds-section slds-is-open">
+                    <h3 class="slds-section__title slds-theme_shade">
+                        <span class="slds-truncate slds-p-horizontal_small">Care Type Specific Requirements</span>
+                    </h3>
+                    
+                    <template if:true={showResidentialCare}>
+                        <div class="slds-grid slds-wrap slds-gutters">
+                            <div class="slds-col slds-size_1-of-1">
+                                <h4 class="slds-text-heading_small slds-m-bottom_medium">Residential Care</h4>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1">
+                                <lightning-textarea
+                                    label="Describe what systems, policies, or procedures you have/will develop to ensure you comply with the Prudential Standards"
+                                    value={prudentialStandards}
+                                    onchange={handleFieldChange}
+                                    data-field="prudentialStandards"
+                                    required
+                                    message-when-value-missing="Prudential Standards description is required">
+                                </lightning-textarea>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1">
+                                <lightning-textarea
+                                    label="Describe how you will finance the purchase, construction and/or lease of a residential aged care facility"
+                                    value={facilityFinancing}
+                                    onchange={handleFieldChange}
+                                    data-field="facilityFinancing"
+                                    required
+                                    message-when-value-missing="Facility financing description is required">
+                                </lightning-textarea>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1">
+                                <lightning-textarea
+                                    label="Describe the responsibilities of an approved provider of residential care under section 54-1(1)(f) regarding restrictive practices"
+                                    value={restrictivePractices}
+                                    onchange={handleFieldChange}
+                                    data-field="restrictivePractices"
+                                    required
+                                    message-when-value-missing="Restrictive practices description is required">
+                                </lightning-textarea>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template if:true={showHomeCare}>
+                        <div class="slds-grid slds-wrap slds-gutters">
+                            <div class="slds-col slds-size_1-of-1">
+                                <h4 class="slds-text-heading_small slds-m-bottom_medium">Home Care</h4>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1">
+                                <lightning-textarea
+                                    label="Detail the systems, policies, or procedures you have/will develop to deliver home care from referral to delivery"
+                                    value={homeCareDelivery}
+                                    onchange={handleFieldChange}
+                                    data-field="homeCareDelivery"
+                                    required
+                                    message-when-value-missing="Home care delivery description is required">
+                                </lightning-textarea>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1">
+                                <lightning-textarea
+                                    label="What tools or methods will you implement to accurately capture care recipient current and future health status"
+                                    value={healthStatusCapture}
+                                    onchange={handleFieldChange}
+                                    data-field="healthStatusCapture"
+                                    required
+                                    message-when-value-missing="Health status capture description is required">
+                                </lightning-textarea>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1">
+                                <lightning-textarea
+                                    label="Describe the system that you will use to operationalise the delivery of care and services to care recipients in their home"
+                                    value={homeCareSystems}
+                                    onchange={handleFieldChange}
+                                    data-field="homeCareSystems"
+                                    required
+                                    message-when-value-missing="Home care systems description is required">
+                                </lightning-textarea>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1">
+                                <lightning-textarea
+                                    label="Detail the systems for managing medication correctly and safely as set out in Standard 3 of the Aged Care Quality Standards"
+                                    value={medicationManagement}
+                                    onchange={handleFieldChange}
+                                    data-field="medicationManagement"
+                                    required
+                                    message-when-value-missing="Medication management description is required">
+                                </lightning-textarea>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1">
+                                <lightning-textarea
+                                    label="Describe how you will provide choice and flexibility of care to care recipients in their home care package"
+                                    value={careChoiceFlexibility}
+                                    onchange={handleFieldChange}
+                                    data-field="careChoiceFlexibility"
+                                    required
+                                    message-when-value-missing="Care choice and flexibility description is required">
+                                </lightning-textarea>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1">
+                                <lightning-textarea
+                                    label="Describe how you will meet your obligations regarding portability of the care recipient's home care package"
+                                    value={packagePortability}
+                                    onchange={handleFieldChange}
+                                    data-field="packagePortability"
+                                    required
+                                    message-when-value-missing="Package portability description is required">
+                                </lightning-textarea>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template if:true={showFlexibleCare}>
+                        <div class="slds-grid slds-wrap slds-gutters">
+                            <div class="slds-col slds-size_1-of-1">
+                                <h4 class="slds-text-heading_small slds-m-bottom_medium">Flexible Care</h4>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1">
+                                <lightning-textarea
+                                    label="Describe from an experience perspective, how flexible care is to be provided"
+                                    value={flexibleCareExperience}
+                                    onchange={handleFieldChange}
+                                    data-field="flexibleCareExperience"
+                                    required
+                                    message-when-value-missing="Flexible care experience description is required">
+                                </lightning-textarea>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1">
+                                <lightning-textarea
+                                    label="Describe what policies, procedures, or forms you have or will develop to effectively deliver short-term restorative care"
+                                    value={restorativeCare}
+                                    onchange={handleFieldChange}
+                                    data-field="restorativeCare"
+                                    required
+                                    message-when-value-missing="Restorative care description is required">
+                                </lightning-textarea>
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-1">
+                                <lightning-textarea
+                                    label="Describe the responsibilities of an approved provider in relation to multi-disciplinary teams in the delivery of flexible care"
+                                    value={multiDisciplinaryTeams}
+                                    onchange={handleFieldChange}
+                                    data-field="multiDisciplinaryTeams"
+                                    required
+                                    message-when-value-missing="Multi-disciplinary teams description is required">
+                                </lightning-textarea>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <!-- Validation Errors -->
+            <template if:true={hasValidationErrors}>
+                <div class="slds-notify slds-notify_alert slds-theme_error slds-m-top_medium">
+                    <span class="slds-assistive-text">Error</span>
+                    <h2>Please correct the following errors:</h2>
+                    <ul class="slds-list_dotted">
+                        <template for:each={validationErrors} for:item="error">
+                            <li key={error}>{error}</li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
+        </div>
+
+        <!-- Navigation Footer -->
+        <div class="slds-card__footer">
+            <div class="slds-docked-form-footer">
+                <lightning-button 
+                    label="Previous" 
+                    onclick={handlePrevious}
+                    disabled={isPreviousDisabled}
+                    variant="neutral"
+                    class="slds-m-right_small">
+                </lightning-button>
+                <lightning-button 
+                    label="Next" 
+                    onclick={handleNext}
+                    disabled={isNextDisabled}
+                    variant="brand"
+                    class="slds-m-right_small">
+                </lightning-button>
+                <lightning-button 
+                    label="Save Draft" 
+                    onclick={handleSaveDraft}
+                    variant="neutral"
+                    class="slds-m-right_small">
+                </lightning-button>
+                <lightning-button 
+                    label="Submit Application" 
+                    onclick={handleSubmit}
+                    disabled={isSubmitDisabled}
+                    variant="success">
+                </lightning-button>
             </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Processing..." size="medium"></lightning-spinner>
         </template>
     </div>
 </template>
