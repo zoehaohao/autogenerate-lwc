@@ -1,0 +1,124 @@
+<template>
+    <div class="provider-app-form">
+        <lightning-card title="APPLICATION FOR APPROVAL TO PROVIDE AGED CARE" icon-name="standard:form">
+            
+            <lightning-accordion active-section-name={openSections} 
+                               allow-multiple-sections-open="true"
+                               onselect={handleAccordionToggle}>
+                
+                <!-- Section 1: Applicant Details -->
+                <lightning-accordion-section name="section1" label="Section 1: Applicant Details">
+                    <div class="slds-p-around_medium">
+                        <lightning-input 
+                            label="Applicant's (Company) Legal Name"
+                            type="text"
+                            required
+                            value={applicantDetails.legalName}
+                            onchange={handleInputChange}
+                            data-field="legalName">
+                        </lightning-input>
+                        
+                        <div class="slds-grid slds-gutters slds-m-top_medium">
+                            <div class="slds-col">
+                                <lightning-input 
+                                    label="ACN/IAN/ICN"
+                                    type="text"
+                                    required
+                                    value={applicantDetails.acn}
+                                    onchange={handleInputChange}
+                                    data-field="acn">
+                                </lightning-input>
+                            </div>
+                            <div class="slds-col">
+                                <lightning-input 
+                                    label="ABN"
+                                    type="text"
+                                    required
+                                    value={applicantDetails.abn}
+                                    onchange={handleInputChange}
+                                    data-field="abn">
+                                </lightning-input>
+                            </div>
+                        </div>
+
+                        <lightning-input 
+                            label="Business Name (if applicable)"
+                            type="text"
+                            value={applicantDetails.businessName}
+                            onchange={handleInputChange}
+                            data-field="businessName">
+                        </lightning-input>
+                    </div>
+                </lightning-accordion-section>
+
+                <!-- Section 2: Key Personnel Details -->
+                <lightning-accordion-section name="section2" label="Section 2: Key Personnel Details">
+                    <div class="slds-p-around_medium">
+                        <lightning-datatable
+                            key-field="id"
+                            data={keyPersonnelData}
+                            columns={keyPersonnelColumns}
+                            onrowaction={handleRowAction}
+                            hide-checkbox-column>
+                        </lightning-datatable>
+                        
+                        <div class="slds-m-top_medium">
+                            <lightning-button 
+                                label="Add Key Personnel" 
+                                variant="neutral"
+                                onclick={handleAddKeyPersonnel}
+                                icon-name="utility:add">
+                            </lightning-button>
+                        </div>
+                    </div>
+                </lightning-accordion-section>
+
+                <!-- Section 3: Suitability -->
+                <lightning-accordion-section name="section3" label="Section 3: Suitability to be an approved provider">
+                    <div class="slds-p-around_medium">
+                        <lightning-textarea 
+                            label="Experience in Aged Care"
+                            value={suitabilityDetails.experience}
+                            onchange={handleInputChange}
+                            data-field="experience"
+                            required>
+                        </lightning-textarea>
+                    </div>
+                </lightning-accordion-section>
+
+                <!-- Section 4: Care Type Specific Matters -->
+                <lightning-accordion-section name="section4" label="Section 4: Care Type Specific Matters">
+                    <div class="slds-p-around_medium">
+                        <lightning-radio-group
+                            label="Select Care Type"
+                            options={careTypeOptions}
+                            value={selectedCareType}
+                            onchange={handleCareTypeChange}
+                            type="radio"
+                            required>
+                        </lightning-radio-group>
+                    </div>
+                </lightning-accordion-section>
+            </lightning-accordion>
+
+            <div class="slds-m-around_medium">
+                <lightning-button-group>
+                    <lightning-button 
+                        label="Save Draft" 
+                        variant="neutral"
+                        onclick={handleSaveDraft}>
+                    </lightning-button>
+                    <lightning-button 
+                        label="Submit" 
+                        variant="brand"
+                        onclick={handleSubmit}>
+                    </lightning-button>
+                </lightning-button-group>
+            </div>
+
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+        </lightning-card>
+    </div>
+</template>
