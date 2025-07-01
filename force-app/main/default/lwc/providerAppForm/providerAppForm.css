@@ -1,26 +1,5 @@
-.form-page {
-    min-height: 400px;
-}
-
-.slds-has-error .slds-input,
-.slds-has-error .slds-select,
-.slds-has-error .slds-textarea {
-    border-color: #c23934;
-    box-shadow: 0 0 0 1px #c23934 inset;
-}
-
-.slds-has-error .slds-form-element__label {
-    color: #c23934;
-}
-
-.slds-progress-indicator .slds-progress__item.slds-is-active .slds-progress__marker {
-    background-color: #0176d3;
-    border-color: #0176d3;
-}
-
-.slds-progress-indicator .slds-progress__item.slds-is-completed .slds-progress__marker {
-    background-color: #4bca81;
-    border-color: #4bca81;
+:host {
+    display: block;
 }
 
 .slds-card {
@@ -29,163 +8,218 @@
 }
 
 .slds-card__header {
-    background-color: #f3f3f3;
-    border-bottom: 1px solid #dddbda;
-}
-
-.slds-grid.slds-gutters {
-    margin-left: -0.5rem;
-    margin-right: -0.5rem;
-}
-
-.slds-grid.slds-gutters > .slds-col {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-}
-
-.slds-notify.slds-theme_info {
-    background-color: #0176d3;
+    background: linear-gradient(135deg, #4A90E2, #7B68EE);
     color: white;
+    padding: 1.5rem;
 }
 
-.slds-notify.slds-theme_warning {
-    background-color: #ffb75d;
-    color: #080707;
-}
-
-.slds-notify.slds-theme_error {
-    background-color: #c23934;
-    color: white;
-}
-
-.slds-accordion__section {
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
+.slds-text-heading_large {
+    font-size: 1.75rem;
+    font-weight: 700;
+    text-align: center;
     margin-bottom: 0.5rem;
-}
-
-.slds-accordion__summary {
-    background-color: #f3f3f3;
-    padding: 1rem;
-    font-weight: 600;
-}
-
-.slds-accordion__content {
-    padding: 1rem;
-    background-color: white;
 }
 
 .slds-text-heading_medium {
     font-size: 1.25rem;
     font-weight: 600;
-    line-height: 1.25;
-    color: #080707;
+    text-align: center;
 }
 
-.slds-text-heading_small {
-    font-size: 1rem;
+.slds-section__title {
+    background-color: #f3f2f2;
+    padding: 0.75rem 1rem;
+    border-left: 4px solid #0176d3;
     font-weight: 600;
-    line-height: 1.25;
     color: #080707;
 }
 
-.slds-text-body_regular {
-    font-size: 0.875rem;
-    line-height: 1.5;
-    color: #3e3e3c;
+.slds-section__content {
+    background-color: #fafaf9;
+    border: 1px solid #dddbda;
+    border-top: none;
 }
 
-.slds-text-body_small {
-    font-size: 0.75rem;
-    line-height: 1.5;
-    color: #3e3e3c;
+.slds-notify_alert {
+    margin: 1rem 0;
+}
+
+.slds-notify_toast {
+    margin: 1rem 0;
+    border-radius: 0.25rem;
+}
+
+.slds-theme_info {
+    background-color: #e8f4fd;
+    border-color: #1589ee;
+}
+
+.slds-theme_warning {
+    background-color: #fef7e6;
+    border-color: #fe9339;
+}
+
+.slds-theme_error {
+    background-color: #feded8;
+    border-color: #ea001e;
+}
+
+.slds-grid {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.slds-gutters {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+}
+
+.slds-gutters > .slds-col {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.slds-col {
+    flex: 1;
+}
+
+.slds-size_1-of-2 {
+    width: 50%;
+    flex: none;
+}
+
+.slds-size_1-of-3 {
+    width: 33.333333%;
+    flex: none;
+}
+
+.slds-grid_align-spread {
+    justify-content: space-between;
+}
+
+.slds-no-flex {
+    flex: none;
+}
+
+.slds-button-group {
+    display: inline-flex;
+    gap: 0.5rem;
+}
+
+.slds-card__footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #dddbda;
+    background-color: #f3f2f2;
+}
+
+.slds-progress-indicator {
+    margin: 1rem 0;
+}
+
+.slds-is-relative {
+    position: relative;
+}
+
+.slds-list_dotted {
+    list-style-type: disc;
+    padding-left: 1rem;
+}
+
+.slds-list_dotted li {
+    margin-bottom: 0.25rem;
+}
+
+.slds-text-link {
+    color: #0176d3;
+    text-decoration: underline;
+}
+
+.slds-text-link:hover {
+    color: #014486;
+}
+
+.slds-text-color_destructive {
+    color: #ea001e;
 }
 
 .slds-text-color_weak {
     color: #706e6b;
 }
 
-.slds-border_top {
-    border-top: 1px solid #dddbda;
+.slds-text-color_inverse {
+    color: white;
 }
 
-.slds-m-top_large {
-    margin-top: 1.5rem;
-}
-
-.slds-m-top_medium {
-    margin-top: 1rem;
+.slds-m-around_medium {
+    margin: 1rem;
 }
 
 .slds-m-top_small {
     margin-top: 0.5rem;
 }
 
-.slds-m-bottom_large {
-    margin-bottom: 1.5rem;
+.slds-m-top_medium {
+    margin-top: 1rem;
 }
 
-.slds-m-bottom_medium {
-    margin-bottom: 1rem;
+.slds-m-top_large {
+    margin-top: 1.5rem;
 }
 
 .slds-m-bottom_small {
     margin-bottom: 0.5rem;
 }
 
-.slds-p-top_medium {
-    padding-top: 1rem;
+.slds-m-bottom_medium {
+    margin-bottom: 1rem;
 }
 
-.slds-p-horizontal_large {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+.slds-m-bottom_large {
+    margin-bottom: 1.5rem;
 }
 
-.slds-m-right_small {
-    margin-right: 0.5rem;
+.slds-m-left_medium {
+    margin-left: 1rem;
+}
+
+.slds-m-left_large {
+    margin-left: 1.5rem;
+}
+
+.slds-p-around_medium {
+    padding: 1rem;
+}
+
+.slds-p-horizontal_small {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 }
 
 @media (max-width: 768px) {
-    .slds-col.slds-size_1-of-2 {
+    .slds-size_1-of-2,
+    .slds-size_1-of-3 {
         width: 100%;
-    }
-    
-    .slds-col.slds-size_1-of-4 {
-        width: 100%;
-    }
-    
-    .slds-grid.slds-grid_align-spread {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .slds-grid.slds-grid_align-spread .slds-col {
         margin-bottom: 0.5rem;
-        text-align: center;
+    }
+    
+    .slds-grid {
+        flex-direction: column;
+    }
+    
+    .slds-button-group {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .slds-button-group lightning-button {
+        width: 100%;
+        margin-bottom: 0.5rem;
     }
 }
 
-@media (max-width: 480px) {
-    .slds-card {
-        margin: 0 0.5rem;
-    }
-    
-    .slds-p-horizontal_large {
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
-    
-    .slds-text-heading_medium {
-        font-size: 1.125rem;
-    }
-    
+@media print {
+    .slds-card__footer,
     .slds-progress-indicator {
-        font-size: 0.75rem;
+        display: none;
     }
-}
-
-:host {
-    display: block;
-    font-family: 'Salesforce Sans', Arial, sans-serif;
 }
