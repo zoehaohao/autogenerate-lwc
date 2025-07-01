@@ -2,101 +2,96 @@ import { LightningElement, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class ProviderAppForm extends LightningElement {
-    @track openSections = ['section1'];
-    @track showSpinner = false;
-    @track isSubmitDisabled = true;
-    
-    @track applicantDetails = {
-        legalName: '',
-        acn: '',
+    @track activeSections = ['section1'];
+    @track formData = {
+        companyName: '',
+        companyACN: '',
         businessName: '',
-        abn: ''
+        businessAddress: '',
+        experience: '',
+        careType: ''
     };
-    
-    @track keyPersonnelData = [];
-    
-    keyPersonnelColumns = [
-        { label: 'Name', fieldName: 'name', type: 'text' },
-        { label: 'Position', fieldName: 'position', type: 'text' },
-        { label: 'Email', fieldName: 'email', type: 'email' },
-        { label: 'Phone', fieldName: 'phone', type: 'phone' },
-        {
-            type: 'action',
-            typeAttributes: {
-                rowActions: [
-                    { label: 'Edit', name: 'edit' },
-                    { label: 'Delete', name: 'delete' }
-                ]
-            }
-        }
+    @track keyPersonnel = [
+        { id: '1', fullName: '', position: '' }
     ];
-    
+
+    get careTypeOptions() {
+        return [
+            { label: 'Residential Care', value: 'residential' },
+            { label: 'Home Care', value: 'home' },
+            { label: 'Flexible Care', value: 'flexible' }
+        ];
+    }
+
+    get isSubmitDisabled() {
+        return !this.isFormValid();
+    }
+
     handleSectionToggle(event) {
-        this.openSections = event.detail.openSections;
+        this.activeSections = event.detail.openSections;
     }
-    
+
     handleInputChange(event) {
+        const { name, value } = event.target;
+        this.formData = { ...this.formData, [name]: value };
+    }
+
+    handlePersonnelChange(event) {
+        const personnelId = event.target.name;
         const field = event.target.dataset.field;
-        this.applicantDetails[field] = event.target.value;
-        this.validateForm();
+        const value = event.target.value;
+
+        this.keyPersonnel = this.keyPersonnel.map(person => {
+            if (person.id === personnelId) {
+                return { ...person, [field]: value };
+            }
+            return person;
+        });
     }
-    
-    handleAddKeyPersonnel() {
-        const newPerson = {
-            id: Date.now().toString(),
-            name: '',
-            position: '',
-            email: '',
-            phone: ''
-        };
-        this.keyPersonnelData = [...this.keyPersonnelData, newPerson];
-        this.validateForm();
+
+    addKeyPersonnel() {
+        const newId = (this.keyPersonnel.length + 1).toString();
+        this.keyPersonnel = [
+            ...this.keyPersonnel,
+            { id: newId, fullName: '', position: '' }
+        ];
     }
-    
-    handleRowAction(event) {
-        const action = event.detail.action;
-        const row = event.detail.row;
-        
-        switch (action.name) {
-            case 'edit':
-                this.editKeyPersonnel(row);
-                break;
-            case 'delete':
-                this.deleteKeyPersonnel(row);
-                break;
-            default:
-                break;
+
+    isFormValid() {
+        const allInputs = [...this.template.querySelectorAll('lightning-input, lightning-textarea, lightning-radio-group')];
+        return allInputs.reduce((valid, input) => {
+            return valid && input.checkValidity();
+        }, true);
+    }
+
+    handleSaveDraft() {
+        // Implement save draft functionality
+        this.showToast('Success', 'Draft saved successfully', 'success');
+    }
+
+    handleSubmit() {
+        if (!this.isFormValid()) {
+            this.showToast('Error', 'Please complete all required fields', 'error');
+            return;
+        }
+
+        try {
+            // Implement form submission logic here
+            console.log('Form Data:', this.formData);
+            console.log('Key Personnel:', this.keyPersonnel);
+            this.showToast('Success', 'Application submitted successfully', 'success');
+        } catch (error) {
+            this.showToast('Error', 'An error occurred while submitting the form', 'error');
         }
     }
-    
-    editKeyPersonnel(row) {
-        // Implementation for editing key personnel
-        console.log('Editing:', row);
-    }
-    
-    deleteKeyPersonnel(row) {
-        this.keyPersonnelData = this.keyPersonnelData.filter(item => item.id !== row.id);
-        this.validateForm();
-    }
-    
-    validateForm() {
-        const { legalName, acn, abn } = this.applicantDetails;
-        this.isSubmitDisabled = !(legalName && acn && abn && this.keyPersonnelData.length > 0);
-    }
-    
-    handleSubmit() {
-        this.showSpinner = true;
-        
-        // Simulate API call
-        setTimeout(() => {
-            this.showSpinner = false;
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Success',
-                    message: 'Application submitted successfully',
-                    variant: 'success'
-                })
-            );
-        }, 2000);
+
+    showToast(title, message, variant) {
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title,
+                message,
+                variant
+            })
+        );
     }
 }

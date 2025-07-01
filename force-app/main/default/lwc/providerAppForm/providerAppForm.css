@@ -2,15 +2,29 @@
     --slds-c-card-color-background: #ffffff;
 }
 
-.slds-p-around_medium {
-    background-color: #f3f3f3;
+.slds-card {
+    background: var(--slds-c-card-color-background);
+    border-radius: 0.25rem;
 }
 
-lightning-input.required {
-    --slds-c-input-color-border: #ff0000;
+lightning-accordion-section {
+    margin-bottom: 1rem;
 }
 
-lightning-button.submit-button {
-    --slds-c-button-brand-color-background: #0070d2;
-    --slds-c-button-brand-color-border: #0070d2;
+.slds-box {
+    background: #f3f3f3;
+    border-radius: 0.25rem;
+    padding: 1rem;
+}
+
+lightning-input, 
+lightning-textarea, 
+lightning-radio-group {
+    margin-bottom: 0.5rem;
+}
+
+@media screen and (max-width: 768px) {
+    .slds-col {
+        padding-right: 0 !important;
+    }
 }

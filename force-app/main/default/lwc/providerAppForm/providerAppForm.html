@@ -1,9 +1,9 @@
 <template>
-    <div class="slds-p-around_medium">
-        <lightning-card title="Application For Approval To Provide Aged Care" icon-name="standard:form">
-            <div class="slds-p-horizontal_medium">
-                <lightning-accordion allow-multiple-sections-open="true" 
-                                   active-section-name={openSections}
+    <div class="slds-card">
+        <lightning-card title="APPLICATION FOR APPROVAL TO PROVIDE AGED CARE" icon-name="standard:form">
+            <div class="slds-p-around_medium">
+                <lightning-accordion active-section-name={activeSections} 
+                                   allow-multiple-sections-open="true"
                                    onsectiontoggle={handleSectionToggle}>
                     
                     <!-- Section 1: Applicant Details -->
@@ -12,79 +12,124 @@
                             <div class="slds-col slds-size_1-of-2 slds-p-right_medium">
                                 <lightning-input 
                                     label="Applicant's (Company) Legal Name"
+                                    name="companyName"
+                                    type="text"
                                     required
-                                    type="text"
-                                    value={applicantDetails.legalName}
-                                    onchange={handleInputChange}
-                                    data-field="legalName">
-                                </lightning-input>
-                                
-                                <lightning-input 
-                                    label="Applicant's (Company) ACN/IAN/ICN"
-                                    required
-                                    type="text"
-                                    value={applicantDetails.acn}
-                                    onchange={handleInputChange}
-                                    data-field="acn">
-                                </lightning-input>
-                                
-                                <lightning-input 
-                                    label="Business Name (if applicable)"
-                                    type="text"
-                                    value={applicantDetails.businessName}
-                                    onchange={handleInputChange}
-                                    data-field="businessName">
+                                    value={formData.companyName}
+                                    onchange={handleInputChange}>
                                 </lightning-input>
                             </div>
-                            
                             <div class="slds-col slds-size_1-of-2">
                                 <lightning-input 
-                                    label="ABN"
-                                    required
+                                    label="Applicant's (Company) ACN"
+                                    name="companyACN"
                                     type="text"
-                                    value={applicantDetails.abn}
-                                    onchange={handleInputChange}
-                                    data-field="abn">
+                                    required
+                                    pattern="[0-9]{9}"
+                                    message-when-pattern-mismatch="Please enter a valid 9-digit ACN"
+                                    value={formData.companyACN}
+                                    onchange={handleInputChange}>
+                                </lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2 slds-p-top_small">
+                                <lightning-input 
+                                    label="Business Name (if applicable)"
+                                    name="businessName"
+                                    type="text"
+                                    value={formData.businessName}
+                                    onchange={handleInputChange}>
+                                </lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-p-top_medium">
+                                <lightning-input 
+                                    label="Registered Business Address"
+                                    name="businessAddress"
+                                    type="text"
+                                    required
+                                    value={formData.businessAddress}
+                                    onchange={handleInputChange}>
                                 </lightning-input>
                             </div>
                         </div>
                     </lightning-accordion-section>
-                    
+
                     <!-- Section 2: Key Personnel Details -->
                     <lightning-accordion-section name="section2" label="Section 2: Key Personnel Details">
-                        <lightning-datatable
-                            key-field="id"
-                            data={keyPersonnelData}
-                            columns={keyPersonnelColumns}
-                            onrowaction={handleRowAction}
-                            hide-checkbox-column>
-                        </lightning-datatable>
-                        
-                        <div class="slds-p-top_medium">
-                            <lightning-button 
-                                label="Add Key Personnel" 
-                                variant="neutral"
-                                onclick={handleAddKeyPersonnel}>
-                            </lightning-button>
-                        </div>
+                        <template for:each={keyPersonnel} for:item="person" for:index="index">
+                            <div key={person.id} class="slds-box slds-m-bottom_medium">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_1-of-2 slds-p-right_medium">
+                                        <lightning-input 
+                                            label="Full Name"
+                                            name={person.id}
+                                            data-field="fullName"
+                                            type="text"
+                                            required
+                                            value={person.fullName}
+                                            onchange={handlePersonnelChange}>
+                                        </lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <lightning-input 
+                                            label="Position Title"
+                                            name={person.id}
+                                            data-field="position"
+                                            type="text"
+                                            required
+                                            value={person.position}
+                                            onchange={handlePersonnelChange}>
+                                        </lightning-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                        <lightning-button 
+                            label="Add Key Personnel" 
+                            variant="neutral"
+                            onclick={addKeyPersonnel}
+                            class="slds-m-top_small">
+                        </lightning-button>
                     </lightning-accordion-section>
-                    
-                    <!-- Section 3: Submit -->
-                    <lightning-accordion-section name="section3" label="Section 3: Submit Application">
-                        <div class="slds-grid slds-grid_align-center slds-p-top_medium">
-                            <lightning-button 
-                                label="Submit Application"
-                                variant="brand"
-                                onclick={handleSubmit}
-                                disabled={isSubmitDisabled}>
-                            </lightning-button>
-                        </div>
+
+                    <!-- Section 3: Suitability -->
+                    <lightning-accordion-section name="section3" label="Section 3: Suitability to be an approved provider">
+                        <lightning-textarea 
+                            name="experience"
+                            label="Experience in Providing Aged Care"
+                            required
+                            value={formData.experience}
+                            onchange={handleInputChange}>
+                        </lightning-textarea>
+                    </lightning-accordion-section>
+
+                    <!-- Section 4: Care Type Specific Matters -->
+                    <lightning-accordion-section name="section4" label="Section 4: Care Type Specific Matters">
+                        <lightning-radio-group
+                            name="careType"
+                            label="Select Care Type"
+                            options={careTypeOptions}
+                            value={formData.careType}
+                            onchange={handleInputChange}
+                            required>
+                        </lightning-radio-group>
                     </lightning-accordion-section>
                 </lightning-accordion>
-                
-                <template if:true={showSpinner}>
-                    <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
-                </template>
+
+                <!-- Form Actions -->
+                <div class="slds-m-top_medium slds-text-align_right">
+                    <lightning-button 
+                        label="Save Draft" 
+                        variant="neutral"
+                        onclick={handleSaveDraft}
+                        class="slds-m-right_small">
+                    </lightning-button>
+                    <lightning-button 
+                        label="Submit" 
+                        variant="brand"
+                        onclick={handleSubmit}
+                        disabled={isSubmitDisabled}>
+                    </lightning-button>
+                </div>
             </div>
         </lightning-card>
     </div>
