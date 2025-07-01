@@ -1,177 +1,95 @@
-.slds-card {
-    max-width: 1200px;
-    margin: 0 auto;
+.form-page {
+    min-height: 400px;
+}
+
+.slds-has-error .slds-input,
+.slds-has-error .slds-textarea,
+.slds-has-error .slds-select {
+    border-color: #c23934;
+    box-shadow: 0 0 0 1px #c23934 inset;
+}
+
+.slds-text-color_error {
+    color: #c23934;
 }
 
 .slds-progress-indicator {
     margin-bottom: 2rem;
 }
 
-.slds-section__title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    padding: 0.75rem 1rem;
-    background-color: #f3f2f2;
-    border-left: 4px solid #0176d3;
-}.slds-box {
-    padding: 1rem;
-    margin-bottom: 1rem;
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
+.slds-notify_alert {
+    margin: 1rem 0;
 }
 
-.slds-theme_shade {
-    background-color: #f3f2f2;
+.slds-card {
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-.slds-text-heading_small {
-    font-size: 0.875rem;
-    font-weight: 700;
-    line-height: 1.25;
-}
-
-.slds-gutters {
+.slds-grid.slds-gutters {
     margin-left: -0.5rem;
     margin-right: -0.5rem;
 }
 
-.slds-gutters > .slds-col {
+.slds-grid.slds-gutters > .slds-col {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
-}
-
-.slds-docked-form-footer {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 1rem;
-    border-top: 1px solid #dddbda;
-    background-color: #fafaf9;
-}
-
-.slds-notify_alert {
-    padding: 1rem;
-    margin: 1rem 0;
-    border-radius: 0.25rem;
-    border-left: 4px solid #c23934;
-}
-
-.slds-theme_error {
-    background-color: #feded8;
-    color: #8c1b00;
-}
-
-.slds-list_dotted {
-    list-style-type: disc;
-    margin-left: 1.5rem;
-}
-
-.slds-list_dotted li {
-    margin-bottom: 0.25rem;
-}
-
-lightning-input,
-lightning-textarea,
-lightning-combobox,
-lightning-checkbox-group,
-lightning-radio-group {
-    margin-bottom: 1rem;
-}
-
-lightning-accordion {
-    margin-top: 1rem;
-}
-
-lightning-accordion-section {
-    border: 1px solid #dddbda;
-    margin-bottom: 0.5rem;
-}
-
-.slds-card__header {
-    padding: 1rem;
-    border-bottom: 1px solid #dddbda;
-}
-
-.slds-card__header-title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: #080707;
-}
-
-.slds-card__body_inner {
-    padding: 1.5rem;
-}
-
-.slds-card__footer {
-    background-color: #fafaf9;
-    border-top: 1px solid #dddbda;
-}
-
-.slds-m-bottom_medium {
-    margin-bottom: 1rem;
 }
 
 .slds-m-top_medium {
     margin-top: 1rem;
 }
 
+.slds-m-bottom_medium {
+    margin-bottom: 1rem;
+}
+
+.slds-m-bottom_large {
+    margin-bottom: 1.5rem;
+}
+
 .slds-m-top_large {
     margin-top: 1.5rem;
-}
-
-.slds-m-bottom_small {
-    margin-bottom: 0.5rem;
-}
-
-.slds-m-top_small {
-    margin-top: 0.5rem;
 }
 
 .slds-m-right_small {
     margin-right: 0.5rem;
 }
 
-.slds-p-horizontal_small {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
+.slds-text-align_right {
+    text-align: right;
 }
 
 @media (max-width: 768px) {
-    .slds-col {
-        width: 100% !important;
-    }
-    
-    .slds-docked-form-footer {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .slds-docked-form-footer lightning-button {
+    .slds-col.slds-size_1-of-2,
+    .slds-col.slds-size_1-of-3 {
         width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .slds-card__body_inner {
-        padding: 1rem;
+        flex: none;
     }
     
-    .slds-section__title {
-        font-size: 1rem;
-        padding: 0.5rem;
+    .slds-text-align_right {
+        text-align: center;
+    }
+    
+    .slds-button {
+        margin: 0.25rem;
+        width: auto;
     }
 }
 
-:host {
-    display: block;
-    font-family: 'Salesforce Sans', Arial, sans-serif;
+.slds-spinner_container {
+    position: relative;
+    min-height: 200px;
 }
 
-lightning-spinner {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
+.slds-checkbox_faux:focus,
+.slds-radio_faux:focus {
+    outline: 0;
+    box-shadow: 0 0 3px #0176d3;
+}
+
+.slds-form-element__help {
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    color: #706e6b;
 }
