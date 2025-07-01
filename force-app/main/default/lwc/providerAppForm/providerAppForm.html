@@ -1,157 +1,171 @@
 <template>
-    <!-- Progress Indicator -->
-    <lightning-progress-indicator 
-        current-step={currentPageString}
-        type="path"
-        variant="base">
-        <lightning-progress-step 
-            label="Organization Details" 
-            value="1">
-        </lightning-progress-step>
-        <lightning-progress-step 
-            label="Key Personnel" 
-            value="2">
-        </lightning-progress-step>
-        <lightning-progress-step 
-            label="Provider Suitability" 
-            value="3">
-        </lightning-progress-step>
-        <lightning-progress-step 
-            label="Care Type Details" 
-            value="4">
-        </lightning-progress-step>
-    </lightning-progress-indicator>
+    <div class="slds-p-around_medium">
+        <!-- Progress Indicator -->
+        <lightning-progress-indicator 
+            current-step={currentPageString}
+            type="path"
+            variant="base">
+            <lightning-progress-step 
+                label="Application Checklist" 
+                value="1">
+            </lightning-progress-step>
+            <lightning-progress-step 
+                label="Key Personnel Declaration" 
+                value="2">
+            </lightning-progress-step>
+            <lightning-progress-step 
+                label="About the Applicant" 
+                value="3">
+            </lightning-progress-step>
+            <lightning-progress-step 
+                label="Key Personnel Details" 
+                value="4">
+            </lightning-progress-step>
+            <lightning-progress-step 
+                label="Provider Suitability" 
+                value="5">
+            </lightning-progress-step>
+            <lightning-progress-step 
+                label="Care Type Details" 
+                value="6">
+            </lightning-progress-step>
+        </lightning-progress-indicator>
 
-    <!-- Page 1: Organization Details -->
-    <div if:true={isPage1}>
-        <lightning-card title="Organization Details">
-            <div class="slds-p-around_medium">
-                <lightning-input
-                    label="Company Legal Name"
-                    value={formData.companyLegalName}
-                    required
-                    onchange={handleFieldChange}
-                    data-field="companyLegalName">
-                </lightning-input>
-                
-                <lightning-input
-                    label="ACN/IAN/ICN"
-                    value={formData.companyNumber}
-                    required
-                    onchange={handleFieldChange}
-                    data-field="companyNumber">
-                </lightning-input>
-
-                <lightning-input
-                    label="ABN"
-                    value={formData.abn}
-                    required
-                    onchange={handleFieldChange}
-                    data-field="abn">
-                </lightning-input>
-
-                <lightning-input
-                    label="Business Name"
-                    value={formData.businessName}
-                    onchange={handleFieldChange}
-                    data-field="businessName">
-                </lightning-input>
-
-                <lightning-textarea
-                    label="Registered Business Address"
-                    value={formData.businessAddress}
-                    required
-                    onchange={handleFieldChange}
-                    data-field="businessAddress">
-                </lightning-textarea>
-
-                <lightning-combobox
-                    label="Organization Type"
-                    value={formData.orgType}
-                    options={orgTypeOptions}
-                    required
-                    onchange={handleFieldChange}
-                    data-field="orgType">
-                </lightning-combobox>
+        <!-- Page 1: Application Checklist -->
+        <template if:true={isPage1}>
+            <div class="slds-box slds-m-top_medium">
+                <h2 class="slds-text-heading_medium">Required Documents Checklist</h2>
+                <div class="slds-m-top_medium">
+                    <lightning-checkbox-group
+                        name="requiredDocs"
+                        label="Please confirm you have the following documents ready:"
+                        options={requiredDocuments}
+                        value={selectedDocuments}
+                        onchange={handleDocumentSelection}>
+                    </lightning-checkbox-group>
+                </div>
             </div>
-        </lightning-card>
-    </div>
+        </template>
 
-    <!-- Page 2: Key Personnel -->
-    <div if:true={isPage2}>
-        <lightning-card title="Key Personnel Details">
-            <div class="slds-p-around_medium">
-                <template for:each={keyPersonnel} for:item="person" for:index="index">
-                    <div key={person.id} class="slds-box slds-m-bottom_medium">
+        <!-- Page 2: Key Personnel Declaration -->
+        <template if:true={isPage2}>
+            <div class="slds-box slds-m-top_medium">
+                <h2 class="slds-text-heading_medium">Key Personnel Declaration</h2>
+                <div class="slds-grid slds-wrap slds-m-top_medium">
+                    <div class="slds-col slds-size_1-of-2 slds-p-right_medium">
                         <lightning-input
-                            label="Full Name"
-                            value={person.fullName}
+                            label="Declaring Officer 1 Name"
                             required
-                            onchange={handleKeyPersonnelChange}
-                            data-index={index}
-                            data-field="fullName">
+                            value={formData.declaringOfficer1Name}
+                            onchange={handleInputChange}
+                            data-field="declaringOfficer1Name">
                         </lightning-input>
-
                         <lightning-input
                             label="Position"
-                            value={person.position}
                             required
-                            onchange={handleKeyPersonnelChange}
-                            data-index={index}
-                            data-field="position">
+                            value={formData.declaringOfficer1Position}
+                            onchange={handleInputChange}
+                            data-field="declaringOfficer1Position">
                         </lightning-input>
-
                         <lightning-input
-                            type="email"
-                            label="Email"
-                            value={person.email}
+                            type="date"
+                            label="Date"
                             required
-                            onchange={handleKeyPersonnelChange}
-                            data-index={index}
-                            data-field="email">
-                        </lightning-input>
-
-                        <lightning-input
-                            type="tel"
-                            label="Phone"
-                            value={person.phone}
-                            required
-                            onchange={handleKeyPersonnelChange}
-                            data-index={index}
-                            data-field="phone">
+                            value={formData.declaringOfficer1Date}
+                            onchange={handleInputChange}
+                            data-field="declaringOfficer1Date">
                         </lightning-input>
                     </div>
-                </template>
-                <lightning-button 
-                    label="Add Key Personnel" 
-                    onclick={handleAddKeyPersonnel}
-                    variant="neutral">
-                </lightning-button>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input
+                            label="Declaring Officer 2 Name"
+                            required
+                            value={formData.declaringOfficer2Name}
+                            onchange={handleInputChange}
+                            data-field="declaringOfficer2Name">
+                        </lightning-input>
+                        <lightning-input
+                            label="Position"
+                            required
+                            value={formData.declaringOfficer2Position}
+                            onchange={handleInputChange}
+                            data-field="declaringOfficer2Position">
+                        </lightning-input>
+                        <lightning-input
+                            type="date"
+                            label="Date"
+                            required
+                            value={formData.declaringOfficer2Date}
+                            onchange={handleInputChange}
+                            data-field="declaringOfficer2Date">
+                        </lightning-input>
+                    </div>
+                </div>
             </div>
-        </lightning-card>
-    </div>
+        </template>
 
-    <!-- Navigation Buttons -->
-    <div class="slds-docked-form-footer">
-        <lightning-button 
-            label="Previous" 
-            onclick={handlePrevious}
-            disabled={isPreviousDisabled}
-            variant="neutral"
-            class="slds-m-right_small">
-        </lightning-button>
-        <lightning-button 
-            label="Next" 
-            onclick={handleNext}
-            disabled={isNextDisabled}
-            variant="brand"
-            class="slds-m-right_small">
-        </lightning-button>
-        <lightning-button 
-            label="Save" 
-            onclick={handleSave}
-            disabled={isSaveDisabled}
-            variant="success">
-        </lightning-button>
+        <!-- Page 3: About the Applicant -->
+        <template if:true={isPage3}>
+            <div class="slds-box slds-m-top_medium">
+                <h2 class="slds-text-heading_medium">Organization Details</h2>
+                <div class="slds-grid slds-wrap slds-m-top_medium">
+                    <div class="slds-col slds-size_1-of-1">
+                        <lightning-input
+                            label="Legal Name"
+                            required
+                            value={formData.legalName}
+                            onchange={handleInputChange}
+                            data-field="legalName">
+                        </lightning-input>
+                        <lightning-input
+                            label="ACN/IAN/ICN"
+                            required
+                            value={formData.acn}
+                            onchange={handleInputChange}
+                            data-field="acn">
+                        </lightning-input>
+                        <lightning-input
+                            label="ABN"
+                            required
+                            pattern="[0-9]{11}"
+                            value={formData.abn}
+                            onchange={handleInputChange}
+                            data-field="abn"
+                            message-when-pattern-mismatch="Please enter a valid 11-digit ABN">
+                        </lightning-input>
+                        <lightning-input
+                            label="Business Name (if applicable)"
+                            value={formData.businessName}
+                            onchange={handleInputChange}
+                            data-field="businessName">
+                        </lightning-input>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Navigation Buttons -->
+        <div class="slds-docked-form-footer">
+            <lightning-button 
+                label="Previous" 
+                onclick={handlePrevious}
+                disabled={isPreviousDisabled}
+                variant="neutral"
+                class="slds-m-right_small">
+            </lightning-button>
+            <lightning-button 
+                label="Next" 
+                onclick={handleNext}
+                disabled={isNextDisabled}
+                variant="brand"
+                class="slds-m-right_small">
+            </lightning-button>
+            <lightning-button 
+                label="Save" 
+                onclick={handleSave}
+                disabled={isSaveDisabled}
+                variant="success">
+            </lightning-button>
+        </div>
     </div>
 </template>
