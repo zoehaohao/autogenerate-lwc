@@ -9,6 +9,4 @@
         <target>lightning__Tab</target>
         <target>lightningCommunity__Page</target>
     </targets>
-    <masterLabel>Provider Application Form</masterLabel>
-    <description>Comprehensive aged care provider application form with multi-page navigation and validation</description>
 </LightningComponentBundle>
