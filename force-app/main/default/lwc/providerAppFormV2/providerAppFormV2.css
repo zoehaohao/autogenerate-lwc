@@ -1,20 +1,32 @@
+.slds-card {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.slds-progress-indicator {
+    margin-bottom: 2rem;
+}
+
 .slds-section__title {
-    background-color: #f3f3f3;
-    padding: 0.75rem;
-    border-radius: 0.25rem;
-    margin-bottom: 1rem;
+    background-color: #f3f2f2;
+    padding: 0.75rem 1rem;
+    border-left: 4px solid #0176d3;
+    font-weight: 600;
+}
+
+.slds-section__content {
+    padding: 1rem;
 }
 
 .slds-accordion__section {
-    border: 1px solid #d8dde6;
-    border-radius: 0.25rem;
+    border: 1px solid #dddbda;
     margin-bottom: 1rem;
 }
 
 .slds-accordion__summary {
     background-color: #f7f9fb;
     padding: 1rem;
-    border-bottom: 1px solid #d8dde6;
+    cursor: pointer;
 }
 
 .slds-accordion__content {
@@ -22,27 +34,83 @@
 }
 
 .slds-notify {
-    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.slds-box {
     padding: 1rem;
+    background-color: #f7f9fb;
+    border: 1px solid #dddbda;
 }
 
-.slds-notify_alert.slds-theme_warning {
-    background-color: #fef7e0;
-    border-left: 4px solid #fe9339;
+.slds-table th,
+.slds-table td {
+    padding: 0.5rem;
+    vertical-align: top;
 }
 
-.slds-notify_alert.slds-theme_info {
-    background-color: #e8f4fd;
-    border-left: 4px solid #0176d3;
+.slds-checkbox {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
 }
 
-.slds-notify_alert.slds-theme_error {
-    background-color: #fef7f7;
-    border-left: 4px solid #ea001e;
+.slds-checkbox input[type="checkbox"] {
+    margin-right: 0.5rem;
+    margin-top: 0.125rem;
 }
 
-.slds-progress-indicator {
-    margin-bottom: 2rem;
+.slds-checkbox__label {
+    display: flex;
+    align-items: flex-start;
+    cursor: pointer;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.slds-list_horizontal dt {
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+.slds-list_horizontal dd {
+    margin-bottom: 0.5rem;
+}
+
+.slds-card__footer {
+    padding: 1rem;
+    border-top: 1px solid #dddbda;
+    background-color: #f7f9fb;
+}
+
+.validation-error {
+    color: #c23934;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.required-field::after {
+    content: " *";
+    color: #c23934;
+}
+
+@media (max-width: 768px) {
+    .slds-grid.slds-gutters .slds-col {
+        padding: 0.5rem 0;
+    }
+    
+    .slds-card__body {
+        padding: 1rem;
+    }
+    
+    .slds-section__content {
+        padding: 0.5rem;
+    }
+}
+
+:host {
+    display: block;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
 }
 
 .slds-spinner_container {
@@ -58,171 +126,37 @@
     justify-content: center;
 }
 
-.slds-card__header {
-    background-color: #f7f9fb;
-    border-bottom: 2px solid #0176d3;
-    padding: 1.5rem;
+.page-transition {
+    animation: fadeIn 0.3s ease-in-out;
 }
 
-.slds-card__body {
-    min-height: 600px;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.slds-form-element {
-    margin-bottom: 1rem;
-}
-
-.slds-text-heading_large {
-    font-size: 1.75rem;
-    font-weight: 300;
-    line-height: 1.25;
-}
-
-.slds-text-heading_medium {
-    font-size: 1.25rem;
-    font-weight: 700;
-    line-height: 1.25;
-}
-
-.slds-text-heading_small {
-    font-size: 1rem;
-    font-weight: 700;
-    line-height: 1.25;
-}
-
-.slds-text-body_regular {
-    font-size: 0.875rem;
-    line-height: 1.5;
-}
-
-.slds-text-body_small {
+.slds-form-element__help {
     font-size: 0.75rem;
-    line-height: 1.5;
-}
-
-.slds-text-color_weak {
     color: #706e6b;
+    margin-top: 0.25rem;
 }
 
-.slds-text-align_center {
-    text-align: center;
-}
-
-.slds-text-align_right {
-    text-align: right;
-}
-
-.slds-m-top_small {
-    margin-top: 0.5rem;
-}
-
-.slds-m-top_medium {
-    margin-top: 1rem;
-}
-
-.slds-m-top_large {
-    margin-top: 1.5rem;
-}
-
-.slds-m-bottom_small {
-    margin-bottom: 0.5rem;
-}
-
-.slds-m-bottom_medium {
-    margin-bottom: 1rem;
-}
-
-.slds-m-bottom_large {
-    margin-bottom: 1.5rem;
-}
-
-.slds-m-right_small {
-    margin-right: 0.5rem;
-}
-
-.slds-p-horizontal_small {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-}
-
-.slds-p-horizontal_large {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-}
-
-.slds-p-vertical_medium {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-}
-
-.slds-p-right_small {
-    padding-right: 0.5rem;
-}
-
-.slds-p-left_small {
-    padding-left: 0.5rem;
-}
-
-.slds-border_bottom {
-    border-bottom: 1px solid #d8dde6;
-}
-
-.slds-theme_shade {
-    background-color: #f3f3f3;
-}
-
-.slds-box {
-    background-color: #ffffff;
-    border: 1px solid #d8dde6;
-    border-radius: 0.25rem;
+.declaration-section {
+    background-color: #fafaf9;
+    border: 1px solid #dddbda;
     padding: 1rem;
+    border-radius: 0.25rem;
 }
 
-.slds-list_dotted {
-    list-style: disc;
-    margin-left: 1rem;
-}
-
-.slds-list_dotted li {
-    margin-bottom: 0.25rem;
-}
-
-@media (max-width: 768px) {
-    .slds-col {
-        width: 100% !important;
-        margin-bottom: 1rem;
-    }
-    
-    .slds-grid {
-        display: block;
-    }
-    
-    .slds-p-horizontal_large {
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
-}
-
-:host {
-    display: block;
-    font-family: 'Salesforce Sans', Arial, sans-serif;
-}
-
-lightning-input,
-lightning-textarea,
-lightning-combobox,
-lightning-checkbox-group,
-lightning-radio-group {
-    margin-bottom: 1rem;
-}
-
-lightning-button {
-    min-width: 120px;
-}
-
-lightning-progress-indicator {
-    --slds-c-progress-indicator-color-background: #f3f3f3;
-    --slds-c-progress-indicator-color-border: #d8dde6;
-    --slds-c-progress-indicator-step-color-background-current: #0176d3;
-    --slds-c-progress-indicator-step-color-border-current: #0176d3;
+.summary-section {
+    background-color: #f7f9fb;
+    border: 1px solid #0176d3;
+    padding: 1rem;
+    border-radius: 0.25rem;
 }
