@@ -1,92 +1,106 @@
 <template>
     <div class="slds-card">
-        <div class="slds-card__header slds-grid">
-            <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                <div class="slds-media__body">
-                    <h2 class="slds-card__header-title">
-                        <span class="slds-text-heading_medium">Provider Application Form</span>
-                    </h2>
-                </div>
-            </header>
+        <div class="slds-card__header">
+            <h1 class="slds-text-heading_large slds-m-bottom_medium">Healthcare Provider Application Form</h1>
+            <p class="slds-text-body_regular slds-text-color_weak">
+                Complete all sections to submit your provider application. All fields marked with * are required.
+            </p>
         </div>
-        
-        <div class="slds-card__body slds-card__body_inner">
-            <!-- Progress Indicator -->
-            <div class="slds-m-bottom_large">
-                <lightning-progress-indicator 
-                    current-step={currentPageString}
-                    type="path"
-                    variant="base">
-                    <lightning-progress-step 
-                        label="Personal Information" 
-                        value="1">
-                    </lightning-progress-step>
-                    <lightning-progress-step 
-                        label="Contact Details" 
-                        value="2">
-                    </lightning-progress-step>
-                    <lightning-progress-step 
-                        label="Additional Information" 
-                        value="3">
-                    </lightning-progress-step>
-                </lightning-progress-indicator>
-            </div>
+
+        <!-- Progress Indicator -->
+        <div class="slds-card__body slds-p-horizontal_large">
+            <lightning-progress-indicator 
+                current-step={currentPageString}
+                type="path"
+                variant="base">
+                <lightning-progress-step 
+                    label="Personal Information" 
+                    value="1">
+                </lightning-progress-step>
+                <lightning-progress-step 
+                    label="Contact Details" 
+                    value="2">
+                </lightning-progress-step>
+                <lightning-progress-step 
+                    label="Professional Information" 
+                    value="3">
+                </lightning-progress-step>
+                <lightning-progress-step 
+                    label="Additional Information" 
+                    value="4">
+                </lightning-progress-step>
+                <lightning-progress-step 
+                    label="Review & Submit" 
+                    value="5">
+                </lightning-progress-step>
+            </lightning-progress-indicator>
+
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <lightning-spinner 
+                    alternative-text="Loading..." 
+                    size="medium">
+                </lightning-spinner>
+            </template>
+
+            <!-- Error Messages -->
+            <template if:true={hasErrors}>
+                <div class="slds-notify slds-notify_alert slds-theme_error slds-theme_alert-texture slds-m-bottom_medium" role="alert">
+                    <h2 class="slds-text-heading_small">Please correct the following errors:</h2>
+                    <ul class="slds-list_dotted slds-m-top_small">
+                        <template for:each={errorMessages} for:item="error">
+                            <li key={error} class="slds-text-body_small">{error}</li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
 
             <!-- Page 1: Personal Information -->
             <template if:true={isPage1}>
                 <div class="form-page">
                     <h2 class="slds-text-heading_medium slds-m-bottom_medium">Personal Information</h2>
-                    <p class="slds-text-body_regular slds-m-bottom_large">
-                        Please provide your personal details. All fields marked with * are required.
+                    <p class="slds-text-body_regular slds-m-bottom_large slds-text-color_weak">
+                        Please provide your personal details exactly as they appear on your government-issued identification.
                     </p>
 
-                    <div class="slds-notify slds-notify_alert slds-theme_info slds-theme_alert-texture slds-m-bottom_medium" role="alert">
-                        <h2 class="slds-text-heading_small">Important: All information must be accurate and up-to-date</h2>
-                    </div>
-
-                    <div class="slds-grid slds-gutters slds-wrap">
+                    <div class="slds-grid slds-wrap slds-gutters">
                         <div class="slds-col slds-size_1-of-2">
                             <lightning-input
                                 label="First Name"
-                                type="text"
                                 value={firstName}
                                 onchange={handleInputChange}
                                 data-field="firstName"
                                 required
                                 class={firstNameClass}>
                             </lightning-input>
-                            <template if:true={errors.firstName}>
-                                <div class="slds-text-color_error slds-text-body_small">{errors.firstName}</div>
-                            </template>
                         </div>
-                        
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-input
+                                label="Middle Name"
+                                value={middleName}
+                                onchange={handleInputChange}
+                                data-field="middleName">
+                            </lightning-input>
+                        </div>
                         <div class="slds-col slds-size_1-of-2">
                             <lightning-input
                                 label="Last Name"
-                                type="text"
                                 value={lastName}
                                 onchange={handleInputChange}
                                 data-field="lastName"
                                 required
                                 class={lastNameClass}>
                             </lightning-input>
-                            <template if:true={errors.lastName}>
-                                <div class="slds-text-color_error slds-text-body_small">{errors.lastName}</div>
-                            </template>
                         </div>
-                    </div>
-
-                    <div class="slds-grid slds-gutters slds-wrap slds-m-top_medium">
                         <div class="slds-col slds-size_1-of-2">
                             <lightning-input
-                                label="Middle Name"
-                                type="text"
-                                value={middleName}
+                                label="Suffix"
+                                value={suffix}
                                 onchange={handleInputChange}
-                                data-field="middleName">
+                                data-field="suffix"
+                                placeholder="Jr., Sr., III, etc.">
                             </lightning-input>
                         </div>
-                        
                         <div class="slds-col slds-size_1-of-2">
                             <lightning-input
                                 label="Date of Birth"
@@ -95,32 +109,10 @@
                                 onchange={handleInputChange}
                                 data-field="dateOfBirth"
                                 required
-                                field-level-help="Enter your date of birth in MM/DD/YYYY format"
+                                max={maxBirthDate}
                                 class={dateOfBirthClass}>
                             </lightning-input>
-                            <template if:true={errors.dateOfBirth}>
-                                <div class="slds-text-color_error slds-text-body_small">{errors.dateOfBirth}</div>
-                            </template>
                         </div>
-                    </div>
-
-                    <div class="slds-grid slds-gutters slds-wrap slds-m-top_medium">
-                        <div class="slds-col slds-size_1-of-2">
-                            <lightning-input
-                                label="Social Security Number"
-                                type="text"
-                                value={ssn}
-                                onchange={handleInputChange}
-                                data-field="ssn"
-                                required
-                                field-level-help="Enter your 9-digit SSN without dashes"
-                                class={ssnClass}>
-                            </lightning-input>
-                            <template if:true={errors.ssn}>
-                                <div class="slds-text-color_error slds-text-body_small">{errors.ssn}</div>
-                            </template>
-                        </div>
-                        
                         <div class="slds-col slds-size_1-of-2">
                             <lightning-combobox
                                 label="Gender"
@@ -129,90 +121,28 @@
                                 onchange={handleInputChange}
                                 data-field="gender"
                                 required
+                                placeholder="Select Gender"
                                 class={genderClass}>
                             </lightning-combobox>
-                            <template if:true={errors.gender}>
-                                <div class="slds-text-color_error slds-text-body_small">{errors.gender}</div>
-                            </template>
                         </div>
-                    </div>
-
-                    <div class="slds-m-top_medium">
-                        <lightning-textarea
-                            label="Address"
-                            value={address}
-                            onchange={handleInputChange}
-                            data-field="address"
-                            required
-                            placeholder="Enter your complete address"
-                            class={addressClass}>
-                        </lightning-textarea>
-                        <template if:true={errors.address}>
-                            <div class="slds-text-color_error slds-text-body_small">{errors.address}</div>
-                        </template>
-                    </div>
-
-                    <div class="slds-grid slds-gutters slds-wrap slds-m-top_medium">
-                        <div class="slds-col slds-size_1-of-3">
+                        <div class="slds-col slds-size_1-of-1">
                             <lightning-input
-                                label="City"
-                                type="text"
-                                value={city}
+                                label="Social Security Number"
+                                type="password"
+                                value={ssn}
                                 onchange={handleInputChange}
-                                data-field="city"
+                                data-field="ssn"
                                 required
-                                class={cityClass}>
+                                field-level-help="Enter your 9-digit SSN. This information is encrypted and secure."
+                                maxlength="11"
+                                class={ssnClass}>
                             </lightning-input>
-                            <template if:true={errors.city}>
-                                <div class="slds-text-color_error slds-text-body_small">{errors.city}</div>
-                            </template>
-                        </div>
-                        
-                        <div class="slds-col slds-size_1-of-3">
-                            <lightning-combobox
-                                label="State"
-                                value={state}
-                                options={stateOptions}
-                                onchange={handleInputChange}
-                                data-field="state"
-                                required
-                                class={stateClass}>
-                            </lightning-combobox>
-                            <template if:true={errors.state}>
-                                <div class="slds-text-color_error slds-text-body_small">{errors.state}</div>
-                            </template>
-                        </div>
-                        
-                        <div class="slds-col slds-size_1-of-3">
-                            <lightning-input
-                                label="ZIP Code"
-                                type="text"
-                                value={zipCode}
-                                onchange={handleInputChange}
-                                data-field="zipCode"
-                                required
-                                field-level-help="Enter 5-digit ZIP code"
-                                class={zipCodeClass}>
-                            </lightning-input>
-                            <template if:true={errors.zipCode}>
-                                <div class="slds-text-color_error slds-text-body_small">{errors.zipCode}</div>
-                            </template>
                         </div>
                     </div>
 
-                    <!-- Navigation Buttons -->
-                    <div class="slds-m-top_large slds-text-align_right">
-                        <lightning-button
-                            label="Cancel"
-                            variant="neutral"
-                            onclick={handleCancel}
-                            class="slds-m-right_small">
-                        </lightning-button>
-                        <lightning-button
-                            label="Next"
-                            variant="brand"
-                            onclick={handleNext}>
-                        </lightning-button>
+                    <div class="slds-notify slds-notify_alert slds-theme_info slds-theme_alert-texture slds-m-top_medium" role="alert">
+                        <h2 class="slds-text-heading_small">Privacy Notice</h2>
+                        <p class="slds-text-body_small">All personal information is protected under HIPAA regulations and will be kept strictly confidential.</p>
                     </div>
                 </div>
             </template>
@@ -221,11 +151,61 @@
             <template if:true={isPage2}>
                 <div class="form-page">
                     <h2 class="slds-text-heading_medium slds-m-bottom_medium">Contact Details</h2>
-                    <p class="slds-text-body_regular slds-m-bottom_large">
-                        Please provide your contact information. We will use this information to communicate with you regarding your application.
+                    <p class="slds-text-body_regular slds-m-bottom_large slds-text-color_weak">
+                        Provide current contact information where you can be reached for application updates and correspondence.
                     </p>
 
-                    <div class="slds-grid slds-gutters slds-wrap">
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col slds-size_1-of-1">
+                            <h3 class="slds-text-heading_small slds-m-bottom_small">Primary Address</h3>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-input
+                                label="Street Address"
+                                value={streetAddress}
+                                onchange={handleInputChange}
+                                data-field="streetAddress"
+                                required
+                                class={streetAddressClass}>
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-input
+                                label="City"
+                                value={city}
+                                onchange={handleInputChange}
+                                data-field="city"
+                                required
+                                class={cityClass}>
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4">
+                            <lightning-combobox
+                                label="State"
+                                value={state}
+                                options={stateOptions}
+                                onchange={handleInputChange}
+                                data-field="state"
+                                required
+                                placeholder="Select State"
+                                class={stateClass}>
+                            </lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-4">
+                            <lightning-input
+                                label="ZIP Code"
+                                value={zipCode}
+                                onchange={handleInputChange}
+                                data-field="zipCode"
+                                required
+                                maxlength="10"
+                                class={zipCodeClass}>
+                            </lightning-input>
+                        </div>
+                        
+                        <div class="slds-col slds-size_1-of-1 slds-m-top_medium">
+                            <h3 class="slds-text-heading_small slds-m-bottom_small">Contact Information</h3>
+                        </div>
                         <div class="slds-col slds-size_1-of-2">
                             <lightning-input
                                 label="Primary Phone"
@@ -237,27 +217,16 @@
                                 field-level-help="Enter 10-digit phone number"
                                 class={primaryPhoneClass}>
                             </lightning-input>
-                            <template if:true={errors.primaryPhone}>
-                                <div class="slds-text-color_error slds-text-body_small">{errors.primaryPhone}</div>
-                            </template>
-                            <div class="slds-text-color_weak slds-m-top_x-small">
-                                Note: Phone number should be 10 digits without spaces or special characters
-                            </div>
                         </div>
-                        
                         <div class="slds-col slds-size_1-of-2">
                             <lightning-input
                                 label="Secondary Phone"
                                 type="tel"
                                 value={secondaryPhone}
                                 onchange={handleInputChange}
-                                data-field="secondaryPhone"
-                                field-level-help="Optional secondary contact number">
+                                data-field="secondaryPhone">
                             </lightning-input>
                         </div>
-                    </div>
-
-                    <div class="slds-grid slds-gutters slds-wrap slds-m-top_medium">
                         <div class="slds-col slds-size_1-of-2">
                             <lightning-input
                                 label="Email Address"
@@ -268,11 +237,7 @@
                                 required
                                 class={emailClass}>
                             </lightning-input>
-                            <template if:true={errors.email}>
-                                <div class="slds-text-color_error slds-text-body_small">{errors.email}</div>
-                            </template>
                         </div>
-                        
                         <div class="slds-col slds-size_1-of-2">
                             <lightning-input
                                 label="Confirm Email Address"
@@ -283,305 +248,474 @@
                                 required
                                 class={confirmEmailClass}>
                             </lightning-input>
-                            <template if:true={errors.confirmEmail}>
-                                <div class="slds-text-color_error slds-text-body_small">{errors.confirmEmail}</div>
-                            </template>
                         </div>
-                    </div>
-
-                    <div class="slds-m-top_medium">
-                        <lightning-radio-group
-                            label="Preferred Contact Method"
-                            options={contactMethodOptions}
-                            value={preferredContactMethod}
-                            onchange={handleInputChange}
-                            data-field="preferredContactMethod"
-                            required
-                            type="radio"
-                            class={preferredContactMethodClass}>
-                        </lightning-radio-group>
-                        <template if:true={errors.preferredContactMethod}>
-                            <div class="slds-text-color_error slds-text-body_small">{errors.preferredContactMethod}</div>
-                        </template>
-                    </div>
-
-                    <div class="slds-m-top_medium">
-                        <lightning-combobox
-                            label="Best Time to Contact"
-                            value={bestTimeToContact}
-                            options={timeOptions}
-                            onchange={handleInputChange}
-                            data-field="bestTimeToContact"
-                            required
-                            class={bestTimeToContactClass}>
-                        </lightning-combobox>
-                        <template if:true={errors.bestTimeToContact}>
-                            <div class="slds-text-color_error slds-text-body_small">{errors.bestTimeToContact}</div>
-                        </template>
-                    </div>
-
-                    <div class="slds-m-top_medium">
-                        <lightning-input
-                            label="Emergency Contact Name"
-                            type="text"
-                            value={emergencyContactName}
-                            onchange={handleInputChange}
-                            data-field="emergencyContactName"
-                            required
-                            class={emergencyContactNameClass}>
-                        </lightning-input>
-                        <template if:true={errors.emergencyContactName}>
-                            <div class="slds-text-color_error slds-text-body_small">{errors.emergencyContactName}</div>
-                        </template>
-                    </div>
-
-                    <div class="slds-grid slds-gutters slds-wrap slds-m-top_medium">
-                        <div class="slds-col slds-size_1-of-2">
-                            <lightning-input
-                                label="Emergency Contact Phone"
-                                type="tel"
-                                value={emergencyContactPhone}
-                                onchange={handleInputChange}
-                                data-field="emergencyContactPhone"
-                                required
-                                class={emergencyContactPhoneClass}>
-                            </lightning-input>
-                            <template if:true={errors.emergencyContactPhone}>
-                                <div class="slds-text-color_error slds-text-body_small">{errors.emergencyContactPhone}</div>
-                            </template>
-                        </div>
-                        
-                        <div class="slds-col slds-size_1-of-2">
-                            <lightning-input
-                                label="Relationship to Emergency Contact"
-                                type="text"
-                                value={emergencyContactRelationship}
-                                onchange={handleInputChange}
-                                data-field="emergencyContactRelationship"
-                                required
-                                class={emergencyContactRelationshipClass}>
-                            </lightning-input>
-                            <template if:true={errors.emergencyContactRelationship}>
-                                <div class="slds-text-color_error slds-text-body_small">{errors.emergencyContactRelationship}</div>
-                            </template>
-                        </div>
-                    </div>
-
-                    <!-- Navigation Buttons -->
-                    <div class="slds-m-top_large slds-text-align_right">
-                        <lightning-button
-                            label="Previous"
-                            variant="neutral"
-                            onclick={handlePrevious}
-                            class="slds-m-right_small">
-                        </lightning-button>
-                        <lightning-button
-                            label="Next"
-                            variant="brand"
-                            onclick={handleNext"
-                            variant="brand"
-                            onclick={handleNext}>
-                        </lightning-button>
                     </div>
                 </div>
             </template>
 
-            <!-- Page 3: Additional Information -->
+            <!-- Page 3: Professional Information -->
             <template if:true={isPage3}>
                 <div class="form-page">
-                    <h2 class="slds-text-heading_medium slds-m-bottom_medium">Additional Information</h2>
-                    <p class="slds-text-body_regular slds-m-bottom_large">
-                        Please provide additional information to complete your provider application. This information helps us better understand your background and qualifications.
+                    <h2 class="slds-text-heading_medium slds-m-bottom_medium">Professional Information</h2>
+                    <p class="slds-text-body_regular slds-m-bottom_large slds-text-color_weak">
+                        Provide details about your medical education, training, and professional credentials.
                     </p>
 
-                    <div class="slds-m-bottom_medium">
-                        <lightning-combobox
-                            label="Provider Type"
-                            value={providerType}
-                            options={providerTypeOptions}
-                            onchange={handleInputChange}
-                            data-field="providerType"
-                            required
-                            class={providerTypeClass}>
-                        </lightning-combobox>
-                        <template if:true={errors.providerType}>
-                            <div class="slds-text-color_error slds-text-body_small">{errors.providerType}</div>
-                        </template>
-                    </div>
-
-                    <div class="slds-grid slds-gutters slds-wrap">
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-combobox
+                                label="Provider Type"
+                                value={providerType}
+                                options={providerTypeOptions}
+                                onchange={handleInputChange}
+                                data-field="providerType"
+                                required
+                                placeholder="Select Provider Type"
+                                class={providerTypeClass}>
+                            </lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-combobox
+                                label="Specialty"
+                                value={specialty}
+                                options={specialtyOptions}
+                                onchange={handleInputChange}
+                                data-field="specialty"
+                                required
+                                placeholder="Select Primary Specialty"
+                                class={specialtyClass}>
+                            </lightning-combobox>
+                        </div>
                         <div class="slds-col slds-size_1-of-2">
                             <lightning-input
-                                label="License Number"
-                                type="text"
+                                label="Medical License Number"
                                 value={licenseNumber}
                                 onchange={handleInputChange}
                                 data-field="licenseNumber"
                                 required
                                 class={licenseNumberClass}>
                             </lightning-input>
-                            <template if:true={errors.licenseNumber}>
-                                <div class="slds-text-color_error slds-text-body_small">{errors.licenseNumber}</div>
-                            </template>
                         </div>
-                        
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-combobox
+                                label="License State"
+                                value={licenseState}
+                                options={stateOptions}
+                                onchange={handleInputChange}
+                                data-field="licenseState"
+                                required
+                                placeholder="Select License State"
+                                class={licenseStateClass}>
+                            </lightning-combobox>
+                        </div>
                         <div class="slds-col slds-size_1-of-2">
                             <lightning-input
                                 label="License Expiration Date"
                                 type="date"
-                                value={licenseExpirationDate}
+                                value={licenseExpiration}
                                 onchange={handleInputChange}
-                                data-field="licenseExpirationDate"
+                                data-field="licenseExpiration"
                                 required
-                                class={licenseExpirationDateClass}>
+                                min={todayDate}
+                                class={licenseExpirationClass}>
                             </lightning-input>
-                            <template if:true={errors.licenseExpirationDate}>
-                                <div class="slds-text-color_error slds-text-body_small">{errors.licenseExpirationDate}</div>
-                            </template>
                         </div>
-                    </div>
-
-                    <div class="slds-grid slds-gutters slds-wrap slds-m-top_medium">
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-input
+                                label="DEA Number"
+                                value={deaNumber}
+                                onchange={handleInputChange}
+                                data-field="deaNumber"
+                                field-level-help="Required if prescribing controlled substances">
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-input
+                                label="NPI Number"
+                                value={npiNumber}
+                                onchange={handleInputChange}
+                                data-field="npiNumber"
+                                required
+                                maxlength="10"
+                                field-level-help="10-digit National Provider Identifier"
+                                class={npiNumberClass}>
+                            </lightning-input>
+                        </div>
                         <div class="slds-col slds-size_1-of-2">
                             <lightning-input
                                 label="Years of Experience"
                                 type="number"
-                                value={yearsOfExperience}
+                                value={yearsExperience}
                                 onchange={handleInputChange}
-                                data-field="yearsOfExperience"
+                                data-field="yearsExperience"
                                 required
                                 min="0"
-                                max="50"
-                                class={yearsOfExperienceClass}>
+                                max="60"
+                                class={yearsExperienceClass}>
                             </lightning-input>
-                            <template if:true={errors.yearsOfExperience}>
-                                <div class="slds-text-color_error slds-text-body_small">{errors.yearsOfExperience}</div>
-                            </template>
                         </div>
-                        
-                        <div class="slds-col slds-size_1-of-2">
-                            <lightning-combobox
-                                label="Education Level"
-                                value={educationLevel}
-                                options={educationLevelOptions}
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-input
+                                label="Medical School"
+                                value={medicalSchool}
                                 onchange={handleInputChange}
-                                data-field="educationLevel"
+                                data-field="medicalSchool"
                                 required
-                                class={educationLevelClass}>
-                            </lightning-combobox>
-                            <template if:true={errors.educationLevel}>
-                                <div class="slds-text-color_error slds-text-body_small">{errors.educationLevel}</div>
-                            </template>
+                                class={medicalSchoolClass}>
+                            </lightning-input>
                         </div>
-                    </div>
-
-                    <div class="slds-m-top_medium">
-                        <lightning-checkbox-group
-                            label="Specializations"
-                            options={specializationOptions}
-                            value={specializations}
-                            onchange={handleInputChange}
-                            data-field="specializations"
-                            required
-                            class={specializationsClass}>
-                        </lightning-checkbox-group>
-                        <template if:true={errors.specializations}>
-                            <div class="slds-text-color_error slds-text-body_small">{errors.specializations}</div>
-                        </template>
-                        <div class="slds-text-color_weak slds-m-top_x-small">
-                            Select all that apply. At least one specialization is required.
-                        </div>
-                    </div>
-
-                    <div class="slds-m-top_medium">
-                        <lightning-textarea
-                            label="Professional Summary"
-                            value={professionalSummary}
-                            onchange={handleInputChange}
-                            data-field="professionalSummary"
-                            required
-                            placeholder="Provide a brief summary of your professional background and qualifications"
-                            max-length="500"
-                            class={professionalSummaryClass}>
-                        </lightning-textarea>
-                        <template if:true={errors.professionalSummary}>
-                            <div class="slds-text-color_error slds-text-body_small">{errors.professionalSummary}</div>
-                        </template>
-                    </div>
-
-                    <div class="slds-m-top_medium">
-                        <lightning-input
-                            label="Previous Employer"
-                            type="text"
-                            value={previousEmployer}
-                            onchange={handleInputChange}
-                            data-field="previousEmployer">
-                        </lightning-input>
-                    </div>
-
-                    <div class="slds-grid slds-gutters slds-wrap slds-m-top_medium">
                         <div class="slds-col slds-size_1-of-2">
                             <lightning-input
-                                label="Employment Start Date"
-                                type="date"
-                                value={employmentStartDate}
+                                label="Graduation Year"
+                                type="number"
+                                value={graduationYear}
                                 onchange={handleInputChange}
-                                data-field="employmentStartDate">
+                                data-field="graduationYear"
+                                required
+                                min="1950"
+                                max={currentYear}
+                                class={graduationYearClass}>
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-input
+                                label="Residency Program"
+                                value={residencyProgram}
+                                onchange={handleInputChange}
+                                data-field="residencyProgram"
+                                required
+                                class={residencyProgramClass}>
+                            </lightning-input>
+                        </div>
+                    </div>
+
+                    <div class="slds-notify slds-notify_alert slds-theme_warning slds-theme_alert-texture slds-m-top_medium" role="alert">
+                        <h2 class="slds-text-heading_small">Important</h2>
+                        <p class="slds-text-body_small">All professional credentials will be verified through primary sources. Ensure all information is accurate and current.</p>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Page 4: Additional Information -->
+            <template if:true={isPage4}>
+                <div class="form-page">
+                    <h2 class="slds-text-heading_medium slds-m-bottom_medium">Additional Information</h2>
+                    <p class="slds-text-body_regular slds-m-bottom_large slds-text-color_weak">
+                        Please provide additional details about your practice and any relevant background information.
+                    </p>
+
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col slds-size_1-of-1">
+                            <h3 class="slds-text-heading_small slds-m-bottom_small">Practice Information</h3>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-input
+                                label="Practice/Hospital Name"
+                                value={practiceName}
+                                onchange={handleInputChange}
+                                data-field="practiceName"
+                                required
+                                class={practiceNameClass}>
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-input
+                                label="Practice Address"
+                                value={practiceAddress}
+                                onchange={handleInputChange}
+                                data-field="practiceAddress"
+                                required
+                                class={practiceAddressClass}>
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-input
+                                label="Practice Phone"
+                                type="tel"
+                                value={practicePhone}
+                                onchange={handleInputChange}
+                                data-field="practicePhone"
+                                required
+                                class={practicePhoneClass}>
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-input
+                                label="Practice Fax"
+                                type="tel"
+                                value={practiceFax}
+                                onchange={handleInputChange}
+                                data-field="practiceFax">
                             </lightning-input>
                         </div>
                         
-                        <div class="slds-col slds-size_1-of-2">
-                            <lightning-input
-                                label="Employment End Date"
-                                type="date"
-                                value={employmentEndDate}
-                                onchange={handleInputChange}
-                                data-field="employmentEndDate">
-                            </lightning-input>
+                        <div class="slds-col slds-size_1-of-1 slds-m-top_medium">
+                            <h3 class="slds-text-heading_small slds-m-bottom_small">Background Questions</h3>
+                            <p class="slds-text-body_small slds-text-color_weak slds-m-bottom_small">
+                                Please answer all questions truthfully. Any false statements may result in application denial.
+                            </p>
                         </div>
+                        
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-radio-group
+                                label="Have you ever had your medical license suspended, revoked, or restricted?"
+                                options={yesNoOptions}
+                                value={licenseDiscipline}
+                                onchange={handleInputChange}
+                                data-field="licenseDiscipline"
+                                required
+                                class={licenseDisciplineClass}>
+                            </lightning-radio-group>
+                        </div>
+                        
+                        <template if:true={showDisciplineDetails}>
+                            <div class="slds-col slds-size_1-of-1">
+                                <lightning-textarea
+                                    label="Please provide details"
+                                    value={disciplineDetails}
+                                    onchange={handleInputChange}
+                                    data-field="disciplineDetails"
+                                    required
+                                    maxlength="1000"
+                                    class={disciplineDetailsClass}>
+                                </lightning-textarea>
+                            </div>
+                        </template>
+                        
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-radio-group
+                                label="Have you ever been convicted of a felony?"
+                                options={yesNoOptions}
+                                value={felonyConviction}
+                                onchange={handleInputChange}
+                                data-field="felonyConviction"
+                                required
+                                class={felonyConvictionClass}>
+                            </lightning-radio-group>
+                        </div>
+                        
+                        <template if:true={showFelonyDetails}>
+                            <div class="slds-col slds-size_1-of-1">
+                                <lightning-textarea
+                                    label="Please provide details"
+                                    value={felonyDetails}
+                                    onchange={handleInputChange}
+                                    data-field="felonyDetails"
+                                    required
+                                    maxlength="1000"
+                                    class={felonyDetailsClass}>
+                                </lightning-textarea>
+                            </div>
+                        </template>
+                        
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-radio-group
+                                label="Do you have malpractice insurance?"
+                                options={yesNoOptions}
+                                value={malpracticeInsurance}
+                                onchange={handleInputChange}
+                                data-field="malpracticeInsurance"
+                                required
+                                class={malpracticeInsuranceClass}>
+                            </lightning-radio-group>
+                        </div>
+                        
+                        <template if:true={showInsuranceDetails}>
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning-input
+                                    label="Insurance Carrier"
+                                    value={insuranceCarrier}
+                                    onchange={handleInputChange}
+                                    data-field="insuranceCarrier"
+                                    required
+                                    class={insuranceCarrierClass}>
+                                </lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning-input
+                                    label="Policy Number"
+                                    value={policyNumber}
+                                    onchange={handleInputChange}
+                                    data-field="policyNumber"
+                                    required
+                                    class={policyNumberClass}>
+                                </lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning-input
+                                    label="Coverage Amount"
+                                    value={coverageAmount}
+                                    onchange={handleInputChange}
+                                    data-field="coverageAmount"
+                                    required
+                                    class={coverageAmountClass}>
+                                </lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning-input
+                                    label="Policy Expiration Date"
+                                    type="date"
+                                    value={policyExpiration}
+                                    onchange={handleInputChange}
+                                    data-field="policyExpiration"
+                                    required
+                                    min={todayDate}
+                                    class={policyExpirationClass}>
+                                </lightning-input>
+                            </div>
+                        </template>
+                        
+                        <div class="slds-col slds-size_1-of-1">
+                            <lightning-textarea
+                                label="Additional Comments or Information"
+                                value={additionalComments}
+                                onchange={handleInputChange}
+                                data-field="additionalComments"
+                                maxlength="2000"
+                                field-level-help="Optional: Provide any additional information relevant to your application">
+                            </lightning-textarea>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Page 5: Review & Submit -->
+            <template if:true={isPage5}>
+                <div class="form-page">
+                    <h2 class="slds-text-heading_medium slds-m-bottom_medium">Review & Submit</h2>
+                    <p class="slds-text-body_regular slds-m-bottom_large slds-text-color_weak">
+                        Please review all information before submitting your application. You can go back to previous sections to make changes.
+                    </p>
+
+                    <lightning-accordion allow-multiple-sections-open>
+                        <lightning-accordion-section name="personal" label="Personal Information">
+                            <div class="slds-grid slds-wrap slds-gutters_small">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <strong>Name:</strong> {fullName}
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <strong>Date of Birth:</strong> {formattedDateOfBirth}
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <strong>Gender:</strong> {gender}
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <strong>SSN:</strong> ***-**-{ssnLast4}
+                                </div>
+                            </div>
+                        </lightning-accordion-section>
+                        
+                        <lightning-accordion-section name="contact" label="Contact Details">
+                            <div class="slds-grid slds-wrap slds-gutters_small">
+                                <div class="slds-col slds-size_1-of-1">
+                                    <strong>Address:</strong> {fullAddress}
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <strong>Primary Phone:</strong> {formattedPrimaryPhone}
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <strong>Email:</strong> {email}
+                                </div>
+                            </div>
+                        </lightning-accordion-section>
+                        
+                        <lightning-accordion-section name="professional" label="Professional Information">
+                            <div class="slds-grid slds-wrap slds-gutters_small">
+                                <div class="slds-col slds-size_1-of-2">
+                                    <strong>Provider Type:</strong> {providerType}
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <strong>Specialty:</strong> {specialty}
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <strong>License Number:</strong> {licenseNumber}
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <strong>NPI Number:</strong> {npiNumber}
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <strong>Medical School:</strong> {medicalSchool}
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <strong>Years of Experience:</strong> {yearsExperience}
+                                </div>
+                            </div>
+                        </lightning-accordion-section>
+                        
+                        <lightning-accordion-section name="additional" label="Additional Information">
+                            <div class="slds-grid slds-wrap slds-gutters_small">
+                                <div class="slds-col slds-size_1-of-1">
+                                    <strong>Practice Name:</strong> {practiceName}
+                                </div>
+                                <div class="slds-col slds-size_1-of-1">
+                                    <strong>Practice Address:</strong> {practiceAddress}
+                                </div>
+                                <div class="slds-col slds-size_1-of-2">
+                                    <strong>Malpractice Insurance:</strong> {malpracticeInsurance}
+                                </div>
+                            </div>
+                        </lightning-accordion-section>
+                    </lightning-accordion>
+
+                    <div class="slds-notify slds-notify_alert slds-theme_info slds-theme_alert-texture slds-m-top_large" role="alert">
+                        <h2 class="slds-text-heading_small">Certification and Agreement</h2>
+                        <p class="slds-text-body_small">
+                            By submitting this application, I certify that all information provided is true and accurate to the best of my knowledge. 
+                            I understand that any false statements may result in denial of my application or termination of provider status.
+                        </p>
                     </div>
 
                     <div class="slds-m-top_medium">
                         <lightning-input
                             type="checkbox"
-                            label="I certify that all information provided is accurate and complete"
-                            checked={certificationAgreement}
+                            label="I agree to the terms and conditions and certify that all information is accurate"
+                            checked={agreementAccepted}
                             onchange={handleInputChange}
-                            data-field="certificationAgreement"
+                            data-field="agreementAccepted"
                             required
-                            class={certificationAgreementClass}>
+                            class={agreementAcceptedClass}>
                         </lightning-input>
-                        <template if:true={errors.certificationAgreement}>
-                            <div class="slds-text-color_error slds-text-body_small">{errors.certificationAgreement}</div>
-                        </template>
-                    </div>
-
-                    <div class="slds-notify slds-notify_alert slds-theme_warning slds-theme_alert-texture slds-m-top_medium" role="alert">
-                        <h2 class="slds-text-heading_small">Legal Disclaimer: By submitting this application, you agree to background verification and credential validation processes.</h2>
-                    </div>
-
-                    <!-- Navigation Buttons -->
-                    <div class="slds-m-top_large slds-text-align_right">
-                        <lightning-button
-                            label="Previous"
-                            variant="neutral"
-                            onclick={handlePrevious}
-                            class="slds-m-right_small">
-                        </lightning-button>
-                        <lightning-button
-                            label="Submit Application"
-                            variant="brand"
-                            onclick={handleSubmit}
-                            disabled={isSubmitting}>
-                        </lightning-button>
                     </div>
                 </div>
             </template>
 
-            <!-- Loading Spinner -->
-            <template if:true={isLoading}>
-                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
-            </template>
+            <!-- Navigation Buttons -->
+            <div class="slds-m-top_large slds-p-top_medium slds-border_top">
+                <div class="slds-grid slds-grid_align-spread">
+                    <div class="slds-col">
+                        <template if:false={isFirstPage}>
+                            <lightning-button
+                                label="Previous"
+                                onclick={handlePrevious}
+                                variant="neutral"
+                                class="slds-m-right_small">
+                            </lightning-button>
+                        </template>
+                        <lightning-button
+                            label="Cancel"
+                            onclick={handleCancel}
+                            variant="neutral">
+                        </lightning-button>
+                    </div>
+                    <div class="slds-col">
+                        <template if:false={isLastPage}>
+                            <lightning-button
+                                label="Next"
+                                onclick={handleNext}
+                                variant="brand">
+                            </lightning-button>
+                        </template>
+                        <template if:true={isLastPage}>
+                            <lightning-button
+                                label="Submit Application"
+                                onclick={handleSubmit}
+                                variant="brand"
+                                disabled={submitDisabled}>
+                            </lightning-button>
+                        </template>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>

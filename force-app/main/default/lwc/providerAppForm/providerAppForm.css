@@ -3,27 +3,34 @@
 }
 
 .slds-has-error .slds-input,
-.slds-has-error .slds-textarea,
-.slds-has-error .slds-select {
+.slds-has-error .slds-select,
+.slds-has-error .slds-textarea {
     border-color: #c23934;
     box-shadow: 0 0 0 1px #c23934 inset;
 }
 
-.slds-text-color_error {
+.slds-has-error .slds-form-element__label {
     color: #c23934;
 }
 
-.slds-progress-indicator {
-    margin-bottom: 2rem;
+.slds-progress-indicator .slds-progress__item.slds-is-active .slds-progress__marker {
+    background-color: #0176d3;
+    border-color: #0176d3;
 }
 
-.slds-notify_alert {
-    margin: 1rem 0;
+.slds-progress-indicator .slds-progress__item.slds-is-completed .slds-progress__marker {
+    background-color: #4bca81;
+    border-color: #4bca81;
 }
 
 .slds-card {
     max-width: 1200px;
     margin: 0 auto;
+}
+
+.slds-card__header {
+    background-color: #f3f3f3;
+    border-bottom: 1px solid #dddbda;
 }
 
 .slds-grid.slds-gutters {
@@ -36,60 +43,149 @@
     padding-right: 0.5rem;
 }
 
-.slds-m-top_medium {
-    margin-top: 1rem;
+.slds-notify.slds-theme_info {
+    background-color: #0176d3;
+    color: white;
 }
 
-.slds-m-bottom_medium {
-    margin-bottom: 1rem;
+.slds-notify.slds-theme_warning {
+    background-color: #ffb75d;
+    color: #080707;
 }
 
-.slds-m-bottom_large {
-    margin-bottom: 1.5rem;
+.slds-notify.slds-theme_error {
+    background-color: #c23934;
+    color: white;
+}
+
+.slds-accordion__section {
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.slds-accordion__summary {
+    background-color: #f3f3f3;
+    padding: 1rem;
+    font-weight: 600;
+}
+
+.slds-accordion__content {
+    padding: 1rem;
+    background-color: white;
+}
+
+.slds-text-heading_medium {
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: #080707;
+}
+
+.slds-text-heading_small {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: #080707;
+}
+
+.slds-text-body_regular {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #3e3e3c;
+}
+
+.slds-text-body_small {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: #3e3e3c;
+}
+
+.slds-text-color_weak {
+    color: #706e6b;
+}
+
+.slds-border_top {
+    border-top: 1px solid #dddbda;
 }
 
 .slds-m-top_large {
     margin-top: 1.5rem;
 }
 
+.slds-m-top_medium {
+    margin-top: 1rem;
+}
+
+.slds-m-top_small {
+    margin-top: 0.5rem;
+}
+
+.slds-m-bottom_large {
+    margin-bottom: 1.5rem;
+}
+
+.slds-m-bottom_medium {
+    margin-bottom: 1rem;
+}
+
+.slds-m-bottom_small {
+    margin-bottom: 0.5rem;
+}
+
+.slds-p-top_medium {
+    padding-top: 1rem;
+}
+
+.slds-p-horizontal_large {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
 .slds-m-right_small {
     margin-right: 0.5rem;
 }
 
-.slds-text-align_right {
-    text-align: right;
-}
-
 @media (max-width: 768px) {
-    .slds-col.slds-size_1-of-2,
-    .slds-col.slds-size_1-of-3 {
+    .slds-col.slds-size_1-of-2 {
         width: 100%;
-        flex: none;
     }
     
-    .slds-text-align_right {
+    .slds-col.slds-size_1-of-4 {
+        width: 100%;
+    }
+    
+    .slds-grid.slds-grid_align-spread {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .slds-grid.slds-grid_align-spread .slds-col {
+        margin-bottom: 0.5rem;
         text-align: center;
     }
+}
+
+@media (max-width: 480px) {
+    .slds-card {
+        margin: 0 0.5rem;
+    }
     
-    .slds-button {
-        margin: 0.25rem;
-        width: auto;
+    .slds-p-horizontal_large {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .slds-text-heading_medium {
+        font-size: 1.125rem;
+    }
+    
+    .slds-progress-indicator {
+        font-size: 0.75rem;
     }
 }
 
-.slds-spinner_container {
-    position: relative;
-    min-height: 200px;
-}
-
-.slds-checkbox_faux:focus,
-.slds-radio_faux:focus {
-    outline: 0;
-    box-shadow: 0 0 3px #0176d3;
-}
-
-.slds-form-element__help {
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-    color: #706e6b;
+:host {
+    display: block;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
 }
