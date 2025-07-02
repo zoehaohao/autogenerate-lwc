@@ -4,65 +4,54 @@ export default class AbnLookupCmp extends LightningElement {
     @track searchTerm = '';
     @track searchResults = [];
     @track showError = false;
-    @track errorMessage = '';
-    @track showResults = false;
-    @track showHelperText = true;
+
+    // Mock data for demonstration
+    mockResults = [
+        { abn: '33 051 775 556', businessName: 'Big Bang Aged Care Limited', status: 'Active' },
+        { abn: '004 085 616', businessName: 'Big Bang Aged Care NSW', status: 'Active' },
+        { abn: '123 456 789', businessName: 'Big Bang Aged Care QLD', status: 'Active' },
+        { abn: '456 789 123', businessName: 'Big Bang Aged Care VIC', status: 'Active' }
+    ];
 
     handleSearchChange(event) {
         this.searchTerm = event.target.value;
         this.showError = false;
-        this.showResults = false;
-        this.showHelperText = true;
     }
 
     handleSearch() {
-        // Reset states
+        // Reset error state
         this.showError = false;
-        this.showResults = false;
-        this.showHelperText = false;
 
-        // Validate input
-        if (!this.searchTerm) {
+        // Validate search term
+        if (this.isABNSearch() && !this.isValidABN(this.searchTerm)) {
             this.showError = true;
-            this.errorMessage = 'Please enter a search term';
+            this.searchResults = [];
             return;
         }
 
-        // Validate ABN/ACN format if numeric input
-        if (/^\d+$/.test(this.searchTerm)) {
-            if (this.searchTerm.length !== 11 && this.searchTerm.length !== 9) {
-                this.showError = true;
-                this.errorMessage = 'An ABN requires 11 digits and an ACN requires 9 digits, check the number and try again.';
-                return;
-            }
-        }
-
-        // Mock search results - replace with actual API call
-        this.searchResults = [
-            {
-                id: '1',
-                abn: '33 051 775 556',
-                entityName: 'Big Bang Aged Care Limited',
-                businessName: 'Big Bang Aged Care Limited (Active)'
-            },
-            {
-                id: '2',
-                abn: '004 085 616',
-                entityName: 'Big Bang Aged Care NSW',
-                businessName: 'Big Bang Aged Care NSW (Active)'
-            }
-        ];
-
-        this.showResults = true;
+        // Perform search (mock implementation)
+        this.searchResults = this.mockResults.filter(result => {
+            return result.businessName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+                   result.abn.includes(this.searchTerm);
+        });
     }
 
     handleSelect(event) {
-        const selectedId = event.currentTarget.dataset.id;
-        const selectedResult = this.searchResults.find(result => result.id === selectedId);
-        
-        // Dispatch selection event
-        this.dispatchEvent(new CustomEvent('selection', {
-            detail: selectedResult
+        const selectedAbn = event.currentTarget.dataset.id;
+        // Dispatch event with selected ABN
+        this.dispatchEvent(new CustomEvent('select', {
+            detail: {
+                abn: selectedAbn
+            }
         }));
+    }
+
+    isABNSearch() {
+        return /^\d+$/.test(this.searchTerm);
+    }
+
+    isValidABN(abn) {
+        const digits = abn.replace(/\D/g, '');
+        return digits.length === 11;
     }
 }

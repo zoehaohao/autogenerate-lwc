@@ -1,92 +1,75 @@
 <template>
-    <div class="abn-lookup-container">
-        <h1 class="slds-text-heading_large slds-m-bottom_medium">ABN Lookup</h1>
+    <div class="slds-card">
+        <div class="slds-card__header">
+            <h2 class="slds-text-heading_medium">ABN Lookup</h2>
+        </div>
+        
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-form-element">
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_1-of-1">
+                        <div class="slds-text-title slds-m-bottom_small">
+                            <lightning-icon icon-name="utility:info" size="x-small" class="slds-m-right_x-small"></lightning-icon>
+                            ABN lookup pattern
+                        </div>
+                        
+                        <div class="slds-text-body_regular slds-m-bottom_medium">
+                            Search for an Australian Business Number (ABN) using the ABN field, Company / Business / Trading name or Australian Company Number (ACN). Use the current entity list from identities and or Australian Company Number to find it.
+                        </div>
 
-        <div class="slds-card">
-            <div class="slds-p-around_medium">
-                <div class="slds-grid slds-grid_vertical-align-center">
-                    <div class="slds-col">
                         <div class="slds-form-element">
-                            <label class="slds-form-element__label">
-                                <abbr class="slds-required" title="required">*</abbr>
-                                ABN lookup pattern
-                                <lightning-helptext 
-                                    content="Search for an Australian Business Number (ABN) using the ABN field, Company / Business / Trading name or Australian Company Number (ACN)">
-                                </lightning-helptext>
-                            </label>
-                            <div class="slds-form-element__control">
-                                <div class="search-box slds-grid">
-                                    <lightning-input
+                            <div class="slds-grid slds-gutters">
+                                <div class="slds-col slds-size_3-of-4">
+                                    <lightning-input 
                                         type="search"
-                                        variant="standard"
+                                        label="Search"
                                         placeholder="Search by Business name, ABN or ACN"
                                         value={searchTerm}
-                                        onchange={handleSearchChange}
-                                        class="slds-col">
+                                        onchange={handleSearchChange}>
                                     </lightning-input>
-                                    <lightning-button
-                                        label="Search"
+                                </div>
+                                <div class="slds-col slds-size_1-of-4 slds-align-bottom">
+                                    <lightning-button 
+                                        label="Search" 
                                         variant="brand"
                                         onclick={handleSearch}
-                                        class="slds-m-left_small">
+                                        class="slds-m-left_x-small">
                                     </lightning-button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="slds-m-top_medium">
-                    <template if:true={showHelperText}>
-                        <div class="slds-text-body_regular slds-m-bottom_small">
-                            Search for an Australian Business Number (ABN) using the ABN field, Company / Business / Trading name or Australian Company Number (ACN). Use the current entity list from identities and or Australian Company Number to find it.
-                        </div>
-                    </template>
+                        <template if:true={showError}>
+                            <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
+                                <lightning-icon icon-name="utility:warning" size="small" class="slds-m-right_x-small"></lightning-icon>
+                                <span>An ABN requires 11 digits and an ACN requires 9 digits, check the number and try again.</span>
+                            </div>
+                        </template>
 
-                    <template if:true={showError}>
-                        <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning" role="alert">
-                            <span class="slds-icon_container slds-icon-utility-warning slds-m-right_small">
-                                <lightning-icon icon-name="utility:warning" size="small" variant="warning"></lightning-icon>
-                            </span>
-                            <h2>{errorMessage}</h2>
-                        </div>
-                    </template>
-
-                    <template if:true={showResults}>
-                        <div class="search-results">
-                            <template for:each={searchResults} for:item="result">
-                                <div key={result.id} class="result-card slds-card slds-m-bottom_small">
-                                    <div class="slds-card__body slds-card__body_inner">
-                                        <div class="slds-grid slds-grid_align-spread">
-                                            <div class="slds-col">
-                                                <div class="slds-text-heading_medium">{result.abn}</div>
-                                                <div class="slds-grid slds-wrap">
-                                                    <div class="slds-col slds-size_1-of-2">
-                                                        <div class="slds-text-title">Entity name</div>
-                                                        <div class="slds-text-body_regular">{result.entityName}</div>
-                                                    </div>
-                                                    <div class="slds-col slds-size_1-of-2 slds-text-align_right">
-                                                        <div class="slds-text-title">Business name</div>
-                                                        <div class="slds-text-body_regular">{result.businessName}</div>
-                                                    </div>
-                                                </div>
+                        <template if:true={searchResults.length}>
+                            <div class="slds-m-top_medium">
+                                <template for:each={searchResults} for:item="result">
+                                    <div key={result.abn} class="result-card slds-box slds-m-bottom_small">
+                                        <div class="slds-grid slds-gutters">
+                                            <div class="slds-col slds-size_3-of-4">
+                                                <div class="slds-text-heading_small slds-m-bottom_xx-small">{result.abn}</div>
+                                                <div class="slds-text-body_regular">{result.businessName}</div>
+                                                <div class="slds-text-body_small slds-text-color_success">{result.status}</div>
                                             </div>
-                                            <div class="slds-col slds-shrink-none">
+                                            <div class="slds-col slds-size_1-of-4 slds-align_absolute-center">
                                                 <lightning-button 
                                                     label="Select" 
-                                                    variant="brand"
-                                                    icon-name="utility:forward"
-                                                    icon-position="right"
-                                                    onclick={handleSelect} 
-                                                    data-id={result.id}>
+                                                    variant="neutral"
+                                                    onclick={handleSelect}
+                                                    data-id={result.abn}>
                                                 </lightning-button>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </template>
-                        </div>
-                    </template>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
                 </div>
             </div>
         </div>
