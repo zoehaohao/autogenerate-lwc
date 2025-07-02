@@ -2,20 +2,20 @@ import { LightningElement, track } from 'lwc';
 
 export default class ProviderAppForm extends LightningElement {
     @track currentPage = 1;
+    @track hasErrors = false;
+    @track errorMessages = [];
+    
     @track formData = {
-        legalName: '',
+        companyLegalName: '',
         acn: '',
         abn: '',
         businessName: '',
-        certificateFile: null,
-        trustDeedFile: null
+        streetAddress: '',
+        suburb: '',
+        state: '',
+        postcode: ''
     };
-    @track hasErrors = false;
-    @track errorMessage = '';
 
-    acceptedFormats = ['.pdf', '.doc', '.docx', '.xls', '.xlsx'];
-
-    // Getters
     get currentPageString() {
         return String(this.currentPage);
     }
@@ -24,84 +24,100 @@ export default class ProviderAppForm extends LightningElement {
         return this.currentPage === 1;
     }
 
-    get showTrustDeedUpload() {
-        return this.formData.abn && this.formData.abn.trim() !== '';
+    get nextButtonLabel() {
+        return this.currentPage === 4 ? 'Submit' : 'Next';
     }
 
-    // Event Handlers
+    get stateOptions() {
+        return [
+            { label: 'New South Wales', value: 'NSW' },
+            { label: 'Victoria', value: 'VIC' },
+            { label: 'Queensland', value: 'QLD' },
+            { label: 'Western Australia', value: 'WA' },
+            { label: 'South Australia', value: 'SA' },
+            { label: 'Tasmania', value: 'TAS' },
+            { label: 'Australian Capital Territory', value: 'ACT' },
+            { label: 'Northern Territory', value: 'NT' }
+        ];
+    }
+
     handleInputChange(event) {
         const field = event.target.dataset.field;
-        this.formData[field] = event.target.value;
-        this.validateField(field);
+        const value = event.target.value;
+        this.formData[field] = value;
     }
 
-    handleUploadFinished(event) {
-        const uploadedFiles = event.detail.files;
-        console.log('Files uploaded successfully: ' + JSON.stringify(uploadedFiles));
+    validatePage1() {
+        let isValid = true;
+        this.errorMessages = [];
+
+        // Company Legal Name validation
+        if (!this.formData.companyLegalName) {
+            this.errorMessages.push('Company Legal Name is required');
+            isValid = false;
+        }
+
+        // ACN validation
+        if (!this.formData.acn) {
+            this.errorMessages.push('ACN/IAN/ICN is required');
+            isValid = false;
+        }
+
+        // ABN validation
+        if (!this.formData.abn) {
+            this.errorMessages.push('ABN is required');
+            isValid = false;
+        } else if (!/^\d{11}$/.test(this.formData.abn)) {
+            this.errorMessages.push('ABN must be 11 digits');
+            isValid = false;
+        }
+
+        // Address validation
+        if (!this.formData.streetAddress) {
+            this.errorMessages.push('Street Address is required');
+            isValid = false;
+        }
+        if (!this.formData.suburb) {
+            this.errorMessages.push('Suburb/Town is required');
+            isValid = false;
+        }
+        if (!this.formData.state) {
+            this.errorMessages.push('State/Territory is required');
+            isValid = false;
+        }
+        if (!this.formData.postcode) {
+            this.errorMessages.push('Postcode is required');
+            isValid = false;
+        } else if (!/^\d{4}$/.test(this.formData.postcode)) {
+            this.errorMessages.push('Postcode must be 4 digits');
+            isValid = false;
+        }
+
+        this.hasErrors = !isValid;
+        return isValid;
     }
 
     handleNext() {
-        if (this.validateCurrentPage()) {
+        if (this.currentPage === 1 && !this.validatePage1()) {
+            return;
+        }
+        
+        if (this.currentPage < 4) {
             this.currentPage++;
+        } else {
+            this.handleSubmit();
         }
     }
 
     handleCancel() {
-        // Reset form or navigate away
-        this.dispatchEvent(new CustomEvent('cancel'));
+        // Reset form and navigate away
+        this.formData = {};
+        this.currentPage = 1;
+        // Add navigation logic here
     }
 
-    // Validation Methods
-    validateCurrentPage() {
-        let isValid = true;
-        let errors = [];
-
-        if (this.isPage1) {
-            // Validate required fields
-            if (!this.formData.legalName) {
-                errors.push('Legal Name is required');
-                isValid = false;
-            }
-            if (!this.formData.acn) {
-                errors.push('ACN/IAN/ICN is required');
-                isValid = false;
-            }
-            if (!this.formData.abn) {
-                errors.push('ABN is required');
-                isValid = false;
-            }
-
-            // Validate ABN format
-            if (this.formData.abn && !this.validateABN(this.formData.abn)) {
-                errors.push('Invalid ABN format');
-                isValid = false;
-            }
-        }
-
-        if (!isValid) {
-            this.hasErrors = true;
-            this.errorMessage = errors.join('. ');
-        } else {
-            this.hasErrors = false;
-            this.errorMessage = '';
-        }
-
-        return isValid;
-    }
-
-    validateField(fieldName) {
-        // Individual field validation
-        switch(fieldName) {
-            case 'abn':
-                return this.validateABN(this.formData.abn);
-            // Add more field validations as needed
-        }
-        return true;
-    }
-
-    validateABN(abn) {
-        // Basic ABN validation - 11 digits
-        const abnRegex = /^\d{11}$/;
-        return abnRegex.test(abn);
+    handleSubmit() {
+        // Add submission logic here
+        console.log('Form submitted:', this.formData);
     }
 }

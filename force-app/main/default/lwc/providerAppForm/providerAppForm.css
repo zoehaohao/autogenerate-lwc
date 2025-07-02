@@ -1,22 +1,29 @@
 :host {
     display: block;
-    padding: 1rem;
 }
 
-.slds-form {
-    max-width: 800px;
-    margin: 0 auto;
+.form-page {
+    margin-top: 2rem;
 }
 
 .slds-notify {
     margin: 1rem 0;
+    padding: 1rem;
 }
 
-lightning-input, 
-lightning-file-upload {
+h2 {
+    color: rgb(62, 62, 60);
+}
+
+h3 {
     margin-bottom: 1rem;
 }
 
-.slds-progress-indicator {
-    margin-bottom: 2rem;
+lightning-input, 
+lightning-combobox {
+    margin-bottom: 1rem;
+}
+
+.slds-grid {
+    margin-bottom: 1rem;
 }

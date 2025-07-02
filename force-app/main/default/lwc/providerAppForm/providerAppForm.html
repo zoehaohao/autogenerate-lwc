@@ -1,116 +1,142 @@
 <template>
-    <!-- Progress Indicator -->
-    <lightning-progress-indicator 
-        current-step={currentPageString}
-        type="path"
-        variant="base">
-        <lightning-progress-step 
-            label="About the Applicant" 
-            value="1">
-        </lightning-progress-step>
-        <lightning-progress-step 
-            label="Key Personnel" 
-            value="2">
-        </lightning-progress-step>
-        <lightning-progress-step 
-            label="Suitability" 
-            value="3">
-        </lightning-progress-step>
-        <lightning-progress-step 
-            label="Care Type Details" 
-            value="4">
-        </lightning-progress-step>
-    </lightning-progress-indicator>
-
-    <!-- Form Content -->
     <div class="slds-p-around_medium">
-        <!-- Page 1: About the Applicant -->
-        <template if:true={isPage1}>
-            <div class="slds-form">
-                <h2 class="slds-text-heading_medium slds-m-bottom_medium">Organisation Details</h2>
-                
-                <lightning-input 
-                    label="Applicant's (Company) Legal Name"
-                    required
-                    type="text"
-                    value={formData.legalName}
-                    onchange={handleInputChange}
-                    data-field="legalName">
-                </lightning-input>
-
-                <div class="slds-grid slds-gutters">
-                    <div class="slds-col">
-                        <lightning-input 
-                            label="ACN/IAN/ICN"
-                            required
-                            type="text"
-                            value={formData.acn}
-                            onchange={handleInputChange}
-                            data-field="acn">
-                        </lightning-input>
-                    </div>
-                    <div class="slds-col">
-                        <lightning-input 
-                            label="ABN"
-                            required
-                            type="text"
-                            value={formData.abn}
-                            onchange={handleInputChange}
-                            data-field="abn">
-                        </lightning-input>
-                    </div>
-                </div>
-
-                <lightning-input 
-                    label="Business Name (if applicable)"
-                    type="text"
-                    value={formData.businessName}
-                    onchange={handleInputChange}
-                    data-field="businessName">
-                </lightning-input>
-
-                <lightning-file-upload
-                    label="Certificate of Registration"
-                    name="certificateUpload"
-                    accept={acceptedFormats}
-                    record-id={recordId}
-                    onuploadfinished={handleUploadFinished}
-                    multiple>
-                </lightning-file-upload>
-
-                <template if:true={showTrustDeedUpload}>
-                    <lightning-file-upload
-                        label="Trust Deed"
-                        name="trustDeedUpload"
-                        accept={acceptedFormats}
-                        record-id={recordId}
-                        onuploadfinished={handleUploadFinished}
-                        multiple>
-                    </lightning-file-upload>
-                </template>
-            </div>
-
-            <!-- Navigation Buttons -->
-            <div class="slds-m-top_medium slds-text-align_right">
-                <lightning-button 
-                    label="Cancel" 
-                    variant="neutral" 
-                    onclick={handleCancel} 
-                    class="slds-m-right_x-small">
-                </lightning-button>
-                <lightning-button 
-                    label="Next" 
-                    variant="brand" 
-                    onclick={handleNext}>
-                </lightning-button>
-            </div>
-        </template>
+        <!-- Progress Indicator -->
+        <lightning-progress-indicator 
+            current-step={currentPageString}
+            type="path"
+            variant="base">
+            <lightning-progress-step 
+                label="Applicant Details" 
+                value="1">
+            </lightning-progress-step>
+            <lightning-progress-step 
+                label="Key Personnel" 
+                value="2">
+            </lightning-progress-step>
+            <lightning-progress-step 
+                label="Suitability" 
+                value="3">
+            </lightning-progress-step>
+            <lightning-progress-step 
+                label="Care Type" 
+                value="4">
+            </lightning-progress-step>
+        </lightning-progress-indicator>
 
         <!-- Error Panel -->
         <template if:true={hasErrors}>
             <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
-                <h2>{errorMessage}</h2>
+                <h2>Please correct the following errors:</h2>
+                <template for:each={errorMessages} for:item="error">
+                    <p key={error}>{error}</p>
+                </template>
             </div>
         </template>
+
+        <!-- Page 1: Applicant Details -->
+        <div class="form-page" if:true={isPage1}>
+            <h2 class="slds-text-heading_medium slds-m-bottom_medium">Applicant Details</h2>
+            
+            <lightning-input 
+                label="Applicant's (Company) Legal Name"
+                type="text"
+                required
+                value={formData.companyLegalName}
+                onchange={handleInputChange}
+                data-field="companyLegalName">
+            </lightning-input>
+
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col">
+                    <lightning-input 
+                        label="ACN/IAN/ICN"
+                        type="text"
+                        required
+                        value={formData.acn}
+                        onchange={handleInputChange}
+                        data-field="acn">
+                    </lightning-input>
+                </div>
+                <div class="slds-col">
+                    <lightning-input 
+                        label="ABN"
+                        type="text"
+                        required
+                        value={formData.abn}
+                        onchange={handleInputChange}
+                        data-field="abn">
+                    </lightning-input>
+                </div>
+            </div>
+
+            <lightning-input 
+                label="Business Name (if applicable)"
+                type="text"
+                value={formData.businessName}
+                onchange={handleInputChange}
+                data-field="businessName">
+            </lightning-input>
+
+            <div class="slds-m-top_medium">
+                <h3 class="slds-text-heading_small">Registered Business Address</h3>
+                <lightning-input 
+                    label="Street Number and Name"
+                    type="text"
+                    required
+                    value={formData.streetAddress}
+                    onchange={handleInputChange}
+                    data-field="streetAddress">
+                </lightning-input>
+                
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <lightning-input 
+                            label="Suburb/Town"
+                            type="text"
+                            required
+                            value={formData.suburb}
+                            onchange={handleInputChange}
+                            data-field="suburb">
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col">
+                        <lightning-combobox
+                            label="State/Territory"
+                            value={formData.state}
+                            options={stateOptions}
+                            required
+                            onchange={handleInputChange}
+                            data-field="state">
+                        </lightning-combobox>
+                    </div>
+                    <div class="slds-col">
+                        <lightning-input 
+                            label="Postcode"
+                            type="text"
+                            required
+                            pattern="[0-9]{4}"
+                            value={formData.postcode}
+                            onchange={handleInputChange}
+                            data-field="postcode">
+                        </lightning-input>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="slds-m-top_large slds-text-align_right">
+            <lightning-button 
+                label="Cancel" 
+                variant="neutral" 
+                onclick={handleCancel} 
+                class="slds-m-right_small">
+            </lightning-button>
+            <lightning-button 
+                label={nextButtonLabel} 
+                variant="brand" 
+                onclick={handleNext}>
+            </lightning-button>
+        </div>
     </div>
 </template>
