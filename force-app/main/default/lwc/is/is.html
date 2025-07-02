@@ -1,0 +1,88 @@
+<template>
+    <div class="feedback-container">
+        <!-- Success Toast -->
+        <template if:true={showSuccessToast}>
+            <div class="slds-notify_container">
+                <div class="slds-notify slds-notify_toast slds-theme_success" role="alert">
+                    <span class="slds-icon_container slds-icon-utility-success">
+                        <lightning-icon icon-name="utility:success" size="small" variant="inverse"></lightning-icon>
+                    </span>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small">Feedback received. Thank you for your valuable feedback.</h2>
+                    </div>
+                    <div class="slds-notify__close">
+                        <lightning-button-icon icon-name="utility:close" variant="bare-inverse" onclick={closeToast}></lightning-button-icon>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Feedback Form -->
+        <div class="slds-modal__content">
+            <div class="slds-p-around_medium">
+                <h2 class="slds-text-heading_medium">Help us improve with your feedback</h2>
+                
+                <!-- Progress Indicator -->
+                <div class="slds-p-vertical_medium">
+                    <lightning-progress-indicator current-step={currentStep} type="base" variant="base">
+                        <lightning-progress-step label="Rating" value="1"></lightning-progress-step>
+                        <lightning-progress-step label="Details" value="2"></lightning-progress-step>
+                    </lightning-progress-indicator>
+                </div>
+
+                <!-- Step 1: Rating -->
+                <template if:true={isStepOne}>
+                    <div class="slds-p-vertical_medium">
+                        <h3 class="slds-text-heading_small">How easy was it to make your submission today? (Step 1 of 2)</h3>
+                        <div class="slds-grid slds-gutters slds-p-vertical_medium">
+                            <template for:each={ratingOptions} for:item="option">
+                                <div key={option.value} class="slds-col">
+                                    <button class={option.buttonClass} onclick={handleRatingSelect} data-value={option.value}>
+                                        <div class="slds-text-heading_large">{option.value}</div>
+                                        <div class="slds-text-body_small">{option.label}</div>
+                                    </button>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Step 2: Details -->
+                <template if:true={isStepTwo}>
+                    <div class="slds-p-vertical_medium">
+                        <h3 class="slds-text-heading_small">Would you like to provide more details? (Step 2 of 2)</h3>
+                        <p class="slds-text-body_small slds-p-vertical_small">Please do not include any confidential or personal information.</p>
+                        <lightning-textarea 
+                            value={feedbackDetails}
+                            onchange={handleDetailsChange}
+                            maxlength="250"
+                            placeholder="Your feedback..."
+                        ></lightning-textarea>
+                        <div class="slds-text-align_right slds-text-body_small">
+                            {characterCount} of 250
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Navigation Buttons -->
+                <div class="slds-grid slds-grid_align-spread slds-p-top_medium">
+                    <template if:true={showBackButton}>
+                        <lightning-button 
+                            label="Back"
+                            onclick={handleBack}
+                            variant="neutral">
+                        </lightning-button>
+                    </template>
+                    <div class="slds-col_bump-left">
+                        <lightning-button 
+                            label={nextButtonLabel}
+                            onclick={handleNext}
+                            variant="brand"
+                            disabled={isNextDisabled}>
+                        </lightning-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

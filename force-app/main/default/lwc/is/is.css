@@ -1,0 +1,44 @@
+:host {
+    display: block;
+}
+
+.feedback-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.rating-button {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.rating-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.rating-button.selected {
+    border: 2px solid #0070d2;
+    box-shadow: 0 0 4px #0070d2;
+}
+
+.rating-button.slds-theme_success {
+    background-color: #f3fef3;
+}
+
+.rating-button.slds-theme_error {
+    background-color: #fef3f3;
+}
+
+.slds-notify_container {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+}
