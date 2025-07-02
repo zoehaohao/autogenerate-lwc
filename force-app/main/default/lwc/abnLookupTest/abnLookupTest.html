@@ -1,0 +1,108 @@
+<template>
+    <div class="slds-p-around_medium">
+        <!-- Header -->
+        <div class="slds-text-heading_small slds-m-bottom_small">
+            <span class="required">*</span> ABN lookup pattern
+            <lightning-button-icon
+                icon-name="utility:info"
+                variant="bare"
+                alternative-text="Info"
+                class="info-icon">
+            </lightning-button-icon>
+        </div>
+
+        <!-- Find ABN Button -->
+        <lightning-button
+            label="Find ABN"
+            variant="brand"
+            class="find-abn-button"
+            onclick={handleFindABN}>
+        </lightning-button>
+
+        <!-- Search Section -->
+        <template if:true={showSearchSection}>
+            <div class="slds-m-top_medium">
+                <p class="slds-text-body_regular slds-m-bottom_medium">
+                    You can find an Australian Business Number (ABN) using the ABN itself, 
+                    Company / Business / Trading name or Australian Company Number (ACN). 
+                    Once the correct entity has been identified you can select it for use.
+                </p>
+
+                <div class="slds-form-element search-container">
+                    <div class="slds-grid">
+                        <div class="slds-col search-input-container">
+                            <lightning-input
+                                type="search"
+                                label="Search"
+                                placeholder="Search by Business name, ABN or ACN"
+                                variant="label-hidden"
+                                value={searchTerm}
+                                onchange={handleSearchChange}>
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_2-of-12">
+                            <lightning-button
+                                label="Search"
+                                variant="brand"
+                                class="search-button"
+                                onclick={handleSearch}>
+                            </lightning-button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error Messages -->
+                <template if:true={showErrors}>
+                    <div class="slds-m-top_small">
+                        <template for:each={errorMessages} for:item="error">
+                            <div key={error} class="error-message">
+                                <lightning-icon
+                                    icon-name="utility:warning"
+                                    size="x-small"
+                                    class="slds-m-right_x-small">
+                                </lightning-icon>
+                                {error}
+                            </div>
+                        </template>
+                    </div>
+                </template>
+
+                <!-- Search Results -->
+                <template if:true={showResults}>
+                    <div class="slds-m-top_medium">
+                        <template if:true={searchResults.length}>
+                            <div class="search-results-text">
+                                Your search for {searchTerm} found {searchResults.length} matches.
+                            </div>
+                            <template for:each={searchResults} for:item="result">
+                                <div key={result.id} class="result-card">
+                                    <div class="slds-text-heading_small slds-m-bottom_small">
+                                        {result.name}
+                                    </div>
+                                    <div class="field-list">
+                                        <template for:each={result.fields} for:item="field">
+                                            <div key={field.label} class="field-row">
+                                                <div class="field-label">{field.label}</div>
+                                                <div class="field-value">{field.value}</div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                    <div class="slds-m-top_medium slds-text-align_right">
+                                        <lightning-button
+                                            label="Select"
+                                            variant="brand"
+                                            icon-name="utility:forward"
+                                            icon-position="right"
+                                            onclick={handleSelect}
+                                            data-id={result.id}>
+                                        </lightning-button>
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>
