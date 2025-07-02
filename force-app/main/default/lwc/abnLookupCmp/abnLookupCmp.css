@@ -2,18 +2,13 @@
     display: block;
 }
 
-.result-card {
-    background: white;
-    border-radius: 4px;
-    transition: all 0.2s ease;
+.select-button {
+    --slds-c-button-neutral-color-background: #1b2834;
+    --slds-c-button-neutral-color-border: #1b2834;
+    --slds-c-button-neutral-text-color: #ffffff;
 }
 
-.result-card:hover {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.slds-notify_alert {
-    background-color: #fff3e0;
-    color: #3e2723;
-    margin: 1rem 0;
+.select-button:hover {
+    --slds-c-button-neutral-color-background-hover: #2c3f50;
+    --slds-c-button-neutral-color-border-hover: #2c3f50;
 }
