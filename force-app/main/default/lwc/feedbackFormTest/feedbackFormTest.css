@@ -1,0 +1,68 @@
+:host {
+    display: block;
+    padding: 1rem;
+}
+
+.feedback-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.success-toast {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+    background-color: #4caf50;
+    color: white;
+}
+
+.close-button {
+    margin-left: auto;
+}
+
+.rating-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.rating-box {
+    padding: 1rem;
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.rating-box:hover {
+    border-color: #0176d3;
+}
+
+.rating-box.selected {
+    background-color: #eef4ff;
+    border-color: #0176d3;
+}
+
+.rating-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.rating-text {
+    font-size: 0.875rem;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.character-count {
+    color: #706e6b;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
