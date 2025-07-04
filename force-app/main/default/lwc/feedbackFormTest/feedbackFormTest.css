@@ -1,48 +1,67 @@
 :host {
-    display: block;
-    padding: 1rem;
+    --slds-c-button-brand-color-background: rgb(62, 135, 124);
+    --slds-c-button-brand-color-background-hover: rgb(42, 115, 104);
 }
 
 .feedback-container {
-    max-width: 1000px;
+    padding: 2rem;
+    max-width: 800px;
     margin: 0 auto;
 }
 
-.success-toast {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    margin-bottom: 1rem;
-    background-color: #4caf50;
-    color: white;
+.content-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 4px;
 }
 
-.close-button {
-    margin-left: auto;
+.progress-bar {
+    background: #f3f3f3;
+    height: 8px;
+    border-radius: 4px;
+    margin: 1.5rem 0;
+    position: relative;
 }
 
-.rating-container {
-    display: flex;
-    justify-content: space-between;
+.progress {
+    background: rgb(62, 135, 124);
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.rating-buttons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
     gap: 1rem;
+    margin: 2rem 0;
 }
 
-.rating-box {
+.rating-button {
+    border: 1px solid #d8d8d8;
+    border-radius: 8px;
     padding: 1rem;
-    border: 1px solid #d8dde6;
-    border-radius: 0.25rem;
-    text-align: center;
+    background: white;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.rating-box:hover {
-    border-color: #0176d3;
+.rating-button.easy {
+    border-color: rgb(201, 237, 219);
 }
 
-.rating-box.selected {
-    background-color: #eef4ff;
-    border-color: #0176d3;
+.rating-button.neutral {
+    border-color: #e0e0e0;
+}
+
+.rating-button.difficult {
+    border-color: rgb(254, 215, 215);
+}
+
+.rating-button.selected {
+    background: rgb(62, 135, 124);
+    color: white;
+    border-color: rgb(62, 135, 124);
 }
 
 .rating-number {
@@ -51,18 +70,46 @@
     margin-bottom: 0.5rem;
 }
 
-.rating-text {
+.rating-label {
     font-size: 0.875rem;
 }
 
 .button-container {
+    margin-top: 2rem;
     display: flex;
     justify-content: flex-end;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 .character-count {
-    color: #706e6b;
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
+    text-align: right;
+    color: #666;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+.success-toast {
+    background: rgb(75, 183, 73);
+    color: white;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.close-toast {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+}
+
+.info-text {
+    color: #666;
+    margin-bottom: 1rem;
 }

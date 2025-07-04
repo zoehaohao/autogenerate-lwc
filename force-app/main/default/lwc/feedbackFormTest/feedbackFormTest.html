@@ -2,113 +2,75 @@
     <div class="feedback-container">
         <!-- Success Toast -->
         <template if:true={showSuccessToast}>
-            <div class="success-toast slds-notify slds-notify_alert slds-theme_success" role="alert">
-                <span class="slds-icon_container slds-icon-utility-success">
-                    <lightning-icon icon-name="utility:success" size="small" variant="inverse"></lightning-icon>
-                </span>
-                <span>Feedback received. Thank you for your valuable feedback.</span>
-                <button class="slds-button slds-button_icon close-button" onclick={closeToast}>
-                    <lightning-icon icon-name="utility:close" size="small" variant="inverse"></lightning-icon>
-                </button>
+            <div class="success-toast">
+                <lightning-icon icon-name="utility:success" size="small" variant="inverse"></lightning-icon>
+                <span>{successMessage}</span>
+                <button class="close-toast" onclick={closeToast}>×</button>
             </div>
         </template>
 
-        <!-- Progress Indicator -->
-        <lightning-progress-indicator 
-            current-step={currentStep} 
-            type="path"
-            variant="base">
-            <lightning-progress-step 
-                label="Rate Experience" 
-                value="1">
-            </lightning-progress-step>
-            <lightning-progress-step 
-                label="Additional Details" 
-                value="2">
-            </lightning-progress-step>
-        </lightning-progress-indicator>
-
-        <!-- Step 1: Rating -->
-        <template if:true={isStepOne}>
-            <div class="slds-m-top_medium">
-                <h2 class="slds-text-heading_medium">How easy was it to make your submission today? (Step 1 of 2)</h2>
-                <div class="rating-container slds-grid slds-gutters slds-m-top_medium">
-                    <div class="slds-col" onclick={handleRating} data-rating="1">
-                        <div class={getRatingClass} data-rating="1">
-                            <div class="rating-number">1</div>
-                            <div class="rating-text">It was quite easy</div>
-                        </div>
-                    </div>
-                    <div class="slds-col" onclick={handleRating} data-rating="2">
-                        <div class={getRatingClass} data-rating="2">
-                            <div class="rating-number">2</div>
-                            <div class="rating-text">Easy</div>
-                        </div>
-                    </div>
-                    <div class="slds-col" onclick={handleRating} data-rating="3">
-                        <div class={getRatingClass} data-rating="3">
-                            <div class="rating-number">3</div>
-                            <div class="rating-text">Neutral</div>
-                        </div>
-                    </div>
-                    <div class="slds-col" onclick={handleRating} data-rating="4">
-                        <div class={getRatingClass} data-rating="4">
-                            <div class="rating-number">4</div>
-                            <div class="rating-text">Difficult</div>
-                        </div>
-                    </div>
-                    <div class="slds-col" onclick={handleRating} data-rating="5">
-                        <div class={getRatingClass} data-rating="5">
-                            <div class="rating-number">5</div>
-                            <div class="rating-text">It was a lot of effort</div>
-                        </div>
-                    </div>
-                </div>
+        <!-- Main Content -->
+        <div class="content-section">
+            <h2>Help us improve with your feedback</h2>
+            
+            <!-- Progress Indicator -->
+            <div class="progress-bar">
+                <div class="progress" style={progressStyle}></div>
+                <span class="progress-text">{currentStep}%</span>
+                <span class="progress-total">100%</span>
             </div>
-        </template>
 
-        <!-- Step 2: Comments -->
-        <template if:true={isStepTwo}>
-            <div class="slds-m-top_medium">
-                <h2 class="slds-text-heading_medium">Would you like to provide more details? (Step 2 of 2)</h2>
-                <p class="slds-text-body_regular slds-m-top_small">Please do not include any confidential or personal information.</p>
-                <lightning-textarea
-                    value={feedbackComment}
-                    onchange={handleCommentChange}
-                    maxlength="250"
-                    placeholder="Your feedback..."
-                    class="slds-m-top_medium">
-                </lightning-textarea>
-                <div class="character-count slds-text-align_right">
-                    {characterCount} of 250
-                </div>
-            </div>
-        </template>
-
-        <!-- Navigation Buttons -->
-        <div class="button-container slds-m-top_medium">
-            <template if:true={showBackButton}>
-                <lightning-button 
-                    label="Back"
-                    onclick={handleBack}
-                    variant="neutral"
-                    class="slds-m-right_small">
-                </lightning-button>
-            </template>
+            <!-- Step 1 -->
             <template if:true={isStepOne}>
-                <lightning-button 
-                    label="Next"
-                    onclick={handleNext}
-                    variant="brand"
-                    disabled={isNextDisabled}>
-                </lightning-button>
+                <h3>How easy was it to make your submission today? (Step 1 of 2)</h3>
+                <div class="rating-buttons">
+                    <template for:each={ratingOptions} for:item="option">
+                        <button 
+                            key={option.value}
+                            class={option.buttonClass} 
+                            onclick={handleRatingSelect}
+                            data-value={option.value}>
+                            <div class="rating-number">{option.value}</div>
+                            <div class="rating-label">{option.label}</div>
+                        </button>
+                    </template>
+                </div>
+                <div class="button-container">
+                    <lightning-button 
+                        label="Next"
+                        variant="brand"
+                        onclick={handleNext}
+                        disabled={isNextDisabled}>
+                    </lightning-button>
+                </div>
             </template>
+
+            <!-- Step 2 -->
             <template if:true={isStepTwo}>
-                <lightning-button 
-                    label="Submit"
-                    onclick={handleSubmit}
-                    variant="brand">
-                </lightning-button>
+                <h3>Would you like to provide more details? (Step 2 of 2)</h3>
+                <p class="info-text">Please do not include any confidential or personal information.</p>
+                <lightning-textarea
+                    value={feedbackDetails}
+                    onchange={handleFeedbackChange}
+                    maxlength="250"
+                    placeholder="Your feedback...">
+                </lightning-textarea>
+                <div class="character-count">
+                    <span>{characterCount} of 250</span>
+                </div>
+                <div class="button-container">
+                    <lightning-button 
+                        label="Back"
+                        variant="neutral"
+                        onclick={handleBack}
+                        class="back-button">
+                    </lightning-button>
+                    <lightning-button 
+                        label="Submit"
+                        variant="brand"
+                        onclick={handleSubmit}>
+                    </lightning-button>
+                </div>
             </template>
         </div>
     </div>
