@@ -1,0 +1,38 @@
+:host {
+    --slds-c-button-brand-color-background: rgb(52, 143, 134);
+    --slds-c-button-brand-color-background-hover: rgb(42, 133, 124);
+}
+
+.feedback-container {
+    position: relative;
+}
+
+.rating-button {
+    width: 100%;
+    text-align: center;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.rating-button.selected {
+    background-color: rgb(243, 246, 251);
+    border-color: rgb(52, 143, 134);
+    color: rgb(52, 143, 134);
+}
+
+.slds-progress-bar {
+    background: rgb(236, 235, 234);
+    height: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.slds-progress-bar__value {
+    background: rgb(52, 143, 134);
+    height: 100%;
+    border-radius: 0.25rem;
+    transition: width 0.4s ease;
+}
+
+.slds-notify_toast {
+    background-color: rgb(75, 183, 73);
+}

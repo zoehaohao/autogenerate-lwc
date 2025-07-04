@@ -1,0 +1,103 @@
+<template>
+    <div class="feedback-container">
+        <!-- Success Toast -->
+        <template if:true={showSuccessToast}>
+            <div class="slds-notify_container slds-is-relative">
+                <div class="slds-notify slds-notify_toast slds-theme_success" role="status">
+                    <span class="slds-assistive-text">success</span>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small">Feedback received. Thank you for your valuable feedback.</h2>
+                    </div>
+                    <div class="slds-notify__close">
+                        <lightning-button-icon icon-name="utility:close" 
+                                             variant="bare-inverse" 
+                                             onclick={closeToast}
+                                             size="small">
+                        </lightning-button-icon>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Feedback Modal -->
+        <div if:true={showModal} class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal Header -->
+                <header class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium">Help us improve with your feedback</h2>
+                    <lightning-button-icon icon-name="utility:close" 
+                                         onclick={closeModal}
+                                         class="slds-modal__close">
+                    </lightning-button-icon>
+                </header>
+
+                <!-- Modal Body -->
+                <div class="slds-modal__content slds-p-around_medium">
+                    <!-- Progress Bar -->
+                    <div class="slds-progress-bar" role="progressbar">
+                        <span class="slds-progress-bar__value" style={progressStyle}></span>
+                    </div>
+
+                    <!-- Step 1 -->
+                    <template if:true={isStepOne}>
+                        <div class="slds-p-top_medium">
+                            <h3 class="slds-text-heading_small">How easy was it to make your submission today? (Step 1 of 2)</h3>
+                            <div class="slds-grid slds-gutters slds-p-top_medium">
+                                <template for:each={ratingOptions} for:item="option">
+                                    <div key={option.value} class="slds-col">
+                                        <button class={option.buttonClass} 
+                                                onclick={handleRatingSelect} 
+                                                data-value={option.value}>
+                                            <div class="slds-text-heading_large">{option.value}</div>
+                                            <div class="slds-text-body_small">{option.label}</div>
+                                        </button>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Step 2 -->
+                    <template if:true={isStepTwo}>
+                        <div class="slds-p-top_medium">
+                            <h3 class="slds-text-heading_small">Would you like to provide more details? (Step 2 of 2)</h3>
+                            <p class="slds-text-body_small slds-p-vertical_small">Please do not include any confidential or personal information.</p>
+                            <lightning-textarea label="Your feedback..." 
+                                             value={feedbackText}
+                                             onchange={handleFeedbackChange}
+                                             maxlength="250">
+                            </lightning-textarea>
+                            <div class="slds-text-align_right slds-p-top_x-small">
+                                <span class="slds-text-body_small">{characterCount} of 250</span>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Modal Footer -->
+                <footer class="slds-modal__footer">
+                    <template if:true={isStepTwo}>
+                        <lightning-button label="Back" 
+                                        onclick={handleBack} 
+                                        class="slds-m-right_x-small">
+                        </lightning-button>
+                    </template>
+                    <lightning-button label={nextButtonLabel} 
+                                    variant="brand" 
+                                    onclick={handleNext}
+                                    disabled={isNextDisabled}>
+                    </lightning-button>
+                </footer>
+            </div>
+        </div>
+        <div if:true={showModal} class="slds-backdrop slds-backdrop_open"></div>
+
+        <!-- Feedback Button -->
+        <div class="slds-p-around_medium">
+            <lightning-button label="Give feedback" 
+                            variant="brand" 
+                            onclick={openModal}>
+            </lightning-button>
+        </div>
+    </div>
+</template>
