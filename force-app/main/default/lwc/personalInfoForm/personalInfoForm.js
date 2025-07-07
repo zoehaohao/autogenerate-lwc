@@ -1,50 +1,77 @@
-// personalInfoForm.js
-import { LightningElement, track } from 'lwc';
-
 export default class PersonalInfoForm extends LightningElement {
-    @track formData = {};
-    @track errorMessage = '';
-    @track isFormValid = false;
+    currentPage = 1;
+    totalPages = 2;
 
-    handleInputChange(event) {
-        const { id, value } = event.target;
-        this.formData[id] = value;
-        this.validateForm();
+    formData = {
+        name: '',
+        address: ''
+    };
+
+    // Getters for page visibility
+    get isPageOne() {
+        return this.currentPage === 1;
     }
 
-    validateForm() {
-        const requiredFields = ['firstName', 'lastName', 'birthdate', 'zipCode', 'startDate', 'endDate'];
-        let isValid = true;
-        let errors = [];
+    get isPageTwo() {
+        return this.currentPage === 2;
+    }
 
-        requiredFields.forEach(field => {
-            if (!this.formData[field]) {
-                isValid = false;
-                errors.push(`${field.charAt(0).toUpperCase() + field.slice(1)} is required.`);
-            }
-        });
+    get currentPageString() {
+        return this.currentPage.toString();
+    }
 
-        if (this.formData.zipCode && !/^\d{5}$/.test(this.formData.zipCode)) {
-            isValid = false;
-            errors.push('Zip Code must be 5 digits.');
+    // Navigation button visibility
+    get showPrevButton() {
+        return this.currentPage > 1;
+    }
+
+    get showNextButton() {
+        return this.currentPage < this.totalPages;
+    }
+
+    get showSubmitButton() {
+        return this.currentPage === this.totalPages;
+    }
+
+    // Event Handlers
+    handleInputChange(event) {
+        const field = event.target.dataset.field;
+        this.formData[field] = event.target.value;
+    }
+
+    handlePrevious() {
+        if (this.currentPage > 1) {
+            this.currentPage--;
         }
+    }
 
-        if (this.formData.startDate && this.formData.endDate) {
-            if (new Date(this.formData.endDate) <= new Date(this.formData.startDate)) {
-                isValid = false;
-                errors.push('End Date must be after Start Date.');
+    handleNext() {
+        if (this.validateCurrentPage()) {
+            if (this.currentPage < this.totalPages) {
+                this.currentPage++;
             }
         }
-
-        this.isFormValid = isValid;
-        this.errorMessage = errors.join(' ');
     }
 
     handleSubmit() {
-        if (this.isFormValid) {
+        if (this.validateCurrentPage()) {
             console.log('Form submitted:', this.formData);
-        } else {
-            this.errorMessage = 'Please correct the errors before submitting.';
+            // Add submission logic here
         }
+    }
+
+    // Validation
+    validateCurrentPage() {
+        let isValid = true;
+        const inputs = [...this.template.querySelectorAll('lightning-input')];
+        
+        inputs.forEach(input => {
+            if (input.required && !input.value) {
+                input.reportValidity();
+                isValid = false;
+            }
+        });
+
+        return isValid;
     }
 }
