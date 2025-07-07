@@ -1,9 +1,17 @@
 export default class FeedbackFormTest extends LightningElement {
-    showModal = false;
+    showFeedbackModal = false;
     showSuccessToast = false;
     currentStep = 1;
     selectedRating = null;
-    feedbackText = '';
+    feedbackDetails = '';
+    
+    get progressValue() {
+        return this.currentStep === 1 ? 50 : 100;
+    }
+
+    get progressStyle() {
+        return `width: ${this.progressValue}%`;
+    }
 
     get isStepOne() {
         return this.currentStep === 1;
@@ -11,10 +19,6 @@ export default class FeedbackFormTest extends LightningElement {
 
     get isStepTwo() {
         return this.currentStep === 2;
-    }
-
-    get progressStyle() {
-        return `width: ${this.currentStep === 1 ? '50' : '100'}%`;
     }
 
     get nextButtonLabel() {
@@ -26,7 +30,7 @@ export default class FeedbackFormTest extends LightningElement {
     }
 
     get characterCount() {
-        return this.feedbackText.length;
+        return this.feedbackDetails.length;
     }
 
     get ratingOptions() {
@@ -40,17 +44,17 @@ export default class FeedbackFormTest extends LightningElement {
     }
 
     getRatingButtonClass(value) {
-        let baseClass = 'slds-button slds-button_neutral slds-p-around_small rating-button';
-        return this.selectedRating === value ? `${baseClass} selected` : baseClass;
+        let baseClass = 'slds-button slds-button_neutral slds-p-around_small slds-text-align_center';
+        return this.selectedRating === value ? `${baseClass} selected-rating` : baseClass;
     }
 
-    openModal() {
-        this.showModal = true;
+    openFeedbackModal() {
+        this.showFeedbackModal = true;
     }
 
-    closeModal() {
-        this.showModal = false;
+    closeFeedbackModal() {
         this.resetForm();
+        this.showFeedbackModal = false;
     }
 
     closeToast() {
@@ -62,7 +66,7 @@ export default class FeedbackFormTest extends LightningElement {
     }
 
     handleFeedbackChange(event) {
-        this.feedbackText = event.target.value;
+        this.feedbackDetails = event.target.value;
     }
 
     handleNext() {
@@ -78,14 +82,14 @@ export default class FeedbackFormTest extends LightningElement {
     }
 
     submitFeedback() {
-        // Here you would typically make an API call to submit the feedback
+        // Here you would typically make an API call to save the feedback
         this.showSuccessToast = true;
-        this.closeModal();
+        this.closeFeedbackModal();
     }
 
     resetForm() {
         this.currentStep = 1;
         this.selectedRating = null;
-        this.feedbackText = '';
+        this.feedbackDetails = '';
     }
 }

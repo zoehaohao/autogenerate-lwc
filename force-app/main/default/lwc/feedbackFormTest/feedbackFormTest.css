@@ -1,38 +1,25 @@
 :host {
-    --slds-c-button-brand-color-background: rgb(52, 143, 134);
-    --slds-c-button-brand-color-background-hover: rgb(42, 133, 124);
+    --slds-c-button-neutral-color-background: #ffffff;
+    --slds-c-button-neutral-color-border: #dddbda;
 }
 
-.feedback-container {
-    position: relative;
-}
-
-.rating-button {
-    width: 100%;
-    text-align: center;
-    border-radius: 0.25rem;
-    transition: all 0.2s ease;
-}
-
-.rating-button.selected {
-    background-color: rgb(243, 246, 251);
-    border-color: rgb(52, 143, 134);
-    color: rgb(52, 143, 134);
-}
-
-.slds-progress-bar {
-    background: rgb(236, 235, 234);
-    height: 0.5rem;
-    border-radius: 0.25rem;
-}
-
-.slds-progress-bar__value {
-    background: rgb(52, 143, 134);
-    height: 100%;
-    border-radius: 0.25rem;
-    transition: width 0.4s ease;
+.selected-rating {
+    background-color: #f3f2f2;
+    border: 2px solid #0070d2;
 }
 
 .slds-notify_toast {
-    background-color: rgb(75, 183, 73);
+    min-width: 100%;
+}
+
+.slds-progress-bar {
+    background: #dddbda;
+    height: 4px;
+    margin: 1rem 0;
+}
+
+.slds-progress-bar__value {
+    background: #4bca81;
+    height: 100%;
+    transition: width .4s ease;
 }
