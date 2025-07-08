@@ -9,7 +9,6 @@ export default class QfrFormTest extends LightningElement {
 
     @track addressInfo = {
         address: '',
-        city: '',
         state: '',
         zipCode: ''
     };
@@ -62,7 +61,6 @@ export default class QfrFormTest extends LightningElement {
 
         this.addressInfo = {
             address: '',
-            city: '',
             state: '',
             zipCode: ''
         };
