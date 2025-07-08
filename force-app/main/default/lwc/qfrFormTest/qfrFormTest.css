@@ -4,159 +4,77 @@
     padding: 1rem;
 }
 
-.page-content {
+.page-container {
     margin-top: 1rem;
+    margin-bottom: 2rem;
 }
 
-.structure-type-container {
-    border: 1px solid #d8dde6;
-    border-radius: 0.25rem;
-    padding: 1rem;
-    background-color: #fafaf9;
-}
-
-.service-types-section {
-    background-color: #ffffff;
-    border-radius: 0.25rem;
-    padding: 1rem;
-    border-left: 3px solid #0176d3;
-}
-
-.qa-comments {
-    font-style: italic;
-    color: #706e6b;
+.slds-section__title {
     background-color: #f3f2f2;
+    border-left: 4px solid #0176d3;
     padding: 0.5rem;
-    border-radius: 0.25rem;
+    margin-bottom: 1rem;
 }
 
-.labour-costs-table {
-    border: 1px solid #d8dde6;
-    border-radius: 0.25rem;
-}
-
-.file-upload-container {
-    border: 2px dashed #d8dde6;
-    border-radius: 0.25rem;
-    padding: 2rem;
-    text-align: center;
+.contact-display,
+.contact-edit {
     background-color: #fafaf9;
-    transition: border-color 0.2s ease;
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    padding: 1rem;
 }
 
-.file-upload-container:hover {
+.file-upload-area {
+    border: 2px dashed #dddbda;
+    border-radius: 0.25rem;
+    background-color: #fafaf9;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.file-upload-area:hover {
     border-color: #0176d3;
     background-color: #f3f3f3;
 }
 
-.document-table {
-    border: 1px solid #d8dde6;
-    border-radius: 0.25rem;
+.file-upload-area:focus {
+    outline: none;
+    border-color: #0176d3;
+    box-shadow: 0 0 3px #0176d3;
 }
 
-.navigation-buttons {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 0;
-    border-top: 1px solid #d8dde6;
+.slds-docked-form-footer {
+    position: sticky;
+    bottom: 0;
+    background-color: white;
+    border-top: 1px solid #dddbda;
+    padding: 1rem;
+    margin-top: 2rem;
+    z-index: 100;
 }
 
-.loading-overlay {
+.slds-spinner_container {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    right: 0;
+    bottom: 0;
     background-color: rgba(255, 255, 255, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
     z-index: 9999;
 }
 
-.contact-display .slds-form-element__static {
-    font-weight: 500;
-    color: #181818;
-}
-
-.account-name {
-    font-size: 1.125rem;
+.slds-form-element__label {
     font-weight: 600;
-    color: #181818;
+    color: #3e3e3c;
 }
 
-.naps-id {
-    font-size: 0.875rem;
-    color: #706e6b;
-}
-
-.error-message {
-    color: #c23934;
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-}
-
-.slds-checkbox_toggle {
-    margin-left: auto;
-}
-
-.slds-checkbox_toggle_text {
-    font-size: 0.75rem;
-}
-
-.edit-contact-btn {
-    margin-left: auto;
-}
-
-.slds-section__title-action-bar {
+.slds-radio-group lightning-radio-group[type="button"] {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-@media (max-width: 768px) {
-    .qfr-form-container {
-        padding: 0.5rem;
-    }
-    
-    .slds-grid.slds-wrap .slds-col {
-        width: 100%;
-    }
-    
-    .navigation-buttons {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .navigation-buttons lightning-button {
-        width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .file-upload-container {
-        padding: 1rem;
-    }
-    
-    .slds-file-selector__button {
-        width: 100%;
-        justify-content: center;
-    }
-}
-
-:host {
-    display:block;
-}
-
-.slds-progress-indicator {
-    margin-bottom: 2rem;
-}
-
-.slds-card {
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10);
-    border: 1px solid #d8dde6;
+    gap: 0.5rem;
 }
 
 .slds-card__header-title {
@@ -165,78 +83,118 @@
     color: #181818;
 }
 
-.slds-section__title {
+.slds-text-heading_medium {
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.slds-text-heading_small {
     font-size: 1rem;
     font-weight: 600;
-    color: #181818;
-    padding: 0.75rem 1rem;
-    background-color: #f3f2f2;
-    border-bottom: 1px solid #d8dde6;
-    margin-bottom: 0;
 }
 
-.slds-section__content {
-    background-color: #ffffff;
+.slds-text-color_weak {
+    color: #706e6b;
 }
 
-.slds-form-element__label {
-    font-weight: 500;
-    color: #181818;
-    margin-bottom: 0.25rem;
+.slds-progress-indicator {
+    margin-bottom: 2rem;
 }
 
-.slds-radio-group lightning-input {
-    margin-right: 1rem;
+@media (max-width: 768px) {
+    .qfr-form-container {
+        padding: 0.5rem;
+    }
+    
+    .slds-grid.slds-wrap .slds-col.slds-size_1-of-2 {
+        width: 100%;
+    }
+    
+    .file-upload-area {
+        min-height: 150px;
+    }
 }
 
-.slds-checkbox-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+@media (max-width: 480px) {
+    .slds-docked-form-footer .slds-grid {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .slds-docked-form-footer .slds-col {
+        width: 100%;
+    }
 }
 
-.slds-checkbox-group lightning-input {
-    margin-right: 1rem;
+/* Custom styling for business structure toggles */
+.slds-form-element .slds-grid.slds-grid_align-spread {
+    align-items: center;
+    padding: 0.75rem;
+    background-color: #fafaf9;
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
     margin-bottom: 0.5rem;
 }
 
-lightning-helptext {
-    margin-left: 0.25rem;
+.slds-form-element .slds-grid.slds-grid_align-spread:hover {
+    background-color: #f3f3f3;
 }
 
+/* Labour cost table styling */
 lightning-datatable {
-    border-radius: 0.25rem;
-    overflow: hidden;
+    --sds-c-table-color-background: #ffffff;
+    --sds-c-table-color-border: #dddbda;
 }
 
-lightning-spinner {
-    z-index: 1000;
-}
-
-.slds-file-selector__dropzone {
-    min-height: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.slds-file-selector__body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
+/* File upload progress styling */
+.file-upload-progress {
     width: 100%;
+    height: 4px;
+    background-color: #dddbda;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.file-upload-progress-bar {
     height: 100%;
+    background-color: #0176d3;
+    transition: width 0.3s ease;
 }
 
-.slds-file-selector__button {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+/* Accordion custom styling */
+lightning-accordion-section {
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    margin-bottom: 0.5rem;
 }
 
-.slds-file-selector__text {
-    color: #706e6b;
-    font-size: 0.875rem;
+/* Error state styling */
+.slds-has-error .slds-form-element__control {
+    border-color: #ea001e;
+}
+
+.slds-form-element__help {
+    color: #ea001e;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+/* Success state styling */
+.slds-form-element.slds-has-success .slds-form-element__control {
+    border-color: #4bca81;
+}
+
+/* Focus states */
+.slds-form-element__control:focus-within {
+    border-color: #0176d3;
+    box-shadow: 0 0 3px #0176d3;
+}
+
+/* Loading overlay */
+.slds-spinner_container .slds-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
