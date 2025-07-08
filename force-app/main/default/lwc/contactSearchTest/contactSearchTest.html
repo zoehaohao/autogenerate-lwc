@@ -1,37 +1,41 @@
-<!-- contactSearchTest.html -->
 <template>
     <div class="slds-card">
-        <div class="slds-card__header">
-            <div class="slds-grid slds-gutters">
-                <div class="slds-col slds-size_3-of-4">
-                    <lightning-input
-                        type="search"
-                        label="Search Contacts"
-                        placeholder={placeholder}
-                        value={searchTerm}
-                        onchange={handleSearchTermChange}
-                        class="slds-m-bottom_small">
-                    </lightning-input>
-                </div>
-                <div class="slds-col slds-size_1-of-4 slds-align-bottom">
-                    <lightning-button
-                        label="Search"
-                        variant="brand"
-                        onclick={handleSearch}
-                        disabled={isSearchDisabled}
-                        class="slds-m-bottom_small">
-                    </lightning-button>
+        <div class="slds-p-around_medium">
+            <!-- Search Section -->
+            <div class="slds-form-element">
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_3-of-4">
+                        <lightning-input
+                            type="search"
+                            label="Search Contacts"
+                            placeholder={placeholder}
+                            value={searchTerm}
+                            onchange={handleSearchChange}
+                            class="search-input">
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-4 slds-align-end">
+                        <lightning-button
+                            label="Search"
+                            variant="brand"
+                            onclick={handleSearch}
+                            disabled={isSearchDisabled}
+                            class="slds-m-top_32">
+                        </lightning-button>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="slds-card__body">
+
+            <!-- Loading State -->
             <template if:true={isLoading}>
-                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                <div class="slds-p-around_medium slds-align_absolute-center">
+                    <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                </div>
             </template>
-            
-            <template if:false={isLoading}>
-                <template if:true={hasResults}>
+
+            <!-- Results Table -->
+            <template if:true={hasResults}>
+                <div class="slds-p-top_medium">
                     <lightning-datatable
                         key-field="Id"
                         data={contacts}
@@ -41,13 +45,14 @@
                         sorted-direction={sortedDirection}
                         onsort={handleSort}>
                     </lightning-datatable>
-                </template>
-                
-                <template if:false={hasResults}>
-                    <div class="slds-align_absolute-center slds-m-vertical_medium">
-                        No contacts found.
-                    </div>
-                </template>
+                </div>
+            </template>
+
+            <!-- No Results State -->
+            <template if:true={showNoResults}>
+                <div class="slds-p-top_medium slds-align_absolute-center">
+                    <p class="slds-text-heading_small">No contacts found</p>
+                </div>
             </template>
         </div>
     </div>

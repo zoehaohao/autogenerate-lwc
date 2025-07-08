@@ -12,7 +12,7 @@
     <targetConfigs>
         <targetConfig targets="lightning__AppPage,lightning__HomePage,lightning__RecordPage">
             <property name="placeholder" type="String" default="Enter contact name..." />
-            <property name="maxResults" type="Integer" default="50" min="1" max="100" />
+            <property name="maxResults" type="Integer" default="50" />
             <property name="showAccountName" type="Boolean" default="true" />
         </targetConfig>
     </targetConfigs>

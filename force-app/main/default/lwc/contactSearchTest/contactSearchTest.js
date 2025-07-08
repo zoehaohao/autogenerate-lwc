@@ -1,14 +1,5 @@
-// contactSearchTest.js
 import { LightningElement, api, track } from 'lwc';
-import searchContactsByName from '@salesforce/apex/ContactSearchTestController.searchContactsByName';
-
-const COLUMNS = [
-    { label: 'Name', fieldName: 'Name', type: 'text', sortable: true },
-    { label: 'Email', fieldName: 'Email', type: 'email', sortable: true },
-    { label: 'Phone', fieldName: 'Phone', type: 'phone', sortable: true },
-    { label: 'Account', fieldName: 'AccountName', type: 'text', sortable: true },
-    { label: 'Title', fieldName: 'Title', type: 'text', sortable: true }
-];
+import searchContacts from '@salesforce/apex/ContactSearchController.searchContactsByName';
 
 export default class ContactSearchTest extends LightningElement {
     @api placeholder = 'Enter contact name...';
@@ -21,17 +12,37 @@ export default class ContactSearchTest extends LightningElement {
     @track sortedBy;
     @track sortedDirection = 'asc';
 
-    columns = COLUMNS;
+    columns = [
+        { label: 'Name', fieldName: 'Name', type: 'text', sortable: true },
+        { label: 'Email', fieldName: 'Email', type: 'email', sortable: true },
+        { label: 'Phone', fieldName: 'Phone', type: 'phone', sortable: true },
+        { label: 'Title', fieldName: 'Title', type: 'text', sortable: true }
+    ];
+
+    connectedCallback() {
+        if (this.showAccountName) {
+            this.columns.push({ 
+                label: 'Account', 
+                fieldName: 'AccountName', 
+                type: 'text', 
+                sortable: true 
+            });
+        }
+    }
 
     get isSearchDisabled() {
         return !this.searchTerm || this.searchTerm.length < 2 || this.isLoading;
     }
 
     get hasResults() {
-        return this.contacts && this.contacts.length > 0;
+        return this.contacts.length > 0;
     }
 
-    handleSearchTermChange(event) {
+    get showNoResults() {
+        return !this.isLoading && this.searchTerm && this.contacts.length === 0;
+    }
+
+    handleSearchChange(event) {
         this.searchTerm = event.target.value;
     }
 
@@ -40,11 +51,11 @@ export default class ContactSearchTest extends LightningElement {
 
         this.isLoading = true;
         try {
-            const results = await searchContactsByName({
+            const results = await searchContacts({ 
                 searchTerm: this.searchTerm,
                 limitResults: this.maxResults
             });
-            
+
             this.contacts = results.map(contact => ({
                 ...contact,
                 AccountName: contact.Account?.Name
@@ -52,11 +63,11 @@ export default class ContactSearchTest extends LightningElement {
 
             this.dispatchSearchEvent();
         } catch (error) {
-            console.error('Error searching contacts:', error);
+            console.error('Search error:', error);
             this.dispatchEvent(
                 new ShowToastEvent({
                     title: 'Error',
-                    message: error.message,
+                    message: 'An error occurred while searching contacts',
                     variant: 'error'
                 })
             );
@@ -75,13 +86,15 @@ export default class ContactSearchTest extends LightningElement {
     sortData(fieldName, direction) {
         const clonedData = [...this.contacts];
         clonedData.sort((a, b) => {
-            const aValue = a[fieldName] || '';
-            const bValue = b[fieldName] || '';
             return direction === 'asc' ? 
-                aValue.localeCompare(bValue) : 
-                bValue.localeCompare(aValue);
+                this.compareValues(a[fieldName], b[fieldName]) :
+                this.compareValues(b[fieldName], a[fieldName]);
         });
         this.contacts = clonedData;
+    }
+
+    compareValues(a, b) {
+        return a > b ? 1 : a < b ? -1 : 0;
     }
 
     dispatchSearchEvent() {
@@ -104,9 +117,9 @@ export default class ContactSearchTest extends LightningElement {
 
     @api
     focusSearchInput() {
-        const searchInput = this.template.querySelector('lightning-input');
-        if (searchInput) {
-            searchInput.focus();
+        const input = this.template.querySelector('.search-input');
+        if (input) {
+            input.focus();
         }
     }
 }
