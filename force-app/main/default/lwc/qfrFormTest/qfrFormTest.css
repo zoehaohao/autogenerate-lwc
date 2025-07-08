@@ -1,150 +1,118 @@
-.qfr-form-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 1rem;
+.section-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #3e3e3c;
 }
 
-.page-content {
-    margin-top: 1.5rem;
+.slds-section {
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    background-color: #ffffff;
+    margin-bottom: 1rem;
 }
 
 .slds-section__title {
     background-color: #f3f2f2;
-    border-left: 4px solid #0176d3;
-    padding: 0.75rem 1rem;
-    margin-bottom: 0;
+    padding: 0.75rem;
+    border-bottom: 1px solid #d8dde6;
 }
 
-.contact-display,
-.contact-edit {
-    background-color: #fafaf9;
+.slds-section__content {
     padding: 1rem;
-    border-radius: 0.25rem;
-    border: 1px solid #dddbda;
 }
 
-.file-upload-area {
-    border: 2px dashed #dddbda;
-    border-radius: 0.25rem;
-    background-color: #fafaf9;
-    transition: border-color 0.2s ease-in-out;
-    cursor: pointer;
-}
-
-.file-upload-area:hover {
-    border-color: #0176d3;
-    background-color: #f3f3f3;
-}
-
-.business-structure-item {
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
-    padding: 1rem;
+.slds-form-element {
     margin-bottom: 1rem;
-    background-color: #ffffff;
 }
 
-.business-structure-item.selected {
-    border-color: #0176d3;
-    background-color: #f3f9ff;
+.slds-form-element__label {
+    font-weight: 600;
+    color: #3e3e3c;
 }
 
-.labour-cost-table {
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
-    overflow: hidden;
+.slds-required {
+    color: #c23934;
+    margin-right: 0.25rem;
 }
 
-.expandable-row {
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
+.slds-has-error lightning-input {
+    --slds-c-input-color-border: #c23934;
+    --slds-c-input-color-border-focus: #c23934;
 }
 
-.expandable-row:hover {
-    background-color: #f3f2f2;
+.slds-button-group {
+    display: flex;
+    justify-content: flex-end;
 }
 
-.expanded-content {
-    background-color: #fafaf9;
-    border-top: 1px solid #dddbda;
+.slds-notify_alert {
     padding: 1rem;
+    border-radius: 0.25rem;
+    border-left: 4px solid;
 }
 
-.progress-indicator {
-    margin-bottom: 2rem;
-}
-
-.navigation-buttons {
-    border-top: 1px solid #dddbda;
-    padding-top: 1.5rem;
-    margin-top: 2rem;
-}
-
-.form-validation-error {
-    border-color: #c23934;
-    box-shadow: 0 0 0 1px #c23934 inset;
-}
-
-.form-validation-error .slds-form-element__help {
-    color: #c23934;
-}
-
-.currency-input {
-    text-align: right;
-}
-
-.document-status-uploaded {
-    color: #2e844a;
-    font-weight: 600;
-}
-
-.document-status-processing {
-    color: #fe9339;
-    font-weight: 600;
-}
-
-.document-status-error {
-    color: #c23934;
-    font-weight: 600;
-}
-
-@media (max-width: 768px) {
-    .qfr-form-container {
-        padding: 0.5rem;
-    }
-    
-    .slds-grid.slds-wrap .slds-col {
-        flex-basis: 100%;
-        max-width: 100%;
-    }
-    
-    .file-upload-area {
-        padding: 1rem;
-    }
-    
-    .navigation-buttons .slds-grid {
-        flex-direction: column;
-        gap: 1rem;
-    }
+.slds-alert_success {
+    background-color: #f3f9f1;
+    border-left-color: #4bca81;
+    color: #181818;
 }
 
 :host {
     display: block;
 }
 
+/* Loading state styling */
 .slds-is-relative {
     position: relative;
 }
 
-.loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
+/* Responsive design */
+@media (max-width: 768px) {
+    .slds-button-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .slds-button-group lightning-button {
+        margin: 0.25rem 0;
+    }
+}
+
+/* Focus states */
+lightning-input:focus-within {
+    box-shadow: 0 0 3px #1589ee;
+}
+
+/* Hover states */
+lightning-button:hover {
+    transform: translateY(-1px);
+    transition: transform 0.1s ease-in-out;
+}
+
+/* Disabled state styling */
+lightning-button[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Form validation styling */
+.slds-form-element__help {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* Success message animation */
+.slds-notify {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
