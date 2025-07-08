@@ -1,0 +1,54 @@
+<!-- contactSearchTest.html -->
+<template>
+    <div class="slds-card">
+        <div class="slds-card__header">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_3-of-4">
+                    <lightning-input
+                        type="search"
+                        label="Search Contacts"
+                        placeholder={placeholder}
+                        value={searchTerm}
+                        onchange={handleSearchTermChange}
+                        class="slds-m-bottom_small">
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-4 slds-align-bottom">
+                    <lightning-button
+                        label="Search"
+                        variant="brand"
+                        onclick={handleSearch}
+                        disabled={isSearchDisabled}
+                        class="slds-m-bottom_small">
+                    </lightning-button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slds-card__body">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </template>
+            
+            <template if:false={isLoading}>
+                <template if:true={hasResults}>
+                    <lightning-datatable
+                        key-field="Id"
+                        data={contacts}
+                        columns={columns}
+                        hide-checkbox-column
+                        sorted-by={sortedBy}
+                        sorted-direction={sortedDirection}
+                        onsort={handleSort}>
+                    </lightning-datatable>
+                </template>
+                
+                <template if:false={hasResults}>
+                    <div class="slds-align_absolute-center slds-m-vertical_medium">
+                        No contacts found.
+                    </div>
+                </template>
+            </template>
+        </div>
+    </div>
+</template>
