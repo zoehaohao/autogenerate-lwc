@@ -1,24 +1,50 @@
-.section-title {
-    font-weight: bold;
-    font-size: 1.1rem;
-    color: #3e3e3c;
+:host {
+    display: block;
+    padding: 1rem;
 }
 
-.slds-section {
-    border: 1px solid #d8dde6;
+.slds-card {
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
     border-radius: 0.25rem;
     background-color: #ffffff;
-    margin-bottom: 1rem;
+    border: 1px solid #d8dde6;
 }
 
-.slds-section__title {
-    background-color: #f3f2f2;
-    padding: 0.75rem;
+.slds-card__header {
+    padding: 1rem 1rem 0.75rem;
+    background-color: #f3f3f3;
     border-bottom: 1px solid #d8dde6;
 }
 
-.slds-section__content {
+.slds-card__header-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #080707;
+    margin: 0;
+}
+
+.slds-card__body {
     padding: 1rem;
+}
+
+.slds-section {
+    margin-bottom: 1.5rem;
+}
+
+.slds-section__title {
+    background-color: #f3f3f3;
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    padding: 0.5rem 0;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #3e3e3c;
+}
+
+.slds-section__content {
+    padding: 0 0.5rem;
 }
 
 .slds-form-element {
@@ -26,48 +52,96 @@
 }
 
 .slds-form-element__label {
-    font-weight: 600;
+    font-size: 0.875rem;
+    font-weight: 400;
     color: #3e3e3c;
+    margin-bottom: 0.25rem;
+    display: inline-block;
 }
 
 .slds-required {
     color: #c23934;
-    margin-right: 0.25rem;
+    margin-right: 0.125rem;
 }
 
-.slds-has-error lightning-input {
-    --slds-c-input-color-border: #c23934;
-    --slds-c-input-color-border-focus: #c23934;
+.slds-form-element__control lightning-input {
+    width: 100%;
 }
 
 .slds-button-group {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
 }
 
-.slds-notify_alert {
-    padding: 1rem;
+.slds-notify {
+    padding: 0.75rem 1rem;
     border-radius: 0.25rem;
-    border-left: 4px solid;
+    border-width: 1px;
+    border-style: solid;
+    position: relative;
 }
 
 .slds-alert_success {
-    background-color: #f3f9f1;
-    border-left-color: #4bca81;
-    color: #181818;
+    background-color: #4bca81;
+    border-color: #4bca81;
+    color: #ffffff;
 }
 
-:host {
-    display: block;
+.slds-alert_error {
+    background-color: #c23934;
+    border-color: #c23934;
+    color: #ffffff;
 }
 
-/* Loading state styling */
+.slds-notify h2 {
+    font-size: 0.875rem;
+    font-weight: 400;
+    margin: 0;
+}
+
+.slds-assistive-text {
+    position: absolute !important;
+    margin: -1px !important;
+    border: 0 !important;
+    padding: 0 !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    clip: rect(0 0 0 0) !important;
+    text-transform: none !important;
+    white-space: nowrap !important;
+}
+
+/* Loading state styles */
 .slds-is-relative {
     position: relative;
 }
 
+/* Focus and hover states */
+lightning-input:focus-within {
+    box-shadow: 0 0 3px #1589ee;
+}
+
+lightning-button:hover {
+    transform: translateY(-1px);
+    transition: transform 0.1s ease-in-out;
+}
+
+lightning-button:active {
+    transform: translateY(0);
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
+    :host {
+        padding: 0.5rem;
+    }
+    
+    .slds-card__header,
+    .slds-card__body {
+        padding: 0.75rem;
+    }
+    
     .slds-button-group {
         flex-direction: column;
         align-items: stretch;
@@ -78,41 +152,38 @@
     }
 }
 
-/* Focus states */
-lightning-input:focus-within {
-    box-shadow: 0 0 3px #1589ee;
-}
-
-/* Hover states */
-lightning-button:hover {
-    transform: translateY(-1px);
-    transition: transform 0.1s ease-in-out;
-}
-
-/* Disabled state styling */
-lightning-button[disabled] {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-/* Form validation styling */
-.slds-form-element__help {
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
-}
-
-/* Success message animation */
-.slds-notify {
-    animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .slds-card {
+        border-width: 2px;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    
+    .slds-section__title {
+        border-width: 2px;
+    }
+    
+    .slds-form-element__label {
+        font-weight: 600;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion:reduce) {
+    lightning-button:hover {
+        transform: none;
+        transition: none;
+    }
+}
+
+/* Print styles */
+@media print {
+    .slds-button-group,
+    .slds-notify {
+        display: none;
+    }
+    
+    .slds-card {
+        box-shadow: none;
+        border: 1px solid #000;
     }
 }

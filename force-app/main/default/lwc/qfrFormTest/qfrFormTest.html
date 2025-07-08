@@ -1,23 +1,25 @@
 <template>
     <div class="slds-card">
-        <div class="slds-card__header slds-grid">
-            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+        <div class="slds-card__header slds-border_bottom">
+            <div class="slds-media slds-media_center slds-has-flexi-truncate">
                 <div class="slds-media__body">
                     <h2 class="slds-card__header-title">
-                        <span>Form Test</span>
+                        <span>Form Information</span>
                     </h2>
                 </div>
-            </header>
+            </div>
         </div>
         <div class="slds-card__body slds-card__body_inner">
-            <form class="slds-form slds-form_stacked">
+            <form class="slds-form slds-form_stacked" onsubmit={handleSubmit}>
                 <!-- Personal Information Section -->
                 <div class="slds-section slds-is-open">
                     <h3 class="slds-section__title slds-theme_shade">
-                        <span class="slds-truncate slds-p-horizontal_small section-title">Personal Information</span>
+                        <span class="slds-truncate slds-p-horizontal_small" title="Personal Information">
+                            Personal Information
+                        </span>
                     </h3>
                     <div class="slds-section__content">
-                        <div class="slds-form-element">
+                        <div class="slds-form-element slds-is-required">
                             <label class="slds-form-element__label" for="name-input">
                                 <abbr class="slds-required" title="required">*</abbr>
                                 Name
@@ -28,13 +30,11 @@
                                     name="name"
                                     type="text"
                                     value={personalInfo.name}
-                                    required
                                     onchange={handlePersonalInfoChange}
+                                    required
+                                    message-when-value-missing="Name is required"
                                     class={nameInputClass}>
                                 </lightning-input>
-                            </div>
-                            <div if:true={errors.name} class="slds-form-element__help slds-text-color_error">
-                                {errors.name}
                             </div>
                         </div>
                     </div>
@@ -43,7 +43,9 @@
                 <!-- Address Section -->
                 <div class="slds-section slds-is-open slds-m-top_medium">
                     <h3 class="slds-section__title slds-theme_shade">
-                        <span class="slds-truncate slds-p-horizontal_small section-title">Address</span>
+                        <span class="slds-truncate slds-p-horizontal_small" title="Address">
+                            Address
+                        </span>
                     </h3>
                     <div class="slds-section__content">
                         <div class="slds-form-element">
@@ -57,11 +59,8 @@
                                     type="text"
                                     value={addressInfo.address}
                                     onchange={handleAddressChange}
-                                    class={addressInputClass}>
+                                    placeholder="Enter your address">
                                 </lightning-input>
-                            </div>
-                            <div if:true={errors.address} class="slds-form-element__help slds-text-color_error">
-                                {errors.address}
                             </div>
                         </div>
                     </div>
@@ -80,7 +79,7 @@
                             <lightning-button
                                 variant="brand"
                                 label="Submit"
-                                onclick={handleSubmit}
+                                type="submit"
                                 disabled={submitDisabled}
                                 class="slds-m-left_x-small">
                             </lightning-button>
@@ -97,10 +96,18 @@
                 </div>
 
                 <!-- Success Message -->
-                <div if:true={showSuccess} class="slds-m-top_medium">
+                <div if:true={showSuccessMessage} class="slds-m-top_medium">
                     <div class="slds-notify slds-notify_alert slds-alert_success" role="alert">
                         <span class="slds-assistive-text">Success</span>
                         <h2>Form submitted successfully!</h2>
+                    </div>
+                </div>
+
+                <!-- Error Message -->
+                <div if:true={showErrorMessage} class="slds-m-top_medium">
+                    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                        <span class="slds-assistive-text">Error</span>
+                        <h2>{errorMessage}</h2>
                     </div>
                 </div>
             </form>

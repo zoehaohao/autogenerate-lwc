@@ -9,25 +9,18 @@ export default class QfrFormTest extends LightningElement {
         address: ''
     };
 
-    @track errors = {};
     @track isProcessing = false;
-    @track showSuccess = false;
+    @track showSuccessMessage = false;
+    @track showErrorMessage = false;
+    @track errorMessage = '';
 
-    // Computed properties for CSS classes
+    // Getters for computed properties
     get nameInputClass() {
-        return this.errors.name ? 'slds-has-error' : '';
-    }
-
-    get addressInputClass() {
-        return this.errors.address ? 'slds-has-error' : '';
+        return this.personalInfo.name ? 'slds-has-value' : '';
     }
 
     get submitDisabled() {
-        return this.isProcessing || !this.isFormValid;
-    }
-
-    get isFormValid() {
-        return this.personalInfo.name && this.personalInfo.name.trim().length > 0;
+        return this.isProcessing || !this.personalInfo.name.trim();
     }
 
     // Event Handlers
@@ -40,16 +33,8 @@ export default class QfrFormTest extends LightningElement {
             [fieldName]: fieldValue
         };
 
-        // Clear error when user starts typing
-        if (this.errors[fieldName]) {
-            this.errors = {
-                ...this.errors,
-                [fieldName]: null
-            };
-        }
-
-        // Real-time validation
-        this.validateField(fieldName, fieldValue);
+        // Clear any existing messages when user starts typing
+        this.clearMessages();
     }
 
     handleAddressChange(event) {
@@ -61,20 +46,34 @@ export default class QfrFormTest extends LightningElement {
             [fieldName]: fieldValue
         };
 
-        // Clear error when user starts typing
-        if (this.errors[fieldName]) {
-            this.errors = {
-                ...this.errors,
-                [fieldName]: null
-            };
-        }
+        // Clear any existing messages when user starts typing
+        this.clearMessages();
+    }
 
-        // Real-time validation
-        this.validateField(fieldName, fieldValue);
+    handleSubmit(event) {
+        event.preventDefault();
+        
+        try {
+            // Validate form
+            if (!this.validateForm()) {
+                return;
+            }
+
+            // Start processing
+            this.isProcessing = true;
+            this.clearMessages();
+
+            // Simulate form submission
+            this.processFormSubmission();
+
+        } catch (error) {
+            this.handleError('An unexpected error occurred while submitting the form.');
+        }
     }
 
     handleClear() {
         try {
+            // Reset form data
             this.personalInfo = {
                 name: ''
             };
@@ -83,144 +82,150 @@ export default class QfrFormTest extends LightningElement {
                 address: ''
             };
 
-            this.errors = {};
-            this.showSuccess = false;
+            // Clear messages
+            this.clearMessages();
 
-            // Clear form inputs
-            const inputs = this.template.querySelectorAll('lightning-input');
-            inputs.forEach(input => {
-                input.value = '';
-            });
+            // Reset form validation
+            this.resetFormValidation();
 
         } catch (error) {
-            console.error('Error clearing form:', error);
-        }
-    }
-
-    async handleSubmit() {
-        try {
-            this.isProcessing = true;
-            this.showSuccess = false;
-
-            // Validate all fields
-            const isValid = this.validateAllFields();
-
-            if (!isValid) {
-                this.isProcessing = false;
-                return;
-            }
-
-            // Simulate processing time
-            await this.simulateProcessing();
-
-            // Process form data
-            const formData = {
-                personalInfo: { ...this.personalInfo },
-                addressInfo: { ...this.addressInfo },
-                submittedAt: new Date().toISOString()
-            };
-
-            console.log('Form Data Submitted:', formData);
-
-            // Show success message
-            this.showSuccess = true;
-
-            // Auto-hide success message after 5 seconds
-            setTimeout(() => {
-                this.showSuccess = false;
-            }, 5000);
-
-        } catch (error) {
-            console.error('Error submitting form:', error);
-            this.showError('An error occurred while submitting the form. Please try again.');
-        } finally {
-            this.isProcessing = false;
+            this.handleError('An error occurred while clearing the form.');
         }
     }
 
     // Validation Methods
-    validateField(fieldName, fieldValue) {
+    validateForm() {
         let isValid = true;
-        let errorMessage = null;
+        const inputFields = this.template.querySelectorAll('lightning-input');
 
-        switch (fieldName) {
-            case 'name':
-                if (!fieldValue || fieldValue.trim().length === 0) {
-                    errorMessage = 'Name is required';
-                    isValid = false;
-                } else if (fieldValue.trim().length < 2) {
-                    errorMessage = 'Name must be at least 2 characters long';
-                    isValid = false;
-                } else if (fieldValue.trim().length > 100) {
-                    errorMessage = 'Name cannot exceed 100 characters';
-                    isValid = false;
-                }
-                break;
+        // Validate each input field
+        inputFields.forEach(field => {
+            if (!field.checkValidity()) {
+                field.reportValidity();
+                isValid = false;
+            }
+        });
 
-            case 'address':
-                if (fieldValue && fieldValue.trim().length > 255) {
-                    errorMessage = 'Address cannot exceed 255 characters';
-                    isValid = false;
-                }
-                break;
-
-            default:
-                break;
+        // Custom validation for required name field
+        if (!this.personalInfo.name || !this.personalInfo.name.trim()) {
+            this.handleError('Name is required.');
+            isValid = false;
         }
 
-        // Update errors
-        this.errors = {
-            ...this.errors,
-            [fieldName]: errorMessage
-        };
+        // Validate name length
+        if (this.personalInfo.name && this.personalInfo.name.trim().length < 2) {
+            this.handleError('Name must be at least 2 characters long.');
+            isValid = false;
+        }
+
+        // Validate name format (letters, spaces, hyphens, apostrophes only)
+        if (this.personalInfo.name && this.personalInfo.name.trim()) {
+            const namePattern = /^[a-zA-Z\s\-']+$/;
+            if (!namePattern.test(this.personalInfo.name.trim())) {
+                this.handleError('Name can only contain letters, spaces, hyphens, and apostrophes.');
+                isValid = false;
+            }
+        }
 
         return isValid;
     }
 
-    validateAllFields() {
-        let isFormValid = true;
-
-        // Validate name (required)
-        const nameValid = this.validateField('name', this.personalInfo.name);
-        if (!nameValid) {
-            isFormValid = false;
-        }
-
-        // Validate address (optional but has constraints)
-        const addressValid = this.validateField('address', this.addressInfo.address);
-        if (!addressValid) {
-            isFormValid = false;
-        }
-
-        return isFormValid;
-    }
-
-    // Helper Methods
-    async simulateProcessing() {
-        return new Promise(resolve => {
-            setTimeout(resolve, 2000); // 2 second delay to simulate processing
+    resetFormValidation() {
+        // Reset validation state on all input fields
+        const inputFields = this.template.querySelectorAll('lightning-input');
+        inputFields.forEach(field => {
+            field.setCustomValidity('');
+            field.reportValidity();
         });
     }
 
-    showError(message) {
-        // You could implement a toast message or error display here
-        console.error(message);
+    // Form Processing
+    processFormSubmission() {
+        // Simulate async processing with setTimeout
+        setTimeout(() => {
+            try {
+                // Simulate successful submission
+                this.handleSuccess();
+                
+                // Log form data (in real implementation, this would be sent to server)
+                console.log('Form Data Submitted:', {
+                    personalInfo: this.personalInfo,
+                    addressInfo: this.addressInfo,
+                    timestamp: new Date().toISOString()
+                });
+
+            } catch (error) {
+                this.handleError('Failed to process form submission.');
+            } finally {
+                this.isProcessing = false;
+            }
+        }, 2000); // 2 second delay to simulate processing
+    }
+
+    // Message Handling
+    handleSuccess() {
+        this.showSuccessMessage = true;
+        this.showErrorMessage = false;
+        this.errorMessage = '';
+        
+        // Auto-hide success message after 5 seconds
+        setTimeout(() => {
+            this.showSuccessMessage = false;
+        }, 5000);
+    }
+
+    handleError(message) {
+        this.showErrorMessage = true;
+        this.showSuccessMessage = false;
+        this.errorMessage = message;
+        this.isProcessing = false;
+        
+        // Auto-hide error message after 8 seconds
+        setTimeout(() => {
+            this.showErrorMessage = false;
+            this.errorMessage = '';
+        }, 8000);
+    }
+
+    clearMessages() {
+        this.showSuccessMessage = false;
+        this.showErrorMessage = false;
+        this.errorMessage = '';
     }
 
     // Lifecycle Hooks
     connectedCallback() {
         // Initialize component
-        console.log('QfrFormTest component connected');
+        this.clearMessages();
     }
 
     renderedCallback() {
-        // Focus on first input when component renders
-        if (!this.hasRendered) {
+        // Focus on name field when component renders
+        if (!this.personalInfo.name) {
             const nameInput = this.template.querySelector('[data-id="name-input"]');
             if (nameInput) {
-                nameInput.focus();
+                setTimeout(() => {
+                    nameInput.focus();
+                }, 100);
             }
-            this.hasRendered = true;
         }
+    }
+
+    // Utility Methods
+    sanitizeInput(input) {
+        if (typeof input !== 'string') return input;
+        return input.trim().replace(/\s+/g, ' '); // Remove extra whitespace
+    }
+
+    formatFormData() {
+        return {
+            personalInfo: {
+                name: this.sanitizeInput(this.personalInfo.name)
+            },
+            addressInfo: {
+                address: this.sanitizeInput(this.addressInfo.address)
+            },
+            submittedAt: new Date().toISOString()
+        };
     }
 }
