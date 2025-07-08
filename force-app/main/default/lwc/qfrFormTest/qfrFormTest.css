@@ -4,36 +4,31 @@
     padding: 1rem;
 }
 
-.page-container {
-    margin-top: 1rem;
-    margin-bottom: 2rem;
+.page-content {
+    margin-top: 1.5rem;
 }
 
 .slds-section__title {
     background-color: #f3f2f2;
     border-left: 4px solid #0176d3;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0;
 }
 
 .contact-display,
 .contact-edit {
     background-color: #fafaf9;
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
     padding: 1rem;
+    border-radius: 0.25rem;
+    border: 1px solid #dddbda;
 }
 
 .file-upload-area {
     border: 2px dashed #dddbda;
     border-radius: 0.25rem;
     background-color: #fafaf9;
-    min-height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    transition: border-color 0.2s ease-in-out;
     cursor: pointer;
-    transition: all 0.2s ease;
 }
 
 .file-upload-area:hover {
@@ -41,64 +36,76 @@
     background-color: #f3f3f3;
 }
 
-.file-upload-area:focus {
-    outline: none;
-    border-color: #0176d3;
-    box-shadow: 0 0 3px #0176d3;
+.business-structure-item {
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #ffffff;
 }
 
-.slds-docked-form-footer {
-    position: sticky;
-    bottom: 0;
-    background-color: white;
+.business-structure-item.selected {
+    border-color: #0176d3;
+    background-color: #f3f9ff;
+}
+
+.labour-cost-table {
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    overflow: hidden;
+}
+
+.expandable-row {
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.expandable-row:hover {
+    background-color: #f3f2f2;
+}
+
+.expanded-content {
+    background-color: #fafaf9;
     border-top: 1px solid #dddbda;
     padding: 1rem;
-    margin-top: 2rem;
-    z-index: 100;
 }
 
-.slds-spinner_container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(255, 255, 255, 0.8);
-    z-index: 9999;
-}
-
-.slds-form-element__label {
-    font-weight: 600;
-    color: #3e3e3c;
-}
-
-.slds-radio-group lightning-radio-group[type="button"] {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.slds-card__header-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #181818;
-}
-
-.slds-text-heading_medium {
-    font-size: 1.125rem;
-    font-weight: 600;
-}
-
-.slds-text-heading_small {
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.slds-text-color_weak {
-    color: #706e6b;
-}
-
-.slds-progress-indicator {
+.progress-indicator {
     margin-bottom: 2rem;
+}
+
+.navigation-buttons {
+    border-top: 1px solid #dddbda;
+    padding-top: 1.5rem;
+    margin-top: 2rem;
+}
+
+.form-validation-error {
+    border-color: #c23934;
+    box-shadow: 0 0 0 1px #c23934 inset;
+}
+
+.form-validation-error .slds-form-element__help {
+    color: #c23934;
+}
+
+.currency-input {
+    text-align: right;
+}
+
+.document-status-uploaded {
+    color: #2e844a;
+    font-weight: 600;
+}
+
+.document-status-processing {
+    color: #fe9339;
+    font-weight: 600;
+}
+
+.document-status-error {
+    color: #c23934;
+    font-weight: 600;
 }
 
 @media (max-width: 768px) {
@@ -106,95 +113,38 @@
         padding: 0.5rem;
     }
     
-    .slds-grid.slds-wrap .slds-col.slds-size_1-of-2 {
-        width: 100%;
+    .slds-grid.slds-wrap .slds-col {
+        flex-basis: 100%;
+        max-width: 100%;
     }
     
     .file-upload-area {
-        min-height: 150px;
-    }
-}
-
-@media (max-width: 480px) {
-    .slds-docked-form-footer .slds-grid {
-        flex-direction: column;
-        gap: 0.5rem;
+        padding: 1rem;
     }
     
-    .slds-docked-form-footer .slds-col {
-        width: 100%;
+    .navigation-buttons .slds-grid {
+        flex-direction: column;
+        gap: 1rem;
     }
 }
 
-/* Custom styling for business structure toggles */
-.slds-form-element .slds-grid.slds-grid_align-spread {
-    align-items: center;
-    padding: 0.75rem;
-    background-color: #fafaf9;
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
-    margin-bottom: 0.5rem;
+:host {
+    display: block;
 }
 
-.slds-form-element .slds-grid.slds-grid_align-spread:hover {
-    background-color: #f3f3f3;
+.slds-is-relative {
+    position: relative;
 }
 
-/* Labour cost table styling */
-lightning-datatable {
-    --sds-c-table-color-background: #ffffff;
-    --sds-c-table-color-border: #dddbda;
-}
-
-/* File upload progress styling */
-.file-upload-progress {
-    width: 100%;
-    height: 4px;
-    background-color: #dddbda;
-    border-radius: 2px;
-    overflow: hidden;
-    margin-top: 0.5rem;
-}
-
-.file-upload-progress-bar {
-    height: 100%;
-    background-color: #0176d3;
-    transition: width 0.3s ease;
-}
-
-/* Accordion custom styling */
-lightning-accordion-section {
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
-    margin-bottom: 0.5rem;
-}
-
-/* Error state styling */
-.slds-has-error .slds-form-element__control {
-    border-color: #ea001e;
-}
-
-.slds-form-element__help {
-    color: #ea001e;
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-}
-
-/* Success state styling */
-.slds-form-element.slds-has-success .slds-form-element__control {
-    border-color: #4bca81;
-}
-
-/* Focus states */
-.slds-form-element__control:focus-within {
-    border-color: #0176d3;
-    box-shadow: 0 0 3px #0176d3;
-}
-
-/* Loading overlay */
-.slds-spinner_container .slds-spinner {
+.loading-overlay {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
 }
