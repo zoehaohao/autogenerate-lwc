@@ -1,0 +1,89 @@
+<template>
+    <div class="feedback-container">
+        <!-- Success Toast -->
+        <template if:true={showSuccessToast}>
+            <div class="slds-notify_container slds-is-relative">
+                <div class="slds-notify slds-notify_toast slds-theme_success" role="status">
+                    <span class="slds-icon_container slds-icon-utility-success slds-m-right_small">
+                        <lightning-icon icon-name="utility:success" size="small" variant="inverse"></lightning-icon>
+                    </span>
+                    <span class="slds-assistive-text">success</span>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small">Feedback received. Thank you for your valuable feedback.</h2>
+                    </div>
+                    <div class="slds-notify__close">
+                        <lightning-button-icon icon-name="utility:close" variant="bare-inverse" onclick={closeToast}></lightning-button-icon>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Feedback Form -->
+        <div class="feedback-form">
+            <h2 class="slds-text-heading_medium">Help us improve with your feedback</h2>
+            
+            <!-- Progress Bar -->
+            <div class="slds-progress-bar slds-progress-bar_circular" role="progressbar">
+                <span class="slds-progress-bar__value" style={progressStyle}>
+                    <span class="slds-assistive-text">Progress: {progressPercentage}%</span>
+                </span>
+            </div>
+
+            <!-- Step 1 -->
+            <template if:true={isStepOne}>
+                <div class="feedback-step">
+                    <h3 class="slds-text-heading_small">How easy was it to make your submission today? (Step 1 of 2)</h3>
+                    <div class="rating-buttons">
+                        <template for:each={ratingOptions} for:item="option">
+                            <lightning-button 
+                                key={option.value}
+                                label={option.label}
+                                variant={option.variant}
+                                class="rating-button"
+                                onclick={() => this.handleRating(option.value)}>
+                            </lightning-button>
+                        </template>
+                    </div>
+                    <div class="button-container">
+                        <lightning-button 
+                            label="Next"
+                            variant="brand"
+                            onclick={handleNext}
+                            disabled={isNextDisabled}>
+                        </lightning-button>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Step 2 -->
+            <template if:true={isStepTwo}>
+                <div class="feedback-step">
+                    <h3 class="slds-text-heading_small">Would you like to provide more details? (Step 2 of 2)</h3>
+                    <p class="slds-text-body_small">Please do not include any confidential or personal information.</p>
+                    <lightning-textarea
+                        value={feedbackDetails}
+                        onchange={handleFeedbackChange}
+                        maxlength="250"
+                        placeholder="Your feedback...">
+                    </lightning-textarea>
+                    <div class="character-count">
+                        <span>{characterCount} of 250</span>
+                    </div>
+                    <div class="button-container">
+                        <lightning-button 
+                            label="Back"
+                            variant="neutral"
+                            onclick={handleBack}
+                            class="slds-m-right_small">
+                        </lightning-button>
+                        <lightning-button 
+                            label="Submit"
+                            variant="brand"
+                            onclick={handleSubmit}>
+                        </lightning-button>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+</template>

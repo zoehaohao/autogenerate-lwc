@@ -1,0 +1,50 @@
+:host {
+    display: block;
+}
+
+.feedback-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.feedback-form {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.rating-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem 0;
+    gap: 1rem;
+}
+
+.rating-button {
+    flex: 1;
+    white-space: pre-line;
+    text-align: center;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+
+.character-count {
+    text-align: right;
+    color: #706e6b;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+.slds-notify_container {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+}
