@@ -1,34 +1,26 @@
 import { LightningElement, api, track } from 'lwc';
-import searchContacts from '@salesforce/apex/ContactSearchController.searchContactsByName';
+import searchContacts from '@salesforce/apex/ContactSearchTestController.searchContactsByName';
+
+const COLUMNS = [
+    { label: 'Name', fieldName: 'Name', type: 'text', sortable: true },
+    { label: 'Email', fieldName: 'Email', type: 'email', sortable: true },
+    { label: 'Phone', fieldName: 'Phone', type: 'phone', sortable: true },
+    { label: 'Account Name', fieldName: 'AccountName', type: 'text', sortable: true },
+    { label: 'Title', fieldName: 'Title', type: 'text', sortable: true }
+];
 
 export default class ContactSearchTest extends LightningElement {
-    @api placeholder = 'Enter contact name...';
+    @api placeholder = 'Search by name...';
     @api maxResults = 50;
     @api showAccountName = true;
 
     @track searchTerm = '';
     @track contacts = [];
     @track isLoading = false;
-    @track sortedBy;
+    @track sortedBy = 'Name';
     @track sortedDirection = 'asc';
 
-    columns = [
-        { label: 'Name', fieldName: 'Name', type: 'text', sortable: true },
-        { label: 'Email', fieldName: 'Email', type: 'email', sortable: true },
-        { label: 'Phone', fieldName: 'Phone', type: 'phone', sortable: true },
-        { label: 'Title', fieldName: 'Title', type: 'text', sortable: true }
-    ];
-
-    connectedCallback() {
-        if (this.showAccountName) {
-            this.columns.push({ 
-                label: 'Account', 
-                fieldName: 'AccountName', 
-                type: 'text', 
-                sortable: true 
-            });
-        }
-    }
+    columns = COLUMNS;
 
     get isSearchDisabled() {
         return !this.searchTerm || this.searchTerm.length < 2 || this.isLoading;
@@ -38,8 +30,8 @@ export default class ContactSearchTest extends LightningElement {
         return this.contacts.length > 0;
     }
 
-    get showNoResults() {
-        return !this.isLoading && this.searchTerm && this.contacts.length === 0;
+    get showEmptyState() {
+        return !this.isLoading && this.searchTerm && !this.hasResults;
     }
 
     handleSearchChange(event) {
@@ -55,58 +47,48 @@ export default class ContactSearchTest extends LightningElement {
                 searchTerm: this.searchTerm,
                 limitResults: this.maxResults
             });
-
+            
             this.contacts = results.map(contact => ({
                 ...contact,
                 AccountName: contact.Account?.Name
             }));
 
-            this.dispatchSearchEvent();
+            // Dispatch custom event
+            this.dispatchEvent(new CustomEvent('contactsearch', {
+                detail: {
+                    searchTerm: this.searchTerm,
+                    results: this.contacts,
+                    resultCount: this.contacts.length,
+                    timestamp: new Date()
+                }
+            }));
         } catch (error) {
-            console.error('Search error:', error);
-            this.dispatchEvent(
-                new ShowToastEvent({
-                    title: 'Error',
-                    message: 'An error occurred while searching contacts',
-                    variant: 'error'
-                })
-            );
+            this.dispatchEvent(new ShowToastEvent({
+                title: 'Error',
+                message: error.message,
+                variant: 'error'
+            }));
+            this.contacts = [];
         } finally {
             this.isLoading = false;
         }
     }
 
     handleSort(event) {
-        const { fieldName: sortedBy, sortDirection } = event.detail;
-        this.sortedBy = sortedBy;
-        this.sortedDirection = sortDirection;
-        this.sortData(sortedBy, sortDirection);
+        this.sortedBy = event.detail.fieldName;
+        this.sortedDirection = event.detail.sortDirection;
+        this.sortData();
     }
 
-    sortData(fieldName, direction) {
-        const clonedData = [...this.contacts];
-        clonedData.sort((a, b) => {
-            return direction === 'asc' ? 
-                this.compareValues(a[fieldName], b[fieldName]) :
-                this.compareValues(b[fieldName], a[fieldName]);
-        });
-        this.contacts = clonedData;
-    }
-
-    compareValues(a, b) {
-        return a > b ? 1 : a < b ? -1 : 0;
-    }
-
-    dispatchSearchEvent() {
-        const searchEvent = new CustomEvent('contactsearch', {
-            detail: {
-                searchTerm: this.searchTerm,
-                results: this.contacts,
-                resultCount: this.contacts.length,
-                timestamp: new Date()
-            }
-        });
-        this.dispatchEvent(searchEvent);
+    sortData() {
+        const reverse = this.sortedDirection === 'asc' ? 1 : -1;
+        const fieldName = this.sortedBy;
+        
+        this.contacts = [...this.contacts.sort((a, b) => {
+            a = a[fieldName] ? a[fieldName].toLowerCase() : '';
+            b = b[fieldName] ? b[fieldName].toLowerCase() : '';
+            return a > b ? 1 * reverse : -1 * reverse;
+        })];
     }
 
     @api
@@ -117,9 +99,7 @@ export default class ContactSearchTest extends LightningElement {
 
     @api
     focusSearchInput() {
-        const input = this.template.querySelector('.search-input');
-        if (input) {
-            input.focus();
-        }
+        const input = this.template.querySelector('lightning-input');
+        if (input) input.focus();
     }
 }

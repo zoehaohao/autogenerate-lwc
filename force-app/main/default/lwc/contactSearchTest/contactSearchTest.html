@@ -5,23 +5,24 @@
             <div class="slds-form-element">
                 <div class="slds-grid slds-gutters">
                     <div class="slds-col slds-size_3-of-4">
-                        <lightning-input
+                        <lightning-input 
                             type="search"
                             label="Search Contacts"
-                            placeholder={placeholder}
                             value={searchTerm}
                             onchange={handleSearchChange}
-                            class="search-input">
-                        </lightning-input>
+                            placeholder={placeholder}
+                            min-length="2"
+                            message-when-too-short="Please enter at least 2 characters"
+                        ></lightning-input>
                     </div>
-                    <div class="slds-col slds-size_1-of-4 slds-align-end">
-                        <lightning-button
+                    <div class="slds-col slds-size_1-of-4 slds-align-bottom">
+                        <lightning-button 
                             label="Search"
-                            variant="brand"
                             onclick={handleSearch}
                             disabled={isSearchDisabled}
-                            class="slds-m-top_32">
-                        </lightning-button>
+                            variant="brand"
+                            class="slds-m-left_x-small"
+                        ></lightning-button>
                     </div>
                 </div>
             </div>
@@ -48,10 +49,10 @@
                 </div>
             </template>
 
-            <!-- No Results State -->
-            <template if:true={showNoResults}>
+            <!-- Empty State -->
+            <template if:true={showEmptyState}>
                 <div class="slds-p-top_medium slds-align_absolute-center">
-                    <p class="slds-text-heading_small">No contacts found</p>
+                    <div class="slds-text-color_weak">No contacts found</div>
                 </div>
             </template>
         </div>

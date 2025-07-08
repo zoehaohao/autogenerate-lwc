@@ -1,24 +1,26 @@
-public with sharing class ContactSearchController {
+public with sharing class ContactSearchTestController {
     @AuraEnabled(cacheable=true)
     public static List<Contact> searchContactsByName(String searchTerm, Integer limitResults) {
         try {
             if (String.isBlank(searchTerm) || searchTerm.length() < 2) {
-                return new List<Contact>();
+                throw new AuraHandledException('Search term must be at least 2 characters');
             }
 
-            String searchKey = '%' + String.escapeSingleQuotes(searchTerm) + '%';
+            String searchPattern = '%' + String.escapeSingleQuotes(searchTerm) + '%';
             
             return [
                 SELECT Id, FirstName, LastName, Name, Email, Phone, Account.Name, Title 
                 FROM Contact 
-                WHERE (FirstName LIKE :searchKey OR LastName LIKE :searchKey OR Name LIKE :searchKey)
+                WHERE (FirstName LIKE :searchPattern 
+                    OR LastName LIKE :searchPattern 
+                    OR Name LIKE :searchPattern)
                 AND IsDeleted = false
                 WITH SECURITY_ENFORCED
                 ORDER BY LastName, FirstName
                 LIMIT :limitResults
             ];
         } catch (Exception e) {
-            throw new AuraHandledException('Error searching contacts: ' + e.getMessage());
+            throw new AuraHandledException(e.getMessage());
         }
     }
 }
