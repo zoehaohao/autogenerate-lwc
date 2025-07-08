@@ -4,234 +4,115 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export default class QfrFormTest extends LightningElement {
     @track currentStep = '1';
     @track formData = {
+        // Page 1 data
         solvencyConcern: '',
-        futureSolvencyIssues: '',
+        solvencyFuture: '',
         operationalLoss: '',
-        workforceType: 'Individual agreements'
+        
+        // Page 2 data
+        organisationName: 'Sample Healthcare Provider',
+        napsId: 'NAPS123456',
+        contactName: 'John Smith',
+        contactPosition: 'Financial Manager',
+        contactPhone: '02 9876 5432',
+        contactEmail: 'john.smith@healthcare.com.au',
+        
+        // Page 3 data
+        workforceType: 'individual-agreements'
     };
     
+    @track errors = {};
     @track openSections = [];
-    @track labourCostsSections = [];
     @track isEditingContact = false;
     @track isLoading = false;
-    @track isUploading = false;
-    
-    @track contactInfo = {
-        name: 'John Smith',
-        position: 'Financial Manager',
-        phone: '+61 2 1234 5678',
-        email: 'john.smith@healthcare.com.au'
-    };
+    @track draftValues = [];
+    @track documentCategory = '';
+    @track documentType = '';
+    @track uploadedDocuments = [];
 
-    @track accountInfo = {
-        organizationName: 'Healthcare Provider ABC',
-        napsId: 'NAPS-12345678'
-    };
-
-    @track businessStructureTypes = [
-        {
-            name: 'inHouseDelivery',
-            label: 'In-house delivery',
-            selected: false,
-            serviceTypes: [],
-            additionalInfo: '',
-            serviceTypesName: 'inHouseServiceTypes',
-            additionalInfoName: 'inHouseAdditionalInfo'
-        },
-        {
-            name: 'franchisee',
-            label: 'Franchisee',
-            selected: false,
-            serviceTypes: [],
-            additionalInfo: '',
-            serviceTypesName: 'franchiseeServiceTypes',
-            additionalInfoName: 'franchiseeAdditionalInfo'
-        },
-        {
-            name: 'franchisor',
-            label: 'Franchisor',
-            selected: false,
-            serviceTypes: [],
-            additionalInfo: '',
-            serviceTypesName: 'franchisorServiceTypes',
-            additionalInfoName: 'franchisorAdditionalInfo'
-        },
-        {
-            name: 'brokerage',
-            label: 'Brokerage',
-            selected: false,
-            serviceTypes: [],
-            additionalInfo: '',
-            serviceTypesName: 'brokerageServiceTypes',
-            additionalInfoName: 'brokerageAdditionalInfo'
-        },
-        {
-            name: 'subcontractor',
-            label: 'Subcontractor',
-            selected: false,
-            serviceTypes: [],
-            additionalInfo: '',
-            serviceTypesName: 'subcontractorServiceTypes',
-            additionalInfoName: 'subcontractorAdditionalInfo'
-        },
-        {
-            name: 'selfEmployed',
-            label: 'Self-employ individual',
-            selected: false,
-            serviceTypes: [],
-            additionalInfo: '',
-            serviceTypesName: 'selfEmployedServiceTypes',
-            additionalInfoName: 'selfEmployedAdditionalInfo'
-        },
-        {
-            name: 'other',
-            label: 'Other',
-            selected: false,
-            serviceTypes: [],
-            additionalInfo: '',
-            serviceTypesName: 'otherServiceTypes',
-            additionalInfoName: 'otherAdditionalInfo'
-        }
+    // Business Structure Configuration
+    @track businessStructures = [
+        { name: 'inHouse', label: 'In-house delivery', selected: false, serviceTypes: [], serviceTypesName: 'inHouseServices' },
+        { name: 'franchisee', label: 'Franchisee', selected: false, serviceTypes: [], serviceTypesName: 'franchiseeServices' },
+        { name: 'franchisor', label: 'Franchisor', selected: false, serviceTypes: [], serviceTypesName: 'franchisorServices' },
+        { name: 'brokerage', label: 'Brokerage', selected: false, serviceTypes: [], serviceTypesName: 'brokerageServices' },
+        { name: 'subcontractor', label: 'Subcontractor', selected: false, serviceTypes: [], serviceTypesName: 'subcontractorServices' },
+        { name: 'selfEmployed', label: 'Self-employ individual', selected: false, serviceTypes: [], serviceTypesName: 'selfEmployedServices' },
+        { name: 'other', label: 'Other', selected: false, serviceTypes: [], serviceTypesName: 'otherServices' }
     ];
 
-    @track documentUpload = {
-        category: '',
-        type: ''
-    };
-
-    @track uploadedFiles = [];
-    @track labourCostsData = [
-        {
-            id: '1',
-            employeeCategory: 'Registered Nurses',
-            total: 250000,
-            centrallyHeld: 50000,
-            isParent: true,
-            level: 0
-        },
-        {
-            id: '2',
-            employeeCategory: 'Enrolled Nurses',
-            total: 180000,
-            centrallyHeld: 30000,
-            isParent: true,
-            level: 0
-        },
-        {
-            id: '3',
-            employeeCategory: 'Personal Care Workers',
-            total: 320000,
-            centrallyHeld: 60000,
-            isParent: true,
-            level: 0
-        },
-        {
-            id: '4',
-            employeeCategory: 'Allied Health',
-            total: 150000,
-            centrallyHeld: 25000,
-            isParent: true,
-            level: 0
-        }
+    // Labour Cost Data
+    @track labourCostData = [
+        { id: '1', category: 'Registered Nurses', total: 0, centrallyHeld: 0, editable: true },
+        { id: '2', category: 'Enrolled Nurses', total: 0, centrallyHeld: 0, editable: true },
+        { id: '3', category: 'Personal Care Workers', total: 0, centrallyHeld: 0, editable: true },
+        { id: '4', category: 'Allied Health', total: 0, centrallyHeld: 0, editable: true },
+        { id: '5', category: 'Administration', total: 0, centrallyHeld: 0, editable: true },
+        { id: '6', category: 'Management', total: 0, centrallyHeld: 0, editable: true }
     ];
 
     // Options
     yesNoOptions = [
-        { label: 'Yes', value: 'Yes' },
-        { label: 'No', value: 'No' }
-    ];
-
-    workforceOptions = [
-        { label: 'Individual agreements', value: 'Individual agreements' },
-        { label: 'Enterprise agreement', value: 'Enterprise agreement' },
-        { label: 'Award rates', value: 'Award rates' },
-        { label: 'Mixed arrangements', value: 'Mixed arrangements' }
+        { label: 'Yes', value: 'yes' },
+        { label: 'No', value: 'no' }
     ];
 
     serviceTypeOptions = [
-        { label: 'Clinical care', value: 'Clinical care' },
-        { label: 'Personal care', value: 'Personal care' },
-        { label: 'Allied health', value: 'Allied health' },
-        { label: 'Domestic assistance', value: 'Domestic assistance' },
-        { label: 'Social support', value: 'Social support' },
-        { label: 'Transport', value: 'Transport' },
-        { label: 'Meals', value: 'Meals' },
-        { label: 'Other', value: 'Other' }
+        { label: 'Clinical care', value: 'clinical' },
+        { label: 'Personal care', value: 'personal' },
+        { label: 'Allied health', value: 'allied' },
+        { label: 'Domestic assistance', value: 'domestic' },
+        { label: 'Social support', value: 'social' },
+        { label: 'Respite care', value: 'respite' }
+    ];
+
+    workforceOptions = [
+        { label: 'Individual agreements', value: 'individual-agreements' },
+        { label: 'Enterprise agreement', value: 'enterprise-agreement' },
+        { label: 'Award only', value: 'award-only' },
+        { label: 'Mixed arrangements', value: 'mixed' }
     ];
 
     documentCategoryOptions = [
-        { label: 'Financial Declaration', value: 'Financial Declaration' },
-        { label: 'Supporting Documentation', value: 'Supporting Documentation' },
-        { label: 'Compliance Certificate', value: 'Compliance Certificate' },
-        { label: 'Other', value: 'Other' }
+        { label: 'Financial Declaration', value: 'financial-declaration' },
+        { label: 'Supporting Documents', value: 'supporting-documents' },
+        { label: 'Compliance Certificate', value: 'compliance-certificate' },
+        { label: 'Other', value: 'other' }
     ];
 
     documentTypeOptions = [
-        { label: 'PDF Document', value: 'PDF' },
-        { label: 'Word Document', value: 'Word' },
-        { label: 'Excel Spreadsheet', value: 'Excel' },
-        { label: 'Image', value: 'Image' }
+        { label: 'PDF Document', value: 'pdf' },
+        { label: 'Word Document', value: 'word' },
+        { label: 'Excel Spreadsheet', value: 'excel' },
+        { label: 'Image', value: 'image' }
     ];
 
-    labourCostsColumns = [
-        {
-            label: 'Employee Category',
-            fieldName: 'employeeCategory',
-            type: 'text'
-        },
-        {
-            label: 'Total',
-            fieldName: 'total',
-            type: 'currency',
-            editable: true
-        },
-        {
-            label: 'Centrally Held',
-            fieldName: 'centrallyHeld',
-            type: 'currency',
-            editable: true
-        }
+    // Column definitions
+    labourCostColumns = [
+        { label: 'Employee Category', fieldName: 'category', type: 'text' },
+        { label: 'Total ($)', fieldName: 'total', type: 'currency', editable: true },
+        { label: 'Centrally Held ($)', fieldName: 'centrallyHeld', type: 'currency', editable: true }
     ];
 
-    fileColumns = [
-        {
-            label: 'File Name',
-            fieldName: 'name',
-            type: 'text'
-        },
-        {
-            label: 'Category',
-            fieldName: 'category',
-            type: 'text'
-        },
-        {
-            label: 'Type',
-            fieldName: 'type',
-            type: 'text'
-        },
-        {
-            label: 'Size',
-            fieldName: 'size',
-            type: 'text'
-        },
-        {
-            label: 'Status',
-            fieldName: 'status',
-            type: 'text'
-        },
+    documentColumns = [
+        { label: 'File Name', fieldName: 'name', type: 'text' },
+        { label: 'Category', fieldName: 'category', type: 'text' },
+        { label: 'Type', fieldName: 'type', type: 'text' },
+        { label: 'Size', fieldName: 'size', type: 'text' },
+        { label: 'Status', fieldName: 'status', type: 'text' },
         {
             type: 'action',
             typeAttributes: {
                 rowActions: [
                     { label: 'View', name: 'view' },
                     { label: 'Download', name: 'download' },
-                    { label: 'Remove', name: 'remove' }
+                    { label: 'Delete', name: 'delete' }
                 ]
             }
         }
     ];
 
-    // Computed Properties
+    // Computed properties
     get isPage1() {
         return this.currentStep === '1';
     }
@@ -257,7 +138,7 @@ export default class QfrFormTest extends LightningElement {
     }
 
     get isNextDisabled() {
-        return this.isLoading || !this.isCurrentPageValid();
+        return !this.isCurrentPageValid() || this.isLoading;
     }
 
     get nextButtonLabel() {
@@ -268,39 +149,24 @@ export default class QfrFormTest extends LightningElement {
         return this.isEditingContact ? 'Editing...' : 'Edit';
     }
 
-    get hasUploadedFiles() {
-        return this.uploadedFiles && this.uploadedFiles.length > 0;
+    get editButtonVariant() {
+        return this.isEditingContact ? 'neutral' : 'brand';
     }
 
-    // Event Handlers
+    // Event handlers
     handleAccordionToggle(event) {
-        const openSections = event.detail.openSections;
-        this.openSections = openSections;
-    }
-
-    handleLabourAccordionToggle(event) {
-        const openSections = event.detail.openSections;
-        this.labourCostsSections = openSections;
+        this.openSections = event.detail.openSections;
     }
 
     handleInputChange(event) {
-        const fieldName =event.target.name;
-        const value = event.detail.value;
-        this.formData = { ...this.formData, [fieldName]: value };
-    }
-
-    handleContactChange(event) {
         const fieldName = event.target.name;
         const value = event.target.value;
+        this.formData = { ...this.formData, [fieldName]: value };
         
-        if (fieldName === 'contactName') {
-            this.contactInfo = { ...this.contactInfo, name: value };
-        } else if (fieldName === 'contactPosition') {
-            this.contactInfo = { ...this.contactInfo, position: value };
-        } else if (fieldName === 'contactPhone') {
-            this.contactInfo = { ...this.contactInfo, phone: value };
-        } else if (fieldName === 'contactEmail') {
-            this.contactInfo = { ...this.contactInfo, email: value };
+        // Clear error for this field
+        if (this.errors[fieldName]) {
+            this.errors = { ...this.errors };
+            delete this.errors[fieldName];
         }
     }
 
@@ -317,101 +183,78 @@ export default class QfrFormTest extends LightningElement {
 
     handleCancelEdit() {
         this.isEditingContact = false;
-        // Reset contact info to original values if needed
+        // Reset form data to original values if needed
     }
 
     handleStructureToggle(event) {
         const structureName = event.target.name;
-        const isChecked = event.target.checked;
+        const isSelected = event.target.checked;
         
-        this.businessStructureTypes = this.businessStructureTypes.map(structure => {
+        this.businessStructures = this.businessStructures.map(structure => {
             if (structure.name === structureName) {
-                return { ...structure, selected: isChecked };
+                return { ...structure, selected: isSelected };
             }
             return structure;
         });
     }
 
     handleServiceTypeChange(event) {
-        const fieldName = event.target.name;
+        const structureName = event.target.name;
         const selectedValues = event.detail.value;
         
-        this.businessStructureTypes = this.businessStructureTypes.map(structure => {
-            if (structure.serviceTypesName === fieldName) {
+        this.businessStructures = this.businessStructures.map(structure => {
+            if (structure.serviceTypesName === structureName) {
                 return { ...structure, serviceTypes: selectedValues };
             }
             return structure;
         });
     }
 
-    handleAdditionalInfoChange(event) {
-        const fieldName = event.target.name;
-        const value = event.target.value;
-        
-        this.businessStructureTypes = this.businessStructureTypes.map(structure => {
-            if (structure.additionalInfoName === fieldName) {
-                return { ...structure, additionalInfo: value };
-            }
-            return structure;
-        });
+    handleCellChange(event) {
+        this.draftValues = event.detail.draftValues;
     }
 
-    handleLabourCostChange(event) {
-        const draftValues = event.detail.draftValues;
-        const updatedData = [...this.labourCostsData];
-        
-        draftValues.forEach(draft => {
-            const index = updatedData.findIndex(item => item.id === draft.id);
-            if (index !== -1) {
-                updatedData[index] = { ...updatedData[index], ...draft };
-            }
-        });
-        
-        this.labourCostsData = updatedData;
+    handleDocumentCategoryChange(event) {
+        this.documentCategory = event.detail.value;
     }
 
-    handleDocumentConfigChange(event) {
-        const fieldName = event.target.name;
-        const value = event.detail.value;
-        this.documentUpload = { ...this.documentUpload, [fieldName]: value };
+    handleDocumentTypeChange(event) {
+        this.documentType = event.detail.value;
     }
 
-    handleFileUpload(event) {
+    handleFileDrop(event) {
+        event.preventDefault();
+        const files = event.dataTransfer.files;
+        this.processFiles(files);
+    }
+
+    handleDragOver(event) {
+        event.preventDefault();
+    }
+
+    handleBrowseFiles() {
+        const fileInput = this.template.querySelector('.file-input');
+        fileInput.click();
+    }
+
+    handleFileSelect(event) {
         const files = event.target.files;
-        if (files && files.length > 0) {
-            this.isUploading = true;
-            
-            // Simulate file upload process
-            setTimeout(() => {
-                const newFiles = Array.from(files).map((file, index) => ({
-                    id: Date.now() + index,
-                    name: file.name,
-                    category: this.documentUpload.category || 'Uncategorized',
-                    type: this.documentUpload.type || 'Unknown',
-                    size: this.formatFileSize(file.size),
-                    status: 'Uploaded'
-                }));
-                
-                this.uploadedFiles = [...this.uploadedFiles, ...newFiles];
-                this.isUploading = false;
-                this.showToast('Success', `${files.length} file(s) uploaded successfully`, 'success');
-            }, 2000);
-        }
+        this.processFiles(files);
     }
 
-    handleFileAction(event) {
+    handleDocumentAction(event) {
         const actionName = event.detail.action.name;
         const row = event.detail.row;
         
         switch (actionName) {
             case 'view':
-                this.viewFile(row);
+                this.viewDocument(row);
                 break;
             case 'download':
-                this.downloadFile(row);
+                this.downloadDocument(row);
                 break;
-            case 'remove':
-                this.removeFile(row);
+            case 'delete':
+                this.deleteDocument(row);
                 break;
         }
     }
@@ -432,7 +275,7 @@ export default class QfrFormTest extends LightningElement {
         }
     }
 
-    // Validation Methods
+    // Validation methods
     isCurrentPageValid() {
         switch (this.currentStep) {
             case '1':
@@ -451,50 +294,86 @@ export default class QfrFormTest extends LightningElement {
     }
 
     validatePage1() {
-        return this.formData.solvencyConcern && 
-               this.formData.futureSolvencyIssues && 
-               this.formData.operationalLoss;
+        this.errors = {};
+        let isValid = true;
+
+        if (!this.formData.solvencyConcern) {
+            this.errors.solvencyConcern = 'Please answer the solvency concern question';
+            isValid = false;
+        }
+
+        if (!this.formData.solvencyFuture) {
+            this.errors.solvencyFuture = 'Please answer the future solvency question';
+            isValid = false;
+        }
+
+        if (!this.formData.operationalLoss) {
+            this.errors.operationalLoss = 'Please answer the operational loss question';
+            isValid = false;
+        }
+
+        return isValid;
     }
 
     validatePage2() {
-        return this.contactInfo.name && 
-               this.contactInfo.position && 
-               this.contactInfo.phone && 
-               this.contactInfo.email && 
-               this.isValidEmail(this.contactInfo.email);
+        return this.validateContactInfo();
     }
 
     validatePage3() {
-        const hasSelectedStructure = this.businessStructureTypes.some(structure => structure.selected);
-        const selectedStructuresValid = this.businessStructureTypes
-            .filter(structure => structure.selected)
-            .every(structure => structure.serviceTypes.length > 0);
-        
-        return hasSelectedStructure && selectedStructuresValid && this.formData.workforceType;
+        const hasSelectedStructure = this.businessStructures.some(structure => structure.selected);
+        return hasSelectedStructure && this.formData.workforceType;
     }
 
     validatePage4() {
-        return this.labourCostsData.some(item => item.total > 0);
+        return this.labourCostData.some(row => row.total > 0 || row.centrallyHeld > 0);
     }
 
     validatePage5() {
-        return this.uploadedFiles.length > 0;
+        return this.uploadedDocuments.length > 0;
     }
 
     validateContactInfo() {
-        return this.contactInfo.name && 
-               this.contactInfo.position && 
-               this.contactInfo.phone && 
-               this.contactInfo.email && 
-               this.isValidEmail(this.contactInfo.email);
-    }
-
-    isValidEmail(email) {
+        let isValid = true;
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
+        const phoneRegex = /^(\+61|0)[2-9]\d{8}$/;
+
+        if (!this.formData.contactName) {
+            isValid = false;
+        }
+
+        if (!this.formData.contactEmail || !emailRegex.test(this.formData.contactEmail)) {
+            isValid = false;
+        }
+
+        if (!this.formData.contactPhone || !phoneRegex.test(this.formData.contactPhone.replace(/\s/g, ''))) {
+            isValid = false;
+        }
+
+        return isValid;
     }
 
-    // Helper Methods
+    // Helper methods
+    processFiles(files) {
+        if (!this.documentCategory || !this.documentType) {
+            this.showToast('Error', 'Please select document category and type before uploading', 'error');
+            return;
+        }
+
+        Array.from(files).forEach(file => {
+            const document = {
+                id: Date.now() + Math.random(),
+                name: file.name,
+                category: this.documentCategory,
+                type: this.documentType,
+                size: this.formatFileSize(file.size),
+                status: 'Uploaded'
+            };
+            this.uploadedDocuments = [...this.uploadedDocuments, document];
+        });
+
+        this.showToast('Success', `${files.length} file(s) uploaded successfully`, 'success');
+    }
+
     formatFileSize(bytes) {
         if (bytes === 0) return '0 Bytes';
         const k = 1024;
@@ -503,27 +382,27 @@ export default class QfrFormTest extends LightningElement {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
-    viewFile(file) {
-        this.showToast('Info', `Viewing file: ${file.name}`, 'info');
+    viewDocument(row) {
+        this.showToast('Info', `Viewing document: ${row.name}`, 'info');
     }
 
-    downloadFile(file) {
-        this.showToast('Info', `Downloading file: ${file.name}`, 'info');
+    downloadDocument(row) {
+        this.showToast('Info', `Downloading document: ${row.name}`, 'info');
     }
 
-    removeFile(file) {
-        this.uploadedFiles = this.uploadedFiles.filter(f => f.id !== file.id);
-        this.showToast('Success', `File ${file.name} removed successfully`, 'success');
+    deleteDocument(row) {
+        this.uploadedDocuments = this.uploadedDocuments.filter(doc => doc.id !== row.id);
+        this.showToast('Success', 'Document deleted successfully', 'success');
     }
 
     handleSubmit() {
         this.isLoading = true;
         
-        // Simulate form submission
+        // Simulate submission process
         setTimeout(() => {
             this.isLoading = false;
             this.showToast('Success', 'QFR Form submitted successfully!', 'success');
-        }, 3000);
+        }, 2000);
     }
 
     showToast(title, message, variant) {
@@ -536,8 +415,21 @@ export default class QfrFormTest extends LightningElement {
     }
 
     connectedCallback() {
-        // Initialize form data
-        this.openSections = [];
-        this.labourCostsSections = ['labour-costs-table'];
+        // Initialize any default data or perform setup
+        this.loadSavedData();
+    }
+
+    loadSavedData() {
+        // Simulate loading saved form data
+        // In real implementation, this would load from Salesforce records
+    }
+
+    renderedCallback() {
+        // Handle any post-render logic
+        this.updateProgressIndicator();
+    }
+
+    updateProgressIndicator() {
+        // Update progress indicator styling if needed
     }
 }
