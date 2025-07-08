@@ -4,113 +4,114 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export default class QfrFormTest extends LightningElement {
     @track currentStep = '1';
     @track formData = {
-        // Page 1 data
         solvencyConcern: '',
         solvencyFuture: '',
         operationalLoss: '',
-        
-        // Page 2 data
-        organisationName: 'Sample Healthcare Provider',
-        napsId: 'NAPS123456',
         contactName: 'John Smith',
         contactPosition: 'Financial Manager',
-        contactPhone: '02 9876 5432',
+        contactPhone: '+61 2 9876 5432',
         contactEmail: 'john.smith@healthcare.com.au',
-        
-        // Page 3 data
-        workforceType: 'individual-agreements'
+        workforceEngagement: 'individual-agreements'
     };
-    
-    @track errors = {};
+
     @track openSections = [];
     @track isEditingContact = false;
     @track isLoading = false;
-    @track draftValues = [];
-    @track documentCategory = '';
-    @track documentType = '';
-    @track uploadedDocuments = [];
+    @track isUploading = false;
+    @track selectedCategory = '';
+    @track selectedDocumentType = '';
 
-    // Business Structure Configuration
-    @track businessStructures = [
-        { name: 'inHouse', label: 'In-house delivery', selected: false, serviceTypes: [], serviceTypesName: 'inHouseServices' },
-        { name: 'franchisee', label: 'Franchisee', selected: false, serviceTypes: [], serviceTypesName: 'franchiseeServices' },
-        { name: 'franchisor', label: 'Franchisor', selected: false, serviceTypes: [], serviceTypesName: 'franchisorServices' },
-        { name: 'brokerage', label: 'Brokerage', selected: false, serviceTypes: [], serviceTypesName: 'brokerageServices' },
-        { name: 'subcontractor', label: 'Subcontractor', selected: false, serviceTypes: [], serviceTypesName: 'subcontractorServices' },
-        { name: 'selfEmployed', label: 'Self-employ individual', selected: false, serviceTypes: [], serviceTypesName: 'selfEmployedServices' },
-        { name: 'other', label: 'Other', selected: false, serviceTypes: [], serviceTypesName: 'otherServices' }
-    ];
-
-    // Labour Cost Data
-    @track labourCostData = [
-        { id: '1', category: 'Registered Nurses', total: 0, centrallyHeld: 0, editable: true },
-        { id: '2', category: 'Enrolled Nurses', total: 0, centrallyHeld: 0, editable: true },
-        { id: '3', category: 'Personal Care Workers', total: 0, centrallyHeld: 0, editable: true },
-        { id: '4', category: 'Allied Health', total: 0, centrallyHeld: 0, editable: true },
-        { id: '5', category: 'Administration', total: 0, centrallyHeld: 0, editable: true },
-        { id: '6', category: 'Management', total: 0, centrallyHeld: 0, editable: true }
-    ];
-
-    // Options
-    yesNoOptions = [
-        { label: 'Yes', value: 'yes' },
-        { label: 'No', value: 'no' }
-    ];
-
-    serviceTypeOptions = [
-        { label: 'Clinical care', value: 'clinical' },
-        { label: 'Personal care', value: 'personal' },
-        { label: 'Allied health', value: 'allied' },
-        { label: 'Domestic assistance', value: 'domestic' },
-        { label: 'Social support', value: 'social' },
-        { label: 'Respite care', value: 'respite' }
-    ];
-
-    workforceOptions = [
-        { label: 'Individual agreements', value: 'individual-agreements' },
-        { label: 'Enterprise agreement', value: 'enterprise-agreement' },
-        { label: 'Award only', value: 'award-only' },
-        { label: 'Mixed arrangements', value: 'mixed' }
-    ];
-
-    documentCategoryOptions = [
-        { label: 'Financial Declaration', value: 'financial-declaration' },
-        { label: 'Supporting Documents', value: 'supporting-documents' },
-        { label: 'Compliance Certificate', value: 'compliance-certificate' },
-        { label: 'Other', value: 'other' }
-    ];
-
-    documentTypeOptions = [
-        { label: 'PDF Document', value: 'pdf' },
-        { label: 'Word Document', value: 'word' },
-        { label: 'Excel Spreadsheet', value: 'excel' },
-        { label: 'Image', value: 'image' }
-    ];
-
-    // Column definitions
-    labourCostColumns = [
-        { label: 'Employee Category', fieldName: 'category', type: 'text' },
-        { label: 'Total ($)', fieldName: 'total', type: 'currency', editable: true },
-        { label: 'Centrally Held ($)', fieldName: 'centrallyHeld', type: 'currency', editable: true }
-    ];
-
-    documentColumns = [
-        { label: 'File Name', fieldName: 'name', type: 'text' },
-        { label: 'Category', fieldName: 'category', type: 'text' },
-        { label: 'Type', fieldName: 'type', type: 'text' },
-        { label: 'Size', fieldName: 'size', type: 'text' },
-        { label: 'Status', fieldName: 'status', type: 'text' },
+    @track businessStructureTypes = [
         {
-            type: 'action',
-            typeAttributes: {
-                rowActions: [
-                    { label: 'View', name: 'view' },
-                    { label: 'Download', name: 'download' },
-                    { label: 'Delete', name: 'delete' }
-                ]
-            }
+            name: 'inhouse-delivery',
+            label: 'In-house delivery',
+            selected: false,
+            serviceTypes: [],
+            additionalInfo: ''
+        },
+        {
+            name: 'franchisee',
+            label: 'Franchisee',
+            selected: false,
+            serviceTypes: [],
+            additionalInfo: ''
+        },
+        {
+            name: 'franchisor',
+            label: 'Franchisor',
+            selected: false,
+            serviceTypes: [],
+            additionalInfo: ''
+        },
+        {
+            name: 'brokerage',
+            label: 'Brokerage',
+            selected: false,
+            serviceTypes: [],
+            additionalInfo: ''
+        },
+        {
+            name: 'subcontractor',
+            label: 'Subcontractor',
+            selected: false,
+            serviceTypes: [],
+            additionalInfo: ''
+        },
+        {
+            name: 'self-employ',
+            label: 'Self-employ individual',
+            selected: false,
+            serviceTypes: [],
+            additionalInfo: ''
+        },
+        {
+            name: 'other',
+            label: 'Other',
+            selected: false,
+            serviceTypes: [],
+            additionalInfo: ''
         }
     ];
+
+    @track labourCostData = [
+        {
+            id: '1',
+            category: 'Registered Nurses',
+            total: 0,
+            centrallyHeld: 0,
+            editable: true
+        },
+        {
+            id: '2',
+            category: 'Enrolled Nurses',
+            total: 0,
+            centrallyHeld: 0,
+            editable: true
+        },
+        {
+            id: '3',
+            category: 'Personal Care Workers',
+            total: 0,
+            centrallyHeld: 0,
+            editable: true
+        },
+        {
+            id: '4',
+            category: 'Allied Health Professionals',
+            total: 0,
+            centrallyHeld: 0,
+            editable: true
+        },
+        {
+            id: '5',
+            category: 'Other Direct Care Staff',
+            total: 0,
+            centrallyHeld: 0,
+            editable: true
+        }
+    ];
+
+    @track uploadedDocuments = [];
 
     // Computed properties
     get isPage1() {
@@ -138,7 +139,7 @@ export default class QfrFormTest extends LightningElement {
     }
 
     get isNextDisabled() {
-        return !this.isCurrentPageValid() || this.isLoading;
+        return this.isLoading || !this.isCurrentPageValid();
     }
 
     get nextButtonLabel() {
@@ -153,93 +154,305 @@ export default class QfrFormTest extends LightningElement {
         return this.isEditingContact ? 'neutral' : 'brand';
     }
 
+    get accountInfo() {
+        return {
+            organizationName: 'Sample Healthcare Provider',
+            napsId: 'NAPS ID: 12345678'
+        };
+    }
+
+    get yesNoOptions() {
+        return [
+            { label: 'Yes', value: 'yes' },
+            { label: 'No', value: 'no' }
+        ];
+    }
+
+    get serviceTypeOptions() {
+        return [
+            { label: 'Clinical care', value: 'clinical-care' },
+            { label: 'Personal care', value: 'personal-care' },
+            { label: 'Allied health', value: 'allied-health' },
+            { label: 'Domestic assistance', value: 'domestic-assistance' },
+            { label: 'Social support', value: 'social-support' },
+            { label: 'Transport', value: 'transport' },
+            { label: 'Other', value: 'other' }
+        ];
+    }
+
+    get workforceOptions() {
+        return [
+            { label: 'Individual agreements', value: 'individual-agreements' },
+            { label: 'Enterprise agreement', value: 'enterprise-agreement' },
+            { label: 'Award only', value: 'award-only' },
+            { label: 'Mixed arrangements', value: 'mixed-arrangements' }
+        ];
+    }
+
+    get documentCategories() {
+        return [
+            { label: 'Financial Declaration', value: 'financial-declaration' },
+            { label: 'Supporting Documents', value: 'supporting-documents' },
+            { label: 'Compliance Certificate', value: 'compliance-certificate' },
+            { label: 'Other', value: 'other' }
+        ];
+    }
+
+    get documentTypes() {
+        return [
+            { label: 'PDF Document', value: 'pdf' },
+            { label: 'Word Document', value: 'word' },
+            { label: 'Excel Spreadsheet', value: 'excel' },
+            { label: 'Image', value: 'image' }
+        ];
+    }
+
+    get labourCostColumns() {
+        return [
+            {
+                label: 'Employee Category',
+                fieldName: 'category',
+                type: 'text'
+            },
+            {
+                label: 'Total ($)',
+                fieldName: 'total',
+                type: 'currency',
+                editable: true,
+                typeAttributes: {
+                    currencyCode: 'AUD',
+                    minimumFractionDigits: 0
+                }
+            },
+            {
+                label: 'Centrally Held ($)',
+                fieldName: 'centrallyHeld',
+                type: 'currency',
+                editable: true,
+                typeAttributes: {
+                    currencyCode: 'AUD',
+                    minimumFractionDigits: 0
+                }
+            }
+        ];
+    }
+
+    get documentColumns() {
+        return [
+            {
+                label: 'File Name',fieldName: 'fileName',
+                type: 'text'
+            },
+            {
+                label: 'Category',
+                fieldName: 'category',
+                type: 'text'
+            },
+            {
+                label: 'Type',
+                fieldName: 'documentType',
+                type: 'text'
+            },
+            {
+                label: 'Status',
+                fieldName: 'status',
+                type: 'text'
+            },
+            {
+                type: 'action',
+                typeAttributes: {
+                    rowActions: [
+                        { label: 'View', name: 'view' },
+                        { label: 'Download', name: 'download' },
+                        { label: 'Remove', name: 'remove' }
+                    ]
+                }
+            }
+        ];
+    }
+
+    get page1Errors() {
+        const errors = [];
+        if (!this.formData.solvencyConcern) {
+            errors.push('Please answer the solvency concern question');
+        }
+        if (!this.formData.solvencyFuture) {
+            errors.push('Please answer the future solvency question');
+        }
+        if (!this.formData.operationalLoss) {
+            errors.push('Please answer the operational loss question');
+        }
+        return errors;
+    }
+
+    get page2Errors() {
+        const errors = [];
+        if (!this.formData.contactName) {
+            errors.push('Contact name is required');
+        }
+        if (!this.formData.contactPosition) {
+            errors.push('Contact position is required');
+        }
+        if (!this.formData.contactPhone) {
+            errors.push('Contact phone is required');
+        }
+        if (!this.formData.contactEmail) {
+            errors.push('Contact email is required');
+        }
+        return errors;
+    }
+
+    get page3Errors() {
+        const errors = [];
+        const hasSelectedStructure = this.businessStructureTypes.some(type => type.selected);
+        if (!hasSelectedStructure) {
+            errors.push('Please select at least one business structure type');
+        }
+        if (!this.formData.workforceEngagement) {
+            errors.push('Please select workforce engagement method');
+        }
+        return errors;
+    }
+
+    get page4Errors() {
+        const errors = [];
+        const hasLabourData = this.labourCostData.some(item => item.total > 0 || item.centrallyHeld > 0);
+        if (!hasLabourData) {
+            errors.push('Please enter labour cost data for at least one category');
+        }
+        return errors;
+    }
+
+    get page5Errors() {
+        const errors = [];
+        if (this.uploadedDocuments.length === 0) {
+            errors.push('Please upload at least one document');
+        }
+        return errors;
+    }
+
     // Event handlers
     handleAccordionToggle(event) {
         this.openSections = event.detail.openSections;
     }
 
-    handleInputChange(event) {
-        const fieldName = event.target.name;
-        const value = event.target.value;
-        this.formData = { ...this.formData, [fieldName]: value };
-        
-        // Clear error for this field
-        if (this.errors[fieldName]) {
-            this.errors = { ...this.errors };
-            delete this.errors[fieldName];
-        }
+    handleSolvencyConcernChange(event) {
+        this.formData.solvencyConcern = event.detail.value;
+    }
+
+    handleSolvencyFutureChange(event) {
+        this.formData.solvencyFuture = event.detail.value;
+    }
+
+    handleOperationalLossChange(event) {
+        this.formData.operationalLoss = event.detail.value;
     }
 
     handleEditContact() {
         this.isEditingContact = !this.isEditingContact;
     }
 
+    handleContactNameChange(event) {
+        this.formData.contactName = event.detail.value;
+    }
+
+    handleContactPositionChange(event) {
+        this.formData.contactPosition = event.detail.value;
+    }
+
+    handleContactPhoneChange(event) {
+        this.formData.contactPhone = event.detail.value;
+    }
+
+    handleContactEmailChange(event) {
+        this.formData.contactEmail = event.detail.value;
+    }
+
     handleSaveContact() {
         if (this.validateContactInfo()) {
             this.isEditingContact = false;
-            this.showToast('Success', 'Contact information updated successfully', 'success');
+            this.showToast('Success', 'Contact information saved successfully', 'success');
         }
     }
 
     handleCancelEdit() {
         this.isEditingContact = false;
-        // Reset form data to original values if needed
     }
 
     handleStructureToggle(event) {
-        const structureName = event.target.name;
-        const isSelected = event.target.checked;
+        const structureName = event.target.dataset.name;
+        const isChecked = event.detail.checked;
         
-        this.businessStructures = this.businessStructures.map(structure => {
-            if (structure.name === structureName) {
-                return { ...structure, selected: isSelected };
+        this.businessStructureTypes = this.businessStructureTypes.map(type => {
+            if (type.name === structureName) {
+                return { ...type, selected: isChecked };
             }
-            return structure;
+            return type;
         });
     }
 
     handleServiceTypeChange(event) {
-        const structureName = event.target.name;
+        const structureName = event.target.dataset.name;
         const selectedValues = event.detail.value;
         
-        this.businessStructures = this.businessStructures.map(structure => {
-            if (structure.serviceTypesName === structureName) {
-                return { ...structure, serviceTypes: selectedValues };
+        this.businessStructureTypes = this.businessStructureTypes.map(type => {
+            if (type.name === structureName) {
+                return { ...type, serviceTypes: selectedValues };
             }
-            return structure;
+            return type;
         });
     }
 
-    handleCellChange(event) {
-        this.draftValues = event.detail.draftValues;
+    handleAdditionalInfoChange(event) {
+        const structureName = event.target.dataset.name;
+        const value = event.detail.value;
+        
+        this.businessStructureTypes = this.businessStructureTypes.map(type => {
+            if (type.name === structureName) {
+                return { ...type, additionalInfo: value };
+            }
+            return type;
+        });
     }
 
-    handleDocumentCategoryChange(event) {
-        this.documentCategory = event.detail.value;
+    handleWorkforceChange(event) {
+        this.formData.workforceEngagement = event.detail.value;
+    }
+
+    handleLabourCostChange(event) {
+        const draftValues = event.detail.draftValues;
+        const updatedData = [...this.labourCostData];
+        
+        draftValues.forEach(draft => {
+            const index = updatedData.findIndex(item => item.id === draft.id);
+            if (index !== -1) {
+                updatedData[index] = { ...updatedData[index], ...draft };
+            }
+        });
+        
+        this.labourCostData = updatedData;
+    }
+
+    handleCategoryChange(event) {
+        this.selectedCategory = event.detail.value;
     }
 
     handleDocumentTypeChange(event) {
-        this.documentType = event.detail.value;
-    }
-
-    handleFileDrop(event) {
-        event.preventDefault();
-        const files = event.dataTransfer.files;
-        this.processFiles(files);
-    }
-
-    handleDragOver(event) {
-        event.preventDefault();
+        this.selectedDocumentType = event.detail.value;
     }
 
     handleBrowseFiles() {
-        const fileInput = this.template.querySelector('.file-input');
+        const fileInput = this.template.querySelector('input[type="file"]');
         fileInput.click();
     }
 
-    handleFileSelect(event) {
+    handleFileSelection(event) {
         const files = event.target.files;
-        this.processFiles(files);
+        if (files.length > 0 && this.selectedCategory && this.selectedDocumentType) {
+            this.uploadFiles(files);
+        } else {
+            this.showToast('Error', 'Please select document category and type before uploading', 'error');
+        }
     }
 
     handleDocumentAction(event) {
@@ -253,8 +466,8 @@ export default class QfrFormTest extends LightningElement {
             case 'download':
                 this.downloadDocument(row);
                 break;
-            case 'delete':
-                this.deleteDocument(row);
+            case 'remove':
+                this.removeDocument(row);
                 break;
         }
     }
@@ -275,161 +488,99 @@ export default class QfrFormTest extends LightningElement {
         }
     }
 
-    // Validation methods
+    // Helper methods
     isCurrentPageValid() {
         switch (this.currentStep) {
             case '1':
-                return this.validatePage1();
+                return this.page1Errors.length === 0;
             case '2':
-                return this.validatePage2();
+                return this.page2Errors.length === 0;
             case '3':
-                return this.validatePage3();
+                return this.page3Errors.length === 0;
             case '4':
-                return this.validatePage4();
+                return this.page4Errors.length === 0;
             case '5':
-                return this.validatePage5();
+                return this.page5Errors.length === 0;
             default:
                 return false;
         }
     }
 
-    validatePage1() {
-        this.errors = {};
-        let isValid = true;
-
-        if (!this.formData.solvencyConcern) {
-            this.errors.solvencyConcern = 'Please answer the solvency concern question';
-            isValid = false;
-        }
-
-        if (!this.formData.solvencyFuture) {
-            this.errors.solvencyFuture = 'Please answer the future solvency question';
-            isValid = false;
-        }
-
-        if (!this.formData.operationalLoss) {
-            this.errors.operationalLoss = 'Please answer the operational loss question';
-            isValid = false;
-        }
-
-        return isValid;
-    }
-
-    validatePage2() {
-        return this.validateContactInfo();
-    }
-
-    validatePage3() {
-        const hasSelectedStructure = this.businessStructures.some(structure => structure.selected);
-        return hasSelectedStructure && this.formData.workforceType;
-    }
-
-    validatePage4() {
-        return this.labourCostData.some(row => row.total > 0 || row.centrallyHeld > 0);
-    }
-
-    validatePage5() {
-        return this.uploadedDocuments.length > 0;
-    }
-
     validateContactInfo() {
-        let isValid = true;
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const phoneRegex = /^(\+61|0)[2-9]\d{8}$/;
-
-        if (!this.formData.contactName) {
-            isValid = false;
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phonePattern = /^(\+61|0)[0-9\s\-\(\)]{8,}$/;
+        
+        if (!this.formData.contactEmail || !emailPattern.test(this.formData.contactEmail)) {
+            this.showToast('Error', 'Please enter a valid email address', 'error');
+            return false;
         }
-
-        if (!this.formData.contactEmail || !emailRegex.test(this.formData.contactEmail)) {
-            isValid = false;
+        
+        if (!this.formData.contactPhone || !phonePattern.test(this.formData.contactPhone)) {
+            this.showToast('Error', 'Please enter a valid Australian phone number', 'error');
+            return false;
         }
-
-        if (!this.formData.contactPhone || !phoneRegex.test(this.formData.contactPhone.replace(/\s/g, ''))) {
-            isValid = false;
-        }
-
-        return isValid;
+        
+        return true;
     }
 
-    // Helper methods
-    processFiles(files) {
-        if (!this.documentCategory || !this.documentType) {
-            this.showToast('Error', 'Please select document category and type before uploading', 'error');
-            return;
-        }
-
-        Array.from(files).forEach(file => {
-            const document = {
-                id: Date.now() + Math.random(),
-                name: file.name,
-                category: this.documentCategory,
-                type: this.documentType,
-                size: this.formatFileSize(file.size),
-                status: 'Uploaded'
-            };
-            this.uploadedDocuments = [...this.uploadedDocuments, document];
-        });
-
-        this.showToast('Success', `${files.length} file(s) uploaded successfully`, 'success');
-    }
-
-    formatFileSize(bytes) {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    uploadFiles(files) {
+        this.isUploading = true;
+        
+        // Simulate file upload
+        setTimeout(() => {
+            Array.from(files).forEach((file, index) => {
+                const newDocument = {
+                    id: Date.now() + index,
+                    fileName: file.name,
+                    category: this.selectedCategory,
+                    documentType: this.selectedDocumentType,
+                    status: 'Uploaded',
+                    size: file.size
+                };
+                this.uploadedDocuments = [...this.uploadedDocuments, newDocument];
+            });
+            
+            this.isUploading = false;
+            this.selectedCategory = '';
+            this.selectedDocumentType = '';
+            this.showToast('Success', `${files.length} file(s) uploaded successfully`, 'success');
+        }, 2000);
     }
 
     viewDocument(row) {
-        this.showToast('Info', `Viewing document: ${row.name}`, 'info');
+        this.showToast('Info', `Viewing document: ${row.fileName}`, 'info');
     }
 
     downloadDocument(row) {
-        this.showToast('Info', `Downloading document: ${row.name}`, 'info');
+        this.showToast('Info', `Downloading document: ${row.fileName}`, 'info');
     }
 
-    deleteDocument(row) {
+    removeDocument(row) {
         this.uploadedDocuments = this.uploadedDocuments.filter(doc => doc.id !== row.id);
-        this.showToast('Success', 'Document deleted successfully', 'success');
+        this.showToast('Success', 'Document removed successfully', 'success');
     }
 
     handleSubmit() {
         this.isLoading = true;
         
-        // Simulate submission process
+        // Simulate form submission
         setTimeout(() => {
             this.isLoading = false;
             this.showToast('Success', 'QFR Form submitted successfully!', 'success');
-        }, 2000);
+        }, 3000);
     }
 
     showToast(title, message, variant) {
-        const event = new ShowToastEvent({
+        const evt = new ShowToastEvent({
             title: title,
             message: message,
             variant: variant
         });
-        this.dispatchEvent(event);
+        this.dispatchEvent(evt);
     }
 
     connectedCallback() {
-        // Initialize any default data or perform setup
-        this.loadSavedData();
-    }
-
-    loadSavedData() {
-        // Simulate loading saved form data
-        // In real implementation, this would load from Salesforce records
-    }
-
-    renderedCallback() {
-        // Handle any post-render logic
-        this.updateProgressIndicator();
-    }
-
-    updateProgressIndicator() {
-        // Update progress indicator styling if needed
+        // Initialize form data
+        this.openSections = [];
     }
 }
