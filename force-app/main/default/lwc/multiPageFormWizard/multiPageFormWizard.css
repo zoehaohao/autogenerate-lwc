@@ -1,0 +1,26 @@
+:host {
+    display: block;
+}
+
+.form-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.slds-notify {
+    margin-top: 1rem;
+}
+
+.slds-card {
+    background: #ffffff;
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.1);
+}
+
+lightning-radio-group {
+    display: block;
+}
+
+.slds-progress-indicator {
+    margin-bottom: 2rem;
+}

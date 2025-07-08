@@ -1,0 +1,103 @@
+<template>
+    <div class="form-container slds-p-around_medium">
+        <!-- Progress Indicator -->
+        <lightning-progress-indicator 
+            current-step={currentPageString}
+            type="path"
+            variant="base">
+            <lightning-progress-step 
+                label="Residential Viability" 
+                value="1">
+            </lightning-progress-step>
+            <lightning-progress-step 
+                label="Contact Information" 
+                value="2">
+            </lightning-progress-step>
+            <lightning-progress-step 
+                label="Business Structure" 
+                value="3">
+            </lightning-progress-step>
+            <lightning-progress-step 
+                label="Labour Costs" 
+                value="4">
+            </lightning-progress-step>
+            <lightning-progress-step 
+                label="Documents" 
+                value="5">
+            </lightning-progress-step>
+        </lightning-progress-indicator>
+
+        <!-- Page 1: Residential Viability -->
+        <div if:true={isPage1} class="slds-p-top_medium">
+            <lightning-accordion allow-multiple-sections-open>
+                <lightning-accordion-section name="about" label="About this section">
+                    <p class="slds-text-body_regular">
+                        This section collects information about the financial health and viability 
+                        of residential care services to identify providers who may need additional support.
+                    </p>
+                </lightning-accordion-section>
+            </lightning-accordion>
+
+            <div class="slds-card slds-p-around_medium slds-m-top_medium">
+                <h2 class="slds-text-heading_medium slds-m-bottom_medium">Solvency Assessment</h2>
+                <lightning-radio-group
+                    name="solvencyConcern"
+                    label="Are you currently concerned about the solvency of your organisation?"
+                    options={yesNoOptions}
+                    value={formData.solvencyConcern}
+                    required
+                    onchange={handleFieldChange}>
+                </lightning-radio-group>
+
+                <lightning-radio-group
+                    name="futureSolvency"
+                    label="Do you envisage any solvency issues arising in the next six months?"
+                    options={yesNoOptions}
+                    value={formData.futureSolvency}
+                    required
+                    class="slds-m-top_medium"
+                    onchange={handleFieldChange}>
+                </lightning-radio-group>
+            </div>
+
+            <div class="slds-card slds-p-around_medium slds-m-top_medium">
+                <h2 class="slds-text-heading_medium slds-m-bottom_medium">Financial Performance</h2>
+                <lightning-radio-group
+                    name="operationalLoss"
+                    label="Do you forecast an operational loss for the current year?"
+                    options={yesNoOptions}
+                    value={formData.operationalLoss}
+                    required
+                    field-level-help="An operational loss occurs when operating expenses exceed operating revenues from your core care services."
+                    onchange={handleFieldChange}>
+                </lightning-radio-group>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="slds-m-top_large slds-grid slds-grid_align-spread">
+            <lightning-button 
+                label="Previous" 
+                variant="neutral" 
+                onclick={handlePrevious}
+                disabled={isFirstPage}>
+            </lightning-button>
+            <lightning-button 
+                label={nextButtonLabel} 
+                variant="brand" 
+                onclick={handleNext}
+                disabled={isNextDisabled}>
+            </lightning-button>
+        </div>
+
+        <!-- Error Panel -->
+        <template if:true={hasErrors}>
+            <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                <h2>Please correct the following errors:</h2>
+                <template for:each={errorMessages} for:item="error">
+                    <p key={error}>{error}</p>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>
