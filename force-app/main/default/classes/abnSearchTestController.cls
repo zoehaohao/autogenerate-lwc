@@ -1,48 +1,25 @@
 public with sharing class abnSearchTestController {
-    @AuraEnabled
-    public static ResponseWrapper searchABN(String searchTerm) {
-        try {
-            // Validate input
-            if (String.isBlank(searchTerm)) {
-                return new ResponseWrapper(false, 'Search term cannot be empty', null);
-            }
+    private static final String API_ENDPOINT = 'https://686dc140c9090c495387232f.mockapi.io/test/callouts/search_abn';
+    private static final Integer TIMEOUT = 30000; // 30 seconds
 
-            // Initialize HTTP request
+    @AuraEnabled
+    public static List<Map<String, Object>> searchABN(String searchTerm) {
+        try {
             Http http = new Http();
             HttpRequest request = new HttpRequest();
-            request.setEndpoint('https://686dc140c9090c495387232f.mockapi.io/test/callouts/search_abn');
+            request.setEndpoint(API_ENDPOINT + '?search=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8'));
             request.setMethod('GET');
-            request.setTimeout(30000); // 30 seconds timeout
-            
-            // Add search parameter
-            String endpoint = request.getEndpoint() + '?search=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            request.setEndpoint(endpoint);
+            request.setTimeout(TIMEOUT);
 
-            // Make the callout
             HttpResponse response = http.send(request);
 
-            // Process response
             if (response.getStatusCode() == 200) {
-                List<Object> results = (List<Object>)JSON.deserializeUntyped(response.getBody());
-                return new ResponseWrapper(true, 'Success', results);
+                return (List<Map<String, Object>>) JSON.deserializeUntyped(response.getBody());
             } else {
-                return new ResponseWrapper(false, 'API Error: ' + response.getStatusCode(), null);
+                throw new AuraHandledException('API Error: ' + response.getStatusCode() + ' ' + response.getStatus());
             }
-
         } catch (Exception e) {
-            return new ResponseWrapper(false, e.getMessage(), null);
-        }
-    }
-
-    public class ResponseWrapper {
-        @AuraEnabled public Boolean success;
-        @AuraEnabled public String message;
-        @AuraEnabled public Object data;
-        
-        public ResponseWrapper(Boolean success, String message, Object data) {
-            this.success = success;
-            this.message = message;
-            this.data = data;
+            throw new AuraHandledException('Error processing request: ' + e.getMessage());
         }
     }
 }

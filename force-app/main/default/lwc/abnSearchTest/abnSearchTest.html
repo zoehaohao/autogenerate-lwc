@@ -11,61 +11,77 @@
                         value={searchTerm}
                         onchange={handleSearchChange}
                         onkeyup={handleKeyUp}
-                        class="searchInput"
+                        class="search-input"
                         required>
                     </lightning-input>
                 </div>
-            </div>
-            
-            <div class="slds-m-top_small">
-                <lightning-button 
-                    label="Search" 
-                    variant="brand" 
-                    onclick={handleSearch}
-                    disabled={isSearchDisabled}>
-                </lightning-button>
+                <div class="slds-m-top_small">
+                    <lightning-button 
+                        label="Search" 
+                        variant="brand" 
+                        onclick={handleSearch}
+                        disabled={isSearchDisabled}>
+                    </lightning-button>
+                </div>
             </div>
 
             <!-- Loading Spinner -->
             <template if:true={isLoading}>
-                <div class="slds-is-relative slds-m-top_medium">
+                <div class="slds-p-around_medium">
                     <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
                 </div>
             </template>
 
             <!-- Error Message -->
-            <template if:true={errorMessage}>
-                <div class="slds-m-top_small">
+            <template if:true={error}>
+                <div class="slds-p-around_medium">
                     <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
                         <span class="slds-assistive-text">error</span>
-                        <h2>{errorMessage}</h2>
+                        <h2>{error}</h2>
                     </div>
                 </div>
             </template>
 
             <!-- Results Section -->
             <template if:true={hasResults}>
-                <div class="slds-m-top_medium">
+                <div class="slds-p-top_medium">
                     <template for:each={searchResults} for:item="result">
-                        <div key={result.id} class="slds-m-bottom_small">
+                        <div key={result.id} class="slds-p-bottom_small">
                             <lightning-card>
                                 <div class="slds-p-around_medium">
                                     <div class="slds-grid slds-wrap">
-                                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                                            <p><strong>Business Name:</strong> {result.businessName}</p>
-                                            <p><strong>ABN:</strong> {result.abn}</p>
-                                            <p><strong>ACN:</strong> {result.acn}</p>
+                                        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                            <div class="slds-text-title">Company Name</div>
+                                            <div>{result.Company_Name}</div>
                                         </div>
-                                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                                            <p><strong>Status:</strong> {result.status}</p>
-                                            <p><strong>Type:</strong> {result.type}</p>
-                                            <p><strong>State:</strong> {result.state}</p>
+                                        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                            <div class="slds-text-title">ABN</div>
+                                            <div>{result.ABN}</div>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                            <div class="slds-text-title">ACN</div>
+                                            <div>{result.ACN}</div>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                            <div class="slds-text-title">Type</div>
+                                            <div>{result.Type}</div>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-2">
+                                            <div class="slds-text-title">Location</div>
+                                            <div>{result.Location}</div>
                                         </div>
                                     </div>
                                 </div>
                             </lightning-card>
                         </div>
                     </template>
+                </div>
+            </template>
+
+            <!-- No Results Message -->
+            <template if:true={showNoResults}>
+                <div class="slds-p-top_medium slds-text-align_center">
+                    No results found
                 </div>
             </template>
         </div>
