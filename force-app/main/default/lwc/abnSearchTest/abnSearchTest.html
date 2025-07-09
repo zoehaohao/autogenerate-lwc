@@ -27,11 +27,13 @@
 
             <!-- Loading Spinner -->
             <template if:true={isLoading}>
-                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                <div class="slds-is-relative slds-m-top_medium">
+                    <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                </div>
             </template>
 
             <!-- Error Message -->
-            <template if:true={hasError}>
+            <template if:true={errorMessage}>
                 <div class="slds-m-top_small">
                     <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
                         <span class="slds-assistive-text">error</span>
@@ -63,13 +65,6 @@
                             </lightning-card>
                         </div>
                     </template>
-                </div>
-            </template>
-
-            <!-- No Results Message -->
-            <template if:true={showNoResults}>
-                <div class="slds-m-top_medium">
-                    <div class="slds-text-align_center">No results found</div>
                 </div>
             </template>
         </div>

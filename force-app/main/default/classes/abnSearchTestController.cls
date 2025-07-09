@@ -1,45 +1,48 @@
 public with sharing class abnSearchTestController {
+    private static final String API_ENDPOINT = 'https://686dc140c9090c495387232f.mockapi.io/test/callouts/search_abn';
+    private static final Integer TIMEOUT = 30000; // 30 seconds
+
     @AuraEnabled
-    public static List<BusinessResult> searchABN(String searchTerm) {
+    public static ResponseWrapper searchABN(String searchTerm) {
         try {
-            // Validate input
+            // Input validation
             if (String.isBlank(searchTerm)) {
-                throw new AbnLookupException('Search term cannot be empty');
+                return new ResponseWrapper(false, 'Search term cannot be empty', null);
             }
 
             // Prepare HTTP request
             Http http = new Http();
             HttpRequest request = new HttpRequest();
-            request.setEndpoint('https://686dc140c9090c495387232f.mockapi.io/test/callouts/search_abn?q=' + 
-                              EncodingUtil.urlEncode(searchTerm, 'UTF-8'));
+            request.setEndpoint(API_ENDPOINT + '?search=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8'));
             request.setMethod('GET');
-            request.setTimeout(30000); // 30 seconds timeout
+            request.setTimeout(TIMEOUT);
 
             // Make the callout
             HttpResponse response = http.send(request);
 
             // Process response
             if (response.getStatusCode() == 200) {
-                return (List<BusinessResult>) JSON.deserialize(
-                    response.getBody(), 
-                    List<BusinessResult>.class
-                );
+                List<Object> results = (List<Object>)JSON.deserializeUntyped(response.getBody());
+                return new ResponseWrapper(true, 'Success', results);
             } else {
-                throw new AbnLookupException('API Error: ' + response.getStatus());
+                return new ResponseWrapper(false, 'API Error: ' + response.getStatusCode(), null);
             }
+
         } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
+            System.debug(LoggingLevel.ERROR, 'Error in searchABN: ' + e.getMessage());
+            return new ResponseWrapper(false, 'An error occurred: ' + e.getMessage(), null);
         }
     }
 
-    public class BusinessResult {
-        @AuraEnabled public String abn { get; set; }
-        @AuraEnabled public String acn { get; set; }
-        @AuraEnabled public String businessName { get; set; }
-        @AuraEnabled public String status { get; set; }
-        @AuraEnabled public String type { get; set; }
-        @AuraEnabled public String state { get; set; }
+    public class ResponseWrapper {
+        @AuraEnabled public Boolean success;
+        @AuraEnabled public String message;
+        @AuraEnabled public Object data;
+        
+        public ResponseWrapper(Boolean success, String message, Object data) {
+            this.success = success;
+            this.message = message;
+            this.data = data;
+        }
     }
-
-    public class AbnLookupException extends Exception {}
 }
