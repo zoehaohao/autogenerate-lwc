@@ -124,14 +124,7 @@ jobs:
           cat manifest/package.xml
           
           # Deploy only the changed components using the manifest
-          # Use RunLocalTests if Apex classes are being deployed, otherwise NoTestRun
-          if [ "$HAS_APEX_CHANGES" == "true" ]; then
-            echo "Deploying with RunLocalTests due to Apex changes"
-            sf project deploy start -o targetOrg -l RunLocalTests -x manifest/package.xml --json > deployment_result.json
-          else
-            echo "Deploying with NoTestRun (LWC only)"
-            sf project deploy start -o targetOrg -l NoTestRun -x manifest/package.xml --json > deployment_result.json
-          fi
+          sf project deploy start -o targetOrg -l NoTestRun -x manifest/package.xml --json > deployment_result.json
           
       - name: Check Deployment Status
         if: env.HAS_CHANGES == 'true'
