@@ -1,0 +1,78 @@
+<template>
+    <lightning-card title="ABN Lookup" icon-name="standard:search">
+        <div class="slds-p-around_medium">
+            <div class="slds-form-element">
+                <div class="slds-form-element__control">
+                    <lightning-input
+                        type="text"
+                        label="Search"
+                        placeholder={searchPlaceholder}
+                        value={searchTerm}
+                        onchange={handleSearchChange}
+                        onkeypress={handleKeyPress}
+                        class="search-input"
+                        required>
+                    </lightning-input>
+                </div>
+                <div class="slds-m-top_small">
+                    <lightning-button 
+                        label="Search" 
+                        variant="brand" 
+                        onclick={handleSearch}
+                        disabled={isSearchDisabled}>
+                    </lightning-button>
+                </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <div class="slds-p-around_medium">
+                    <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                </div>
+            </template>
+
+            <!-- Error Message -->
+            <template if:true={errorMessage}>
+                <div class="slds-p-around_medium">
+                    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                        <span class="slds-assistive-text">error</span>
+                        <h2>{errorMessage}</h2>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Results Section -->
+            <template if:true={hasResults}>
+                <div class="slds-p-top_medium">
+                    <template for:each={searchResults} for:item="result">
+                        <div key={result.id} class="slds-p-bottom_small">
+                            <lightning-card>
+                                <div class="slds-p-around_medium">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                            <p><strong>Business Name:</strong> {result.businessName}</p>
+                                            <p><strong>ABN:</strong> {result.abn}</p>
+                                            <p><strong>ACN:</strong> {result.acn}</p>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                            <p><strong>Status:</strong> {result.status}</p>
+                                            <p><strong>Type:</strong> {result.type}</p>
+                                            <p><strong>State:</strong> {result.state}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </lightning-card>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <!-- No Results Message -->
+            <template if:true={showNoResults}>
+                <div class="slds-p-around_medium slds-text-align_center">
+                    No results found for your search criteria.
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
