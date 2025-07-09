@@ -1,21 +1,22 @@
 public with sharing class abnSearchTestController {
-    private static final String API_ENDPOINT = 'https://686dc140c9090c495387232f.mockapi.io/test/callouts/search_abn';
-    private static final Integer TIMEOUT = 30000; // 30 seconds
-
     @AuraEnabled
     public static ResponseWrapper searchABN(String searchTerm) {
         try {
-            // Input validation
+            // Validate input
             if (String.isBlank(searchTerm)) {
                 return new ResponseWrapper(false, 'Search term cannot be empty', null);
             }
 
-            // Prepare HTTP request
+            // Initialize HTTP request
             Http http = new Http();
             HttpRequest request = new HttpRequest();
-            request.setEndpoint(API_ENDPOINT + '?search=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8'));
+            request.setEndpoint('https://686dc140c9090c495387232f.mockapi.io/test/callouts/search_abn');
             request.setMethod('GET');
-            request.setTimeout(TIMEOUT);
+            request.setTimeout(30000); // 30 seconds timeout
+            
+            // Add search parameter
+            String endpoint = request.getEndpoint() + '?search=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
+            request.setEndpoint(endpoint);
 
             // Make the callout
             HttpResponse response = http.send(request);
@@ -29,8 +30,7 @@ public with sharing class abnSearchTestController {
             }
 
         } catch (Exception e) {
-            System.debug(LoggingLevel.ERROR, 'Error in searchABN: ' + e.getMessage());
-            return new ResponseWrapper(false, 'An error occurred: ' + e.getMessage(), null);
+            return new ResponseWrapper(false, e.getMessage(), null);
         }
     }
 

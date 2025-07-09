@@ -15,14 +15,15 @@
                         required>
                     </lightning-input>
                 </div>
-                <div class="slds-m-top_small">
-                    <lightning-button 
-                        label="Search"
-                        variant="brand"
-                        onclick={handleSearch}
-                        disabled={isSearchDisabled}>
-                    </lightning-button>
-                </div>
+            </div>
+            
+            <div class="slds-m-top_small">
+                <lightning-button 
+                    label="Search" 
+                    variant="brand" 
+                    onclick={handleSearch}
+                    disabled={isSearchDisabled}>
+                </lightning-button>
             </div>
 
             <!-- Loading Spinner -->
@@ -46,7 +47,7 @@
             <template if:true={hasResults}>
                 <div class="slds-m-top_medium">
                     <template for:each={searchResults} for:item="result">
-                        <div key={result.abn} class="slds-m-bottom_small">
+                        <div key={result.id} class="slds-m-bottom_small">
                             <lightning-card>
                                 <div class="slds-p-around_medium">
                                     <div class="slds-grid slds-wrap">

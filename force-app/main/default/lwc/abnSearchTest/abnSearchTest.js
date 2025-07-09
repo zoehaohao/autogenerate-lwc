@@ -1,23 +1,36 @@
 import { LightningElement, track } from 'lwc';
 import searchABN from '@salesforce/apex/abnSearchTestController.searchABN';
 
+const DEBOUNCE_DELAY = 300;
 export default class AbnSearchTest extends LightningElement {
     @track searchTerm = '';
     @track searchResults = [];
     @track errorMessage = '';
     @track isLoading = false;
-    searchTimeout;
 
     get searchPlaceholder() {
         return 'Enter ABN (11 digits), ACN (9 digits) or Company Name';
     }
 
-    get isSearchDisabled() {
-        return !this.searchTerm || this.isLoading;
-    }
-
     get hasResults() {
         return this.searchResults && this.searchResults.length > 0;
+    }
+
+    get isSearchDisabled() {
+        return !this.isValidSearchTerm || this.isLoading;
+    }
+
+    get isValidSearchTerm() {
+        if (!this.searchTerm) return false;
+        
+        // ABN validation
+        if (/^\d{11}$/.test(this.searchTerm)) return true;
+        
+        // ACN validation
+        if (/^\d{9}$/.test(this.searchTerm)) return true;
+        
+        // Company name validation
+        return this.searchTerm.length >= 2;
     }
 
     handleSearchChange(event) {
@@ -31,66 +44,28 @@ export default class AbnSearchTest extends LightningElement {
         }
     }
 
-    validateInput() {
-        const term = this.searchTerm.trim();
-        if (!term) {
-            this.errorMessage = 'Please enter a search term';
-            return false;
-        }
-
-        if (/^\d+$/.test(term)) {
-            if (term.length === 11) {
-                return true; // Valid ABN
-            } else if (term.length === 9) {
-                return true; // Valid ACN
-            } else {
-                this.errorMessage = 'Invalid number format. ABN should be 11 digits, ACN should be 9 digits';
-                return false;
-            }
-        }
-
-        if (term.length < 2) {
-            this.errorMessage = 'Company name must be at least 2 characters';
-            return false;
-        }
-
-        return true;
-    }
-
-    handleSearch() {
-        if (!this.validateInput()) {
-            return;
-        }
+    async handleSearch() {
+        if (!this.isValidSearchTerm) return;
 
         this.isLoading = true;
         this.errorMessage = '';
         this.searchResults = [];
 
-        // Clear any existing timeout
-        if (this.searchTimeout) {
-            clearTimeout(this.searchTimeout);
+        try {
+            const results = await searchABN({ searchTerm: this.searchTerm });
+            if (results.success) {
+                this.searchResults = results.data;
+                if (this.searchResults.length === 0) {
+                    this.errorMessage = 'No results found';
+                }
+            } else {
+                this.errorMessage = results.message || 'An error occurred while searching';
+            }
+        } catch (error) {
+            this.errorMessage = 'An unexpected error occurred. Please try again.';
+            console.error('Search error:', error);
+        } finally {
+            this.isLoading = false;
         }
-
-        // Debounce the search
-        this.searchTimeout = setTimeout(() => {
-            searchABN({ searchTerm: this.searchTerm })
-                .then(result => {
-                    if (result.success) {
-                        this.searchResults = result.data;
-                        if (!this.searchResults.length) {
-                            this.errorMessage = 'No results found';
-                        }
-                    } else {
-                        this.errorMessage = result.message || 'Search failed';
-                    }
-                })
-                .catch(error => {
-                    this.errorMessage = 'An error occurred while searching. Please try again.';
-                    console.error('Search error:', error);
-                })
-                .finally(() => {
-                    this.isLoading = false;
-                });
-        }, 300);
     }
 }
