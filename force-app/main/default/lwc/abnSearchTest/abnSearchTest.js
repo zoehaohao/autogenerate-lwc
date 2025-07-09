@@ -6,21 +6,25 @@ export default class AbnSearchTest extends LightningElement {
     @track searchResults = [];
     @track errorMessage = '';
     @track isLoading = false;
-
+    
     get searchPlaceholder() {
         return 'Enter ABN (11 digits), ACN (9 digits) or Company Name';
     }
 
-    get isSearchDisabled() {
-        return !this.searchTerm || this.isLoading;
+    get hasResults() {
+        return this.searchResults.length > 0;
     }
 
-    get hasResults() {
-        return this.searchResults && this.searchResults.length > 0;
+    get hasError() {
+        return this.errorMessage !== '';
+    }
+
+    get isSearchDisabled() {
+        return !this.isValidInput() || this.isLoading;
     }
 
     get showNoResults() {
-        return !this.isLoading && !this.errorMessage && this.searchResults.length === 0 && this.searchTerm;
+        return !this.isLoading && !this.hasError && !this.hasResults && this.searchTerm;
     }
 
     handleSearchChange(event) {
@@ -28,45 +32,29 @@ export default class AbnSearchTest extends LightningElement {
         this.errorMessage = '';
     }
 
-    handleKeyPress(event) {
-        if (event.keyCode === 13) {
+    handleKeyUp(event) {
+        if (event.key === 'Enter') {
             this.handleSearch();
         }
     }
 
-    validateSearch() {
-        if (!this.searchTerm) {
-            this.errorMessage = 'Please enter a search term';
-            return false;
-        }
-
+    isValidInput() {
         const term = this.searchTerm.trim();
-        if (term.length < 2) {
-            this.errorMessage = 'Search term must be at least 2 characters';
-            return false;
-        }
-
-        // ABN validation
-        if (/^\d+$/.test(term) && term.length === 11) {
-            return true;
-        }
-
-        // ACN validation
-        if (/^\d+$/.test(term) && term.length === 9) {
-            return true;
-        }
-
-        // Company name validation
-        if (term.length >= 2) {
-            return true;
-        }
-
-        this.errorMessage = 'Invalid search format';
-        return false;
+        if (!term) return false;
+        
+        // ABN validation (11 digits)
+        if (/^\d{11}$/.test(term)) return true;
+        
+        // ACN validation (9 digits)
+        if (/^\d{9}$/.test(term)) return true;
+        
+        // Company name validation (minimum 2 characters)
+        return term.length >= 2;
     }
 
     async handleSearch() {
-        if (!this.validateSearch()) {
+        if (!this.isValidInput()) {
+            this.errorMessage = 'Please enter a valid ABN, ACN or Company Name';
             return;
         }
 
@@ -75,15 +63,10 @@ export default class AbnSearchTest extends LightningElement {
         this.searchResults = [];
 
         try {
-            const results = await searchABN({ searchTerm: this.searchTerm });
-            if (results.success) {
-                this.searchResults = results.data;
-            } else {
-                this.errorMessage = results.message || 'Search failed. Please try again.';
-            }
+            const results = await searchABN({ searchTerm: this.searchTerm.trim() });
+            this.searchResults = results;
         } catch (error) {
-            this.errorMessage = 'An unexpected error occurred. Please try again.';
-            console.error('Search error:', error);
+            this.errorMessage = error.body?.message || 'An error occurred while searching. Please try again.';
         } finally {
             this.isLoading = false;
         }

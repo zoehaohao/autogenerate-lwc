@@ -1,6 +1,7 @@
 <template>
     <lightning-card title="ABN Lookup" icon-name="standard:search">
         <div class="slds-p-around_medium">
+            <!-- Search Section -->
             <div class="slds-form-element">
                 <div class="slds-form-element__control">
                     <lightning-input
@@ -9,15 +10,15 @@
                         placeholder={searchPlaceholder}
                         value={searchTerm}
                         onchange={handleSearchChange}
-                        onkeypress={handleKeyPress}
-                        class="search-input"
+                        onkeyup={handleKeyUp}
+                        class="searchInput"
                         required>
                     </lightning-input>
                 </div>
                 <div class="slds-m-top_small">
                     <lightning-button 
-                        label="Search" 
-                        variant="brand" 
+                        label="Search"
+                        variant="brand"
                         onclick={handleSearch}
                         disabled={isSearchDisabled}>
                     </lightning-button>
@@ -26,14 +27,12 @@
 
             <!-- Loading Spinner -->
             <template if:true={isLoading}>
-                <div class="slds-p-around_medium">
-                    <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
-                </div>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
             </template>
 
             <!-- Error Message -->
-            <template if:true={errorMessage}>
-                <div class="slds-p-around_medium">
+            <template if:true={hasError}>
+                <div class="slds-m-top_small">
                     <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
                         <span class="slds-assistive-text">error</span>
                         <h2>{errorMessage}</h2>
@@ -43,9 +42,9 @@
 
             <!-- Results Section -->
             <template if:true={hasResults}>
-                <div class="slds-p-top_medium">
+                <div class="slds-m-top_medium">
                     <template for:each={searchResults} for:item="result">
-                        <div key={result.id} class="slds-p-bottom_small">
+                        <div key={result.abn} class="slds-m-bottom_small">
                             <lightning-card>
                                 <div class="slds-p-around_medium">
                                     <div class="slds-grid slds-wrap">
@@ -69,8 +68,8 @@
 
             <!-- No Results Message -->
             <template if:true={showNoResults}>
-                <div class="slds-p-around_medium slds-text-align_center">
-                    No results found for your search criteria.
+                <div class="slds-m-top_medium">
+                    <div class="slds-text-align_center">No results found</div>
                 </div>
             </template>
         </div>
