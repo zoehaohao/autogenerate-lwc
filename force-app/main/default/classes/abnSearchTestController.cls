@@ -1,31 +1,57 @@
-public with sharing class AbnSearchTestController {
-    @AuraEnabled(cacheable=true)
-    public static Map<String, Object> searchABN(String searchTerm) {
+public with sharing class abnSearchTestController {
+    private static final String API_ENDPOINT = 'https://686dc140c9090c495387232f.mockapi.io/test/callouts/search_abn';
+    private static final Integer TIMEOUT = 30000; // 30 seconds
+
+    @AuraEnabled
+    public static List<Map<String, Object>> searchABN(String searchTerm) {
         try {
+            // Validate input
+            if (String.isBlank(searchTerm)) {
+                throw new AbnLookupException('Search term cannot be empty');
+            }
+
+            // Prepare HTTP request
             Http http = new Http();
             HttpRequest request = new HttpRequest();
-            request.setEndpoint('https://686dc140c9090c495387232f.mockapi.io/test/callouts/search_abn?search=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8'));
+            request.setEndpoint(API_ENDPOINT + '?search=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8'));
             request.setMethod('GET');
-            request.setTimeout(30000); // 30 seconds timeout
-            
+            request.setTimeout(TIMEOUT);
+
+            // Send request
             HttpResponse response = http.send(request);
-            
+
+            // Handle response
             if (response.getStatusCode() == 200) {
-                return new Map<String, Object>{
-                    'success' => true,
-                    'data' => response.getBody()
-                };
+                return parseResponse(response.getBody());
             } else {
-                return new Map<String, Object>{
-                    'success' => false,
-                    'error' => 'HTTP Error: ' + response.getStatusCode()
-                };
+                throw new AbnLookupException('API request failed with status code: ' + response.getStatusCode());
             }
         } catch (Exception e) {
-            return new Map<String, Object>{
-                'success' => false,
-                'error' => e.getMessage()
-            };
+            throw new AuraHandledException(e.getMessage());
         }
     }
+
+    private static List<Map<String, Object>> parseResponse(String responseBody) {
+        try {
+            Object parsed = JSON.deserializeUntyped(responseBody);
+            if (!(parsed instanceof List<Object>)) {
+                throw new AbnLookupException('Invalid response format');
+            }
+
+            List<Object> resultList = (List<Object>) parsed;
+            List<Map<String, Object>> results = new List<Map<String, Object>>();
+
+            for (Object item : resultList) {
+                if (item instanceof Map<String, Object>) {
+                    results.add((Map<String, Object>) item);
+                }
+            }
+
+            return results;
+        } catch (Exception e) {
+            throw new AbnLookupException('Error parsing API response: ' + e.getMessage());
+        }
+    }
+
+    public class AbnLookupException extends Exception {}
 }
