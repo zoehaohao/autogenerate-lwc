@@ -1,0 +1,22 @@
+.slds-card {
+    background: white;
+    border-radius: 0.25rem;
+}
+
+.search-container {
+    position: relative;
+}
+
+.results-container {
+    margin-top: 1rem;
+}
+
+.result-item {
+    cursor: pointer;
+    padding: 0.5rem;
+    border-bottom: 1px solid #dddbda;
+}
+
+.result-item:hover {
+    background-color: #f3f2f2;
+}
