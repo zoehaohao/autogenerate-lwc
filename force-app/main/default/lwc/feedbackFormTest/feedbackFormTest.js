@@ -1,95 +1,100 @@
-export default class FeedbackFormTest extends LightningElement {
-    showFeedbackModal = false;
-    showSuccessToast = false;
-    currentStep = 1;
-    selectedRating = null;
-    feedbackDetails = '';
-    
-    get progressValue() {
-        return this.currentStep === 1 ? 50 : 100;
-    }
+import { LightningElement, track } from 'lwc';
 
-    get progressStyle() {
-        return `width: ${this.progressValue}%`;
-    }
+export default class FeedbackFormTest extends LightningElement {
+    @track showFeedbackModal = false;
+    @track showSuccessToast = false;
+    @track currentStep = 0;
+    @track selectedRating = null;
+    @track feedbackText = '';
+    @track characterCount = 0;
+
+    ratingOptions = [
+        { value: 1, label: 'It was quite easy', buttonClass: 'rating-button rating-green' },
+        { value: 2, label: 'Easy', buttonClass: 'rating-button rating-light-green' },
+        { value: 3, label: 'Neutral', buttonClass: 'rating-button rating-neutral' },
+        { value: 4, label: 'Difficult', buttonClass: 'rating-button rating-light-red' },
+        { value: 5, label: 'It was a lot of effort', buttonClass: 'rating-button rating-red' }
+    ];
 
     get isStepOne() {
-        return this.currentStep === 1;
+        return this.currentStep === 50;
     }
 
     get isStepTwo() {
-        return this.currentStep === 2;
-    }
-
-    get nextButtonLabel() {
-        return this.currentStep === 1 ? 'Next' : 'Submit';
+        return this.currentStep === 100;
     }
 
     get isNextDisabled() {
-        return this.currentStep === 1 && !this.selectedRating;
+        return this.selectedRating === null;
     }
 
-    get characterCount() {
-        return this.feedbackDetails.length;
-    }
-
-    get ratingOptions() {
-        return [
-            { value: '1', label: 'It was quite easy', buttonClass: this.getRatingButtonClass('1') },
-            { value: '2', label: 'Easy', buttonClass: this.getRatingButtonClass('2') },
-            { value: '3', label: 'Neutral', buttonClass: this.getRatingButtonClass('3') },
-            { value: '4', label: 'Difficult', buttonClass: this.getRatingButtonClass('4') },
-            { value: '5', label: 'It was a lot of effort', buttonClass: this.getRatingButtonClass('5') }
-        ];
-    }
-
-    getRatingButtonClass(value) {
-        let baseClass = 'slds-button slds-button_neutral slds-p-around_small slds-text-align_center';
-        return this.selectedRating === value ? `${baseClass} selected-rating` : baseClass;
+    get progressStyle() {
+        return `width: ${this.currentStep}%`;
     }
 
     openFeedbackModal() {
         this.showFeedbackModal = true;
+        this.currentStep = 50;
+        this.selectedRating = null;
+        this.feedbackText = '';
     }
 
     closeFeedbackModal() {
-        this.resetForm();
         this.showFeedbackModal = false;
+        this.resetForm();
+    }
+
+    handleRatingSelect(event) {
+        const value = parseInt(event.currentTarget.dataset.value);
+        this.selectedRating = value;
+        
+        // Update button classes
+        this.ratingOptions = this.ratingOptions.map(option => ({
+            ...option,
+            buttonClass: `rating-button ${option.value === value ? 'selected' : ''} rating-${this.getRatingColor(option.value)}`
+        }));
+    }
+
+    getRatingColor(value) {
+        const colors = ['green', 'light-green', 'neutral', 'light-red', 'red'];
+        return colors[value - 1];
+    }
+
+    handleNext() {
+        if (this.selectedRating) {
+            this.currentStep = 100;
+        }
+    }
+
+    handleBack() {
+        this.currentStep = 50;
+    }
+
+    handleTextareaChange(event) {
+        this.feedbackText = event.target.value;
+        this.characterCount = this.feedbackText.length;
+    }
+
+    handleSubmit() {
+        // Here you would typically make an API call to save the feedback
+        this.showSuccessToast = true;
+        this.showFeedbackModal = false;
+        this.resetForm();
+        
+        // Auto-hide toast after 5 seconds
+        setTimeout(() => {
+            this.showSuccessToast = false;
+        }, 5000);
     }
 
     closeToast() {
         this.showSuccessToast = false;
     }
 
-    handleRatingSelect(event) {
-        this.selectedRating = event.currentTarget.dataset.value;
-    }
-
-    handleFeedbackChange(event) {
-        this.feedbackDetails = event.target.value;
-    }
-
-    handleNext() {
-        if (this.currentStep === 1) {
-            this.currentStep = 2;
-        } else {
-            this.submitFeedback();
-        }
-    }
-
-    handleBack() {
-        this.currentStep = 1;
-    }
-
-    submitFeedback() {
-        // Here you would typically make an API call to save the feedback
-        this.showSuccessToast = true;
-        this.closeFeedbackModal();
-    }
-
     resetForm() {
-        this.currentStep = 1;
+        this.currentStep = 50;
         this.selectedRating = null;
-        this.feedbackDetails = '';
+        this.feedbackText = '';
+        this.characterCount = 0;
     }
 }

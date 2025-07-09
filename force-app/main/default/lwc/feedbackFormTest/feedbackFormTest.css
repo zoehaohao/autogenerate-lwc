@@ -1,25 +1,176 @@
-:host {
-    --slds-c-button-neutral-color-background: #ffffff;
-    --slds-c-button-neutral-color-border: #dddbda;
+/* Component styles */
+.feedback-container {
+    position: relative;
 }
 
-.selected-rating {
-    background-color: #f3f2f2;
-    border: 2px solid #0070d2;
+/* Success Toast */
+.success-toast {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: rgb(75, 183, 85);
+    color: white;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    z-index: 9999;
 }
 
-.slds-notify_toast {
-    min-width: 100%;
+.success-icon {
+    --sds-c-icon-color-foreground-default: white;
 }
 
-.slds-progress-bar {
-    background: #dddbda;
+/* Modal Styles */
+.feedback-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 0.25rem;
+    width: 90%;
+    max-width: 600px;
+    z-index: 9000;
+}
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 8000;
+}
+
+.modal-header {
+    padding: 1rem;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-content {
+    padding: 1.5rem;
+}
+
+/* Progress Bar */
+.progress-bar {
+    background: #e5e5e5;
     height: 4px;
-    margin: 1rem 0;
+    margin-bottom: 0.5rem;
 }
 
-.slds-progress-bar__value {
-    background: #4bca81;
+.progress {
     height: 100%;
-    transition: width .4s ease;
+    background: rgb(75, 183, 85);
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    display: flex;
+    justify-content: space-between;
+    color: #666;
+    font-size: 0.875rem;
+}
+
+/* Rating Buttons */
+.rating-buttons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+    margin: 1.5rem 0;
+}
+
+.rating-button {
+    border: 1px solid #e5e5e5;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.rating-button.selected {
+    border-color: rgb(75, 183, 85);
+    background: #f8f8f8;
+}
+
+.rating-number {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.rating-label {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+/* Textarea Styles */
+.feedback-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 0.5rem;
+    border: 1px solid #e5e5e5;
+    border-radius: 0.25rem;
+    margin-bottom: 0.25rem;
+    resize: vertical;
+}
+
+.character-count {
+    text-align: right;
+    color: #666;
+    font-size: 0.875rem;
+}
+
+/* Button Styles */
+.feedback-button {
+    background: rgb(75, 183, 85);
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.modal-footer {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.next-button, .submit-button {
+    background: rgb(27, 35, 43);
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.next-button:disabled {
+    background: #e5e5e5;
+    cursor: not-allowed;
+}
+
+.back-button {
+    background: white;
+    border: 1px solid #e5e5e5;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    color: #666;
 }
