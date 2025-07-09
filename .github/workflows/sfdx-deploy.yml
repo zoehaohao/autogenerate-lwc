@@ -4,7 +4,7 @@ on:
     branches:
       - main  # Trigger deployment when changes are pushed to the 'main' branch
 jobs:
-  deploy-lwc:
+  deploy-lwc-and-apex:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -50,16 +50,38 @@ jobs:
           # Find changed files in force-app/main/default/lwc
           git diff --name-only $PREV_COMMIT $CURRENT_COMMIT -- force-app/main/default/lwc > ./changed_files/lwc_changes.txt
           
+          # Find changed files in force-app/main/default/classes
+          git diff --name-only $PREV_COMMIT $CURRENT_COMMIT -- force-app/main/default/classes > ./changed_files/apex_changes.txt
+          
+          # Check if there are any changes to deploy
+          HAS_LWC_CHANGES=false
+          HAS_APEX_CHANGES=false
+          
           if [ -s ./changed_files/lwc_changes.txt ]; then
             echo "Changed LWC files detected:"
             cat ./changed_files/lwc_changes.txt
-            echo "HAS_CHANGES=true" >> $GITHUB_ENV
+            HAS_LWC_CHANGES=true
           else
             echo "No LWC changes detected"
+          fi
+          
+          if [ -s ./changed_files/apex_changes.txt ]; then
+            echo "Changed Apex files detected:"
+            cat ./changed_files/apex_changes.txt
+            HAS_APEX_CHANGES=true
+          else
+            echo "No Apex changes detected"
+          fi
+          
+          if [ "$HAS_LWC_CHANGES" == "true" ] || [ "$HAS_APEX_CHANGES" == "true" ]; then
+            echo "HAS_CHANGES=true" >> $GITHUB_ENV
+            echo "HAS_LWC_CHANGES=$HAS_LWC_CHANGES" >> $GITHUB_ENV
+            echo "HAS_APEX_CHANGES=$HAS_APEX_CHANGES" >> $GITHUB_ENV
+          else
             echo "HAS_CHANGES=false" >> $GITHUB_ENV
           fi
         
-      - name: Deploy Changed LWC Components to Salesforce
+      - name: Deploy Changed Components to Salesforce
         if: env.HAS_CHANGES == 'true'
         run: |
           # Create a manifest file for only changed components
@@ -81,6 +103,20 @@ jobs:
             echo '    </types>' >> manifest/package.xml
           fi
           
+          # Add Apex classes that have changed
+          if [ -s ./changed_files/apex_changes.txt ]; then
+            echo '    <types>' >> manifest/package.xml
+            
+            # Process each changed Apex class
+            cat ./changed_files/apex_changes.txt | grep "\.cls$" | while read -r APEX_FILE; do
+              APEX_NAME=$(basename "$APEX_FILE" .cls)
+              echo "        <members>$APEX_NAME</members>" >> manifest/package.xml
+            done
+            
+            echo '        <name>ApexClass</name>' >> manifest/package.xml
+            echo '    </types>' >> manifest/package.xml
+          fi
+          
           echo '    <version>58.0</version>' >> manifest/package.xml
           echo '</Package>' >> manifest/package.xml
           
@@ -88,7 +124,14 @@ jobs:
           cat manifest/package.xml
           
           # Deploy only the changed components using the manifest
-          sf project deploy start -o targetOrg -l NoTestRun -x manifest/package.xml --json > deployment_result.json
+          # Use RunLocalTests if Apex classes are being deployed, otherwise NoTestRun
+          if [ "$HAS_APEX_CHANGES" == "true" ]; then
+            echo "Deploying with RunLocalTests due to Apex changes"
+            sf project deploy start -o targetOrg -l RunLocalTests -x manifest/package.xml --json > deployment_result.json
+          else
+            echo "Deploying with NoTestRun (LWC only)"
+            sf project deploy start -o targetOrg -l NoTestRun -x manifest/package.xml --json > deployment_result.json
+          fi
           
       - name: Check Deployment Status
         if: env.HAS_CHANGES == 'true'
@@ -103,6 +146,7 @@ jobs:
             
             if [ "$STATUS" == "Succeeded" ]; then
               echo "Deployment completed successfully!"
+              sf project deploy report -i $DEPLOY_ID -o targetOrg
               break
             elif [ "$STATUS" == "Failed" ] || [ "$STATUS" == "Error" ]; then
               echo "Deployment failed!"
@@ -117,4 +161,4 @@ jobs:
       - name: Skip Deployment Notice
         if: env.HAS_CHANGES == 'false'
         run: |
-          echo "No LWC changes detected in this commit. Skipping deployment."
+          echo "No LWC or Apex changes detected in this commit. Skipping deployment."
