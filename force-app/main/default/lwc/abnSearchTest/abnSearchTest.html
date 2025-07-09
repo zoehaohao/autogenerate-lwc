@@ -1,5 +1,5 @@
 <template>
-    <lightning-card title="ABN Lookup" icon-name="standard:search">
+    <lightning-card title="ABN Lookup">
         <div class="slds-p-around_medium">
             <!-- Search Section -->
             <div class="slds-form-element">
@@ -17,8 +17,8 @@
                 </div>
                 <div class="slds-m-top_small">
                     <lightning-button 
-                        label="Search" 
-                        variant="brand" 
+                        label="Search"
+                        variant="brand"
                         onclick={handleSearch}
                         disabled={isSearchDisabled}>
                     </lightning-button>
@@ -27,14 +27,12 @@
 
             <!-- Loading Spinner -->
             <template if:true={isLoading}>
-                <div class="slds-p-around_medium">
-                    <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
-                </div>
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
             </template>
 
             <!-- Error Message -->
             <template if:true={error}>
-                <div class="slds-p-around_medium">
+                <div class="slds-m-top_small">
                     <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
                         <span class="slds-assistive-text">error</span>
                         <h2>{error}</h2>
@@ -44,31 +42,26 @@
 
             <!-- Results Section -->
             <template if:true={hasResults}>
-                <div class="slds-p-top_medium">
+                <div class="slds-m-top_medium">
                     <template for:each={searchResults} for:item="result">
-                        <div key={result.id} class="slds-p-bottom_small">
+                        <div key={result.id} class="slds-m-bottom_small">
                             <lightning-card>
                                 <div class="slds-p-around_medium">
                                     <div class="slds-grid slds-wrap">
                                         <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
-                                            <div class="slds-text-title">Company Name</div>
-                                            <div>{result.Company_Name}</div>
+                                            <strong>Company Name:</strong> {result.Company_Name}
                                         </div>
                                         <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
-                                            <div class="slds-text-title">ABN</div>
-                                            <div>{result.ABN}</div>
+                                            <strong>ABN:</strong> {result.ABN}
                                         </div>
                                         <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
-                                            <div class="slds-text-title">ACN</div>
-                                            <div>{result.ACN}</div>
+                                            <strong>ACN:</strong> {result.ACN}
                                         </div>
                                         <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
-                                            <div class="slds-text-title">Type</div>
-                                            <div>{result.Type}</div>
+                                            <strong>Type:</strong> {result.Type}
                                         </div>
                                         <div class="slds-col slds-size_1-of-2">
-                                            <div class="slds-text-title">Location</div>
-                                            <div>{result.Location}</div>
+                                            <strong>Location:</strong> {result.Location}
                                         </div>
                                     </div>
                                 </div>
@@ -80,8 +73,8 @@
 
             <!-- No Results Message -->
             <template if:true={showNoResults}>
-                <div class="slds-p-top_medium slds-text-align_center">
-                    No results found
+                <div class="slds-m-top_medium">
+                    <div class="slds-text-align_center">No results found</div>
                 </div>
             </template>
         </div>
