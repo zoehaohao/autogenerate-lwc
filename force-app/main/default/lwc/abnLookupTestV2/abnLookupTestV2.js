@@ -10,37 +10,40 @@ export default class AbnLookupTestV2 extends LightningElement {
         this.searchTerm = event.target.value;
         this.errorMessage = '';
     }
-    
+
     handleSearch() {
-        // Validate input
-        if (!this.searchTerm || this.searchTerm.trim().length < 3) {
-            this.errorMessage = 'Please enter at least 3 characters to search';
+        if (!this.searchTerm) {
+            this.errorMessage = 'Please enter a search term';
             return;
         }
-        
+
+        // Reset error and results
+        this.errorMessage = '';
+        this.searchResults = [];
+
         // Call Apex method
         searchABN({ searchTerm: this.searchTerm })
             .then(result => {
                 if (result.success) {
                     this.searchResults = result.data;
-                    this.errorMessage = '';
+                    if (this.searchResults.length === 0) {
+                        this.errorMessage = 'No results found';
+                    }
                 } else {
-                    this.errorMessage = result.message;
-                    this.searchResults = [];
+                    this.errorMessage = result.message || 'An error occurred while searching';
                 }
             })
             .catch(error => {
-                this.errorMessage = 'An error occurred while searching. Please try again.';
-                this.searchResults = [];
+                this.errorMessage = error.body?.message || 'An unexpected error occurred';
                 console.error('Error:', error);
             });
     }
-    
+
     handleSelect(event) {
         const selectedId = event.currentTarget.dataset.id;
         const selectedResult = this.searchResults.find(result => result.id === selectedId);
         
-        // Dispatch custom event with selected record
+        // Dispatch custom event with selected result
         this.dispatchEvent(new CustomEvent('selection', {
             detail: selectedResult
         }));

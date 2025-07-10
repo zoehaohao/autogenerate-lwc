@@ -1,9 +1,9 @@
-.slds-box {
-    background: white;
-    border: 1px solid #d8dde6;
-    border-radius: 0.25rem;
+.search-input {
+    width: 100%;
+    max-width: 600px;
 }
 
-.slds-box:hover {
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+.slds-card {
+    background: white;
+    border-radius: 0.25rem;
 }
