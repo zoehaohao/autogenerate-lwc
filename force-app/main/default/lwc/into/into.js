@@ -6,7 +6,6 @@ export default class QfrFormTest extends LightningElement {
     totalPages = 1;
 
     @track formData = {
-        firstName: '',
         lastName: ''
     };
 
@@ -43,7 +42,6 @@ export default class QfrFormTest extends LightningElement {
 
     resetForm() {
         this.formData = {
-            firstName: '',
             lastName: ''
         };
     }
