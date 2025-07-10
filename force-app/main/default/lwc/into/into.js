@@ -37,15 +37,23 @@ export default class QfrFormTest extends LightningElement {
         if (this.validateForm()) {
             console.log('Form submitted:', this.formData);
             this.showToast('Success', 'Form submitted successfully', 'success');
+            this.resetForm();
         }
     }
 
+    resetForm() {
+        this.formData = {
+            firstName: '',
+            lastName: ''
+        };
+    }
+
     showToast(title, message, variant) {
-        const evt = new ShowToastEvent({
+        const event = new ShowToastEvent({
             title: title,
             message: message,
-            variant: variant,
+            variant: variant
         });
-        this.dispatchEvent(evt);
+        this.dispatchEvent(event);
     }
 }
