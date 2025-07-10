@@ -1,0 +1,12 @@
+:host {
+    display: block;
+}
+
+.slds-card {
+    background: white;
+    border-radius: 0.25rem;
+}
+
+lightning-input {
+    margin-bottom: 0.5rem;
+}
