@@ -11,4 +11,18 @@ export default class MytestForm extends LightningElement {
     handleAddressChange(event) {
         this.address = event.target.value;
     }
+
+    @api
+    isValid() {
+        const nameInput = this.template.querySelector('lightning-input[name="name"]');
+        return nameInput.reportValidity();
+    }
+
+    @api
+    getFormData() {
+        return {
+            name: this.name,
+            address: this.address
+        };
+    }
 }
