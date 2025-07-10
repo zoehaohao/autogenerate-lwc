@@ -1,137 +1,105 @@
 <template>
-    <div class="slds-card">
-        <div class="slds-card__header slds-grid">
-            <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                <div class="slds-media__body">
-                    <h2 class="slds-card__header-title">
-                        <span>Form Information</span>
-                    </h2>
+    <div class="slds-card slds-p-around_medium">
+        <!-- Progress Indicator -->
+        <lightning-progress-indicator 
+            current-step={currentPageString}
+            type="path"
+            variant="base">
+            <lightning-progress-step 
+                label="Personal Information" 
+                value="1">
+            </lightning-progress-step>
+            <lightning-progress-step 
+                label="Address" 
+                value="2">
+            </lightning-progress-step>
+        </lightning-progress-indicator>
+
+        <!-- Form Content -->
+        <div class="slds-m-top_medium">
+            <!-- Personal Information Section -->
+            <template if:true={isPersonalInfoPage}>
+                <h2 class="slds-text-heading_medium slds-m-bottom_medium">
+                    Personal Information
+                </h2>
+                <div class="slds-form-element slds-m-bottom_medium">
+                    <lightning-input 
+                        label="Name"
+                        required
+                        type="text"
+                        value={formData.name}
+                        onchange={handleInputChange}
+                        data-field="name">
+                    </lightning-input>
                 </div>
-            </header>
+            </template>
+
+            <!-- Address Section -->
+            <template if:true={isAddressPage}>
+                <h2 class="slds-text-heading_medium slds-m-bottom_medium">
+                    Address
+                </h2>
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size_1-of-1 slds-m-bottom_medium">
+                        <lightning-input 
+                            label="Address Line 1"
+                            required
+                            type="text"
+                            value={formData.addressLine1}
+                            onchange={handleInputChange}
+                            data-field="addressLine1"
+                            placeholder="Street address, P.O. box">
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-m-bottom_medium">
+                        <lightning-input 
+                            label="Address Line 2"
+                            type="text"
+                            value={formData.addressLine2}
+                            onchange={handleInputChange}
+                            data-field="addressLine2"
+                            placeholder="Apartment, suite, unit, building, floor, etc.">
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-m-bottom_medium">
+                        <lightning-combobox
+                            label="Country"
+                            required
+                            value={formData.country}
+                            options={countryOptions}
+                            onchange={handleInputChange}
+                            data-field="country">
+                        </lightning-combobox>
+                    </div>
+                </div>
+            </template>
         </div>
-        <div class="slds-card__body slds-card__body_inner">
-            <form class="slds-form slds-form_stacked">
-                <!-- Personal Information Section -->
-                <div class="slds-section slds-is-open">
-                    <h3 class="slds-section__title slds-theme_shade">
-                        <span class="slds-truncate slds-p-horizontal_small" title="Personal Information">
-                            Personal Information
-                        </span>
-                    </h3>
-                    <div class="slds-section__content">
-                        <div class="slds-form-element">
-                            <lightning-input
-                                name="name"
-                                label="Name"
-                                value={personalInfo.name}
-                                required
-                                onchange={handlePersonalInfoChange}
-                                class="slds-m-bottom_medium">
-                            </lightning-input>
-                        </div>
-                        <div class="slds-form-element">
-                            <lightning-input
-                                name="email"
-                                type="email"
-                                label="Email"
-                                value={personalInfo.email}
-                                onchange={handlePersonalInfoChange}
-                                class="slds-m-bottom_medium">
-                            </lightning-input>
-                        </div>
-                        <div class="slds-form-element">
-                            <lightning-input
-                                name="phone"
-                                type="tel"
-                                label="Phone"
-                                value={personalInfo.phone}
-                                onchange={handlePersonalInfoChange}
-                                class="slds-m-bottom_medium">
-                            </lightning-input>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Address Section -->
-                <div class="slds-section slds-is-open slds-m-top_large">
-                    <h3 class="slds-section__title slds-theme_shade">
-                        <span class="slds-truncate slds-p-horizontal_small" title="Address">
-                            Address
-                        </span>
-                    </h3>
-                    <div class="slds-section__content">
-                        <div class="slds-form-element">
-                            <lightning-input
-                                name="address"
-                                label="Address"
-                                value={addressInfo.address}
-                                onchange={handleAddressChange}
-                                class="slds-m-bottom_medium">
-                            </lightning-input>
-                        </div>
-                        <div class="slds-form-element">
-                            <lightning-input
-                                name="state"
-                                label="State"
-                                value={addressInfo.state}
-                                onchange={handleAddressChange}
-                                class="slds-m-bottom_medium">
-                            </lightning-input>
-                        </div>
-                        <div class="slds-form-element">
-                            <lightning-input
-                                name="zipCode"
-                                label="Zip Code"
-                                value={addressInfo.zipCode}
-                                onchange={handleAddressChange}
-                                class="slds-m-bottom_medium">
-                            </lightning-input>
-                        </div>
-                    </div>
-                </div>
+        <!-- Navigation Buttons -->
+        <div class="slds-m-top_medium slds-grid slds-grid_align-center">
+            <template if:false={isFirstPage}>
+                <lightning-button 
+                    label="Previous"
+                    onclick={handlePrevious}
+                    class="slds-m-right_x-small">
+                </lightning-button>
+            </template>
+            
+            <template if:false={isLastPage}>
+                <lightning-button 
+                    label="Next"
+                    variant="brand"
+                    onclick={handleNext}>
+                </lightning-button>
+            </template>
 
-                <!-- Form Actions -->
-                <div class="slds-form-element slds-m-top_large">
-                    <div class="slds-button-group" role="group">
-                        <lightning-button
-                            variant="neutral"
-                            label="Clear"
-                            onclick={handleClear}
-                            class="slds-m-right_small">
-                        </lightning-button>
-                        <lightning-button
-                            variant="brand"
-                            label="Submit"
-                            onclick={handleSubmit}
-                            disabled={isSubmitDisabled}>
-                        </lightning-button>
-                    </div>
-                </div>
-
-                <!-- Loading Spinner -->
-                <template if:true={isLoading}>
-                    <lightning-spinner
-                        alternative-text="Loading"
-                        size="medium">
-                    </lightning-spinner>
-                </template>
-
-                <!-- Success Message -->
-                <template if:true={showSuccessMessage}>
-                    <div class="slds-notify slds-notify_alert slds-theme_success slds-m-top_medium" role="alert">
-                        <span class="slds-assistive-text">Success</span>
-                        <h2>Form submitted successfully!</h2>
-                    </div>
-                </template>
-
-                <!-- Error Message -->
-                <template if:true={showErrorMessage}>
-                    <div class="slds-notify slds-notify_alert slds-theme_error slds-m-top_medium" role="alert">
-                        <span class="slds-assistive-text">Error</span>
-                        <h2>{errorMessage}</h2>
-                    </div>
-                </template>
-            </form>
+            <template if:true={isLastPage}>
+                <lightning-button 
+                    label="Submit"
+                    variant="brand"
+                    onclick={handleSubmit}>
+                </lightning-button>
+            </template>
         </div>
     </div>
 </template>

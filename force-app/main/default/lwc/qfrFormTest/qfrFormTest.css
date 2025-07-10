@@ -1,116 +1,12 @@
-.slds-section__title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: #080707;
-    border-bottom: 1px solid #dddbda;
-    padding-bottom: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-.slds-section__content {
-    padding-left: 0.75rem;
-}
-
-.slds-form-element {
-    margin-bottom: 1rem;
-}
-
-.slds-button-group {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.slds-notify {
-    border-radius: 0.25rem;
-    padding: 0.75rem 1rem;
-    margin: 0.5rem 0;
-}
-
-.slds-theme_success {
-    background-color: #4bca81;
-    color: white;
-    border: 1px solid #4bca81;
-}
-
-.slds-theme_error {
-    background-color: #ea001e;
-    color: white;
-    border: 1px solid #ea001e;
-}
-
 :host {
     display: block;
-    padding: 1rem;
 }
 
 .slds-card {
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
-    border: 1px solid #dddbda;
+    background: white;
     border-radius: 0.25rem;
 }
 
-.slds-card__header {
-    background-color: #f3f2f2;
-    border-bottom: 1px solid #dddbda;
-    padding: 0.75rem 1rem;
-}
-
-.slds-card__body {
-    padding: 1rem;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-    :host {
-        padding: 0.5rem;
-    }
-    
-    .slds-card__body {
-        padding: 0.75rem;
-    }
-    
-    .slds-button-group {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .slds-button-group lightning-button {
-        margin-bottom: 0.5rem;
-    }
-}
-
-/* Focus and hover states */
-lightning-input:focus-within {
-    box-shadow: 0 0 3px #1589ee;
-}
-
-lightning-button:hover {
-    transform: translateY(-1px);
-    transition: transform 0.1s ease-in-out;
-}
-
-/* Loading state styling */
-.slds-spinner_container {
-    position: relative;
-    z-index: 1000;
-}
-
-/* Form validation styling */
-.slds-has-error .slds-form-element__help {
-    color: #ea001e;
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-}
-
-/* Section spacing */
-.slds-section + .slds-section {
-    margin-top: 2rem;
-}
-
-/* Required field indicator */
-lightning-input[required] .slds-form-element__label::after {
-    content: ' *';
-    color: #ea001e;
+lightning-input, lightning-combobox {
+    margin-bottom: 0.5rem;
 }
