@@ -2,42 +2,13 @@ import { LightningElement, track } from 'lwc';
 
 export default class QfrFormTest extends LightningElement {
     currentPage = 1;
-    totalPages = 2;
 
     @track formData = {
-        name: '',
-        addressLine1: '',
-        country: ''
+        name: ''
     };
-
-    get countryOptions() {
-        return [
-            { label: 'United States', value: 'US' },
-            { label: 'Canada', value: 'CA' },
-            { label: 'United Kingdom', value: 'UK' },
-            { label: 'Australia', value: 'AU' },
-            { label: 'Other', value: 'OTHER' }
-        ];
-    }
 
     get currentPageString() {
         return this.currentPage.toString();
-    }
-
-    get isFirstPage() {
-        return this.currentPage === 1;
-    }
-
-    get isLastPage() {
-        return this.currentPage === this.totalPages;
-    }
-
-    get isPersonalInfoPage() {
-        return this.currentPage === 1;
-    }
-
-    get isAddressPage() {
-        return this.currentPage === 2;
     }
 
     handleInputChange(event) {
@@ -45,9 +16,9 @@ export default class QfrFormTest extends LightningElement {
         this.formData[field] = event.target.value;
     }
 
-    validateCurrentPage() {
+    validateForm() {
         let isValid = true;
-        const inputs = [...this.template.querySelectorAll('lightning-input, lightning-combobox')];
+        const inputs = [...this.template.querySelectorAll('lightning-input')];
         
         inputs.forEach(input => {
             if (input.required && !input.value) {
@@ -59,20 +30,8 @@ export default class QfrFormTest extends LightningElement {
         return isValid;
     }
 
-    handlePrevious() {
-        if (this.currentPage > 1) {
-            this.currentPage--;
-        }
-    }
-
-    handleNext() {
-        if (this.validateCurrentPage() && this.currentPage < this.totalPages) {
-            this.currentPage++;
-        }
-    }
-
     handleSubmit() {
-        if (this.validateCurrentPage()) {
+        if (this.validateForm()) {
             console.log('Form submitted:', this.formData);
         }
     }

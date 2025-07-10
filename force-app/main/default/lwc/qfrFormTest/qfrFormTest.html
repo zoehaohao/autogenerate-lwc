@@ -9,87 +9,32 @@
                 label="Personal Information" 
                 value="1">
             </lightning-progress-step>
-            <lightning-progress-step 
-                label="Address" 
-                value="2">
-            </lightning-progress-step>
         </lightning-progress-indicator>
 
         <!-- Form Content -->
         <div class="slds-m-top_medium">
-            <!-- Personal Information Section -->
-            <template if:true={isPersonalInfoPage}>
-                <h2 class="slds-text-heading_medium slds-m-bottom_medium">
-                    Personal Information
-                </h2>
-                <div class="slds-form-element slds-m-bottom_medium">
-                    <lightning-input 
-                        label="Name"
-                        required
-                        type="text"
-                        value={formData.name}
-                        onchange={handleInputChange}
-                        data-field="name">
-                    </lightning-input>
-                </div>
-            </template>
-
-            <!-- Address Section -->
-            <template if:true={isAddressPage}>
-                <h2 class="slds-text-heading_medium slds-m-bottom_medium">
-                    Address
-                </h2>
-                <div class="slds-grid slds-wrap">
-                    <div class="slds-col slds-size_1-of-1 slds-m-bottom_medium">
-                        <lightning-input 
-                            label="Address"
-                            required
-                            type="text"
-                            value={formData.addressLine1}
-                            onchange={handleInputChange}
-                            data-field="addressLine1"
-                            placeholder="Street address, P.O. box">
-                        </lightning-input>
-                    </div>
-                    <div class="slds-col slds-size_1-of-1 slds-m-bottom_medium">
-                        <lightning-combobox
-                            label="Country"
-                            required
-                            value={formData.country}
-                            options={countryOptions}
-                            onchange={handleInputChange}
-                            data-field="country">
-                        </lightning-combobox>
-                    </div>
-                </div>
-            </template>
+            <h2 class="slds-text-heading_medium slds-m-bottom_medium">
+                Personal Information
+            </h2>
+            <div class="slds-form-element slds-m-bottom_medium">
+                <lightning-input 
+                    label="Name"
+                    required
+                    type="text"
+                    value={formData.name}
+                    onchange={handleInputChange}
+                    data-field="name">
+                </lightning-input>
+            </div>
         </div>
 
-        <!-- Navigation Buttons -->
+        <!-- Submit Button -->
         <div class="slds-m-top_medium slds-grid slds-grid_align-center">
-            <template if:false={isFirstPage}>
-                <lightning-button 
-                    label="Previous"
-                    onclick={handlePrevious}
-                    class="slds-m-right_x-small">
-                </lightning-button>
-            </template>
-            
-            <template if:false={isLastPage}>
-                <lightning-button 
-                    label="Next"
-                    variant="brand"
-                    onclick={handleNext}>
-                </lightning-button>
-            </template>
-
-            <template if:true={isLastPage}>
-                <lightning-button 
-                    label="Submit"
-                    variant="brand"
-                    onclick={handleSubmit}>
-                </lightning-button>
-            </template>
+            <lightning-button 
+                label="Submit"
+                variant="brand"
+                onclick={handleSubmit}>
+            </lightning-button>
         </div>
     </div>
 </template>
