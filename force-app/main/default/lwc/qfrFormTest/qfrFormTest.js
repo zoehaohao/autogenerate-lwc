@@ -73,6 +73,7 @@ export default class QfrFormTest extends LightningElement {
 
     handleSubmit() {
         if (this.validateCurrentPage()) {
+            // Handle form submission
             console.log('Form submitted:', this.formData);
         }
     }
