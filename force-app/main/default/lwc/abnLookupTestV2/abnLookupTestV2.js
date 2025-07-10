@@ -12,30 +12,27 @@ export default class AbnLookupTestV2 extends LightningElement {
     }
 
     handleSearch() {
-        if (!this.searchTerm) {
-            this.errorMessage = 'Please enter a search term';
+        // Validate search term
+        if (!this.searchTerm || this.searchTerm.trim().length < 3) {
+            this.errorMessage = 'Please enter at least 3 characters to search';
+            this.searchResults = [];
             return;
         }
-
-        // Reset error and results
-        this.errorMessage = '';
-        this.searchResults = [];
 
         // Call Apex method
         searchABN({ searchTerm: this.searchTerm })
             .then(result => {
                 if (result.success) {
                     this.searchResults = result.data;
-                    if (this.searchResults.length === 0) {
-                        this.errorMessage = 'No results found';
-                    }
+                    this.errorMessage = '';
                 } else {
                     this.errorMessage = result.message || 'An error occurred while searching';
+                    this.searchResults = [];
                 }
             })
             .catch(error => {
                 this.errorMessage = error.body?.message || 'An unexpected error occurred';
-                console.error('Error:', error);
+                this.searchResults = [];
             });
     }
 

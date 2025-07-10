@@ -1,9 +1,8 @@
 .search-input {
     width: 100%;
-    max-width: 600px;
 }
 
-.slds-card {
-    background: white;
-    border-radius: 0.25rem;
+.select-button {
+    --sds-c-button-neutral-color-background: #1a2b3c;
+    --sds-c-button-text-color: #ffffff;
 }
