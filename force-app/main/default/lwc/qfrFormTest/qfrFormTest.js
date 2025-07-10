@@ -2,6 +2,7 @@ import { LightningElement, track } from 'lwc';
 
 export default class QfrFormTest extends LightningElement {
     currentPage = 1;
+    totalPages = 1;
 
     @track formData = {
         name: ''
