@@ -1,65 +1,61 @@
 public with sharing class abnLookupTestV2Controller {
     @AuraEnabled
-    public static List<ABNResult> searchABN(String searchTerm) {
+    public static ResponseWrapper searchABN(String searchTerm) {
         try {
             // Validate input
             if (String.isBlank(searchTerm)) {
-                throw new AuraHandledException('Search term cannot be empty');
+                return new ResponseWrapper(false, 'Search term cannot be empty', null);
             }
 
             // Prepare HTTP request
             Http http = new Http();
             HttpRequest request = new HttpRequest();
-            request.setEndpoint('https://686dc140c9090c495387232f.mockapi.io/test/callouts/search_abn?search=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8'));
+            request.setEndpoint('api.mockfly.dev/mocks/d24e2248-c254-46be-8b45-0365cdca1a44/businessentities/abnid');
             request.setMethod('GET');
             request.setTimeout(30000); // 30 seconds timeout
 
-            // Send request
+            // Add search parameter based on input format
+            String searchType = determineSearchType(searchTerm);
+            request.setEndpoint(request.getEndpoint() + '?' + searchType + '=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8'));
+
+            // Make the callout
             HttpResponse response = http.send(request);
 
             // Process response
             if (response.getStatusCode() == 200) {
-                return parseResponse(response.getBody());
+                Object results = JSON.deserializeUntyped(response.getBody());
+                return new ResponseWrapper(true, 'Success', results);
             } else {
-                throw new AuraHandledException('API request failed with status code: ' + response.getStatusCode());
+                return new ResponseWrapper(false, 'API Error: ' + response.getStatus(), null);
             }
+
         } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
+            return new ResponseWrapper(false, 'Error: ' + e.getMessage(), null);
         }
     }
 
-    private static List<ABNResult> parseResponse(String responseBody) {
-        List<ABNResult> results = new List<ABNResult>();
+    private static String determineSearchType(String searchTerm) {
+        // Remove any spaces or special characters
+        String cleanTerm = searchTerm.replaceAll('[^a-zA-Z0-9]', '');
         
-        try {
-            List<Object> parsedResponse = (List<Object>)JSON.deserializeUntyped(responseBody);
-            
-            for (Object obj : parsedResponse) {
-                Map<String, Object> resultMap = (Map<String, Object>)obj;
-                ABNResult result = new ABNResult();
-                result.id = String.valueOf(resultMap.get('id'));
-                result.ABN = String.valueOf(resultMap.get('ABN'));
-                result.EntityName = String.valueOf(resultMap.get('EntityName'));
-                result.ABNStatus = String.valueOf(resultMap.get('ABNStatus'));
-                result.EntityType = String.valueOf(resultMap.get('EntityType'));
-                result.GoodsServicesGST = String.valueOf(resultMap.get('GoodsServicesGST'));
-                result.MainBusinessLocation = String.valueOf(resultMap.get('MainBusinessLocation'));
-                results.add(result);
-            }
-        } catch (Exception e) {
-            throw new AuraHandledException('Error parsing API response: ' + e.getMessage());
+        if (cleanTerm.length() == 11 && cleanTerm.isNumeric()) {
+            return 'abn';
+        } else if (cleanTerm.length() == 9 && cleanTerm.isNumeric()) {
+            return 'acn';
+        } else {
+            return 'name';
         }
-        
-        return results;
     }
 
-    public class ABNResult {
-        @AuraEnabled public String id;
-        @AuraEnabled public String ABN;
-        @AuraEnabled public String EntityName;
-        @AuraEnabled public String ABNStatus;
-        @AuraEnabled public String EntityType;
-        @AuraEnabled public String GoodsServicesGST;
-        @AuraEnabled public String MainBusinessLocation;
+    public class ResponseWrapper {
+        @AuraEnabled public Boolean success;
+        @AuraEnabled public String message;
+        @AuraEnabled public Object data;
+        
+        public ResponseWrapper(Boolean success, String message, Object data) {
+            this.success = success;
+            this.message = message;
+            this.data = data;
+        }
     }
 }
