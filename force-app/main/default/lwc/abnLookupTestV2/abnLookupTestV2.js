@@ -62,6 +62,7 @@ export default class AbnLookupTestV2 extends LightningElement {
             const response = await searchABN({ searchTerm: this.searchTerm });
             if (response.success) {
                 this.results = response.data;
+                console.log('search results' + this.results);
                 this.currentPage = 1;
             } else {
                 this.errorMessage = response.message || 'No results found';
