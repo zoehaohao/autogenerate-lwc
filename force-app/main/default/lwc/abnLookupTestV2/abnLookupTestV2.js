@@ -7,16 +7,8 @@ export default class AbnLookupTestV2 extends LightningElement {
     @track errorMessage = '';
     @track isSearching = false;
 
-    get searchPlaceholder() {
-        return 'Enter ABN, ACN, or Company Name';
-    }
-
     get hasResults() {
         return this.searchResults && this.searchResults.length > 0;
-    }
-
-    get showNoResults() {
-        return !this.isSearching && !this.errorMessage && this.searchTerm && !this.hasResults;
     }
 
     handleSearchChange(event) {
@@ -24,31 +16,16 @@ export default class AbnLookupTestV2 extends LightningElement {
         this.errorMessage = '';
     }
 
-    handleKeyUp(event) {
-        if (event.key === 'Enter') {
-            this.handleSearch();
-        }
-    }
-
     validateSearch() {
-        if (!this.searchTerm) {
-            this.errorMessage = 'Please enter a search term';
+        if (!this.searchTerm || this.searchTerm.trim().length < 2) {
+            this.errorMessage = 'Please enter at least 2 characters';
             return false;
         }
-
-        const searchValue = this.searchTerm.trim();
-        if (searchValue.length < 2) {
-            this.errorMessage = 'Search term must be at least 2 characters';
-            return false;
-        }
-
         return true;
     }
 
     async handleSearch() {
-        if (!this.validateSearch()) {
-            return;
-        }
+        if (!this.validateSearch()) return;
 
         this.isSearching = true;
         this.errorMessage = '';
@@ -56,9 +33,14 @@ export default class AbnLookupTestV2 extends LightningElement {
 
         try {
             const results = await searchABN({ searchTerm: this.searchTerm });
-            this.searchResults = results;
+            if (results && results.length > 0) {
+                this.searchResults = results;
+            } else {
+                this.errorMessage = `No matching results for ${this.searchTerm}, please check the inputs and try again.`;
+            }
         } catch (error) {
-            this.errorMessage = error.body?.message || 'An error occurred while searching. Please try again.';
+            this.errorMessage = 'An error occurred while searching. Please try again.';
+            console.error('Search error:', error);
         } finally {
             this.isSearching = false;
         }
