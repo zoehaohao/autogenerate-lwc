@@ -5,10 +5,10 @@ export default class AbnLookupTestV2 extends LightningElement {
     @track searchTerm = '';
     @track results = [];
     @track errorMessage = '';
-    @track isLoading = false;
+    @track isSearching = false;
     @track currentPage = 1;
     @track pageSize = 10;
-    
+
     get hasResults() {
         return this.results && this.results.length > 0;
     }
@@ -25,36 +25,36 @@ export default class AbnLookupTestV2 extends LightningElement {
         return this.currentPage === this.totalPages;
     }
 
+    get displayedResults() {
+        const start = (this.currentPage - 1) * this.pageSize;
+        const end = start + this.pageSize;
+        return this.results.slice(start, end);
+    }
+
     get pageNumbers() {
         let pages = [];
-        for(let i = 1; i <= this.totalPages; i++) {
+        for (let i = 1; i <= this.totalPages; i++) {
             pages.push(i);
         }
         return pages;
-    }
-
-    get displayedResults() {
-        const start = (this.currentPage - 1) * this.pageSize;
-        const end = this.currentPage * this.pageSize;
-        return this.results.slice(start, end);
     }
 
     get getPageButtonVariant() {
         return (pageNumber) => pageNumber === this.currentPage ? 'brand' : 'neutral';
     }
 
-    handleSearchInput(event) {
+    handleSearchChange(event) {
         this.searchTerm = event.target.value;
         this.errorMessage = '';
     }
 
     async handleSearch() {
-        if (!this.searchTerm) {
-            this.errorMessage = 'Please enter a search term';
+        if (!this.searchTerm || this.searchTerm.length < 2) {
+            this.errorMessage = 'Please enter at least 2 characters';
             return;
         }
 
-        this.isLoading = true;
+        this.isSearching = true;
         this.errorMessage = '';
         this.results = [];
 
@@ -64,13 +64,13 @@ export default class AbnLookupTestV2 extends LightningElement {
                 this.results = response.data;
                 this.currentPage = 1;
             } else {
-                this.errorMessage = response.message;
+                this.errorMessage = response.message || 'No results found';
             }
         } catch (error) {
             this.errorMessage = 'An error occurred while searching. Please try again.';
             console.error('Search error:', error);
         } finally {
-            this.isLoading = false;
+            this.isSearching = false;
         }
     }
 
