@@ -1,11 +1,17 @@
-/* CSS remains unchanged as it provides required styling */
-.result-card {
+.slds-card {
     background: white;
-    border: 1px solid #d8dde6;
-    border-radius: 0.25rem;
-    transition: all 0.2s ease-in-out;
 }
 
-.result-card:hover {
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+.slds-item_label {
+    width: 30%;
+    color: rgb(62, 62, 60);
+    font-size: .75rem;
+    line-height: 1.25;
+    padding-right: .75rem;
+}
+
+.slds-item_detail {
+    width: 70%;
+    font-size: .75rem;
+    line-height: 1.25;
 }

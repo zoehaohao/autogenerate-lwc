@@ -1,26 +1,118 @@
-<!-- Template remains the same as it's working correctly -->
 <template>
     <div class="slds-card">
         <div class="slds-p-around_medium">
-            <!-- Existing template content remains unchanged as it matches requirements -->
+            <div class="slds-text-heading_small slds-m-bottom_small">
+                <h2>ABN lookup pattern</h2>
+            </div>
+
             <!-- Search Section -->
             <div class="slds-form-element">
-                <!-- ... existing search section ... -->
+                <div class="slds-text-body_regular slds-m-bottom_small">
+                    You can find an Australian Business Number (ABN) using the ABN itself, 
+                    Company / Business / Trading name or Australian Company Number (ACN). Once 
+                    the correct entity has been identified you can select it for use.
+                </div>
+                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left-right">
+                    <lightning-input
+                        type="search"
+                        label="Search"
+                        variant="label-hidden"
+                        placeholder="Search by Business name, ABN or ACN"
+                        value={searchTerm}
+                        onchange={handleSearchChange}>
+                    </lightning-input>
+                    <lightning-button 
+                        label="Search" 
+                        variant="brand" 
+                        onclick={handleSearch}
+                        class="slds-m-left_x-small"
+                        disabled={isSearching}>
+                    </lightning-button>
+                </div>
             </div>
 
             <!-- Loading Spinner -->
             <template if:true={isSearching}>
-                <!-- ... existing spinner section ... -->
+                <div class="slds-is-relative slds-m-top_medium">
+                    <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                </div>
             </template>
 
             <!-- Error Message -->
             <template if:true={errorMessage}>
-                <!-- ... existing error section ... -->
+                <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                    <span class="slds-assistive-text">error</span>
+                    <h2>{errorMessage}</h2>
+                </div>
             </template>
 
             <!-- Results Section -->
             <template if:true={hasResults}>
-                <!-- ... existing results section ... -->
+                <div class="slds-grid slds-wrap slds-m-top_medium">
+                    <template for:each={displayedResults} for:item="result">
+                        <div key={result.abn.identifier_value} class="slds-col slds-size_1-of-2 slds-p-around_x-small">
+                            <div class="slds-card">
+                                <div class="slds-card__header slds-grid">
+                                    <header class="slds-media slds-media_center">
+                                        <div class="slds-media__body">
+                                            <h3 class="slds-text-heading_small">
+                                                ABN: {result.abn.identifier_value}
+                                            </h3>
+                                            <p class="slds-text-body_small">{result.other_trading_name.organisation_name}</p>
+                                        </div>
+                                    </header>
+                                </div>
+                                <div class="slds-card__body slds-card__body_inner">
+                                    <dl class="slds-list_horizontal slds-wrap">
+                                        <dt class="slds-item_label">ABN status:</dt>
+                                        <dd class="slds-item_detail">{result.entity_status.entity_status_code}</dd>
+                                        <dt class="slds-item_label">Entity type:</dt>
+                                        <dd class="slds-item_detail">{result.entity_type.entity_description}</dd>
+                                        <dt class="slds-item_label">GST:</dt>
+                                        <dd class="slds-item_detail">
+                                            Registered from {result.goods_and_services_tax.effective_from}
+                                        </dd>
+                                        <dt class="slds-item_label">Location:</dt>
+                                        <dd class="slds-item_detail">{result.location}</dd>
+                                    </dl>
+                                </div>
+                                <footer class="slds-card__footer">
+                                    <lightning-button 
+                                        label="Select" 
+                                        variant="brand" 
+                                        onclick={handleSelect} 
+                                        data-id={result.abn.identifier_value}>
+                                    </lightning-button>
+                                </footer>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Pagination -->
+                <div class="slds-grid slds-grid_align-center slds-m-top_medium">
+                    <lightning-button-group>
+                        <lightning-button 
+                            label="Previous"
+                            onclick={handlePrevious}
+                            disabled={isFirstPage}>
+                        </lightning-button>
+                        <template for:each={pageNumbers} for:item="pageNumber">
+                            <lightning-button 
+                                key={pageNumber}
+                                label={pageNumber}
+                                variant={getPageButtonVariant(pageNumber)}
+                                onclick={handlePageChange}
+                                data-page={pageNumber}>
+                            </lightning-button>
+                        </template>
+                        <lightning-button 
+                            label="Next"
+                            onclick={handleNext}
+                            disabled={isLastPage}>
+                        </lightning-button>
+                    </lightning-button-group>
+                </div>
             </template>
         </div>
     </div>
