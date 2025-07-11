@@ -5,44 +5,62 @@ export default class AbnLookupTestV2 extends LightningElement {
     @track searchTerm = '';
     @track searchResults = [];
     @track errorMessage = '';
-    
+    @track isSearching = false;
+
+    get searchPlaceholder() {
+        return 'Enter ABN, ACN, or Company Name';
+    }
+
+    get hasResults() {
+        return this.searchResults && this.searchResults.length > 0;
+    }
+
+    get showNoResults() {
+        return !this.isSearching && !this.errorMessage && this.searchTerm && !this.hasResults;
+    }
+
     handleSearchChange(event) {
         this.searchTerm = event.target.value;
         this.errorMessage = '';
     }
 
-    handleSearch() {
-        // Validate search term
-        if (!this.searchTerm || this.searchTerm.trim().length < 3) {
-            this.errorMessage = 'Please enter at least 3 characters to search';
-            this.searchResults = [];
+    handleKeyUp(event) {
+        if (event.key === 'Enter') {
+            this.handleSearch();
+        }
+    }
+
+    validateSearch() {
+        if (!this.searchTerm) {
+            this.errorMessage = 'Please enter a search term';
+            return false;
+        }
+
+        const searchValue = this.searchTerm.trim();
+        if (searchValue.length < 2) {
+            this.errorMessage = 'Search term must be at least 2 characters';
+            return false;
+        }
+
+        return true;
+    }
+
+    async handleSearch() {
+        if (!this.validateSearch()) {
             return;
         }
 
-        // Call Apex method
-        searchABN({ searchTerm: this.searchTerm })
-            .then(result => {
-                if (result.success) {
-                    this.searchResults = result.data;
-                    this.errorMessage = '';
-                } else {
-                    this.errorMessage = result.message || 'An error occurred while searching';
-                    this.searchResults = [];
-                }
-            })
-            .catch(error => {
-                this.errorMessage = error.body?.message || 'An unexpected error occurred';
-                this.searchResults = [];
-            });
-    }
+        this.isSearching = true;
+        this.errorMessage = '';
+        this.searchResults = [];
 
-    handleSelect(event) {
-        const selectedId = event.currentTarget.dataset.id;
-        const selectedResult = this.searchResults.find(result => result.id === selectedId);
-        
-        // Dispatch custom event with selected result
-        this.dispatchEvent(new CustomEvent('selection', {
-            detail: selectedResult
-        }));
+        try {
+            const results = await searchABN({ searchTerm: this.searchTerm });
+            this.searchResults = results;
+        } catch (error) {
+            this.errorMessage = error.body?.message || 'An error occurred while searching. Please try again.';
+        } finally {
+            this.isSearching = false;
+        }
     }
 }
