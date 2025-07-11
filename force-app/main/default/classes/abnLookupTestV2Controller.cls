@@ -1,6 +1,6 @@
 public with sharing class abnLookupTestV2Controller {
     @AuraEnabled
-    public static ResponseWrapper searchABN(String searchTerm) {
+    public static List<Map<String, Object>> searchABN(String searchTerm) {
         try {
             // Initialize HTTP request
             Http http = new Http();
@@ -17,25 +17,20 @@ public with sharing class abnLookupTestV2Controller {
             
             // Process response
             if (response.getStatusCode() == 200) {
-                Object results = JSON.deserializeUntyped(response.getBody());
-                return new ResponseWrapper(true, 'Success', results);
+                // Parse JSON response
+                Object parsed = JSON.deserializeUntyped(response.getBody());
+                if (parsed instanceof List<Object>) {
+                    return (List<Map<String, Object>>) parsed;
+                } else {
+                    List<Map<String, Object>> results = new List<Map<String, Object>>();
+                    results.add((Map<String, Object>) parsed);
+                    return results;
+                }
             } else {
-                return new ResponseWrapper(false, 'API Error: ' + response.getStatus(), null);
+                throw new AuraHandledException('Error calling ABN API: ' + response.getStatusCode() + ' ' + response.getStatus());
             }
         } catch (Exception e) {
-            return new ResponseWrapper(false, e.getMessage(), null);
-        }
-    }
-    
-    public class ResponseWrapper {
-        @AuraEnabled public Boolean success;
-        @AuraEnabled public String message;
-        @AuraEnabled public Object data;
-        
-        public ResponseWrapper(Boolean success, String message, Object data) {
-            this.success = success;
-            this.message = message;
-            this.data = data;
+            throw new AuraHandledException('Error processing request: ' + e.getMessage());
         }
     }
 }
