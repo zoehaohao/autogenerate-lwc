@@ -5,10 +5,10 @@ export default class AbnLookupTestV2 extends LightningElement {
     @track searchTerm = '';
     @track results = [];
     @track errorMessage = '';
-    @track isSearching = false;
+    @track isLoading = false;
     @track currentPage = 1;
     @track pageSize = 10;
-
+    
     get hasResults() {
         return this.results && this.results.length > 0;
     }
@@ -25,21 +25,25 @@ export default class AbnLookupTestV2 extends LightningElement {
         return this.currentPage === this.totalPages;
     }
 
-    get displayedResults() {
-        const start = (this.currentPage - 1) * this.pageSize;
-        const end = start + this.pageSize;
-        return this.results.slice(start, end);
-    }
-
     get pageNumbers() {
         let pages = [];
-        for (let i = 1; i <= this.totalPages; i++) {
+        for(let i = 1; i <= this.totalPages; i++) {
             pages.push(i);
         }
         return pages;
     }
 
-    handleSearchChange(event) {
+    get displayedResults() {
+        const start = (this.currentPage - 1) * this.pageSize;
+        const end = this.currentPage * this.pageSize;
+        return this.results.slice(start, end);
+    }
+
+    get getPageButtonVariant() {
+        return (pageNumber) => pageNumber === this.currentPage ? 'brand' : 'neutral';
+    }
+
+    handleSearchInput(event) {
         this.searchTerm = event.target.value;
         this.errorMessage = '';
     }
@@ -50,7 +54,7 @@ export default class AbnLookupTestV2 extends LightningElement {
             return;
         }
 
-        this.isSearching = true;
+        this.isLoading = true;
         this.errorMessage = '';
         this.results = [];
 
@@ -60,26 +64,14 @@ export default class AbnLookupTestV2 extends LightningElement {
                 this.results = response.data;
                 this.currentPage = 1;
             } else {
-                this.errorMessage = response.message || 'Search failed. Please try again.';
+                this.errorMessage = response.message;
             }
         } catch (error) {
-            this.errorMessage = error.message || 'An unexpected error occurred';
+            this.errorMessage = 'An error occurred while searching. Please try again.';
+            console.error('Search error:', error);
         } finally {
-            this.isSearching = false;
+            this.isLoading = false;
         }
-    }
-
-    handleSelect(event) {
-        const abnId = event.currentTarget.dataset.id;
-        // Handle selection logic here
-        const selectedResult = this.results.find(result => 
-            result.abn.identifier_value === abnId
-        );
-        
-        // Dispatch custom event with selected data
-        this.dispatchEvent(new CustomEvent('selection', {
-            detail: selectedResult
-        }));
     }
 
     handlePrevious() {
@@ -95,11 +87,15 @@ export default class AbnLookupTestV2 extends LightningElement {
     }
 
     handlePageChange(event) {
-        const pageNumber = parseInt(event.currentTarget.dataset.page, 10);
+        const pageNumber = parseInt(event.target.dataset.page, 10);
         this.currentPage = pageNumber;
     }
 
-    getPageButtonVariant(pageNumber) {
-        return parseInt(pageNumber, 10) === this.currentPage ? 'brand' : 'neutral';
+    handleSelect(event) {
+        const selectedAbn = event.target.dataset.id;
+        // Dispatch event with selected ABN
+        this.dispatchEvent(new CustomEvent('abnselected', {
+            detail: selectedAbn
+        }));
     }
 }

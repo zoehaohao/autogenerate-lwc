@@ -14,7 +14,7 @@ public with sharing class abnLookupTestV2Controller {
             request.setMethod('GET');
             request.setTimeout(30000); // 30 seconds timeout
 
-            // Add query parameters based on search type
+            // Add query parameter based on search type
             String endpoint = request.getEndpoint();
             endpoint += '?searchTerm=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
             request.setEndpoint(endpoint);
@@ -27,11 +27,11 @@ public with sharing class abnLookupTestV2Controller {
                 Object results = JSON.deserializeUntyped(response.getBody());
                 return new ResponseWrapper(true, 'Success', results);
             } else {
-                return new ResponseWrapper(false, 'API call failed with status: ' + response.getStatusCode(), null);
+                return new ResponseWrapper(false, 'API Error: ' + response.getStatusCode() + ' ' + response.getStatus(), null);
             }
 
         } catch (Exception e) {
-            return new ResponseWrapper(false, e.getMessage(), null);
+            return new ResponseWrapper(false, 'Error: ' + e.getMessage(), null);
         }
     }
 

@@ -2,16 +2,18 @@
     background: white;
 }
 
-.slds-item_label {
-    width: 30%;
-    color: rgb(62, 62, 60);
-    font-size: .75rem;
-    line-height: 1.25;
-    padding-right: .75rem;
+.slds-input-has-icon {
+    position: relative;
 }
 
-.slds-item_detail {
-    width: 70%;
-    font-size: .75rem;
-    line-height: 1.25;
+.slds-dl_horizontal__label {
+    float: left;
+    clear: left;
+    width: 30%;
+    padding-right: .75rem;
+    font-weight: bold;
+}
+
+.slds-dl_horizontal__detail {
+    margin-left: 30%;
 }
