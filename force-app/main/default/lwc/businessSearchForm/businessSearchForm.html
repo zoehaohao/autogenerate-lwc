@@ -1,0 +1,78 @@
+<template>
+    <lightning-card title="Business Search">
+        <div class="slds-p-around_medium">
+            <!-- Search Section -->
+            <div class="slds-form-element">
+                <div class="slds-form-element__control">
+                    <lightning-input
+                        type="text"
+                        label="Search"
+                        placeholder={searchPlaceholder}
+                        value={searchTerm}
+                        onchange={handleSearchChange}
+                        class="search-input"
+                        message-when-bad-input={validationMessage}
+                        required>
+                    </lightning-input>
+                </div>
+            </div>
+            
+            <div class="slds-m-top_small">
+                <lightning-button 
+                    variant="brand"
+                    label="Search"
+                    onclick={handleSearch}
+                    disabled={isSearchDisabled}
+                    class="slds-m-right_x-small">
+                </lightning-button>
+            </div>
+
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <div class="slds-is-relative slds-p-around_medium">
+                    <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                </div>
+            </template>
+
+            <!-- Error Message -->
+            <template if:true={hasError}>
+                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                    <span class="slds-assistive-text">error</span>
+                    <h2>{errorMessage}</h2>
+                </div>
+            </template>
+
+            <!-- Results Section -->
+            <template if:true={hasResults}>
+                <div class="slds-m-top_medium">
+                    <template for:each={searchResults} for:item="result">
+                        <div key={result.abn.identifier_value} class="slds-m-bottom_medium">
+                            <lightning-card>
+                                <div class="slds-p-around_medium">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                            <div class="slds-text-title">ABN</div>
+                                            <div>{result.abn.identifier_value}</div>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                            <div class="slds-text-title">Status</div>
+                                            <div>{result.entity_status.entity_status_code}</div>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                            <div class="slds-text-title">Entity Type</div>
+                                            <div>{result.entity_type.entity_description}</div>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                            <div class="slds-text-title">ASIC Number</div>
+                                            <div>{result.asic_number}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </lightning-card>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
