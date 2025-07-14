@@ -9,11 +9,4 @@
         <target>lightning__Tab</target>
         <target>lightningCommunity__Page</target>
     </targets>
-    <targetConfigs>
-        <targetConfig targets="lightning__AppPage,lightning__HomePage">
-            <property name="recordId" type="String" label="Record ID" description="The record ID to associate with this component"/>
-            <property name="configSettings" type="String" label="Configuration Settings" description="JSON string of configuration settings"/>
-            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Set component to read-only mode" default="false"/>
-        </targetConfig>
-    </targetConfigs>
 </LightningComponentBundle>
