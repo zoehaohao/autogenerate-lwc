@@ -7,41 +7,45 @@ export default class AbnLookupTestV2 extends LightningElement {
     @api initialData;
     @api isReadOnly = false;
 
-    @track searchTerm = '';
+    @track searchValue = '';
     @track searchResults = [];
     @track isLoading = false;
     @track errorMessage = '';
-    @track searchType = 'name';
+    @track validationError = '';
+    @track searchType = '';
 
     // Computed properties
     get searchPlaceholder() {
-        switch (this.searchType) {
-            case 'abn':
+        switch(this.searchType) {
+            case 'ABN':
                 return 'Enter 11-digit ABN number';
-            case 'acn':
+            case 'ACN':
                 return 'Enter 9-digit ACN number';
+            case 'COMPANY':
+                return 'Enter company name (minimum 2 characters)';
             default:
                 return 'Search by Business name, ABN or ACN';
         }
     }
 
     get isSearchDisabled() {
-        return this.isLoading || !this.searchTerm || this.searchTerm.length < 2;
+        return this.isLoading || !this.searchValue || this.validationError;
     }
 
     get hasResults() {
-        return !this.isLoading && !this.errorMessage && this.searchResults && this.searchResults.length > 0;
+        return this.searchResults && this.searchResults.length > 0 && !this.isLoading;
     }
 
     get showNoResults() {
-        return !this.isLoading && !this.errorMessage && this.searchResults && this.searchResults.length === 0 && this.searchTerm;
+        return !this.hasResults && !this.isLoading && !this.errorMessage && this.searchValue;
     }
 
     // Event handlers
-    handleSearchTermChange(event) {
-        this.searchTerm = event.target.value;
+    handleSearchInputChange(event) {
+        this.searchValue = event.target.value;
         this.detectSearchType();
-        this.clearMessages();
+        this.validateInput();
+        this.clearResults();
     }
 
     handleKeyUp(event) {
@@ -56,120 +60,150 @@ export default class AbnLookupTestV2 extends LightningElement {
         }
 
         this.isLoading = true;
-        this.clearMessages();
+        this.errorMessage = '';
+        this.clearResults();
 
         try {
-            const result = await searchABN({
-                searchTerm: this.searchTerm,
+            const searchParams = {
+                searchValue: this.searchValue,
                 searchType: this.searchType
-            });
+            };
 
+            const result = await searchABN({ searchParams: JSON.stringify(searchParams) });
+            
             if (result.success) {
                 this.searchResults = result.data || [];
-                this.dispatchSearchSuccess(result.data);
+                this.dispatchSearchCompleteEvent(this.searchResults);
             } else {
                 this.errorMessage = result.message || 'An error occurred during search';
-                this.dispatchSearchError(this.errorMessage);
+                this.dispatchErrorEvent(this.errorMessage);
             }
         } catch (error) {
-            console.error('Search error:', error);
             this.errorMessage = 'Unable to perform search. Please try again later.';
-            this.dispatchSearchError(this.errorMessage);
+            this.dispatchErrorEvent(error.body?.message || error.message);
         } finally {
             this.isLoading = false;
         }
     }
 
-    handleSelect(event) {
-        const selectedId = event.target.dataset.id;
-        const selectedResult = this.searchResults.find(result => result.id === selectedId);
+    handleSelectResult(event) {
+        const resultId = event.target.dataset.resultId;
+        const selectedResult = this.searchResults.find(result => result.id === resultId);
         
         if (selectedResult) {
             this.dispatchSelectionEvent(selectedResult);
         }
     }
 
-    // Helper methods
+    // Utility methods
     detectSearchType() {
-        const term = this.searchTerm.replace(/\s/g, '');
+        const value = this.searchValue.trim();
         
-        if (/^\d{11}$/.test(term)) {
-            this.searchType = 'abn';
-        } else if (/^\d{9}$/.test(term)) {
-            this.searchType = 'acn';
+        if (/^\d{11}$/.test(value)) {
+            this.searchType = 'ABN';
+        } else if (/^\d{9}$/.test(value)) {
+            this.searchType = 'ACN';
+        } else if (value.length >= 2) {
+            this.searchType = 'COMPANY';
         } else {
-            this.searchType = 'name';
+            this.searchType = '';
         }
     }
 
     validateInput() {
-        if (!this.searchTerm || this.searchTerm.trim().length < 2) {
-            this.errorMessage = 'Please enter at least 2 characters to search';
+        this.validationError = '';
+        const value = this.searchValue.trim();
+
+        if (!value) {
+            this.validationError = 'Please enter a search value';
             return false;
         }
 
-        const term = this.searchTerm.replace(/\s/g, '');
-        
-        if (this.searchType === 'abn' && !/^\d{11}$/.test(term)) {
-            this.errorMessage = 'ABN must be exactly 11 digits';
-            return false;
-        }
-        
-        if (this.searchType === 'acn' && !/^\d{9}$/.test(term)) {
-            this.errorMessage = 'ACN must be exactly 9 digits';
-            return false;
+        switch(this.searchType) {
+            case 'ABN':
+                if (!/^\d{11}$/.test(value)) {
+                    this.validationError = 'ABN must be exactly 11 digits';
+                    return false;
+                }
+                break;
+            case 'ACN':
+                if (!/^\d{9}$/.test(value)) {
+                    this.validationError = 'ACN must be exactly 9 digits';
+                    return false;
+                }
+                break;
+            case 'COMPANY':
+                if (value.length < 2) {
+                    this.validationError = 'Company name must be at least 2 characters';
+                    return false;
+                }
+                break;
+            default:
+                this.validationError = 'Please enter a valid ABN (11 digits), ACN (9 digits), or company name (2+ characters)';
+                return false;
         }
 
         return true;
     }
 
-    clearMessages() {
+    clearResults() {
+        this.searchResults = [];
         this.errorMessage = '';
     }
 
-    // Parent communication methods
-    dispatchSearchSuccess(results) {
-        const successEvent = new CustomEvent('searchsuccess', {
+    // Custom event dispatchers for parent communication
+    dispatchSearchCompleteEvent(results) {
+        const searchCompleteEvent = new CustomEvent('searchcomplete', {
             detail: {
                 componentName: 'abnLookupTestV2',
+                searchValue: this.searchValue,
+                searchType: this.searchType,
                 results: results,
-                searchTerm: this.searchTerm,
-                searchType: this.searchType,
+                resultCount: results.length,
                 timestamp: new Date().toISOString()
             }
         });
-        this.dispatchEvent(successEvent);
-    }
-
-    dispatchSearchError(errorMessage) {
-        const errorEvent = new CustomEvent('searcherror', {
-            detail: {
-                componentName: 'abnLookupTestV2',
-                errorMessage: errorMessage,
-                searchTerm: this.searchTerm,
-                searchType: this.searchType,
-                timestamp: new Date().toISOString()
-            }
-        });
-        this.dispatchEvent(errorEvent);
+        this.dispatchEvent(searchCompleteEvent);
     }
 
     dispatchSelectionEvent(selectedResult) {
-        const selectionEvent = new CustomEvent('abnselected', {
+        const selectionEvent = new CustomEvent('resultselected', {
             detail: {
                 componentName: 'abnLookupTestV2',
-                selectedABN: selectedResult,
+                selectedResult: selectedResult,
+                searchValue: this.searchValue,
                 timestamp: new Date().toISOString()
             }
         });
         this.dispatchEvent(selectionEvent);
     }
 
-    // Public API methods
+    dispatchErrorEvent(error) {
+        const errorEvent = new CustomEvent('error', {
+            detail: {
+                componentName: 'abnLookupTestV2',
+                errorMessage: typeof error === 'string' ? error : error.message,
+                searchValue: this.searchValue,
+                timestamp: new Date().toISOString()
+            }
+        });
+        this.dispatchEvent(errorEvent);
+    }
+
+    // Public API methods for parent components
     @api
     refreshData() {
-        this.searchResults = [];
-        this.clearMessages();
+        if (this.searchValue) {
+            this.handleSearch();
+        }
+    }
+
+    @api
+    clearSearch() {
+        this.searchValue = '';
+        this.searchType = '';
+        this.clearResults();
+        this.validationError = '';
     }
 
     @api
@@ -178,9 +212,7 @@ export default class AbnLookupTestV2 extends LightningElement {
     }
 
     @api
-    clearSearch() {
-        this.searchTerm = '';
-        this.searchResults = [];
-        this.clearMessages();
+    getSearchResults() {
+        return this.searchResults;
     }
 }
