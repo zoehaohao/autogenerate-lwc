@@ -1,12 +1,66 @@
-:host {
-    display: block;
+.search-input {
+    width: 100%;
 }
 
-.slds-card {
-    background: white;
+.contact-results-table {
+    border: 1px solid #d8dde6;
     border-radius: 0.25rem;
 }
 
-lightning-input {
-    margin-bottom: 0.5rem;
+.slds-notify_alert {
+    border-radius: 0.25rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .slds-medium-size_8-of-12,
+    .slds-medium-size_4-of-12 {
+        width: 100% !important;
+    }
+    
+    .slds-m-left_small {
+        margin-left: 0 !important;
+        margin-top: 0.5rem;
+    }
+    
+    .contact-results-table {
+        font-size: 0.875rem;
+    }
+}
+
+/* Focus indicators for accessibility */
+.search-input:focus-within {
+    box-shadow: 0 0 3px #1589ee;
+}
+
+/* Loading state styling */
+.slds-spinner_container {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Custom table styling */
+.contact-results-table .slds-table th {
+    background-color: #f3f3f3;
+    font-weight: 600;
+}
+
+.contact-results-table .slds-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Error state styling */
+.slds-alert_error {
+    background-color: #c23934;
+    color: white;
+}
+
+.slds-alert_error h2 {
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 400;
+}
+
+/* Empty state styling */
+.slds-text-align_center .slds-icon {
+    opacity: 0.5;
 }

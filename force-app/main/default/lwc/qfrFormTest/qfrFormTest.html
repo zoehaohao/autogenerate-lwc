@@ -1,40 +1,106 @@
 <template>
-    <div class="slds-card slds-p-around_medium">
-        <!-- Progress Indicator -->
-        <lightning-progress-indicator 
-            current-step={currentPageString}
-            type="path"
-            variant="base">
-            <lightning-progress-step 
-                label="Personal Information" 
-                value="1">
-            </lightning-progress-step>
-        </lightning-progress-indicator>
-
-        <!-- Form Content -->
-        <div class="slds-m-top_medium">
-            <h2 class="slds-text-heading_medium slds-m-bottom_medium">
-                Personal Information
-            </h2>
-            <div class="slds-form-element slds-m-bottom_medium">
-                <lightning-input 
-                    label="Name"
-                    required
-                    type="text"
-                    value={formData.name}
-                    onchange={handleInputChange}
-                    data-field="name">
-                </lightning-input>
+    <lightning-card title="Contact Search" icon-name="standard:contact">
+        <div class="slds-p-horizontal_medium">
+            <!-- Search Input Section -->
+            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_medium">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_8-of-12">
+                    <lightning-input
+                        type="text"
+                        label="Search Contacts"
+                        placeholder={searchPlaceholder}
+                        value={searchTerm}
+                        onchange={handleSearchTermChange}
+                        class="search-input">
+                    </lightning-input>
+                    <template if:true={showValidationError}>
+                        <div class="slds-text-color_error slds-text-body_small slds-m-top_xx-small">
+                            Please enter at least 2 characters to search
+                        </div>
+                    </template>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-m-top_large">
+                        <lightning-button
+                            variant="brand"
+                            label="Search"
+                            onclick={handleSearch}
+                            disabled={isSearchDisabled}
+                            class="slds-m-left_small">
+                        </lightning-button>
+                        <lightning-button
+                            variant="neutral"
+                            label="Clear"
+                            onclick={handleClear}
+                            class="slds-m-left_small">
+                        </lightning-button>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Submit Button -->
-        <div class="slds-m-top_medium slds-grid slds-grid_align-center">
-            <lightning-button 
-                label="Submit"
-                variant="brand"
-                onclick={handleSubmit}>
-            </lightning-button>
+            <!-- Loading Indicator -->
+            <template if:true={isLoading}>
+                <div class="slds-text-align_center slds-m-vertical_medium">
+                    <lightning-spinner
+                        alternative-text="Searching contacts..."
+                        size="medium">
+                    </lightning-spinner>
+                    <div class="slds-text-body_regular slds-m-top_small">
+                        Searching contacts...
+                    </div>
+                </div>
+            </template>
+
+            <!-- Results Table -->
+            <template if:true={showResults}>
+                <div class="slds-m-top_medium">
+                    <div class="slds-text-body_small slds-m-bottom_small">
+                        Found {resultCount} contact(s)
+                    </div>
+                    <lightning-datatable
+                        key-field="Id"
+                        data={contacts}
+                        columns={columns}
+                        sorted-by={sortedBy}
+                        sorted-direction={sortedDirection}
+                        onsort={handleSort}
+                        resize-column-disabled="true"
+                        class="contact-results-table">
+                    </lightning-datatable>
+                </div>
+            </template>
+
+            <!-- Empty State -->
+            <template if:true={showEmptyState}>
+                <div class="slds-text-align_center slds-m-vertical_large">
+                    <lightning-icon
+                        icon-name="utility:search"
+                        size="large"
+                        class="slds-m-bottom_small">
+                    </lightning-icon>
+                    <div class="slds-text-heading_medium slds-m-bottom_small">
+                        No contacts found
+                    </div>
+                    <div class="slds-text-body_regular">
+                        Try adjusting your search criteria
+                    </div>
+                </div>
+            </template>
+
+            <!-- Error State -->
+            <template if:true={showError}>
+                <div class="slds-m-vertical_medium">
+                    <div class="slds-notify slds-notify_alert slds-alert_error">
+                        <span class="slds-assistive-text">Error</span>
+                        <lightning-icon
+                            icon-name="utility:error"
+                            size="x-small"
+                            variant="inverse"
+                            class="slds-m-right_x-small">
+                        </lightning-icon>
+                        <h2>{errorMessage}</h2>
+                    </div>
+                </div>
+            </template>
         </div>
-    </div>
+    </lightning-card>
 </template>
