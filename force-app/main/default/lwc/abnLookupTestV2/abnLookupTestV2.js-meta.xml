@@ -9,4 +9,10 @@
         <target>lightning__Tab</target>
         <target>lightningCommunity__Page</target>
     </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AppPage,lightning__HomePage,lightning__Tab">
+            <property name="recordId" type="String" label="Record ID" description="Optional record ID for context"/>
+            <property name="configSettings" type="String" label="Configuration Settings" description="JSON configuration for component behavior"/>
+        </targetConfig>
+    </targetConfigs>
 </LightningComponentBundle>
