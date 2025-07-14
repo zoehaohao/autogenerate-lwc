@@ -1,106 +1,411 @@
 <template>
-    <lightning-card title="Contact Search" icon-name="standard:contact">
-        <div class="slds-p-horizontal_medium">
-            <!-- Search Input Section -->
-            <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_medium">
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_8-of-12">
-                    <lightning-input
-                        type="text"
-                        label="Search Contacts"
-                        placeholder={searchPlaceholder}
-                        value={searchTerm}
-                        onchange={handleSearchTermChange}
-                        class="search-input">
-                    </lightning-input>
-                    <template if:true={showValidationError}>
-                        <div class="slds-text-color_error slds-text-body_small slds-m-top_xx-small">
-                            Please enter at least 2 characters to search
+    <div class="qfr-form-container">
+        <!-- Progress Indicator -->
+        <lightning-progress-indicator 
+            current-step={currentPageString}
+            type="path"
+            variant="base"
+            class="progress-indicator">
+            <lightning-progress-step label="Residential Viability" value="1"></lightning-progress-step>
+            <lightning-progress-step label="Contact Information" value="2"></lightning-progress-step>
+            <lightning-progress-step label="Business Structure" value="3"></lightning-progress-step>
+            <lightning-progress-step label="Labour Costs" value="4"></lightning-progress-step>
+            <lightning-progress-step label="Documents" value="5"></lightning-progress-step>
+        </lightning-progress-indicator>
+
+        <!-- Page 1: Residential Viability -->
+        <template lwc:if={isPage1}>
+            <div class="page-container">
+                <h2 class="page-title">Residential Viability and Prudential Reporting</h2>
+                
+                <!-- Information Section -->
+                <div class="info-section">
+                    <lightning-accordion allow-multiple-sections-open>
+                        <lightning-accordion-section name="about" label="About this section">
+                            <p>This section collects information about the financial health and viability of residential care services to identify providers who may need additional support or intervention.</p>
+                        </lightning-accordion-section>
+                    </lightning-accordion>
+                </div>
+
+                <!-- Solvency Assessment -->
+                <lightning-card title="Solvency Assessment" class="section-card">
+                    <div class="slds-p-horizontal_medium">
+                        <div class="question-group">
+                            <p class="question-text">Are you currently concerned about the solvency of your organisation?</p>
+                            <lightning-radio-group 
+                                name="solvencyConcern"
+                                options={yesNoOptions}
+                                value={formData.solvencyConcern}
+                                onchange={handleInputChange}
+                                type="button"
+                                class="radio-group">
+                            </lightning-radio-group>
                         </div>
-                    </template>
-                </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
-                    <div class="slds-m-top_large">
-                        <lightning-button
-                            variant="brand"
-                            label="Search"
-                            onclick={handleSearch}
-                            disabled={isSearchDisabled}
-                            class="slds-m-left_small">
-                        </lightning-button>
-                        <lightning-button
-                            variant="neutral"
-                            label="Clear"
-                            onclick={handleClear}
-                            class="slds-m-left_small">
-                        </lightning-button>
+                        
+                        <div class="question-group">
+                            <p class="question-text">Do you envisage any solvency issues arising in the next six months?</p>
+                            <lightning-radio-group 
+                                name="solvencyFuture"
+                                options={yesNoOptions}
+                                value={formData.solvencyFuture}
+                                onchange={handleInputChange}
+                                type="button"
+                                class="radio-group">
+                            </lightning-radio-group>
+                        </div>
                     </div>
-                </div>
+                </lightning-card>
+
+                <!-- Financial Performance -->
+                <lightning-card title="Financial Performance Assessment" class="section-card">
+                    <div class="slds-p-horizontal_medium">
+                        <div class="question-group">
+                            <div class="question-with-tooltip">
+                                <p class="question-text">Do you forecast an operational loss for the current year?</p>
+                                <lightning-helptext 
+                                    content="An operational loss occurs when operating expenses exceed operating revenues from your core care services. Consider your year-to-date performance, budget forecasts, and any extraordinary items that may impact this year's results. This excludes investment income or one-time asset sales."
+                                    icon-name="utility:info">
+                                </lightning-helptext>
+                            </div>
+                            <lightning-radio-group 
+                                name="operationalLoss"
+                                options={yesNoOptions}
+                                value={formData.operationalLoss}
+                                onchange={handleInputChange}
+                                type="button"
+                                class="radio-group">
+                            </lightning-radio-group>
+                        </div>
+                    </div>
+                </lightning-card>
             </div>
+        </template>
 
-            <!-- Loading Indicator -->
-            <template if:true={isLoading}>
-                <div class="slds-text-align_center slds-m-vertical_medium">
-                    <lightning-spinner
-                        alternative-text="Searching contacts..."
-                        size="medium">
-                    </lightning-spinner>
-                    <div class="slds-text-body_regular slds-m-top_small">
-                        Searching contacts...
+        <!-- Page 2: Contact Information -->
+        <template lwc:if={isPage2}>
+            <div class="page-container">
+                <h2 class="page-title">Provider Contact Information</h2>
+                
+                <lightning-card title="Account Information" class="section-card">
+                    <div class="slds-p-horizontal_medium">
+                        <div class="contact-display">
+                            <div class="field-group">
+                                <label class="field-label">Organization Name:</label>
+                                <span class="field-value">{formData.organizationName}</span>
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label">NAPS ID:</label>
+                                <span class="field-value">{formData.napsId}</span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </template>
+                </lightning-card>
 
-            <!-- Results Table -->
-            <template if:true={showResults}>
-                <div class="slds-m-top_medium">
-                    <div class="slds-text-body_small slds-m-bottom_small">
-                        Found {resultCount} contact(s)
+                <lightning-card title="Primary Contact" class="section-card">
+                    <div class="slds-p-horizontal_medium">
+                        <template lwc:if={isContactEditMode}>
+                            <div class="edit-form">
+                                <lightning-input 
+                                    label="Name"
+                                    name="contactName"
+                                    value={formData.contactName}
+                                    onchange={handleInputChange}
+                                    required>
+                                </lightning-input>
+                                <lightning-input 
+                                    label="Position"
+                                    name="contactPosition"
+                                    value={formData.contactPosition}
+                                    onchange={handleInputChange}
+                                    required>
+                                </lightning-input>
+                                <lightning-input 
+                                    label="Phone"
+                                    name="contactPhone"
+                                    value={formData.contactPhone}
+                                    onchange={handleInputChange}
+                                    type="tel"
+                                    required>
+                                </lightning-input>
+                                <lightning-input 
+                                    label="Email"
+                                    name="contactEmail"
+                                    value={formData.contactEmail}
+                                    onchange={handleInputChange}
+                                    type="email"
+                                    required>
+                                </lightning-input>
+                                <div class="button-group">
+                                    <lightning-button 
+                                        label="Save"
+                                        variant="brand"
+                                        onclick={handleSaveContact}>
+                                    </lightning-button>
+                                    <lightning-button 
+                                        label="Cancel"
+                                        variant="neutral"
+                                        onclick={handleCancelEdit}>
+                                    </lightning-button>
+                                </div>
+                            </div>
+                        </template>
+                        <template lwc:else>
+                            <div class="contact-display">
+                                <div class="field-group">
+                                    <label class="field-label">Name:</label>
+                                    <span class="field-value">{formData.contactName}</span>
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">Position:</label>
+                                    <span class="field-value">{formData.contactPosition}</span>
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">Phone:</label>
+                                    <span class="field-value">{formData.contactPhone}</span>
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">Email:</label>
+                                    <span class="field-value">{formData.contactEmail}</span>
+                                </div>
+                                <lightning-button 
+                                    label="Edit"
+                                    variant="neutral"
+                                    onclick={handleEditContact}
+                                    class="edit-button">
+                                </lightning-button>
+                            </div>
+                        </template>
                     </div>
-                    <lightning-datatable
-                        key-field="Id"
-                        data={contacts}
-                        columns={columns}
-                        sorted-by={sortedBy}
-                        sorted-direction={sortedDirection}
-                        onsort={handleSort}
-                        resize-column-disabled="true"
-                        class="contact-results-table">
-                    </lightning-datatable>
-                </div>
-            </template>
+                </lightning-card>
+            </div>
+        </template>
 
-            <!-- Empty State -->
-            <template if:true={showEmptyState}>
-                <div class="slds-text-align_center slds-m-vertical_large">
-                    <lightning-icon
-                        icon-name="utility:search"
-                        size="large"
-                        class="slds-m-bottom_small">
-                    </lightning-icon>
-                    <div class="slds-text-heading_medium slds-m-bottom_small">
-                        No contacts found
+        <!-- Page 3: Business Structure -->
+        <template lwc:if={isPage3}>
+            <div class="page-container">
+                <h2 class="page-title">Business Structure Configuration</h2>
+                
+                <lightning-card title="Business Structure Types" class="section-card">
+                    <div class="slds-p-horizontal_medium">
+                        <template for:each={businessStructureTypes} for:item="structureType">
+                            <div key={structureType.name} class="structure-type-section">
+                                <div class="toggle-section">
+                                    <lightning-input 
+                                        type="toggle"
+                                        label={structureType.label}
+                                        name={structureType.name}
+                                        checked={structureType.selected}
+                                        onchange={handleStructureToggle}>
+                                    </lightning-input>
+                                </div>
+                                
+                                <template lwc:if={structureType.selected}>
+                                    <div class="conditional-content">
+                                        <div class="service-types">
+                                            <p class="subsection-title">Service Types:</p>
+                                            <lightning-checkbox-group 
+                                                name={structureType.serviceTypesName}
+                                                options={serviceTypeOptions}
+                                                value={structureType.serviceTypes}
+                                                onchange={handleServiceTypeChange}>
+                                            </lightning-checkbox-group>
+                                        </div>
+                                        <lightning-textarea 
+                                            label="Additional Information"
+                                            name={structureType.additionalInfoName}
+                                            value={structureType.additionalInfo}
+                                            onchange={handleAdditionalInfoChange}
+                                            placeholder="Please provide percentage breakdowns and explanations">
+                                        </lightning-textarea>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
                     </div>
-                    <div class="slds-text-body_regular">
-                        Try adjusting your search criteria
-                    </div>
-                </div>
-            </template>
+                </lightning-card>
 
-            <!-- Error State -->
-            <template if:true={showError}>
-                <div class="slds-m-vertical_medium">
-                    <div class="slds-notify slds-notify_alert slds-alert_error">
-                        <span class="slds-assistive-text">Error</span>
-                        <lightning-icon
-                            icon-name="utility:error"
-                            size="x-small"
-                            variant="inverse"
-                            class="slds-m-right_x-small">
-                        </lightning-icon>
-                        <h2>{errorMessage}</h2>
+                <lightning-card title="Workforce Configuration" class="section-card">
+                    <div class="slds-p-horizontal_medium">
+                        <lightning-combobox 
+                            label="How are your direct care workers engaged?"
+                            name="workforceType"
+                            value={formData.workforceType}
+                            options={workforceOptions}
+                            onchange={handleInputChange}
+                            required>
+                        </lightning-combobox>
                     </div>
-                </div>
-            </template>
+                </lightning-card>
+            </div>
+        </template>
+
+        <!-- Page 4: Labour Costs -->
+        <template lwc:if={isPage4}>
+            <div class="page-container">
+                <h2 class="page-title">Labour Costs Data Management</h2>
+                
+                <lightning-card title="Internal Direct Care Labour Costs" class="section-card">
+                    <div class="slds-p-horizontal_medium">
+                        <div class="data-table-container">
+                            <table class="slds-table slds-table_cell-buffer slds-table_bordered labour-costs-table">
+                                <thead>
+                                    <tr class="slds-line-height_reset">
+                                        <th class="slds-text-title_caps" scope="col">Employee Category</th>
+                                        <th class="slds-text-title_caps" scope="col">Total</th>
+                                        <th class="slds-text-title_caps" scope="col">Centrally Held</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template for:each={labourCostCategories} for:item="category">
+                                        <tr key={category.id} class="parent-row">
+                                            <td class="category-cell">
+                                                <div class="category-header" onclick={handleCategoryToggle} data-category={category.id}>
+                                                    <lightning-icon 
+                                                        icon-name={category.expandIcon}
+                                                        size="x-small"
+                                                        class="expand-icon">
+                                                    </lightning-icon>
+                                                    <span class="category-name">{category.name}</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <lightning-formatted-number 
+                                                    value={category.total}
+                                                    format-style="currency"
+                                                    currency-code="AUD">
+                                                </lightning-formatted-number>
+                                            </td>
+                                            <td>
+                                                <lightning-formatted-number 
+                                                    value={category.centrallyHeld}
+                                                    format-style="currency"
+                                                    currency-code="AUD">
+                                                </lightning-formatted-number>
+                                            </td>
+                                        </tr>
+                                        
+                                        <template lwc:if={category.expanded}>
+                                            <template for:each={category.subCategories} for:item="subCategory">
+                                                <tr key={subCategory.id} class="child-row">
+                                                    <td class="subcategory-cell">
+                                                        <span class="subcategory-name">{subCategory.name}</span>
+                                                    </td>
+                                                    <td>
+                                                        <lightning-input 
+                                                            type="number"
+                                                            name="total"
+                                                            value={subCategory.total}
+                                                            onchange={handleSubCategoryChange}
+                                                            data-category={category.id}
+                                                            data-subcategory={subCategory.id}
+                                                            formatter="currency"
+                                                            step="0.01">
+                                                        </lightning-input>
+                                                    </td>
+                                                    <td>
+                                                        <lightning-input 
+                                                            type="number"
+                                                            name="centrallyHeld"
+                                                            value={subCategory.centrallyHeld}
+                                                            onchange={handleSubCategoryChange}
+                                                            data-category={category.id}
+                                                            data-subcategory={subCategory.id}
+                                                            formatter="currency"
+                                                            step="0.01">
+                                                        </lightning-input>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                        </template>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </lightning-card>
+            </div>
+        </template>
+
+        <!-- Page 5: Document Management -->
+        <template lwc:if={isPage5}>
+            <div class="page-container">
+                <h2 class="page-title">Document Management and Submission</h2>
+                
+                <lightning-card title="Document Upload" class="section-card">
+                    <div class="slds-p-horizontal_medium">
+                        <div class="upload-configuration">
+                            <lightning-combobox 
+                                label="Document Category"
+                                name="documentCategory"
+                                value={selectedDocumentCategory}
+                                options={documentCategoryOptions}
+                                onchange={handleDocumentCategoryChange}
+                                required>
+                            </lightning-combobox>
+                            
+                            <lightning-combobox 
+                                label="Document Type"
+                                name="documentType"
+                                value={selectedDocumentType}
+                                options={documentTypeOptions}
+                                onchange={handleDocumentTypeChange}
+                                required>
+                            </lightning-combobox>
+                        </div>
+                        
+                        <div class="file-upload-area">
+                            <lightning-file-upload 
+                                label="Upload Documents"
+                                name="fileUploader"
+                                accept={acceptedFormats}
+                                record-id={recordId}
+                                onuploadfinished={handleUploadFinished}
+                                multiple>
+                            </lightning-file-upload>
+                        </div>
+                    </div>
+                </lightning-card>
+
+                <lightning-card title="Uploaded Documents" class="section-card">
+                    <div class="slds-p-horizontal_medium">
+                        <template lwc:if={hasUploadedFiles}>
+                            <lightning-datatable 
+                                key-field="id"
+                                data={uploadedFiles}
+                                columns={fileColumns}
+                                onrowaction={handleFileAction}>
+                            </lightning-datatable>
+                        </template>
+                        <template lwc:else>
+                            <p class="no-files-message">No documents uploaded yet.</p>
+                        </template>
+                    </div>
+                </lightning-card>
+            </div>
+        </template>
+
+        <!-- Navigation Controls -->
+        <div class="navigation-controls">
+            <lightning-button 
+                label="Previous"
+                variant="neutral"
+                onclick={handlePrevious}
+                disabled={isPreviousDisabled}
+                class="nav-button">
+            </lightning-button>
+            
+            <lightning-button 
+                label={nextButtonLabel}
+                variant="brand"
+                onclick={handleNext}
+                disabled={isNextDisabled}
+                class="nav-button">
+            </lightning-button>
         </div>
-    </lightning-card>
+
+        <!-- Loading Spinner -->
+        <template lwc:if={isLoading}>
+            <lightning-spinner alternative-text="Loading..." size="medium"></lightning-spinner>
+        </template>
+    </div>
 </template>
