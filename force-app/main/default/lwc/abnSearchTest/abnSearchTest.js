@@ -3,8 +3,8 @@ import searchABN from '@salesforce/apex/abnSearchTestController.searchABN';
 
 export default class AbnSearchTest extends LightningElement {
     @track searchTerm = '';
-    @track searchResults = [];
-    @track error = null;
+    @track results = [];
+    @track error = '';
     @track isLoading = false;
 
     get searchPlaceholder() {
@@ -12,20 +12,37 @@ export default class AbnSearchTest extends LightningElement {
     }
 
     get isSearchDisabled() {
-        return !this.searchTerm || this.isLoading;
+        return !this.isValidInput || this.isLoading;
     }
 
     get hasResults() {
-        return this.searchResults && this.searchResults.length > 0;
+        return this.results && this.results.length > 0;
     }
 
     get showNoResults() {
-        return !this.isLoading && !this.error && this.searchResults && this.searchResults.length === 0;
+        return !this.isLoading && !this.error && this.results && this.results.length === 0;
+    }
+
+    get isValidInput() {
+        if (!this.searchTerm) return false;
+        
+        const term = this.searchTerm.trim();
+        if (this.isABN(term)) return true;
+        if (this.isACN(term)) return true;
+        return term.length >= 2;
+    }
+
+    isABN(value) {
+        return /^\d{11}$/.test(value);
+    }
+
+    isACN(value) {
+        return /^\d{9}$/.test(value);
     }
 
     handleSearchChange(event) {
         this.searchTerm = event.target.value;
-        this.error = null;
+        this.error = '';
     }
 
     handleKeyUp(event) {
@@ -34,44 +51,16 @@ export default class AbnSearchTest extends LightningElement {
         }
     }
 
-    validateSearch() {
-        const term = this.searchTerm.trim();
-        if (!term) {
-            this.error = 'Please enter a search term';
-            return false;
-        }
-
-        if (/^\d+$/.test(term)) {
-            if (term.length === 11) {
-                return true; // Valid ABN
-            } else if (term.length === 9) {
-                return true; // Valid ACN
-            } else {
-                this.error = 'Please enter a valid 11-digit ABN or 9-digit ACN';
-                return false;
-            }
-        }
-
-        if (term.length < 2) {
-            this.error = 'Company name must be at least 2 characters';
-            return false;
-        }
-
-        return true;
-    }
-
     async handleSearch() {
-        if (!this.validateSearch()) {
-            return;
-        }
+        if (!this.isValidInput) return;
 
         this.isLoading = true;
-        this.error = null;
-        this.searchResults = [];
+        this.error = '';
+        this.results = [];
 
         try {
-            const results = await searchABN({ searchTerm: this.searchTerm });
-            this.searchResults = results;
+            const searchResults = await searchABN({ searchTerm: this.searchTerm.trim() });
+            this.results = searchResults;
         } catch (error) {
             this.error = error.body?.message || 'An error occurred while searching. Please try again.';
         } finally {
