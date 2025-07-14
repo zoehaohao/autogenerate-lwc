@@ -10,56 +10,68 @@
                         placeholder={searchPlaceholder}
                         value={searchTerm}
                         onchange={handleSearchChange}
-                        onkeyup={handleKeyUp}
-                        class="searchInput"
+                        class="search-input"
+                        message-when-bad-input={validationMessage}
                         required>
                     </lightning-input>
                 </div>
-                <div class="slds-m-top_small">
-                    <lightning-button 
-                        label="Search" 
-                        variant="brand" 
-                        onclick={handleSearch}
-                        disabled={isSearchDisabled}>
-                    </lightning-button>
-                </div>
+            </div>
+            
+            <div class="slds-m-top_small">
+                <lightning-button 
+                    label="Search" 
+                    variant="brand"
+                    onclick={handleSearch}
+                    disabled={isSearchDisabled}>
+                </lightning-button>
             </div>
 
-            <!-- Loading Spinner -->
+            <!-- Loading State -->
             <template if:true={isLoading}>
-                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                <div class="slds-p-around_medium slds-align_absolute-center">
+                    <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                </div>
             </template>
 
             <!-- Error Message -->
-            <template if:true={error}>
-                <div class="slds-m-top_small slds-text-color_error">
-                    {error}
+            <template if:true={errorMessage}>
+                <div class="slds-p-around_medium">
+                    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                        <span class="slds-assistive-text">error</span>
+                        <h2>{errorMessage}</h2>
+                    </div>
                 </div>
             </template>
 
             <!-- Results Section -->
             <template if:true={hasResults}>
-                <div class="slds-grid slds-wrap slds-m-top_medium">
-                    <template for:each={results} for:item="result">
-                        <div key={result.id} class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_4-of-12 slds-p-around_x-small">
+                <div class="slds-p-top_medium">
+                    <template for:each={searchResults} for:item="result">
+                        <div key={result.abn.identifier_value} class="slds-m-bottom_medium">
                             <lightning-card>
-                                <h3 slot="title">{result.Company_Name}</h3>
                                 <div class="slds-p-around_medium">
-                                    <p><strong>ABN:</strong> {result.ABN}</p>
-                                    <p><strong>ACN:</strong> {result.ACN}</p>
-                                    <p><strong>Type:</strong> {result.Type}</p>
-                                    <p><strong>Location:</strong> {result.Location}</p>
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                            <div class="slds-text-title">ABN</div>
+                                            <div>{result.abn.identifier_value}</div>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                            <div class="slds-text-title">Status</div>
+                                            <div>{result.entity_status.entity_status_code}</div>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                            <div class="slds-text-title">Entity Type</div>
+                                            <div>{result.entity_type.entity_description}</div>
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                            <div class="slds-text-title">ASIC Number</div>
+                                            <div>{result.asic_number}</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </lightning-card>
                         </div>
                     </template>
-                </div>
-            </template>
-
-            <!-- No Results Message -->
-            <template if:true={showNoResults}>
-                <div class="slds-m-top_medium slds-text-align_center">
-                    No results found
                 </div>
             </template>
         </div>

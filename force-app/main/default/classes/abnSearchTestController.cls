@@ -1,53 +1,64 @@
 public with sharing class abnSearchTestController {
+    private static final String API_ENDPOINT = 'https://api.mockfly.dev/mocks/d24e2248-c254-46be-8b45-0365cdca1a44/businessentities/abnid';
+    private static final Integer TIMEOUT = 30000; // 30 seconds
+
     @AuraEnabled
-    public static List<Map<String, Object>> searchABN(String searchTerm) {
+    public static ResponseWrapper searchABN(String searchTerm) {
         try {
-            // Validate input
+            // Input validation
             if (String.isBlank(searchTerm)) {
-                throw new AuraHandledException('Search term cannot be empty');
+                return new ResponseWrapper(false, 'Search term cannot be empty', null);
             }
 
             // Prepare HTTP request
             Http http = new Http();
             HttpRequest request = new HttpRequest();
-            request.setEndpoint('https://686dc140c9090c495387232f.mockapi.io/test/callouts/search_abn');
+            request.setEndpoint(API_ENDPOINT + '?searchTerm=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8'));
             request.setMethod('GET');
-            request.setTimeout(30000); // 30 seconds timeout
+            request.setTimeout(TIMEOUT);
 
-            // Send request
+            // Make the callout
             HttpResponse response = http.send(request);
 
             // Process response
             if (response.getStatusCode() == 200) {
-                return processResponse(response.getBody());
-            } else {
-                throw new AuraHandledException('API request failed with status code: ' + response.getStatusCode());
+                Object parsedResponse = safelyParseJSON(response.getBody());
+                if (parsedResponse != null) {
+                    return new ResponseWrapper(true, 'Success', parsedResponse);
+                }
+                return new ResponseWrapper(false, 'Invalid response format', null);
             }
+            
+            return new ResponseWrapper(
+                false, 
+                'API request failed with status: ' + response.getStatusCode(), 
+                null
+            );
+
         } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
+            System.debug('Error in searchABN: ' + e.getMessage());
+            return new ResponseWrapper(false, 'An unexpected error occurred', null);
         }
     }
 
-    private static List<Map<String, Object>> processResponse(String responseBody) {
+    private static Object safelyParseJSON(String jsonString) {
         try {
-            // Safe JSON parsing
-            Object parsedData = JSON.deserializeUntyped(responseBody);
-            if (!(parsedData instanceof List<Object>)) {
-                throw new AuraHandledException('Invalid response format');
-            }
-
-            List<Object> resultList = (List<Object>)parsedData;
-            List<Map<String, Object>> processedResults = new List<Map<String, Object>>();
-
-            for (Object item : resultList) {
-                if (item instanceof Map<String, Object>) {
-                    processedResults.add((Map<String, Object>)item);
-                }
-            }
-
-            return processedResults;
+            return JSON.deserializeUntyped(jsonString);
         } catch (Exception e) {
-            throw new AuraHandledException('Error processing response: ' + e.getMessage());
+            System.debug('JSON parsing error: ' + e.getMessage());
+            return null;
+        }
+    }
+
+    public class ResponseWrapper {
+        @AuraEnabled public Boolean success;
+        @AuraEnabled public String message;
+        @AuraEnabled public Object data;
+        
+        public ResponseWrapper(Boolean success, String message, Object data) {
+            this.success = success;
+            this.message = message;
+            this.data = data;
         }
     }
 }
