@@ -1,0 +1,162 @@
+<template>
+    <lightning-card title="ABN Lookup" icon-name="standard:search">
+        <div class="slds-p-horizontal_medium slds-p-vertical_small">
+            <!-- Search Section -->
+            <div class="slds-grid slds-gutters slds-wrap">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_8-of-12">
+                    <lightning-input
+                        type="text"
+                        label="Search"
+                        placeholder={searchPlaceholder}
+                        value={searchTerm}
+                        onchange={handleSearchTermChange}
+                        required
+                        class="search-input">
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-12">
+                    <div class="slds-p-top_medium">
+                        <lightning-button
+                            variant="brand"
+                            label="Search"
+                            icon-name="utility:search"
+                            onclick={handleSearch}
+                            disabled={isSearchDisabled}
+                            class="search-button">
+                        </lightning-button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Type Indicator -->
+            <template lwc:if={detectedSearchType}>
+                <div class="slds-p-top_small">
+                    <lightning-badge label={searchTypeLabel} class="search-type-badge"></lightning-badge>
+                </div>
+            </template>
+
+            <!-- Loading Spinner -->
+            <template lwc:if={isLoading}>
+                <div class="slds-p-vertical_medium slds-align_absolute-center">
+                    <lightning-spinner alternative-text="Searching..." size="medium"></lightning-spinner>
+                </div>
+            </template>
+
+            <!-- Error Message -->
+            <template lwc:if={errorMessage}>
+                <div class="slds-p-top_medium">
+                    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                        <span class="slds-assistive-text">Error</span>
+                        <h2>{errorMessage}</h2>
+                    </div>
+                </div>
+            </template>
+
+            <!-- No Results Message -->
+            <template lwc:if={showNoResults}>
+                <div class="slds-p-top_medium">
+                    <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert">
+                        <span class="slds-assistive-text">Warning</span>
+                        <h2>No matching results found. Please check your search criteria and try again.</h2>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Results Section -->
+            <template lwc:if={hasResults}>
+                <div class="slds-p-top_medium">
+                    <h3 class="slds-text-heading_small slds-p-bottom_small">Search Results</h3>
+                    <div class="results-container">
+                        <template for:each={searchResults} for:item="result">
+                            <lightning-card key={result.id} class="result-card slds-p-bottom_small">
+                                <div class="slds-p-around_medium">
+                                    <!-- ABN Header -->
+                                    <div class="slds-grid slds-gutters slds-wrap">
+                                        <div class="slds-col slds-size_1-of-1">
+                                            <h4 class="slds-text-heading_medium slds-text-color_default">
+                                                ABN: {result.abnNumber}
+                                            </h4>
+                                            <template lwc:if={result.entityName}>
+                                                <p class="slds-text-heading_small slds-text-color_weak slds-p-top_xx-small">
+                                                    Entity Name: {result.entityName}
+                                                </p>
+                                            </template>
+                                        </div>
+                                    </div>
+
+                                    <!-- Details Grid -->
+                                    <div class="slds-grid slds-gutters slds-wrap slds-p-top_medium">
+                                        <template lwc:if={result.abnStatus}>
+                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
+                                                <div class="detail-item">
+                                                    <span class="detail-label">ABN Status:</span>
+                                                    <span class="detail-value">{result.abnStatus}</span>
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        <template lwc:if={result.entityType}>
+                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
+                                                <div class="detail-item">
+                                                    <span class="detail-label">Entity Type:</span>
+                                                    <span class="detail-value">{result.entityType}</span>
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        <template lwc:if={result.gstStatus}>
+                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
+                                                <div class="detail-item">
+                                                    <span class="detail-label">GST Status:</span>
+                                                    <span class="detail-value">{result.gstStatus}</span>
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        <template lwc:if={result.asicNumber}>
+                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
+                                                <div class="detail-item">
+                                                    <span class="detail-label">ASIC Number:</span>
+                                                    <span class="detail-value">{result.asicNumber}</span>
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        <template lwc:if={result.lastUpdated}>
+                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
+                                                <div class="detail-item">
+                                                    <span class="detail-label">Last Updated:</span>
+                                                    <span class="detail-value">{result.lastUpdated}</span>
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        <template lwc:if={result.dgrEndorsement}>
+                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
+                                                <div class="detail-item">
+                                                    <span class="detail-label">DGR Endorsement:</span>
+                                                    <span class="detail-value">{result.dgrEndorsement}</span>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+
+                                    <!-- Select Button -->
+                                    <div class="slds-p-top_medium slds-text-align_right">
+                                        <lightning-button
+                                            variant="brand"
+                                            label="Select"
+                                            icon-name="utility:check"
+                                            data-result-id={result.id}
+                                            onclick={handleSelectResult}>
+                                        </lightning-button>
+                                    </div>
+                                </div>
+                            </lightning-card>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
