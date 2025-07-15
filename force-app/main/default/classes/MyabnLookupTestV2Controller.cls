@@ -4,95 +4,82 @@ public with sharing class MyabnLookupTestV2Controller {
     private static final Integer TIMEOUT_SECONDS = 30;
     
     @AuraEnabled(cacheable=false)
-    public static ResponseWrapper searchABN(String searchParams) {
+    public static ResponseWrapper searchABN(String searchTerm, String searchType) {
         try {
-            if (String.isBlank(searchParams)) {
-                return new ResponseWrapper(false, 'Search parameters are required', null);
-            }
-            
-            Map<String, Object> params = (Map<String, Object>) JSON.deserializeUntyped(searchParams);
-            String searchTerm = (String) params.get('searchTerm');
-            String searchType = (String) params.get('searchType');
-            
+            // Input validation
             if (String.isBlank(searchTerm)) {
                 return new ResponseWrapper(false, 'Search term is required', null);
             }
             
-            // Validate input based on search type
-            if (!validateSearchInput(searchTerm, searchType)) {
-                return new ResponseWrapper(false, 'Invalid search criteria', null);
+            // Sanitize input
+            String sanitizedSearchTerm = sanitizeInput(searchTerm.trim());
+            
+            // Validate search term based on type
+            if (!validateSearchTerm(sanitizedSearchTerm, searchType)) {
+                return new ResponseWrapper(false, 'Invalid search term format', null);
             }
             
-            // Perform API callout
-            String apiResponse = performAPICallout(searchTerm, searchType);
+            // Make API call
+            String apiResponse = makeAPICall(sanitizedSearchTerm, searchType);
             
-            if (String.isBlank(apiResponse)) {
-                return new ResponseWrapper(false, 'No response from API', null);
+            // Parse response
+            Object parsedData = parseAPIResponse(apiResponse);
+            
+            // Process and format data
+            List<Map<String, Object>> formattedResults = formatSearchResults(parsedData);
+            
+            if (formattedResults.isEmpty()) {
+                return new ResponseWrapper(true, 'No results found', new List<Object>());
             }
             
-            // Parse and process response
-            Object processedData = processAPIResponse(apiResponse);
-            
-            return new ResponseWrapper(true, 'Search completed successfully', processedData);
+            return new ResponseWrapper(true, 'Search completed successfully', formattedResults);
             
         } catch (CalloutException e) {
             System.debug('Callout Exception: ' + e.getMessage());
             return new ResponseWrapper(false, 'Unable to connect to ABN service. Please try again later.', null);
         } catch (Exception e) {
             System.debug('General Exception: ' + e.getMessage());
+            System.debug('Stack Trace: ' + e.getStackTraceString());
             return new ResponseWrapper(false, 'An unexpected error occurred. Please try again.', null);
         }
     }
     
-    private static Boolean validateSearchInput(String searchTerm, String searchType) {
+    private static String sanitizeInput(String input) {
+        if (String.isBlank(input)) {
+            return '';
+        }
+        
+        // Remove potentially harmful characters but keep alphanumeric, spaces, and common business name characters
+        return input.replaceAll('[^a-zA-Z0-9\\s&.\\-]', '');
+    }
+    
+    private static Boolean validateSearchTerm(String searchTerm, String searchType) {
         if (String.isBlank(searchTerm)) {
             return false;
         }
         
-        String trimmedTerm = searchTerm.trim();
-        
-        switch on searchType {
-            when 'ABN' {
-                // Validate 11-digit ABN
-                return Pattern.matches('^\\d{11}$', trimmedTerm);
-            }
-            when 'ACN' {
-                // Validate 9-digit ACN
-                return Pattern.matches('^\\d{9}$', trimmedTerm);
-            }
-            when 'NAME' {
-                // Validate company name (minimum 2 characters, alphanumeric with common business characters)
-                return trimmedTerm.length() >= 2 && Pattern.matches('^[a-zA-Z0-9\\s&.-]+$', trimmedTerm);
-            }
-            when else {
+        switch (searchType) {
+            case 'ABN':
+                return Pattern.matches('^\\d{11}$', searchTerm);
+            case 'ACN':
+                return Pattern.matches('^\\d{9}$', searchTerm);
+            case 'NAME':
+                return searchTerm.length() >= 2 && searchTerm.length() <= 200;
+            default:
                 return false;
-            }
         }
     }
     
-    private static String performAPICallout(String searchTerm, String searchType) {
+    private static String makeAPICall(String searchTerm, String searchType) {
         Http http = new Http();
         HttpRequest request = new HttpRequest();
         
         // Build endpoint with query parameters
-        String endpoint = API_ENDPOINT;
-        
-        switch on searchType {
-            when 'ABN' {
-                endpoint += '?abn=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            }
-            when 'ACN' {
-                endpoint += '?acn=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            }
-            when 'NAME' {
-                endpoint += '?name=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            }
-        }
+        String endpoint = API_ENDPOINT + buildQueryParameters(searchTerm, searchType);
         
         request.setEndpoint(endpoint);
         request.setMethod('GET');
         request.setHeader('Content-Type', 'application/json');
-        request.setHeader('Accept', 'application/json');
         request.setTimeout(TIMEOUT_SECONDS * 1000);
         
         HttpResponse response = http.send(request);
@@ -100,122 +87,163 @@ public with sharing class MyabnLookupTestV2Controller {
         if (response.getStatusCode() == 200) {
             return response.getBody();
         } else if (response.getStatusCode() == 404) {
-            throw new CalloutException('No matching results found');
+            throw new CalloutException('No results found for the search criteria');
         } else {
             throw new CalloutException('API returned status code: ' + response.getStatusCode());
         }
     }
     
-    private static Object processAPIResponse(String apiResponse) {
+    private static String buildQueryParameters(String searchTerm, String searchType) {
+        String encodedSearchTerm = EncodingUtil.urlEncode(searchTerm, 'UTF-8');
+        
+        switch (searchType) {
+            case 'ABN':
+                return '?abn=' + encodedSearchTerm;
+            case 'ACN':
+                return '?acn=' + encodedSearchTerm;
+            case 'NAME':
+                return '?name=' + encodedSearchTerm;
+            default:
+                return '?q=' + encodedSearchTerm;
+        }
+    }
+    
+    private static Object parseAPIResponse(String jsonResponse) {
+        if (String.isBlank(jsonResponse)) {
+            throw new CalloutException('Empty response from API');
+        }
+        
         try {
-            Object tempData = JSON.deserializeUntyped(apiResponse);
-            
-            if (tempData == null) {
-                return null;
-            }
-            
-            // Handle both single object and array responses
-            if (tempData instanceof List<Object>) {
-                List<Object> tempList = (List<Object>) tempData;
-                List<Map<String, Object>> processedResults = new List<Map<String, Object>>();
-                
-                for (Object item : tempList) {
-                    if (item instanceof Map<String, Object>) {
-                        Map<String, Object> processedItem = processBusinessEntity((Map<String, Object>) item);
-                        if (processedItem != null) {
-                            processedResults.add(processedItem);
-                        }
-                    }
-                }
-                
-                return processedResults;
-            } else if (tempData instanceof Map<String, Object>) {
-                Map<String, Object> processedItem = processBusinessEntity((Map<String, Object>) tempData);
-                return processedItem != null ? new List<Map<String, Object>>{ processedItem } : null;
-            }
-            
-            return null;
-            
+            Object tempData = JSON.deserializeUntyped(jsonResponse);
+            return tempData;
         } catch (JSONException e) {
-            System.debug('JSON parsing error: ' + e.getMessage());
+            System.debug('JSON Parse Error: ' + e.getMessage());
             throw new CalloutException('Invalid response format from API');
         }
     }
     
-    private static Map<String, Object> processBusinessEntity(Map<String, Object> entityData) {
-        if (entityData == null) {
-            return null;
-        }
-        
-        Map<String, Object> processedEntity = new Map<String, Object>();
+    private static List<Map<String, Object>> formatSearchResults(Object apiData) {
+        List<Map<String, Object>> formattedResults = new List<Map<String, Object>>();
         
         try {
-            // Process ABN information
-            Map<String, Object> abnData = (Map<String, Object>) entityData.get('abn');
-            if (abnData != null) {
-                processedEntity.put('abn', abnData);
+            if (apiData == null) {
+                return formattedResults;
             }
             
-            // Process entity status
-            Map<String, Object> entityStatus = (Map<String, Object>) entityData.get('entity_status');
-            if (entityStatus != null) {
-                processedEntity.put('entity_status', entityStatus);
+            // Handle single result
+            if (apiData instanceof Map<String, Object>) {
+                Map<String, Object> singleResult = (Map<String, Object>) apiData;
+                Map<String, Object> formatted = formatSingleResult(singleResult);
+                if (formatted != null) {
+                    formattedResults.add(formatted);
+                }
             }
-            
-            // Process trading name
-            Map<String, Object> tradingName = (Map<String, Object>) entityData.get('other_trading_name');
-            if (tradingName != null) {
-                processedEntity.put('other_trading_name', tradingName);
+            // Handle array of results
+            else if (apiData instanceof List<Object>) {
+                List<Object> tempList = (List<Object>) apiData;
+                for (Object item : tempList) {
+                    if (item instanceof Map<String, Object>) {
+                        Map<String, Object> resultItem = (Map<String, Object>) item;
+                        Map<String, Object> formatted = formatSingleResult(resultItem);
+                        if (formatted != null) {
+                            formattedResults.add(formatted);
+                        }
+                    }
+                }
             }
-            
-            // Process entity type
-            Map<String, Object> entityType = (Map<String, Object>) entityData.get('entity_type');
-            if (entityType != null) {
-                processedEntity.put('entity_type', entityType);
-            }
-            
-            // Process GST information
-            Map<String, Object> gstInfo = (Map<String, Object>) entityData.get('goods_and_services_tax');
-            if (gstInfo != null) {
-                processedEntity.put('goods_and_services_tax', gstInfo);
-            }
-            
-            // Process other fields
-            if (entityData.containsKey('asic_number')) {
-                processedEntity.put('asic_number', entityData.get('asic_number'));
-            }
-            
-            if (entityData.containsKey('record_last_updated_date')) {
-                processedEntity.put('record_last_updated_date', entityData.get('record_last_updated_date'));
-            }
-            
-            if (entityData.containsKey('main_business_location')) {
-                processedEntity.put('main_business_location', entityData.get('main_business_location'));
-            }
-            
-            // Process DGR endorsement if present
-            Map<String, Object> dgrEndorsement = (Map<String, Object>) entityData.get('dgr_endorsement');
-            if (dgrEndorsement != null) {
-                processedEntity.put('dgr_endorsement', dgrEndorsement);
-            }
-            
-            return processedEntity;
             
         } catch (Exception e) {
-            System.debug('Error processing entity data: ' + e.getMessage());
-            return null;
+            System.debug('Error formatting results: ' + e.getMessage());
         }
+        
+        return formattedResults;
     }
     
-    @AuraEnabled(cacheable=true)
-    public static ResponseWrapper getSearchHistory(String userId) {
+    private static Map<String, Object> formatSingleResult(Map<String, Object> rawResult) {
+        if (rawResult == null) {
+            return null;
+        }
+        
+        Map<String, Object> formatted = new Map<String, Object>();
+        
         try {
-            // This method can be implemented to retrieve search history if needed
-            // For now, returning empty success response
-            return new ResponseWrapper(true, 'Search history retrieved', new List<Object>());
+            // Extract ABN information
+            Map<String, Object> abnData = (Map<String, Object>) rawResult.get('abn');
+            if (abnData != null) {
+                formatted.put('abnNumber', abnData.get('identifier_value'));
+            }
+            
+            // Extract entity status
+            Map<String, Object> entityStatus = (Map<String, Object>) rawResult.get('entity_status');
+            if (entityStatus != null) {
+                String status = (String) entityStatus.get('entity_status_code');
+                String effectiveFrom = (String) entityStatus.get('effective_from');
+                if (String.isNotBlank(status) && String.isNotBlank(effectiveFrom)) {
+                    formatted.put('abnStatus', status + ' from ' + formatDate(effectiveFrom));
+                } else {
+                    formatted.put('abnStatus', status);
+                }
+            }
+            
+            // Extract entity type
+            Map<String, Object> entityType = (Map<String, Object>) rawResult.get('entity_type');
+            if (entityType != null) {
+                formatted.put('entityType', entityType.get('entity_description'));
+            }
+            
+            // Extract entity name (from other_trading_name or construct from available data)
+            Map<String, Object> tradingName = (Map<String, Object>) rawResult.get('other_trading_name');
+            if (tradingName != null) {
+                formatted.put('entityName', tradingName.get('organisation_name'));
+            }
+            
+            // Extract GST information
+            Map<String, Object> gstData = (Map<String, Object>) rawResult.get('goods_and_services_tax');
+            if (gstData != null) {
+                String gstFrom = (String) gstData.get('effective_from');
+                if (String.isNotBlank(gstFrom)) {
+                    formatted.put('gstStatus', 'Registered from ' + formatDate(gstFrom));
+                }
+            }
+            
+            // Extract ASIC number for main business location
+            String asicNumber = (String) rawResult.get('asic_number');
+            if (String.isNotBlank(asicNumber)) {
+                formatted.put('mainBusinessLocation', 'VIC ' + asicNumber);
+            }
+            
+            // Set default values if not found
+            if (!formatted.containsKey('abnNumber')) {
+                formatted.put('abnNumber', 'N/A');
+            }
+            if (!formatted.containsKey('entityName')) {
+                formatted.put('entityName', 'N/A');
+            }
+            if (!formatted.containsKey('abnStatus')) {
+                formatted.put('abnStatus', 'N/A');
+            }
+            if (!formatted.containsKey('entityType')) {
+                formatted.put('entityType', 'N/A');
+            }
+            
         } catch (Exception e) {
-            System.debug('Error retrieving search history: ' + e.getMessage());
-            return new ResponseWrapper(false, 'Unable to retrieve search history', null);
+            System.debug('Error processing single result: ' + e.getMessage());
+            return null;
+        }
+        
+        return formatted;
+    }
+    
+    private static String formatDate(String dateString) {
+        if (String.isBlank(dateString) || dateString == '0001-01-01') {
+            return '';
+        }
+        
+        try {
+            Date parsedDate = Date.valueOf(dateString);
+            return parsedDate.format();
+        } catch (Exception e) {
+            return dateString;
         }
     }
     
@@ -224,22 +252,12 @@ public with sharing class MyabnLookupTestV2Controller {
         @AuraEnabled public String message;
         @AuraEnabled public Object data;
         @AuraEnabled public List<String> errors;
-        @AuraEnabled public String timestamp;
         
         public ResponseWrapper(Boolean success, String message, Object data) {
             this.success = success;
             this.message = message;
             this.data = data;
             this.errors = new List<String>();
-            this.timestamp = DateTime.now().formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
-        }
-        
-        public ResponseWrapper(Boolean success, String message, Object data, List<String> errors) {
-            this.success = success;
-            this.message = message;
-            this.data = data;
-            this.errors = errors != null ? errors : new List<String>();
-            this.timestamp = DateTime.now().formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
         }
     }
 }
