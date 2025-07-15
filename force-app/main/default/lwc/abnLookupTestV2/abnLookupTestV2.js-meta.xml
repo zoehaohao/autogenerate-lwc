@@ -13,8 +13,8 @@
     <targetConfigs>
         <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage,lightningCommunity__Default">
             <property name="recordId" type="String" label="Record ID" description="Record ID for context"/>
+            <property name="pageSize" type="Integer" label="Page Size" description="Number of results per page" default="10"/>
             <property name="initialSearchTerm" type="String" label="Initial Search Term" description="Pre-populate search field"/>
-            <property name="pageSize" type="Integer" label="Page Size" default="10" description="Number of results per page"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

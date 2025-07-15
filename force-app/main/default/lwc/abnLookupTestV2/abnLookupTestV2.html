@@ -1,107 +1,107 @@
 <template>
     <lightning-card title="ABN Lookup" icon-name="standard:search">
-        <div class="slds-card__body slds-card__body_inner">
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
             <!-- Search Section -->
             <div class="slds-form-element slds-m-bottom_medium">
-                <div class="search-description slds-m-bottom_small">
-                    <p class="slds-text-body_regular">
-                        You can find an Australian Business Number (ABN) using the ABN itself, 
-                        Company / Business / Trading name or Australian Company Number (ACN). 
-                        Once the correct entity has been identified you can select it for use.
-                    </p>
+                <div class="slds-form-element__control">
+                    <div class="slds-input-has-icon slds-input-has-icon_right">
+                        <lightning-input
+                            type="text"
+                            placeholder={searchPlaceholder}
+                            value={searchTerm}
+                            onchange={handleSearchTermChange}
+                            onkeyup={handleKeyUp}
+                            class="search-input">
+                        </lightning-input>
+                        <lightning-button
+                            variant="brand"
+                            label={searchButtonLabel}
+                            onclick={handleSearch}
+                            disabled={isSearchDisabled}
+                            class="slds-m-left_x-small">
+                        </lightning-button>
+                    </div>
                 </div>
-                
-                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
-                    <lightning-input
-                        type="text"
-                        placeholder={searchPlaceholder}
-                        value={searchTerm}
-                        onchange={handleSearchTermChange}
-                        onkeyup={handleKeyUp}
-                        class="search-input">
-                    </lightning-input>
-                    <lightning-button
-                        variant="brand"
-                        label={searchButtonLabel}
-                        onclick={handleSearch}
-                        disabled={isSearchDisabled}
-                        class="search-button">
-                    </lightning-button>
-                </div>
+                <template if:true={searchTypeInfo}>
+                    <div class="slds-form-element__help slds-m-top_x-small">
+                        {searchTypeInfo}
+                    </div>
+                </template>
             </div>
 
             <!-- Loading Spinner -->
-            <template lwc:if={isLoading}>
+            <template if:true={isLoading}>
                 <div class="slds-align_absolute-center slds-m-vertical_large">
                     <lightning-spinner alternative-text="Searching..." size="medium"></lightning-spinner>
                 </div>
             </template>
 
             <!-- Error Message -->
-            <template lwc:if={errorMessage}>
-                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning slds-m-bottom_medium" role="alert">
-                    <span class="slds-assistive-text">Warning</span>
-                    <lightning-icon icon-name="utility:warning" size="x-small" class="slds-m-right_x-small"></lightning-icon>
-                    <h2>{errorMessage}</h2>
+            <template if:true={errorMessage}>
+                <div class="slds-m-bottom_medium">
+                    <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert">
+                        <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small">
+                            <lightning-icon icon-name="utility:warning" size="x-small" variant="inverse"></lightning-icon>
+                        </span>
+                        <h2>{errorMessage}</h2>
+                    </div>
                 </div>
             </template>
 
             <!-- No Results Message -->
-            <template lwc:if={showNoResults}>
-                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_warning slds-m-bottom_medium" role="alert">
-                    <span class="slds-assistive-text">Warning</span>
-                    <lightning-icon icon-name="utility:warning" size="x-small" class="slds-m-right_x-small"></lightning-icon>
-                    <h2>No matching results for {searchTerm}, please check the inputs and try again.</h2>
+            <template if:true={showNoResults}>
+                <div class="slds-m-bottom_medium">
+                    <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert">
+                        <span class="slds-icon_container slds-icon-utility-info slds-m-right_x-small">
+                            <lightning-icon icon-name="utility:info" size="x-small" variant="inverse"></lightning-icon>
+                        </span>
+                        <h2>No matching results for "{searchTerm}", please check the inputs and try again.</h2>
+                    </div>
                 </div>
             </template>
 
             <!-- Results Section -->
-            <template lwc:if={hasResults}>
+            <template if:true={hasResults}>
                 <div class="results-container">
+                    <!-- Results Grid -->
                     <div class="slds-grid slds-wrap slds-gutters">
                         <template for:each={paginatedResults} for:item="result">
                             <div key={result.id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
                                 <lightning-card class="result-card slds-m-bottom_medium">
-                                    <div class="slds-card__body slds-card__body_inner">
-                                        <div class="slds-text-heading_small slds-m-bottom_small">
-                                            <strong>ABN: {result.abn}</strong>
-                                        </div>
-                                        <div class="slds-text-heading_small slds-m-bottom_medium">
-                                            <strong>Entity Name: {result.entityName}</strong>
+                                    <div class="slds-p-around_medium">
+                                        <div class="slds-m-bottom_small">
+                                            <h3 class="slds-text-heading_small slds-text-color_default">
+                                                ABN: {result.abn}
+                                            </h3>
+                                            <p class="slds-text-heading_medium slds-text-color_default slds-m-top_x-small">
+                                                Entity Name: {result.entityName}
+                                            </p>
                                         </div>
                                         
                                         <div class="slds-form slds-form_stacked">
                                             <div class="slds-form-element slds-m-bottom_x-small">
-                                                <label class="slds-form-element__label slds-text-body_small">
-                                                    <strong>ABN status:</strong>
-                                                </label>
+                                                <label class="slds-form-element__label slds-text-body_small">ABN status:</label>
                                                 <div class="slds-form-element__control">
                                                     <span class="slds-text-body_regular">{result.abnStatus}</span>
                                                 </div>
                                             </div>
                                             
                                             <div class="slds-form-element slds-m-bottom_x-small">
-                                                <label class="slds-form-element__label slds-text-body_small">
-                                                    <strong>Entity type:</strong>
-                                                </label>
+                                                <label class="slds-form-element__label slds-text-body_small">Entity type:</label>
                                                 <div class="slds-form-element__control">
                                                     <span class="slds-text-body_regular">{result.entityType}</span>
                                                 </div>
                                             </div>
                                             
                                             <div class="slds-form-element slds-m-bottom_x-small">
-                                                <label class="slds-form-element__label slds-text-body_small">
-                                                    <strong>Goods & Services Tax (GST):</strong>
-                                                </label>
+                                                <label class="slds-form-element__label slds-text-body_small">Goods & Services Tax (GST):</label>
                                                 <div class="slds-form-element__control">
                                                     <span class="slds-text-body_regular">{result.gstStatus}</span>
                                                 </div>
                                             </div>
                                             
                                             <div class="slds-form-element slds-m-bottom_medium">
-                                                <label class="slds-form-element__label slds-text-body_small">
-                                                    <strong>Main business location:</strong>
-                                                </label>
+                                                <label class="slds-form-element__label slds-text-body_small">Main business location:</label>
                                                 <div class="slds-form-element__control">
                                                     <span class="slds-text-body_regular">{result.businessLocation}</span>
                                                 </div>
@@ -123,23 +123,22 @@
                             </div>
                         </template>
                     </div>
-                    
+
                     <!-- Pagination -->
-                    <template lwc:if={showPagination}>
+                    <template if:true={showPagination}>
                         <div class="slds-m-top_medium">
                             <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center">
                                 <div class="slds-col">
                                     <span class="slds-text-body_small">
-                                        Showing {startRecord} - {endRecord} of {totalRecords} items
+                                        Showing {paginationInfo.startRecord} - {paginationInfo.endRecord} of {paginationInfo.totalRecords} items
                                     </span>
                                 </div>
                                 <div class="slds-col slds-no-flex">
                                     <div class="slds-button-group" role="group">
                                         <lightning-button
-                                            variant="neutral"
                                             label="Previous"
-                                            onclick={handlePrevious}
-                                            disabled={isFirstPage}
+                                            onclick={handlePreviousPage}
+                                            disabled={isPreviousDisabled}
                                             icon-name="utility:chevronleft"
                                             icon-position="left">
                                         </lightning-button>
@@ -147,18 +146,17 @@
                                         <template for:each={pageNumbers} for:item="pageNum">
                                             <lightning-button
                                                 key={pageNum.value}
-                                                variant={pageNum.variant}
                                                 label={pageNum.label}
+                                                variant={pageNum.variant}
                                                 onclick={handlePageClick}
                                                 data-page={pageNum.value}>
                                             </lightning-button>
                                         </template>
                                         
                                         <lightning-button
-                                            variant="neutral"
                                             label="Next"
-                                            onclick={handleNext}
-                                            disabled={isLastPage}
+                                            onclick={handleNextPage}
+                                            disabled={isNextDisabled}
                                             icon-name="utility:chevronright"
                                             icon-position="right">
                                         </lightning-button>
