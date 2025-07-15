@@ -3,7 +3,15 @@
     <apiVersion>62.0</apiVersion>
     <isExposed>true</isExposed>
     <targets>
+        <target>lightning__AppPage</target>
+        <target>lightning__RecordPage</target>
+        <target>lightning__HomePage</target>
         <target>lightningCommunity__Page</target>
-        <target>lightning__Tab</target>
     </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AppPage,lightning__HomePage,lightningCommunity__Page">
+            <property name="recordId" type="String" label="Record ID" description="Record ID for context"/>
+            <property name="configSettings" type="String" label="Configuration Settings" description="JSON configuration for component behavior"/>
+        </targetConfig>
+    </targetConfigs>
 </LightningComponentBundle>
