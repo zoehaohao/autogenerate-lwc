@@ -1,9 +1,4 @@
-.search-input {
-    width: 100%;
-}
-
 .result-card {
-    height: 100%;
     border: 1px solid #d8dde6;
     border-radius: 0.25rem;
 }
@@ -14,25 +9,31 @@
     transition: all 0.2s ease;
 }
 
-.selected-result-card {
-    border: 2px solid #1589ee;
-    background-color: #f3f9ff;
-}
-
 .results-container {
-    margin-top: 1rem;
+    max-height: 600px;
+    overflow-y: auto;
 }
 
-.slds-button-group .slds-button:disabled {
-    opacity: 0.5;
+.slds-list_horizontal dt {
+    width: 30%;
+    margin-right: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.slds-list_horizontal dd {
+    width: 65%;
+    margin-bottom: 0.5rem;
 }
 
 @media (max-width: 768px) {
-    .slds-col.slds-size_1-of-2 {
+    .slds-list_horizontal dt,
+    .slds-list_horizontal dd {
         width: 100%;
+        margin-right: 0;
     }
     
-    .slds-grid.slds-gutters .slds-col {
-        padding: 0.5rem;
+    .results-container {
+        max-height: 400px;
     }
 }
