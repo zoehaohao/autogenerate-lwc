@@ -12,10 +12,9 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage,lightningCommunity__Default">
-            <property name="recordId" type="String" label="Record ID" description="The record ID to associate with this component"/>
-            <property name="initialSearchTerm" type="String" label="Initial Search Term" description="Pre-populate the search field with this value"/>
-            <property name="maxResults" type="Integer" label="Max Results" description="Maximum number of results to display" default="10"/>
-            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Display component in read-only mode" default="false"/>
+            <property name="recordId" type="String" label="Record ID" description="The record ID to associate with the ABN lookup"/>
+            <property name="configSettings" type="String" label="Configuration Settings" description="JSON string containing configuration options"/>
+            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Set to true to make the component read-only" default="false"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
