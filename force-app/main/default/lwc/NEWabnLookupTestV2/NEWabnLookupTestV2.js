@@ -2,7 +2,7 @@ import { LightningElement, api, track } from 'lwc';
 import searchABN from '@salesforce/apex/NEWabnLookupTestV2Controller.searchABN';
 
 export default class NEWabnLookupTestV2 extends LightningElement {
-    // Public API properties for parent component integration
+    // Public API properties for parent components
     @api recordId;
     @api configSettings;
     @api initialSearchTerm = '';
@@ -12,30 +12,43 @@ export default class NEWabnLookupTestV2 extends LightningElement {
     @track searchTerm = '';
     @track searchResults = [];
     @track paginatedResults = [];
-    @track selectedResult = null;
+    @track selectedEntity = null;
     @track isLoading = false;
     @track errorMessage = '';
-    @track searchType = 'name';
-    @track currentPage = 1;
-    @track pageSize = 10;
+    @track currentSearchType = 'name';
+    @track currentView = 'search'; // 'search', 'results', 'selected'
 
-    // Component state
-    hasSearched = false;
-    debounceTimeout;
+    // Search type constants
+    searchTypes = {
+        ABN: 'abn',
+        ACN: 'acn',
+        NAME: 'name'
+    };
 
-    // Lifecycle hooks
     connectedCallback() {
         if (this.initialSearchTerm) {
             this.searchTerm = this.initialSearchTerm;
+            this.detectSearchType();
         }
     }
 
-    // Getters for dynamic properties
+    // Computed properties
+    get actionButtonLabel() {
+        return this.currentView === 'selected' ? 'Change ABN' : 'Find ABN';
+    }
+
+    get searchInstructions() {
+        if (this.currentView === 'selected') {
+            return 'You can find verify the identify of a Company / Business / Trading through using Australian Business Number (ABN).';
+        }
+        return 'You can find an Australian Business Number (ABN) using the ABN itself, Company / Business / Trading name or Australian Company Number (ACN). Once the correct entity has been identified you can select it for use.';
+    }
+
     get searchPlaceholder() {
-        switch (this.searchType) {
-            case 'abn':
+        switch (this.currentSearchType) {
+            case this.searchTypes.ABN:
                 return 'Enter 11-digit ABN number';
-            case 'acn':
+            case this.searchTypes.ACN:
                 return 'Enter 9-digit ACN number';
             default:
                 return 'Search by Business name, ABN or ACN';
@@ -43,337 +56,224 @@ export default class NEWabnLookupTestV2 extends LightningElement {
     }
 
     get searchButtonLabel() {
-        switch (this.searchType) {
-            case 'abn':
-            case 'acn':
-                return 'Verify';
-            default:
-                return 'Search';
-        }
+        return this.currentView === 'selected' ? 'Verify' : 'Search';
     }
 
     get isSearchDisabled() {
-        return this.isLoading || !this.searchTerm || this.searchTerm.length < 2 || this.isReadOnly;
+        return this.isLoading || !this.isValidSearchTerm || this.isReadOnly;
     }
 
-    get hasResults() {
-        return !this.isLoading && this.searchResults && this.searchResults.length > 0 && !this.selectedResult;
+    get isValidSearchTerm() {
+        if (!this.searchTerm || this.searchTerm.trim().length < 2) {
+            return false;
+        }
+
+        const trimmedTerm = this.searchTerm.trim();
+        
+        // ABN validation (11 digits)
+        if (/^\d{11}$/.test(trimmedTerm)) {
+            return true;
+        }
+        
+        // ACN validation (9 digits)
+        if (/^\d{9}$/.test(trimmedTerm)) {
+            return true;
+        }
+        
+        // Company name validation (minimum 2 characters)
+        if (trimmedTerm.length >= 2) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    get showError() {
+        return !this.isLoading && this.errorMessage && this.errorMessage.length > 0;
     }
 
     get showNoResults() {
-        return !this.isLoading && this.hasSearched && (!this.searchResults || this.searchResults.length === 0) && !this.selectedResult;
+        return !this.isLoading && !this.showError && this.searchResults.length === 0 && this.searchTerm && this.currentView === 'results';
+    }
+
+    get showResults() {
+        return !this.isLoading && !this.showError && this.searchResults.length > 0 && this.currentView === 'results';
+    }
+
+    get showSelectedEntity() {
+        return this.currentView === 'selected' && this.selectedEntity;
     }
 
     get showPagination() {
-        return this.searchResults && this.searchResults.length > this.pageSize;
+        return this.searchResults.length > 10;
     }
 
     // Event handlers
+    handleActionButtonClick() {
+        if (this.currentView === 'selected') {
+            this.currentView = 'search';
+            this.selectedEntity = null;
+            this.searchResults = [];
+            this.paginatedResults = [];
+            this.searchTerm = '';
+            this.errorMessage = '';
+        }
+        // If currentView is 'search', the button doesn't need additional action
+    }
+
     handleSearchTermChange(event) {
         this.searchTerm = event.target.value;
         this.detectSearchType();
-        this.clearError();
-        
-        // Clear previous results when search term changes
-        if (!this.searchTerm) {
-            this.searchResults = [];
-            this.paginatedResults = [];
-            this.hasSearched = false;
-        }
+        this.errorMessage = '';
     }
 
-    handleKeyUp(event) {
-        if (event.keyCode === 13) { // Enter key
-            this.handleSearch();
-        }
-    }
-
-    handleSearch() {
-        if (this.isSearchDisabled) {
-            return;
-        }
-
-        if (!this.validateInput()) {
-            return;
-        }
-
-        this.performSearch();
-    }
-
-    handleSelectResult(event) {
-        const resultId = event.target.dataset.resultId;
-        const selected = this.searchResults.find(result => result.id === resultId);
-        
-        if (selected) {
-            this.selectedResult = { ...selected };
-            
-            // Dispatch selection event to parent
-            const selectionEvent = new CustomEvent('abnselected', {
-                detail: {
-                    selectedResult: this.selectedResult,
-                    searchTerm: this.searchTerm,
-                    searchType: this.searchType,
-                    timestamp: new Date().toISOString()
-                },
-                bubbles: true,
-                composed: true
-            });
-            this.dispatchEvent(selectionEvent);
-        }
-    }
-
-    handleChangeABN() {
-        this.selectedResult = null;
-        this.searchTerm = '';
-        this.searchResults = [];
-        this.paginatedResults = [];
-        this.hasSearched = false;
-        this.clearError();
-        
-        // Dispatch change event to parent
-        const changeEvent = new CustomEvent('abnchanged', {
-            detail: {
-                action: 'reset',
-                timestamp: new Date().toISOString()
-            },
-            bubbles: true,
-            composed: true
-        });
-        this.dispatchEvent(changeEvent);
-    }
-
-    handlePaginationDataChange(event) {
-        this.paginatedResults = event.detail.paginatedData || [];
-        this.currentPage = event.detail.currentPage || 1;
-    }
-
-    handlePageSizeChange(event) {
-        this.pageSize = event.detail.pageSize || 10;
-    }
-
-    // Search type detection
     detectSearchType() {
         if (!this.searchTerm) {
-            this.searchType = 'name';
+            this.currentSearchType = this.searchTypes.NAME;
             return;
         }
 
-        const cleanTerm = this.searchTerm.replace(/\s/g, '');
+        const trimmedTerm = this.searchTerm.trim();
         
-        if (/^\d{11}$/.test(cleanTerm)) {
-            this.searchType = 'abn';
-        } else if (/^\d{9}$/.test(cleanTerm)) {
-            this.searchType = 'acn';
-        } else {
-            this.searchType = 'name';
+        // Check for ABN (11 digits)
+        if (/^\d{11}$/.test(trimmedTerm)) {
+            this.currentSearchType = this.searchTypes.ABN;
+        }
+        // Check for ACN (9 digits)
+        else if (/^\d{9}$/.test(trimmedTerm)) {
+            this.currentSearchType = this.searchTypes.ACN;
+        }
+        // Default to name search
+        else {
+            this.currentSearchType = this.searchTypes.NAME;
         }
     }
 
-    // Input validation
-    validateInput() {
-        const cleanTerm = this.searchTerm.replace(/\s/g, '');
-        
-        switch (this.searchType) {
-            case 'abn':
-                if (!/^\d{11}$/.test(cleanTerm)) {
-                    this.showError('Please enter a valid 11-digit ABN number');
-                    return false;
-                }
-                break;
-            case 'acn':
-                if (!/^\d{9}$/.test(cleanTerm)) {
-                    this.showError('Please enter a valid 9-digit ACN number');
-                    return false;
-                }
-                break;
-            case 'name':
-                if (this.searchTerm.length < 2) {
-                    this.showError('Please enter at least 2 characters for company name search');
-                    return false;
-                }
-                break;
+    async handleSearch() {
+        if (!this.isValidSearchTerm) {
+            this.errorMessage = 'Please enter a valid search term';
+            return;
         }
-        
-        return true;
-    }
 
-    // API integration
-    async performSearch() {
         this.isLoading = true;
-        this.clearError();
-        this.hasSearched = true;
+        this.errorMessage = '';
+        this.searchResults = [];
+        this.paginatedResults = [];
 
         try {
             const searchParams = {
                 searchTerm: this.searchTerm.trim(),
-                searchType: this.searchType
+                searchType: this.currentSearchType
             };
 
             const result = await searchABN({ searchParams: JSON.stringify(searchParams) });
-            
+
             if (result.success) {
-                this.processSearchResults(result.data);
+                this.searchResults = result.data || [];
+                this.currentView = 'results';
+                
+                // Dispatch success event to parent
+                this.dispatchSearchEvent('success', {
+                    searchTerm: this.searchTerm,
+                    searchType: this.currentSearchType,
+                    resultCount: this.searchResults.length
+                });
             } else {
-                this.showError(result.message || 'Search failed. Please try again.');
+                this.errorMessage = result.message || 'An error occurred during search';
+                this.dispatchSearchEvent('error', {
+                    searchTerm: this.searchTerm,
+                    errorMessage: this.errorMessage
+                });
             }
         } catch (error) {
             console.error('Search error:', error);
-            this.showError('An error occurred while searching. Please try again.');
-            
-            // Dispatch error event to parent
-            const errorEvent = new CustomEvent('error', {
-                detail: {
-                    componentName: 'NEWabnLookupTestV2',
-                    errorMessage: error.message,
-                    searchTerm: this.searchTerm,
-                    searchType: this.searchType,
-                    timestamp: new Date().toISOString()
-                },
-                bubbles: true,
-                composed: true
+            this.errorMessage = 'Unable to perform search. Please try again.';
+            this.dispatchSearchEvent('error', {
+                searchTerm: this.searchTerm,
+                errorMessage: this.errorMessage
             });
-            this.dispatchEvent(errorEvent);
         } finally {
             this.isLoading = false;
         }
     }
 
-    // Process search results
-    processSearchResults(data) {
-        if (!data) {
-            this.searchResults = [];
-            this.paginatedResults = [];
-            return;
-        }
-
-        // Handle both single result and array of results
-        const results = Array.isArray(data) ? data : [data];
+    handleSelectEntity(event) {
+        const entityId = event.target.dataset.entityId;
+        const selectedEntity = this.searchResults.find(entity => entity.id === entityId);
         
-        this.searchResults = results.map((item, index) => ({
-            id: `result_${index}`,
-            abnNumber: this.extractABNNumber(item),
-            entityName: this.extractEntityName(item),
-            abnStatus: this.extractABNStatus(item),
-            entityType: this.extractEntityType(item),
-            gstStatus: this.extractGSTStatus(item),
-            businessLocation: this.extractBusinessLocation(item),
-            rawData: item
-        }));
+        if (selectedEntity) {
+            this.selectedEntity = selectedEntity;
+            this.currentView = 'selected';
+            
+            // Dispatch selection event to parent
+            this.dispatchSelectionEvent('entityselected', {
+                selectedEntity: this.selectedEntity
+            });
+        }
+    }
 
-        // Initialize pagination
-        this.initializePagination();
+    handlePaginationDataChange(event) {
+        this.paginatedResults = event.detail.paginatedData || [];
+    }
 
-        // Dispatch results event to parent
-        const resultsEvent = new CustomEvent('searchcomplete', {
+    handlePageSizeChange(event) {
+        console.log('Page size changed to:', event.detail.pageSize);
+    }
+
+    // Custom event dispatchers for parent communication
+    dispatchSearchEvent(eventType, detail) {
+        const searchEvent = new CustomEvent('search' + eventType, {
             detail: {
-                results: this.searchResults,
-                searchTerm: this.searchTerm,
-                searchType: this.searchType,
-                resultCount: this.searchResults.length,
+                componentName: 'NEWabnLookupTestV2',
+                ...detail,
                 timestamp: new Date().toISOString()
             },
             bubbles: true,
             composed: true
         });
-        this.dispatchEvent(resultsEvent);
+        this.dispatchEvent(searchEvent);
     }
 
-    // Data extraction methods
-    extractABNNumber(item) {
-        return item?.abn?.identifier_value || 'N/A';
-    }
-
-    extractEntityName(item) {
-        return item?.other_trading_name?.organisation_name || 'N/A';
-    }
-
-    extractABNStatus(item) {
-        const status = item?.entity_status?.entity_status_code || 'Unknown';
-        const effectiveFrom = item?.entity_status?.effective_from;
-        return effectiveFrom ? `${status} from ${this.formatDate(effectiveFrom)}` : status;
-    }
-
-    extractEntityType(item) {
-        return item?.entity_type?.entity_description || 'N/A';
-    }
-
-    extractGSTStatus(item) {
-        const effectiveFrom = item?.goods_and_services_tax?.effective_from;
-        return effectiveFrom ? `Registered from ${this.formatDate(effectiveFrom)}` : 'Not registered';
-    }
-
-    extractBusinessLocation(item) {
-        return item?.asic_number || 'N/A';
-    }
-
-    // Utility methods
-    formatDate(dateString) {
-        if (!dateString || dateString === '0001-01-01') {
-            return 'N/A';
-        }
-        
-        try {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('en-AU', {
-                day: '2-digit',
-                month: 'short',
-                year: 'numeric'
-            });
-        } catch (error) {
-            return dateString;
-        }
-    }
-
-    initializePagination() {
-        if (this.searchResults.length <= this.pageSize) {
-            this.paginatedResults = [...this.searchResults];
-        } else {
-            this.paginatedResults = this.searchResults.slice(0, this.pageSize);
-        }
-    }
-
-    showError(message) {
-        this.errorMessage = message;
-        setTimeout(() => {
-            this.clearError();
-        }, 5000);
-    }
-
-    clearError() {
-        this.errorMessage = '';
+    dispatchSelectionEvent(eventType, detail) {
+        const selectionEvent = new CustomEvent(eventType, {
+            detail: {
+                componentName: 'NEWabnLookupTestV2',
+                ...detail,
+                timestamp: new Date().toISOString()
+            },
+            bubbles: true,
+            composed: true
+        });
+        this.dispatchEvent(selectionEvent);
     }
 
     // Public API methods for parent components
     @api
     refreshData() {
-        if (this.searchTerm) {
-            this.performSearch();
-        }
+        this.searchResults = [];
+        this.paginatedResults = [];
+        this.selectedEntity = null;
+        this.currentView = 'search';
+        this.errorMessage = '';
     }
 
     @api
     validateComponent() {
         return {
-            isValid: !this.errorMessage && (this.selectedResult || !this.hasSearched),
-            selectedResult: this.selectedResult,
-            searchTerm: this.searchTerm,
-            searchType: this.searchType
+            isValid: this.selectedEntity !== null,
+            selectedEntity: this.selectedEntity,
+            hasErrors: this.showError
         };
     }
 
     @api
-    clearSelection() {
-        this.handleChangeABN();
+    getSelectedEntity() {
+        return this.selectedEntity;
     }
 
     @api
-    setSearchTerm(term) {
-        this.searchTerm = term;
+    setSearchTerm(searchTerm) {
+        this.searchTerm = searchTerm;
         this.detectSearchType();
-    }
-
-    @api
-    getSelectedResult() {
-        return this.selectedResult;
     }
 }
