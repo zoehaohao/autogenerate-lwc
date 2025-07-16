@@ -4,57 +4,67 @@ public with sharing class NEWabnLookupTestV2Controller {
     private static final Integer TIMEOUT_SECONDS = 30;
     
     @AuraEnabled(cacheable=false)
-    public static ResponseWrapper searchABN(Map<String, Object> searchParams) {
+    public static ResponseWrapper searchABN(String searchParams) {
         try {
-            // Validate input parameters
-            if (searchParams == null || !searchParams.containsKey('searchTerm') || !searchParams.containsKey('searchType')) {
-                return new ResponseWrapper(false, 'Missing required search parameters', null);
+            if (String.isBlank(searchParams)) {
+                return new ResponseWrapper(false, 'Search parameters are required', null);
             }
             
-            String searchTerm = String.valueOf(searchParams.get('searchTerm')).trim();
-            String searchType = String.valueOf(searchParams.get('searchType'));
+            // Parse search parameters
+            Map<String, Object> params = (Map<String, Object>) JSON.deserializeUntyped(searchParams);
+            String searchTerm = (String) params.get('searchTerm');
+            String searchType = (String) params.get('searchType');
             
-            // Validate search term
             if (String.isBlank(searchTerm)) {
-                return new ResponseWrapper(false, 'Search term cannot be empty', null);
+                return new ResponseWrapper(false, 'Search term is required', null);
             }
             
-            // Perform validation based on search type
+            // Validate input based on search type
             if (!validateSearchInput(searchTerm, searchType)) {
                 return new ResponseWrapper(false, 'Invalid search input format', null);
             }
             
-            // Make API call
-            HttpResponse response = makeAPICall(searchTerm, searchType);
+            // Perform API callout
+            String apiResponse = performAPICallout(searchTerm, searchType);
             
-            if (response.getStatusCode() == 200) {
-                // Parse and process response
-                Object responseData = parseAPIResponse(response.getBody());
-                return new ResponseWrapper(true, 'Search completed successfully', responseData);
-            } else {
-                String errorMessage = handleHTTPError(response.getStatusCode(), response.getBody());
-                return new ResponseWrapper(false, errorMessage, null);
+            if (String.isBlank(apiResponse)) {
+                return new ResponseWrapper(false, 'No response received from ABN service', null);
             }
+            
+            // Parse and process response
+            Object responseData = parseAPIResponse(apiResponse);
+            
+            if (responseData == null) {
+                return new ResponseWrapper(false, 'No matching results found', null);
+            }
+            
+            return new ResponseWrapper(true, 'Search completed successfully', responseData);
             
         } catch (CalloutException e) {
             System.debug('Callout Exception: ' + e.getMessage());
             return new ResponseWrapper(false, 'Unable to connect to ABN service. Please try again later.', null);
         } catch (Exception e) {
             System.debug('General Exception: ' + e.getMessage());
-            return new ResponseWrapper(false, 'An unexpected error occurred. Please contact your administrator.', null);
+            return new ResponseWrapper(false, 'An unexpected error occurred. Please try again.', null);
         }
     }
     
     private static Boolean validateSearchInput(String searchTerm, String searchType) {
+        if (String.isBlank(searchTerm)) {
+            return false;
+        }
+        
+        String cleanTerm = searchTerm.replaceAll('\\s', ''); // Remove spaces
+        
         switch on searchType {
             when 'abn' {
-                return Pattern.matches('^\\d{11}$', searchTerm);
+                return Pattern.matches('^\\d{11}$', cleanTerm);
             }
             when 'acn' {
-                return Pattern.matches('^\\d{9}$', searchTerm);
+                return Pattern.matches('^\\d{9}$', cleanTerm);
             }
             when 'name' {
-                return searchTerm.length() >= 2;
+                return searchTerm.trim().length() >= 2;
             }
             when else {
                 return false;
@@ -62,21 +72,12 @@ public with sharing class NEWabnLookupTestV2Controller {
         }
     }
     
-    private static HttpResponse makeAPICall(String searchTerm, String searchType) {
+    private static String performAPICallout(String searchTerm, String searchType) {
         Http http = new Http();
         HttpRequest request = new HttpRequest();
         
         // Build endpoint with query parameters
-        String endpoint = API_ENDPOINT;
-        Map<String, String> queryParams = buildQueryParameters(searchTerm, searchType);
-        
-        if (!queryParams.isEmpty()) {
-            List<String> paramStrings = new List<String>();
-            for (String key : queryParams.keySet()) {
-                paramStrings.add(key + '=' + EncodingUtil.urlEncode(queryParams.get(key), 'UTF-8'));
-            }
-            endpoint += '?' + String.join(paramStrings, '&');
-        }
+        String endpoint = buildEndpointWithParams(searchTerm, searchType);
         
         request.setEndpoint(endpoint);
         request.setMethod('GET');
@@ -84,37 +85,41 @@ public with sharing class NEWabnLookupTestV2Controller {
         request.setHeader('Accept', 'application/json');
         request.setTimeout(TIMEOUT_SECONDS * 1000);
         
-        System.debug('API Request Endpoint: ' + endpoint);
+        HttpResponse response = http.send(request);
         
-        return http.send(request);
+        if (response.getStatusCode() == 200) {
+            return response.getBody();
+        } else if (response.getStatusCode() == 404) {
+            return null; // No results found
+        } else {
+            throw new CalloutException('API returned status code: ' + response.getStatusCode() + 
+                                     ' with message: ' + response.getStatus());
+        }
     }
     
-    private static Map<String, String> buildQueryParameters(String searchTerm, String searchType) {
-        Map<String, String> params = new Map<String, String>();
+    private static String buildEndpointWithParams(String searchTerm, String searchType) {
+        String baseEndpoint = API_ENDPOINT;
+        String encodedTerm = EncodingUtil.urlEncode(searchTerm.trim(), 'UTF-8');
         
         switch on searchType {
             when 'abn' {
-                params.put('abn', searchTerm);
+                return baseEndpoint + '?abn=' + encodedTerm;
             }
             when 'acn' {
-                params.put('acn', searchTerm);
+                return baseEndpoint + '?acn=' + encodedTerm;
             }
             when 'name' {
-                params.put('name', searchTerm);
+                return baseEndpoint + '?name=' + encodedTerm;
+            }
+            when else {
+                return baseEndpoint + '?q=' + encodedTerm;
             }
         }
-        
-        return params;
     }
     
-    private static Object parseAPIResponse(String responseBody) {
+    private static Object parseAPIResponse(String apiResponse) {
         try {
-            if (String.isBlank(responseBody)) {
-                return null;
-            }
-            
-            // Safe JSON parsing
-            Object tempResult = JSON.deserializeUntyped(responseBody);
+            Object tempResult = JSON.deserializeUntyped(apiResponse);
             
             if (tempResult == null) {
                 return null;
@@ -123,80 +128,114 @@ public with sharing class NEWabnLookupTestV2Controller {
             // Handle both single object and array responses
             if (tempResult instanceof List<Object>) {
                 List<Object> tempList = (List<Object>) tempResult;
-                List<Map<String, Object>> resultList = new List<Map<String, Object>>();
+                if (tempList.isEmpty()) {
+                    return null;
+                }
                 
+                List<Map<String, Object>> results = new List<Map<String, Object>>();
                 for (Object item : tempList) {
                     if (item instanceof Map<String, Object>) {
-                        resultList.add((Map<String, Object>) item);
+                        Map<String, Object> resultMap = (Map<String, Object>) item;
+                        if (isValidResult(resultMap)) {
+                            results.add(sanitizeResult(resultMap));
+                        }
                     }
                 }
                 
-                return resultList;
+                return results.isEmpty() ? null : results;
+                
             } else if (tempResult instanceof Map<String, Object>) {
-                return (Map<String, Object>) tempResult;
+                Map<String, Object> resultMap = (Map<String, Object>) tempResult;
+                if (isValidResult(resultMap)) {
+                    return sanitizeResult(resultMap);
+                }
             }
             
-            return tempResult;
+            return null;
             
         } catch (JSONException e) {
-            System.debug('JSON Parsing Error: ' + e.getMessage());
+            System.debug('JSON Parse Exception: ' + e.getMessage());
             throw new AuraHandledException('Invalid response format from ABN service');
         }
     }
     
-    private static String handleHTTPError(Integer statusCode, String responseBody) {
-        switch on statusCode {
-            when 400 {
-                return 'Invalid search request. Please check your input and try again.';
-            }
-            when 401 {
-                return 'Authentication failed. Please contact your administrator.';
-            }
-            when 403 {
-                return 'Access denied. Please contact your administrator.';
-            }
-            when 404 {
-                return 'ABN service not found. Please try again later.';
-            }
-            when 429 {
-                return 'Too many requests. Please wait a moment and try again.';
-            }
-            when 500 {
-                return 'ABN service is temporarily unavailable. Please try again later.';
-            }
-            when 503 {
-                return 'ABN service is under maintenance. Please try again later.';
-            }
-            when else {
-                return 'Unable to complete search (Error: ' + statusCode + '). Please try again.';
+    private static Boolean isValidResult(Map<String, Object> result) {
+        if (result == null || result.isEmpty()) {
+            return false;
+        }
+        
+        // Check for essential fields
+        Object abnData = result.get('abn');
+        if (abnData instanceof Map<String, Object>) {
+            Map<String, Object> abnMap = (Map<String, Object>) abnData;
+            String abnNumber = (String) abnMap.get('identifier_value');
+            return String.isNotBlank(abnNumber);
+        }
+        
+        return false;
+    }
+    
+    private static Map<String, Object> sanitizeResult(Map<String, Object> result) {
+        Map<String, Object> sanitized = new Map<String, Object>();
+        
+        // Safely copy and sanitize each field
+        for (String key : result.keySet()) {
+            Object value = result.get(key);
+            if (value != null) {
+                if (value instanceof String) {
+                    sanitized.put(key, String.escapeSingleQuotes((String) value));
+                } else if (value instanceof Map<String, Object>) {
+                    sanitized.put(key, sanitizeNestedMap((Map<String, Object>) value));
+                } else {
+                    sanitized.put(key, value);
+                }
             }
         }
+        
+        return sanitized;
+    }
+    
+    private static Map<String, Object> sanitizeNestedMap(Map<String, Object> nestedMap) {
+        Map<String, Object> sanitized = new Map<String, Object>();
+        
+        for (String key : nestedMap.keySet()) {
+            Object value = nestedMap.get(key);
+            if (value != null) {
+                if (value instanceof String) {
+                    sanitized.put(key, String.escapeSingleQuotes((String) value));
+                } else {
+                    sanitized.put(key, value);
+                }
+            }
+        }
+        
+        return sanitized;
     }
     
     // Test method for API connectivity
     @AuraEnabled(cacheable=false)
-    public static ResponseWrapper testConnection() {
+    public static ResponseWrapper testAPIConnection() {
         try {
             Http http = new Http();
             HttpRequest request = new HttpRequest();
-            request.setEndpoint(API_ENDPOINT);
+            
+            request.setEndpoint(API_ENDPOINT + '?test=true');
             request.setMethod('GET');
             request.setHeader('Content-Type', 'application/json');
-            request.setTimeout(10000); // 10 second timeout for test
+            request.setTimeout(10000);
             
             HttpResponse response = http.send(request);
             
-            return new ResponseWrapper(
-                response.getStatusCode() < 400,
-                'Connection test completed. Status: ' + response.getStatusCode(),
-                new Map<String, Object>{
-                    'statusCode' => response.getStatusCode(),
-                    'status' => response.getStatus()
-                }
-            );
+            if (response.getStatusCode() == 200 || response.getStatusCode() == 404) {
+                return new ResponseWrapper(true, 'API connection successful', 
+                    'Status: ' + response.getStatusCode());
+            } else {
+                return new ResponseWrapper(false, 'API connection failed', 
+                    'Status: ' + response.getStatusCode());
+            }
             
         } catch (Exception e) {
-            return new ResponseWrapper(false, 'Connection test failed: ' + e.getMessage(), null);
+            return new ResponseWrapper(false, 'API connection test failed: ' + e.getMessage(), null);
         }
     }
     

@@ -12,10 +12,10 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage,lightningCommunity__Default">
-            <property name="recordId" type="String" label="Record ID" description="Record ID for context"/>
-            <property name="initialSearchTerm" type="String" label="Initial Search Term" description="Pre-populate search field"/>
-            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Display component in read-only mode"/>
-            <property name="showSelectButton" type="Boolean" label="Show Select Button" description="Show select button on result cards"/>
+            <property name="recordId" type="String" label="Record ID" description="The record ID to associate with searches"/>
+            <property name="initialSearchTerm" type="String" label="Initial Search Term" description="Pre-populate the search field with this term"/>
+            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Disable search functionality and make component read-only"/>
+            <property name="showPaginationThreshold" type="Integer" label="Pagination Threshold" description="Number of results before pagination is shown" default="10"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
