@@ -1,7 +1,7 @@
 .result-card {
     border: 1px solid #d8dde6;
     border-radius: 0.25rem;
-    transition: box-shadow 0.15s ease-in-out;
+    transition: box-shadow 0.2s ease;
 }
 
 .result-card:hover {
@@ -9,34 +9,77 @@
 }
 
 .selected-entity-card {
-    background-color: #f3f3f3;
-    border: 1px solid #c9c9c9;
+    border: 1px solid #1b96ff;
+    border-radius: 0.25rem;
+    padding: 1rem;
+    background-color: #f3f9ff;
 }
 
-.results-container {
-    max-height: 600px;
-    overflow-y: auto;
+.results-grid {
+    gap: 1rem;
 }
 
-@media (max-width: 768px) {
-    .slds-button-group {
-        flex-wrap: wrap;
+.results-grid .slds-col {
+    flex: 1 1 100%;
+}
+
+@media (min-width: 768px) {
+    .results-grid .slds-col {
+        flex: 1 1 calc(50% - 0.5rem);
+    }
+}
+
+@media (min-width: 1200px) {
+    .results-grid .slds-col {
+        flex: 1 1 calc(33.333% - 0.667rem);
+    }
+}
+
+@media (min-width: 1600px) {
+    .results-grid .slds-col {
+        flex: 1 1 calc(25% - 0.75rem);
+    }
+}
+
+/* Mobile optimizations */
+@media (max-width: 767px) {
+    .slds-button_brand {
+        width: 100%;
+        margin-top: 0.5rem;
     }
     
-    .slds-button-group .slds-button {
-        margin-bottom: 0.25rem;
+    .result-card .slds-grid {
+        display: block;
+    }
+    
+    .result-card .slds-col {
+        width: 100%;
+        margin-bottom: 0.5rem;
     }
     
     .result-card .slds-text-align_right {
-        text-align: left !important;
-        margin-top: 1rem;
+        text-align: left;
     }
 }
 
-.slds-notify {
-    border-radius: 0.25rem;
+/* Loading state */
+.slds-spinner_container {
+    position: relative;
+    min-height: 6rem;
 }
 
-.slds-card__header-title {
-    font-weight: 600;
+/* Error message styling */
+.slds-alert_warning {
+    margin-top: 1rem;
+}
+
+/* Responsive text sizing */
+@media (max-width: 479px) {
+    .slds-text-heading_small {
+        font-size: 0.875rem;
+    }
+    
+    .slds-text-body_small {
+        font-size: 0.75rem;
+    }
 }
