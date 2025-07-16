@@ -122,11 +122,34 @@ jobs:
           
           echo "Created deployment manifest:"
           cat manifest/package.xml
+  
+          # Validate manifest before deployment
+          if [ ! -s manifest/package.xml ]; then
+            echo "Error: Empty or missing manifest file!"
+            exit 1
+          fi
+          
+          # Check if manifest has actual components
+          if ! grep -q "<members>" manifest/package.xml; then
+            echo "Error: No components found in manifest!"
+            cat manifest/package.xml
+            exit 1
+          fi
           
           # Deploy only the changed components using the manifest
-          sf project deploy start -o targetOrg -l NoTestRun -x manifest/package.xml --json > deployment_result.json
+          echo "Starting deployment..."
+          if sf project deploy start --ignore-conflicts -o targetOrg -l NoTestRun -x manifest/package.xml --json > deployment_result.json; then
+            echo "Deployment command executed successfully"
+            echo "Deployment result:"
+            cat deployment_result.json
+          else
+            echo "Deployment command failed!"
+            echo "Error output:"
+            cat deployment_result.json
+            exit 1
+          fi
           
-          - name: Check Deployment Status
+      - name: Check Deployment Status
         if: env.HAS_CHANGES == 'true'
         run: |
           if [ ! -f deployment_result.json ]; then
