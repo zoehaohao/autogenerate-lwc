@@ -12,10 +12,9 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage,lightningCommunity__Default">
-            <property name="recordId" type="String" label="Record ID" description="The record ID to associate with searches"/>
-            <property name="initialSearchTerm" type="String" label="Initial Search Term" description="Pre-populate the search field with this term"/>
-            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Disable search functionality and make component read-only"/>
-            <property name="showPaginationThreshold" type="Integer" label="Pagination Threshold" description="Number of results before pagination is shown" default="10"/>
+            <property name="recordId" type="String" label="Record ID" description="The record ID to associate with the component"/>
+            <property name="configSettings" type="String" label="Configuration Settings" description="JSON configuration for component behavior"/>
+            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Set component to read-only mode"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
