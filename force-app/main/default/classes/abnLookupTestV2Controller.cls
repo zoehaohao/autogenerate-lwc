@@ -4,63 +4,81 @@ public with sharing class abnLookupTestV2Controller {
     private static final Integer TIMEOUT_SECONDS = 30;
     
     @AuraEnabled(cacheable=false)
-    public static ResponseWrapper searchAbnEntities(String searchTerm) {
+    public static ResponseWrapper searchAbnEntities(String searchTerm, Integer pageSize, Integer pageNumber) {
         try {
+            // Input validation
             if (String.isBlank(searchTerm)) {
                 return new ResponseWrapper(false, 'Search term is required', null);
             }
             
-            // Validate input
-            String validatedTerm = validateAndSanitizeInput(searchTerm.trim());
-            if (String.isBlank(validatedTerm)) {
-                return new ResponseWrapper(false, 'Invalid search term provided', null);
+            // Sanitize inputs
+            String cleanSearchTerm = searchTerm.trim();
+            Integer cleanPageSize = (pageSize != null && pageSize > 0) ? pageSize : 10;
+            Integer cleanPageNumber = (pageNumber != null && pageNumber > 0) ? pageNumber : 1;
+            
+            // Validate search term format
+            ValidationResult validation = validateSearchTerm(cleanSearchTerm);
+            if (!validation.isValid) {
+                return new ResponseWrapper(false, validation.errorMessage, null);
             }
             
             // Make API call
-            HttpResponse response = makeApiCall(validatedTerm);
+            HttpResponse response = makeApiCall(cleanSearchTerm);
             
             if (response.getStatusCode() == 200) {
-                List<AbnEntity> entities = parseApiResponse(response.getBody());
-                return new ResponseWrapper(true, 'Search completed successfully', entities);
+                // Parse response safely
+                SearchResultData resultData = parseApiResponse(response.getBody(), cleanPageSize, cleanPageNumber);
+                return new ResponseWrapper(true, 'Search completed successfully', resultData);
             } else {
                 String errorMsg = 'API call failed with status: ' + response.getStatusCode();
-                System.debug('API Error: ' + errorMsg + ' - Body: ' + response.getBody());
-                return new ResponseWrapper(false, 'Unable to retrieve ABN data. Please try again.', null);
+                System.debug('ABN API Error: ' + errorMsg + ' - Body: ' + response.getBody());
+                return new ResponseWrapper(false, 'No matching results found', null);
             }
             
         } catch (CalloutException e) {
-            System.debug('Callout Exception: ' + e.getMessage());
-            return new ResponseWrapper(false, 'Network error occurred. Please check your connection and try again.', null);
+            System.debug('ABN API Callout Exception: ' + e.getMessage());
+            return new ResponseWrapper(false, 'Service temporarily unavailable. Please try again later.', null);
         } catch (Exception e) {
-            System.debug('General Exception: ' + e.getMessage());
-            System.debug('Stack Trace: ' + e.getStackTraceString());
+            System.debug('ABN Search Exception: ' + e.getMessage() + ' - Stack: ' + e.getStackTraceString());
             return new ResponseWrapper(false, 'An unexpected error occurred. Please try again.', null);
         }
     }
     
-    private static String validateAndSanitizeInput(String input) {
-        if (String.isBlank(input)) {
-            return null;
+    private static ValidationResult validateSearchTerm(String searchTerm) {
+        ValidationResult result = new ValidationResult();
+        
+        if (String.isBlank(searchTerm)) {
+            result.isValid = false;
+            result.errorMessage = 'Search term cannot be empty';
+            return result;
         }
         
-        // Remove any potentially harmful characters
-        String sanitized = input.replaceAll('[<>"\']', '');
-        
-        // Check if it's numeric (ABN/ACN)
-        if (Pattern.matches('^\\d+$', sanitized)) {
-            if (sanitized.length() == 11 || sanitized.length() == 9) {
-                return sanitized;
+        // Check if numeric (ABN/ACN)
+        if (Pattern.matches('^\\d+$', searchTerm)) {
+            if (searchTerm.length() == 11) {
+                // Valid ABN
+                result.isValid = true;
+                result.searchType = 'ABN';
+            } else if (searchTerm.length() == 9) {
+                // Valid ACN
+                result.isValid = true;
+                result.searchType = 'ACN';
             } else {
-                return null; // Invalid ABN/ACN length
+                result.isValid = false;
+                result.errorMessage = 'An ABN requires 11 digits and an ACN requires 9 digits, check the number and try again';
+            }
+        } else {
+            // Business name search
+            if (searchTerm.length() < 2) {
+                result.isValid = false;
+                result.errorMessage = 'Business name must be at least 2 characters';
+            } else {
+                result.isValid = true;
+                result.searchType = 'NAME';
             }
         }
         
-        // For business names, ensure reasonable length
-        if (sanitized.length() >= 2 && sanitized.length() <= 200) {
-            return sanitized;
-        }
-        
-        return null;
+        return result;
     }
     
     private static HttpResponse makeApiCall(String searchTerm) {
@@ -70,13 +88,11 @@ public with sharing class abnLookupTestV2Controller {
         // Build endpoint with query parameters
         String endpoint = API_ENDPOINT;
         
-        // Determine if search term is ABN/ACN or business name
-        if (Pattern.matches('^\\d+$', searchTerm)) {
-            if (searchTerm.length() == 11) {
-                endpoint += '?abn=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            } else {
-                endpoint += '?acn=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            }
+        // Determine parameter based on search term type
+        if (Pattern.matches('^\\d{11}$', searchTerm)) {
+            endpoint += '?abn=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
+        } else if (Pattern.matches('^\\d{9}$', searchTerm)) {
+            endpoint += '?acn=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
         } else {
             endpoint += '?name=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
         }
@@ -87,134 +103,66 @@ public with sharing class abnLookupTestV2Controller {
         request.setHeader('Accept', 'application/json');
         request.setTimeout(TIMEOUT_SECONDS * 1000);
         
+        System.debug('ABN API Request: ' + endpoint);
+        
         return http.send(request);
     }
     
-    private static List<AbnEntity> parseApiResponse(String responseBody) {
-        List<AbnEntity> entities = new List<AbnEntity>();
+    private static SearchResultData parseApiResponse(String responseBody, Integer pageSize, Integer pageNumber) {
+        SearchResultData resultData = new SearchResultData();
         
         try {
-            // Parse the JSON response
-            Object tempResult = JSON.deserializeUntyped(responseBody);
+            // Parse JSON response safely
+            Object tempResponse = JSON.deserializeUntyped(responseBody);
             
-            if (tempResult instanceof List<Object>) {
+            if (tempResponse instanceof Map<String, Object>) {
+                // Single result
+                Map<String, Object> singleResult = (Map<String, Object>) tempResponse;
+                resultData.results = new List<Object>{ singleResult };
+                resultData.totalCount = 1;
+            } else if (tempResponse instanceof List<Object>) {
                 // Multiple results
-                List<Object> tempList = (List<Object>) tempResult;
+                List<Object> tempList = (List<Object>) tempResponse;
+                List<Object> results = new List<Object>();
+                
                 for (Object item : tempList) {
                     if (item instanceof Map<String, Object>) {
-                        Map<String, Object> entityData = (Map<String, Object>) item;
-                        AbnEntity entity = parseEntityData(entityData);
-                        if (entity != null) {
-                            entities.add(entity);
-                        }
+                        results.add((Map<String, Object>) item);
                     }
                 }
-            } else if (tempResult instanceof Map<String, Object>) {
-                // Single result
-                Map<String, Object> entityData = (Map<String, Object>) tempResult;
-                AbnEntity entity = parseEntityData(entityData);
-                if (entity != null) {
-                    entities.add(entity);
+                
+                resultData.results = results;
+                resultData.totalCount = results.size();
+            } else {
+                // Unexpected format - create empty result
+                resultData.results = new List<Object>();
+                resultData.totalCount = 0;
+            }
+            
+            // Apply pagination
+            if (resultData.results != null && resultData.results.size() > 0) {
+                Integer startIndex = (pageNumber - 1) * pageSize;
+                Integer endIndex = Math.min(startIndex + pageSize, resultData.results.size());
+                
+                if (startIndex < resultData.results.size()) {
+                    List<Object> paginatedResults = new List<Object>();
+                    for (Integer i = startIndex; i < endIndex; i++) {
+                        paginatedResults.add(resultData.results[i]);
+                    }
+                    resultData.results = paginatedResults;
                 }
             }
             
-        } catch (Exception e) {
-            System.debug('JSON Parsing Error: ' + e.getMessage());
-            throw new AuraHandledException('Failed to parse API response');
+        } catch (JSONException e) {
+            System.debug('JSON Parse Error: ' + e.getMessage());
+            resultData.results = new List<Object>();
+            resultData.totalCount = 0;
         }
         
-        return entities;
+        return resultData;
     }
     
-    private static AbnEntity parseEntityData(Map<String, Object> entityData) {
-        try {
-            AbnEntity entity = new AbnEntity();
-            
-            // Parse ABN information
-            if (entityData.containsKey('abn') && entityData.get('abn') != null) {
-                Map<String, Object> abnData = (Map<String, Object>) entityData.get('abn');
-                entity.abnNumber = (String) abnData.get('identifier_value');
-                entity.isCurrentIndicator = (String) abnData.get('is_current_indicator');
-            }
-            
-            // Parse entity status
-            if (entityData.containsKey('entity_status') && entityData.get('entity_status') != null) {
-                Map<String, Object> statusData = (Map<String, Object>) entityData.get('entity_status');
-                String statusCode = (String) statusData.get('entity_status_code');
-                String effectiveFrom = (String) statusData.get('effective_from');
-                entity.abnStatus = formatStatus(statusCode, effectiveFrom);
-            }
-            
-            // Parse entity type
-            if (entityData.containsKey('entity_type') && entityData.get('entity_type') != null) {
-                Map<String, Object> typeData = (Map<String, Object>) entityData.get('entity_type');
-                entity.entityType = (String) typeData.get('entity_description');
-            }
-            
-            // Parse business name
-            if (entityData.containsKey('other_trading_name') && entityData.get('other_trading_name') != null) {
-                Map<String, Object> nameData = (Map<String, Object>) entityData.get('other_trading_name');
-                entity.entityName = (String) nameData.get('organisation_name');
-            }
-            
-            // Parse GST information
-            if (entityData.containsKey('goods_and_services_tax') && entityData.get('goods_and_services_tax') != null) {
-                Map<String, Object> gstData = (Map<String, Object>) entityData.get('goods_and_services_tax');
-                String effectiveFrom = (String) gstData.get('effective_from');
-                entity.gstStatus = formatGstStatus(effectiveFrom);
-            }
-            
-            // Parse ASIC number for location (using as placeholder)
-            if (entityData.containsKey('asic_number') && entityData.get('asic_number') != null) {
-                String asicNumber = (String) entityData.get('asic_number');
-                entity.mainBusinessLocation = 'VIC ' + asicNumber; // Default formatting
-            }
-            
-            // Set default values if not provided
-            if (String.isBlank(entity.entityName)) {
-                entity.entityName = 'COLES SUPERMARKETS AUSTRALIA PTY LTD'; // Default from sample
-            }
-            
-            if (String.isBlank(entity.mainBusinessLocation)) {
-                entity.mainBusinessLocation = 'VIC 3123'; // Default from sample
-            }
-            
-            return entity;
-            
-        } catch (Exception e) {
-            System.debug('Entity parsing error: ' + e.getMessage());
-            return null;
-        }
-    }
-    
-    private static String formatStatus(String statusCode, String effectiveFrom) {
-        if (String.isBlank(statusCode)) {
-            return 'Unknown';
-        }
-        
-        String formattedDate = formatDate(effectiveFrom);
-        return statusCode + (String.isNotBlank(formattedDate) ? ' from ' + formattedDate : '');
-    }
-    
-    private static String formatGstStatus(String effectiveFrom) {
-        String formattedDate = formatDate(effectiveFrom);
-        return 'Registered' + (String.isNotBlank(formattedDate) ? ' from ' + formattedDate : '');
-    }
-    
-    private static String formatDate(String dateString) {
-        if (String.isBlank(dateString) || dateString == '0001-01-01') {
-            return '';
-        }
-        
-        try {
-            Date parsedDate = Date.valueOf(dateString);
-            return parsedDate.format();
-        } catch (Exception e) {
-            return dateString; // Return original if parsing fails
-        }
-    }
-    
-    // Response wrapper class
+    // Wrapper classes
     public class ResponseWrapper {
         @AuraEnabled public Boolean success;
         @AuraEnabled public String message;
@@ -229,27 +177,23 @@ public with sharing class abnLookupTestV2Controller {
         }
     }
     
-    // ABN Entity class
-    public class AbnEntity {
-        @AuraEnabled public String abnNumber;
-        @AuraEnabled public String entityName;
-        @AuraEnabled public String businessName;
-        @AuraEnabled public String abnStatus;
-        @AuraEnabled public String entityType;
-        @AuraEnabled public String gstStatus;
-        @AuraEnabled public String mainBusinessLocation;
-        @AuraEnabled public String isCurrentIndicator;
+    public class SearchResultData {
+        @AuraEnabled public List<Object> results;
+        @AuraEnabled public Integer totalCount;
+        @AuraEnabled public Integer currentPage;
+        @AuraEnabled public Integer pageSize;
         
-        public AbnEntity() {
-            // Initialize with default values
-            this.abnNumber = '';
-            this.entityName = '';
-            this.businessName = '';
-            this.abnStatus = '';
-            this.entityType = '';
-            this.gstStatus = '';
-            this.mainBusinessLocation = '';
-            this.isCurrentIndicator = '';
+        public SearchResultData() {
+            this.results = new List<Object>();
+            this.totalCount = 0;
+            this.currentPage = 1;
+            this.pageSize = 10;
         }
+    }
+    
+    private class ValidationResult {
+        public Boolean isValid = false;
+        public String errorMessage = '';
+        public String searchType = '';
     }
 }
