@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__AppPage</target>
+        <target>lightning__RecordPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightning__Tab</target>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage,lightningCommunity__Default">
+            <property name="recordId" type="String" label="Record ID" description="Record ID for context"/>
+            <property name="initialSearchTerm" type="String" label="Initial Search Term" description="Pre-populate search field"/>
+            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Display component in read-only mode"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>
