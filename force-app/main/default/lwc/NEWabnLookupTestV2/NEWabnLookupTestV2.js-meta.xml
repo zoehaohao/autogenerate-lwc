@@ -11,10 +11,10 @@
         <target>lightningCommunity__Default</target>
     </targets>
     <targetConfigs>
-        <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage,lightningCommunity__Default">
+        <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage">
             <property name="recordId" type="String" label="Record ID" description="Record ID for context"/>
             <property name="initialSearchTerm" type="String" label="Initial Search Term" description="Pre-populate search field"/>
-            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Display component in read-only mode"/>
+            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Make component read-only"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
