@@ -1,0 +1,38 @@
+.search-input {
+    width: 100%;
+}
+
+.result-card {
+    height: 100%;
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+}
+
+.result-card:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+}
+
+.selected-result-card {
+    border: 2px solid #1589ee;
+    background-color: #f3f9ff;
+}
+
+.results-container {
+    margin-top: 1rem;
+}
+
+.slds-button-group .slds-button:disabled {
+    opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+    .slds-col.slds-size_1-of-2 {
+        width: 100%;
+    }
+    
+    .slds-grid.slds-gutters .slds-col {
+        padding: 0.5rem;
+    }
+}
