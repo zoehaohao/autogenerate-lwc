@@ -12,9 +12,8 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage,lightningCommunity__Default">
-            <property name="recordId" type="String" label="Record ID" description="The record ID to associate with the component"/>
-            <property name="configSettings" type="String" label="Configuration Settings" description="JSON string of configuration settings"/>
-            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Set component to read-only mode"/>
+            <property name="recordId" type="String" label="Record ID" description="Record ID for context"/>
+            <property name="configSettings" type="String" label="Configuration Settings" description="JSON configuration for component behavior"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
