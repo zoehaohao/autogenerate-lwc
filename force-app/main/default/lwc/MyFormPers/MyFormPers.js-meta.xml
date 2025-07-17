@@ -10,11 +10,4 @@
         <target>lightningCommunity__Page</target>
         <target>lightningCommunity__Default</target>
     </targets>
-    <targetConfigs>
-        <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage,lightningCommunity__Default">
-            <property name="recordId" type="String" label="Record ID" description="Optional record ID for data binding"/>
-            <property name="showActions" type="Boolean" label="Show Form Actions" description="Show Save and Reset buttons" default="true"/>
-            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Make form read-only" default="false"/>
-        </targetConfig>
-    </targetConfigs>
 </LightningComponentBundle>
