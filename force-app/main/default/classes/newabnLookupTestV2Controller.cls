@@ -4,31 +4,26 @@ public with sharing class newabnLookupTestV2Controller {
     private static final Integer TIMEOUT_SECONDS = 30;
     
     @AuraEnabled(cacheable=false)
-    public static ResponseWrapper searchABN(String searchParams) {
+    public static ResponseWrapper searchABN(String searchTerm, String searchType) {
         try {
-            if (String.isBlank(searchParams)) {
-                return new ResponseWrapper(false, 'Search parameters are required', null);
-            }
-            
-            Map<String, Object> params = (Map<String, Object>) JSON.deserializeUntyped(searchParams);
-            String searchTerm = (String) params.get('searchTerm');
-            String searchType = (String) params.get('searchType');
-            
+            // Input validation
             if (String.isBlank(searchTerm)) {
                 return new ResponseWrapper(false, 'Search term is required', null);
             }
             
-            // Validate input based on search type
-            String validationError = validateSearchInput(searchTerm, searchType);
-            if (String.isNotBlank(validationError)) {
-                return new ResponseWrapper(false, validationError, null);
+            // Sanitize input
+            String sanitizedTerm = String.escapeSingleQuotes(searchTerm.trim());
+            
+            // Validate search type and format
+            if (!validateSearchInput(sanitizedTerm, searchType)) {
+                return new ResponseWrapper(false, 'Invalid search format for ' + searchType, null);
             }
             
             // Make API call
-            String apiResponse = makeAPICall(searchTerm, searchType);
+            String apiResponse = makeAPICall(sanitizedTerm, searchType);
             
             if (String.isBlank(apiResponse)) {
-                return new ResponseWrapper(false, 'No response received from ABN service', null);
+                return new ResponseWrapper(false, 'No response received from API', null);
             }
             
             // Parse response
@@ -44,6 +39,7 @@ public with sharing class newabnLookupTestV2Controller {
             System.debug('ABN Search Error: ' + e.getMessage());
             System.debug('Stack Trace: ' + e.getStackTraceString());
             
+            // Return user-friendly error message
             String userMessage = 'An error occurred while searching. Please try again.';
             if (e instanceof CalloutException) {
                 userMessage = 'Unable to connect to ABN service. Please check your connection and try again.';
@@ -53,35 +49,23 @@ public with sharing class newabnLookupTestV2Controller {
         }
     }
     
-    private static String validateSearchInput(String searchTerm, String searchType) {
-        if (String.isBlank(searchTerm)) {
-            return 'Search term cannot be empty';
-        }
-        
+    private static Boolean validateSearchInput(String searchTerm, String searchType) {
         String cleanTerm = searchTerm.replaceAll('\\s', '');
         
         switch on searchType {
-            when 'abn' {
-                if (!Pattern.matches('^\\d{11}$', cleanTerm)) {
-                    return 'ABN must be exactly 11 digits';
-                }
+            when 'ABN' {
+                return Pattern.matches('^\\d{11}$', cleanTerm);
             }
-            when 'acn' {
-                if (!Pattern.matches('^\\d{9}$', cleanTerm)) {
-                    return 'ACN must be exactly 9 digits';
-                }
+            when 'ACN' {
+                return Pattern.matches('^\\d{9}$', cleanTerm);
             }
-            when 'name' {
-                if (searchTerm.length() < 2) {
-                    return 'Company name must be at least 2 characters';
-                }
+            when 'NAME' {
+                return searchTerm.length() >= 2;
             }
             when else {
-                return 'Invalid search type specified';
+                return false;
             }
         }
-        
-        return null;
     }
     
     private static String makeAPICall(String searchTerm, String searchType) {
@@ -94,6 +78,7 @@ public with sharing class newabnLookupTestV2Controller {
             request.setEndpoint(endpoint);
             request.setMethod('GET');
             request.setHeader('Content-Type', 'application/json');
+            request.setHeader('Accept', 'application/json');
             request.setTimeout(TIMEOUT_SECONDS * 1000);
             
             HttpResponse response = http.send(request);
@@ -101,19 +86,17 @@ public with sharing class newabnLookupTestV2Controller {
             if (response.getStatusCode() == 200) {
                 return response.getBody();
             } else if (response.getStatusCode() == 404) {
-                System.debug('ABN not found: ' + response.getStatusCode());
+                System.debug('API returned 404 - No results found');
                 return null;
             } else {
-                throw new CalloutException('API returned status code: ' + response.getStatusCode() + 
-                                         ' with message: ' + response.getStatus());
+                System.debug('API Error - Status Code: ' + response.getStatusCode());
+                System.debug('API Error - Response: ' + response.getBody());
+                throw new CalloutException('API returned status code: ' + response.getStatusCode());
             }
             
-        } catch (System.CalloutException e) {
-            System.debug('Callout Exception: ' + e.getMessage());
-            throw e;
         } catch (Exception e) {
-            System.debug('Unexpected error in API call: ' + e.getMessage());
-            throw new CalloutException('Failed to connect to ABN service: ' + e.getMessage());
+            System.debug('HTTP Callout Error: ' + e.getMessage());
+            throw e;
         }
     }
     
@@ -122,13 +105,13 @@ public with sharing class newabnLookupTestV2Controller {
         String queryParam = '';
         
         switch on searchType {
-            when 'abn' {
-                queryParam = '?abn=' + EncodingUtil.urlEncode(searchTerm.replaceAll('\\s', ''), 'UTF-8');
+            when 'ABN' {
+                queryParam = '?abn=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
             }
-            when 'acn' {
-                queryParam = '?acn=' + EncodingUtil.urlEncode(searchTerm.replaceAll('\\s', ''), 'UTF-8');
+            when 'ACN' {
+                queryParam = '?acn=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
             }
-            when 'name' {
+            when 'NAME' {
                 queryParam = '?name=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
             }
         }
@@ -136,21 +119,22 @@ public with sharing class newabnLookupTestV2Controller {
         return baseEndpoint + queryParam;
     }
     
-    private static Object parseAPIResponse(String responseBody) {
+    private static Object parseAPIResponse(String jsonResponse) {
         try {
-            if (String.isBlank(responseBody)) {
+            if (String.isBlank(jsonResponse)) {
                 return null;
             }
             
-            Object tempResult = JSON.deserializeUntyped(responseBody);
+            // Safe JSON parsing
+            Object tempData = JSON.deserializeUntyped(jsonResponse);
             
-            if (tempResult == null) {
+            if (tempData == null) {
                 return null;
             }
             
             // Handle both single object and array responses
-            if (tempResult instanceof List<Object>) {
-                List<Object> tempList = (List<Object>) tempResult;
+            if (tempData instanceof List<Object>) {
+                List<Object> tempList = (List<Object>) tempData;
                 if (tempList.isEmpty()) {
                     return null;
                 }
@@ -158,84 +142,60 @@ public with sharing class newabnLookupTestV2Controller {
                 List<Map<String, Object>> resultList = new List<Map<String, Object>>();
                 for (Object item : tempList) {
                     if (item instanceof Map<String, Object>) {
-                        Map<String, Object> processedItem = processABNRecord((Map<String, Object>) item);
-                        if (processedItem != null) {
-                            resultList.add(processedItem);
-                        }
+                        resultList.add((Map<String, Object>) item);
                     }
                 }
+                return resultList;
+            } else if (tempData instanceof Map<String, Object>) {
+                Map<String, Object> dataMap = (Map<String, Object>) tempData;
                 
-                return resultList.isEmpty() ? null : resultList;
+                // Check if the response indicates no results
+                if (dataMap.isEmpty() || isEmptyResult(dataMap)) {
+                    return null;
+                }
                 
-            } else if (tempResult instanceof Map<String, Object>) {
-                Map<String, Object> singleResult = (Map<String, Object>) tempResult;
-                Map<String, Object> processedResult = processABNRecord(singleResult);
-                return processedResult;
+                return dataMap;
             }
             
             return null;
             
-        } catch (JSONException e) {
-            System.debug('JSON parsing error: ' + e.getMessage());
-            throw new AuraHandledException('Invalid response format from ABN service');
         } catch (Exception e) {
-            System.debug('Error parsing API response: ' + e.getMessage());
-            throw new AuraHandledException('Error processing ABN data');
+            System.debug('JSON Parsing Error: ' + e.getMessage());
+            throw new AuraHandledException('Failed to parse API response');
         }
     }
     
-    private static Map<String, Object> processABNRecord(Map<String, Object> record) {
-        try {
-            if (record == null || record.isEmpty()) {
-                return null;
+    private static Boolean isEmptyResult(Map<String, Object> dataMap) {
+        // Check for common indicators of empty/invalid results
+        if (dataMap.containsKey('error') || dataMap.containsKey('errors')) {
+            return true;
+        }
+        
+        // Check if ABN data exists and is valid
+        if (dataMap.containsKey('abn')) {
+            Object abnData = dataMap.get('abn');
+            if (abnData instanceof Map<String, Object>) {
+                Map<String, Object> abnMap = (Map<String, Object>) abnData;
+                String identifierValue = (String) abnMap.get('identifier_value');
+                return String.isBlank(identifierValue);
             }
-            
-            // Validate that this is a valid ABN record
-            Map<String, Object> abnData = (Map<String, Object>) record.get('abn');
-            if (abnData == null || String.isBlank((String) abnData.get('identifier_value'))) {
-                return null;
-            }
-            
-            // Return the processed record
-            Map<String, Object> processedRecord = new Map<String, Object>();
-            processedRecord.putAll(record);
-            
-            // Add any additional processing here if needed
-            processedRecord.put('processed_timestamp', DateTime.now().getTime());
-            
-            return processedRecord;
-            
-        } catch (Exception e) {
-            System.debug('Error processing ABN record: ' + e.getMessage());
-            return null;
         }
+        
+        return false;
     }
     
-    @AuraEnabled(cacheable=true)
-    public static ResponseWrapper getSearchHistory(String userId) {
-        try {
-            // This method can be implemented to return search history
-            // For now, returning empty response
-            return new ResponseWrapper(true, 'Search history retrieved', new List<Object>());
-        } catch (Exception e) {
-            System.debug('Error retrieving search history: ' + e.getMessage());
-            return new ResponseWrapper(false, 'Unable to retrieve search history', null);
-        }
-    }
-    
+    // Response wrapper class
     public class ResponseWrapper {
         @AuraEnabled public Boolean success;
         @AuraEnabled public String message;
         @AuraEnabled public Object data;
         @AuraEnabled public List<String> errors;
-        @AuraEnabled public Long timestamp;
         
         public ResponseWrapper(Boolean success, String message, Object data) {
             this.success = success;
             this.message = message;
             this.data = data;
             this.errors = new List<String>();
-            this.timestamp = DateTime.now().getTime();
         }
         
         public ResponseWrapper(Boolean success, String message, Object data, List<String> errors) {
@@ -243,7 +203,17 @@ public with sharing class newabnLookupTestV2Controller {
             this.message = message;
             this.data = data;
             this.errors = errors != null ? errors : new List<String>();
-            this.timestamp = DateTime.now().getTime();
+        }
+    }
+    
+    // Test method for API validation
+    @AuraEnabled(cacheable=false)
+    public static ResponseWrapper testAPIConnection() {
+        try {
+            // Test with a sample ABN
+            return searchABN('44121436162', 'ABN');
+        } catch (Exception e) {
+            return new ResponseWrapper(false, 'API connection test failed: ' + e.getMessage(), null);
         }
     }
 }
