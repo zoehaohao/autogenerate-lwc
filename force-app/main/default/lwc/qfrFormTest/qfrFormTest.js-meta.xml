@@ -9,12 +9,4 @@
         <target>lightning__Tab</target>
         <target>lightningCommunity__Page</target>
     </targets>
-    <targetConfigs>
-        <targetConfig targets="lightning__RecordPage">
-            <property name="recordId" type="String" label="Record ID" description="The record ID for the QFR form"/>
-        </targetConfig>
-        <targetConfig targets="lightning__AppPage,lightning__HomePage">
-            <property name="configSettings" type="String" label="Configuration Settings" description="JSON configuration for the component"/>
-        </targetConfig>
-    </targetConfigs>
 </LightningComponentBundle>
