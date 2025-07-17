@@ -13,7 +13,10 @@
     <targetConfigs>
         <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage,lightningCommunity__Default">
             <property name="recordId" type="String" label="Record ID" description="Record ID for context"/>
-            <property name="configSettings" type="String" label="Configuration Settings" description="JSON configuration for component behavior"/>
+            <property name="initialData" type="String" label="Initial Data" description="JSON string of initial form data"/>
+            <property name="isReadOnly" type="Boolean" label="Read Only" description="Make form read-only" default="false"/>
+            <property name="showSubmitButton" type="Boolean" label="Show Submit Button" description="Display submit button" default="true"/>
+            <property name="showResetButton" type="Boolean" label="Show Reset Button" description="Display reset button" default="true"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

@@ -1,25 +1,26 @@
 import { LightningElement, api, track } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class MyFormPers extends LightningElement {
     // Public API properties for parent component integration
     @api recordId;
-    @api configSettings;
     @api initialData;
     @api isReadOnly = false;
+    @api showSubmitButton = true;
+    @api showResetButton = true;
 
-    // Tracked properties for form data
-    @track personalInfo = {
+    // Form data tracking
+    @track formData = {
         firstName: '',
         middleName: '',
-        lastName: ''
-    };
-
-    @track addressInfo = {
+        lastName: '',
         address: '',
         city: '',
         state: '',
         zipCode: ''
     };
+
+    @track validationErrors = {};
 
     // State options for dropdown
     stateOptions = [
@@ -75,61 +76,188 @@ export default class MyFormPers extends LightningElement {
         { label: 'Wyoming', value: 'WY' }
     ];
 
-    // Component lifecycle
+    // Lifecycle hooks
     connectedCallback() {
-        // Initialize with initial data if provided by parent
         if (this.initialData) {
-            this.initializeFormData();
+            this.formData = { ...this.formData, ...this.initialData };
         }
     }
 
-    // Initialize form data from parent
-    initializeFormData() {
-        if (this.initialData.personalInfo) {
-            this.personalInfo = { ...this.personalInfo, ...this.initialData.personalInfo };
-        }
-        if (this.initialData.addressInfo) {
-            this.addressInfo = { ...this.addressInfo, ...this.initialData.addressInfo };
-        }
+    // Computed properties for field styling
+    get firstNameFieldClass() {
+        return this.validationErrors.firstName ? 'slds-has-error' : '';
     }
 
-    // Handle personal information changes
-    handlePersonalInfoChange(event) {
+    get lastNameFieldClass() {
+        return this.validationErrors.lastName ? 'slds-has-error' : '';
+    }
+
+    get zipCodeFieldClass() {
+        return this.validationErrors.zipCode ? 'slds-has-error' : '';
+    }
+
+    // Event handlers
+    handleInputChange(event) {
         const fieldName = event.target.name;
         const fieldValue = event.target.value;
         
-        this.personalInfo = {
-            ...this.personalInfo,
+        // Update form data
+        this.formData = {
+            ...this.formData,
             [fieldName]: fieldValue
         };
 
-        // Notify parent of data changes
-        this.dispatchDataChangeEvent('personalInfo', fieldName, fieldValue);
+        // Clear validation error for this field
+        if (this.validationErrors[fieldName]) {
+            this.validationErrors = {
+                ...this.validationErrors,
+                [fieldName]: null
+            };
+        }
+
+        // Dispatch change event to parent
+        this.dispatchDataChangeEvent(fieldName, fieldValue);
     }
 
-    // Handle address information changes
-    handleAddressInfoChange(event) {
-        const fieldName = event.target.name;
-        const fieldValue = event.target.value;
+    handleSubmit(event) {
+        event.preventDefault();
         
-        this.addressInfo = {
-            ...this.addressInfo,
-            [fieldName]: fieldValue
-        };
+        if (this.validateForm()) {
+            // Dispatch success event to parent
+            const successEvent = new CustomEvent('success', {
+                detail: {
+                    componentName: 'MyFormPers',
+                    formData: this.formData,
+                    message: 'Form submitted successfully',
+                    timestamp: new Date().toISOString()
+                },
+                bubbles: true,
+                composed: true
+            });
+            this.dispatchEvent(successEvent);
 
-        // Notify parent of data changes
-        this.dispatchDataChangeEvent('addressInfo', fieldName, fieldValue);
+            // Show success toast
+            this.showToast('Success', 'Form submitted successfully!', 'success');
+        } else {
+            // Dispatch error event to parent
+            const errorEvent = new CustomEvent('error', {
+                detail: {
+                    componentName: 'MyFormPers',
+                    errorMessage: 'Please fix validation errors',
+                    validationErrors: this.validationErrors,
+                    timestamp: new Date().toISOString()
+                },
+                bubbles: true,
+                composed: true
+            });
+            this.dispatchEvent(errorEvent);
+
+            // Show error toast
+            this.showToast('Error', 'Please fix the validation errors', 'error');
+        }
     }
 
-    // Dispatch custom events to parent
-    dispatchDataChangeEvent(section, fieldName, fieldValue) {
+    handleReset() {
+        // Reset form data
+        this.formData = {
+            firstName: '',
+            middleName: '',
+            lastName: '',
+            address: '',
+            city: '',
+            state: '',
+            zipCode: ''
+        };
+
+        // Clear validation errors
+        this.validationErrors = {};
+
+        // Dispatch reset event to parent
+        const resetEvent = new CustomEvent('reset', {
+            detail: {
+                componentName: 'MyFormPers',
+                message: 'Form has been reset',
+                timestamp: new Date().toISOString()
+            },
+            bubbles: true,
+            composed: true
+        });
+        this.dispatchEvent(resetEvent);
+
+        // Show info toast
+        this.showToast('Info', 'Form has been reset', 'info');
+    }
+
+    // Validation methods
+    validateForm() {
+        let isValid = true;
+        const errors = {};
+
+        // Validate First Name
+        if (!this.formData.firstName || this.formData.firstName.trim() === '') {
+            errors.firstName = 'First Name is required';
+            isValid = false;
+        }
+
+        // Validate Last Name
+        if (!this.formData.lastName || this.formData.lastName.trim() === '') {
+            errors.lastName = 'Last Name is required';
+            isValid = false;
+        }
+
+        // Validate Zip Code
+        if (!this.formData.zipCode || this.formData.zipCode.trim() === '') {
+            errors.zipCode = 'Zip Code is required';
+            isValid = false;
+        } else if (!this.isValidZipCode(this.formData.zipCode)) {
+            errors.zipCode = 'Please enter a valid zip code';
+            isValid = false;
+        }
+
+        this.validationErrors = errors;
+        return isValid;
+    }
+
+    isValidZipCode(zipCode) {
+        // US Zip code validation (5 digits or 5+4 format)
+        const zipRegex = /^\d{5}(-\d{4})?$/;
+        return zipRegex.test(zipCode.trim());
+    }
+
+    // Public API methods for parent components
+    @api
+    validateComponent() {
+        return this.validateForm();
+    }
+
+    @api
+    getFormData() {
+        return { ...this.formData };
+    }
+
+    @api
+    setFormData(data) {
+        this.formData = { ...this.formData, ...data };
+    }
+
+    @api
+    resetForm() {
+        this.handleReset();
+    }
+
+    @api
+    clearValidationErrors() {
+        this.validationErrors = {};
+    }
+
+    // Helper methods
+    dispatchDataChangeEvent(fieldName, fieldValue) {
         const changeEvent = new CustomEvent('datachange', {
             detail: {
                 componentName: 'MyFormPers',
-                section: section,
                 fieldName: fieldName,
                 newValue: fieldValue,
-                formData: this.getFormData(),
+                formData: this.formData,
                 isValid: this.validateForm(),
                 timestamp: new Date().toISOString()
             },
@@ -139,116 +267,12 @@ export default class MyFormPers extends LightningElement {
         this.dispatchEvent(changeEvent);
     }
 
-    // Public API methods for parent component
-    @api
-    getFormData() {
-        return {
-            personalInfo: { ...this.personalInfo },
-            addressInfo: { ...this.addressInfo }
-        };
-    }
-
-    @api
-    validateForm() {
-        const validationResults = {
-            isValid: true,
-            errors: []
-        };
-
-        // Validate required fields
-        if (!this.personalInfo.firstName || this.personalInfo.firstName.trim() === '') {
-            validationResults.isValid = false;
-            validationResults.errors.push('First name is required');
-        }
-
-        if (!this.personalInfo.lastName || this.personalInfo.lastName.trim() === '') {
-            validationResults.isValid = false;
-            validationResults.errors.push('Last name is required');
-        }
-
-        if (!this.addressInfo.zipCode || this.addressInfo.zipCode.trim() === '') {
-            validationResults.isValid = false;
-            validationResults.errors.push('Zip code is required');
-        }
-
-        // Validate zip code format (basic US zip code validation)
-        if (this.addressInfo.zipCode && !this.isValidZipCode(this.addressInfo.zipCode)) {
-            validationResults.isValid = false;
-            validationResults.errors.push('Please enter a valid zip code');
-        }
-
-        return validationResults;
-    }
-
-    @api
-    clearForm() {
-        this.personalInfo = {
-            firstName: '',
-            middleName: '',
-            lastName: ''
-        };
-        this.addressInfo = {
-            address: '',
-            city: '',
-            state: '',
-            zipCode: ''
-        };
-
-        // Notify parent of form clear
-        const clearEvent = new CustomEvent('formclear', {
-            detail: {
-                componentName: 'MyFormPers',
-                timestamp: new Date().toISOString()
-            },
-            bubbles: true,
-            composed: true
+    showToast(title, message, variant) {
+        const event = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant
         });
-        this.dispatchEvent(clearEvent);
-    }
-
-    @api
-    setFormData(data) {
-        if (data.personalInfo) {
-            this.personalInfo = { ...this.personalInfo, ...data.personalInfo };
-        }
-        if (data.addressInfo) {
-            this.addressInfo = { ...this.addressInfo, ...data.addressInfo };
-        }
-    }
-
-    // Utility methods
-    isValidZipCode(zipCode) {
-        // US zip code validation (5 digits or 5+4 format)
-        const zipRegex = /^\d{5}(-\d{4})?$/;
-        return zipRegex.test(zipCode.trim());
-    }
-
-    // Handle form submission (if needed by parent)
-    handleSubmit() {
-        const validation = this.validateForm();
-        
-        if (validation.isValid) {
-            const submitEvent = new CustomEvent('formsubmit', {
-                detail: {
-                    componentName: 'MyFormPers',
-                    formData: this.getFormData(),
-                    timestamp: new Date().toISOString()
-                },
-                bubbles: true,
-                composed: true
-            });
-            this.dispatchEvent(submitEvent);
-        } else {
-            const errorEvent = new CustomEvent('formerror', {
-                detail: {
-                    componentName: 'MyFormPers',
-                    errors: validation.errors,
-                    timestamp: new Date().toISOString()
-                },
-                bubbles: true,
-                composed: true
-            });
-            this.dispatchEvent(errorEvent);
-        }
+        this.dispatchEvent(event);
     }
 }

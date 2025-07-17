@@ -1,112 +1,126 @@
-/* Section headers styling */
-.section-header {
-    color: #1B3A57;
-    font-weight: 600;
-    font-family: 'Salesforce Sans', Arial, sans-serif;
+/* Form Section Styling */
+.form-section {
+    padding: 1rem;
+    border-radius: 0.25rem;
 }
 
-/* Label container and field label styling */
-.label-container {
+.section-heading {
+    color: #1B3A57; /* Dark blue/navy */
+    font-weight: 600;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    margin-bottom: 1rem;
+}
+
+/* Field Container and Label Styling */
+.field-container {
     display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding-right: 0.75rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
 }
 
 .field-label {
     text-align: right;
-    color: #3E3E3C;
-    font-family: 'Salesforce Sans', Arial, sans-serif;
+    width: 150px;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    color: #3E3E3C; /* Dark grey */
     font-weight: 400;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    flex-shrink: 0;
 }
 
-/* Required asterisk styling */
+.slds-form-element__control {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Required Field Asterisk */
 .required-asterisk {
-    color: #EA001E;
+    color: #EA001E; /* Red */
     margin-right: 0.25rem;
     font-weight: bold;
 }
 
-/* Custom input styling */
-.custom-input {
+/* Input Field Styling */
+.slds-form-element lightning-input,
+.slds-form-element lightning-combobox {
     width: 100%;
 }
 
-/* Responsive design for mobile devices */
-@media (max-width: 767px) {
-    .slds-grid.slds-grid_align-end {
-        display: block;
-    }
-    
-    .label-container {
-        justify-content: flex-start;
-        padding-right: 0;
-        margin-bottom: 0.25rem;
+/* Error Message Styling */
+.error-message {
+    color: #EA001E;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .field-container {
+        flex-direction: column;
+        align-items: stretch;
     }
     
     .field-label {
         text-align: left;
-        justify-content: flex-start;
-    }
-    
-    .slds-col.slds-size_1-of-3,
-    .slds-col.slds-size_2-of-3 {
         width: 100%;
-        flex: none;
-    }
-}
-
-/* Responsive design for tablet devices */
-@media (min-width: 768px) and (max-width: 1023px) {
-    .slds-col.slds-size_1-of-3 {
-        width: 35%;
+        padding-right: 0;
+        padding-bottom: 0.25rem;
+        padding-top: 0;
     }
     
-    .slds-col.slds-size_2-of-3 {
-        width: 65%;
+    .form-section {
+        padding: 0.5rem;
     }
 }
 
-/* Form container styling */
+@media (max-width: 480px) {
+    .section-heading {
+        font-size: 1.125rem;
+    }
+    
+    .slds-grid.slds-gutters {
+        margin: 0;
+    }
+    
+    .slds-col {
+        padding: 0.25rem;
+    }
+}
+
+/* Focus and Hover States */
+.slds-form-element lightning-input:focus-within,
+.slds-form-element lightning-combobox:focus-within {
+    box-shadow: 0 0 3px #1B96FF;
+}
+
+/* Button Styling */
+.slds-grid_align-center {
+    justify-content: center;
+}
+
+/* Card Styling */
 .slds-card {
-    background: white;
-    border-radius: 0.25rem;
-    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid #D8DDE6;
 }
 
-/* Consistent spacing */
-.slds-form-element.slds-m-bottom_medium {
-    margin-bottom: 1rem;
+/* Consistent Field Width */
+.slds-form-element__control lightning-input,
+.slds-form-element__control lightning-combobox {
+    max-width: 300px;
 }
 
-.slds-form-element.slds-m-bottom_large {
-    margin-bottom: 1.5rem;
+/* Section Spacing */
+.form-section + .form-section {
+    border-left: 1px solid #D8DDE6;
 }
 
-/* Input field consistency */
-.custom-input lightning-input,
-.custom-input lightning-combobox {
-    --slds-c-input-sizing-border: 1px solid #D8DDE6;
-    --slds-c-input-color-border-focus: #1B96FF;
-}
-
-/* Ensure consistent field widths */
-.slds-form-element__control {
-    width: 100%;
-}
-
-/* Typography consistency */
-* {
-    font-family: 'Salesforce Sans', Arial, sans-serif;
-}
-
-/* Focus states for accessibility */
-.custom-input lightning-input:focus-within,
-.custom-input lightning-combobox:focus-within {
-    outline: 2px solid #1B96FF;
-    outline-offset: 2px;
+@media (max-width: 1023px) {
+    .form-section + .form-section {
+        border-left: none;
+        border-top: 1px solid #D8DDE6;
+        margin-top: 1rem;
+        padding-top: 1rem;
+    }
 }
