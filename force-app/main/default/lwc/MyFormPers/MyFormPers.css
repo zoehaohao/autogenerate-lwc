@@ -1,49 +1,49 @@
-/* Component-specific styles */
+/* Section headers styling */
 .section-header {
     color: #1B3A57;
     font-weight: 600;
     font-family: 'Salesforce Sans', Arial, sans-serif;
 }
 
+/* Label container and field label styling */
+.label-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 0.75rem;
+}
+
 .field-label {
-    color: #3E3E3C;
-    font-weight: 500;
-    font-family: 'Salesforce Sans', Arial, sans-serif;
     text-align: right;
+    color: #3E3E3C;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    font-weight: 400;
+    margin: 0;
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    height: 2.25rem;
 }
 
+/* Required asterisk styling */
 .required-asterisk {
     color: #EA001E;
     margin-right: 0.25rem;
     font-weight: bold;
 }
 
-.input-field {
+/* Custom input styling */
+.custom-input {
     width: 100%;
-    font-family: 'Salesforce Sans', Arial, sans-serif;
 }
 
-.label-container {
-    padding-right: 0.75rem;
-}
-
-.error-message {
-    color: #EA001E;
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
+/* Responsive design for mobile devices */
+@media (max-width: 767px) {
     .slds-grid.slds-grid_align-end {
         display: block;
     }
     
     .label-container {
+        justify-content: flex-start;
         padding-right: 0;
         margin-bottom: 0.25rem;
     }
@@ -51,84 +51,62 @@
     .field-label {
         text-align: left;
         justify-content: flex-start;
-        height: auto;
     }
     
     .slds-col.slds-size_1-of-3,
     .slds-col.slds-size_2-of-3 {
         width: 100%;
+        flex: none;
     }
 }
 
-@media (max-width: 480px) {
-    .slds-card {
-        margin: 0;
-        border-radius: 0;
-    }
-    
-    .slds-p-around_medium {
-        padding: 1rem;
+/* Responsive design for tablet devices */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .slds-col.slds-size_1-of-3 {
+        width: 35%;
     }
     
-    .section-header {
-        font-size: 1rem;
-    }
-    
-    .field-label {
-        font-size: 0.875rem;
-    }
-    
-    .input-field {
-        font-size: 1rem;
+    .slds-col.slds-size_2-of-3 {
+        width: 65%;
     }
 }
 
-/* Enhanced focus states for accessibility */
-.input-field:focus {
-    border-color: #1B96FF;
-    box-shadow: 0 0 3px #1B96FF;
-    outline: none;
-}
-
-/* Select dropdown styling */
-.slds-select_container {
-    position: relative;
-}
-
-.slds-select_container::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    right: 0.75rem;
-    transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 4px solid #706e6b;
-    pointer-events: none;
-}
-
-/* Form validation states */
-.slds-has-error .input-field {
-    border-color: #EA001E;
-}
-
-.slds-has-error .input-field:focus {
-    border-color: #EA001E;
-    box-shadow: 0 0 3px #EA001E;
-}
-
-/* Button styling */
-.slds-button {
-    font-family: 'Salesforce Sans', Arial, sans-serif;
+/* Form container styling */
+.slds-card {
+    background: white;
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10);
 }
 
 /* Consistent spacing */
-.slds-form-element {
-    margin-bottom: 0.75rem;
+.slds-form-element.slds-m-bottom_medium {
+    margin-bottom: 1rem;
 }
 
-.slds-form-element:last-child {
-    margin-bottom: 0;
+.slds-form-element.slds-m-bottom_large {
+    margin-bottom: 1.5rem;
+}
+
+/* Input field consistency */
+.custom-input lightning-input,
+.custom-input lightning-combobox {
+    --slds-c-input-sizing-border: 1px solid #D8DDE6;
+    --slds-c-input-color-border-focus: #1B96FF;
+}
+
+/* Ensure consistent field widths */
+.slds-form-element__control {
+    width: 100%;
+}
+
+/* Typography consistency */
+* {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+}
+
+/* Focus states for accessibility */
+.custom-input lightning-input:focus-within,
+.custom-input lightning-combobox:focus-within {
+    outline: 2px solid #1B96FF;
+    outline-offset: 2px;
 }

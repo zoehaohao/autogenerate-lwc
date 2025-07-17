@@ -12,10 +12,8 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage,lightningCommunity__Default">
-            <property name="recordId" type="String" label="Record ID" description="Optional record ID for data binding"/>
-            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Make the form read-only" default="false"/>
-            <property name="showSubmitButton" type="Boolean" label="Show Submit Button" description="Display the submit button" default="true"/>
-            <property name="showResetButton" type="Boolean" label="Show Reset Button" description="Display the reset button" default="true"/>
+            <property name="recordId" type="String" label="Record ID" description="Record ID for context"/>
+            <property name="configSettings" type="String" label="Configuration Settings" description="JSON configuration for component behavior"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
