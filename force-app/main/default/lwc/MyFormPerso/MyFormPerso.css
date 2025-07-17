@@ -1,118 +1,106 @@
-/* Form container styling */
-.slds-card {
-    max-width: 600px;
-    margin: 0 auto;
-    font-family: 'Salesforce Sans', Arial, sans-serif;
-}
-
-/* Section styling */
-.form-section {
-    margin-bottom: 2rem;
-}
-
-.section-heading {
+/* Responsive form styling with right-aligned labels */
+.section-header {
     color: #1B3A57;
-    font-size: 1.125rem;
     font-weight: 600;
-    margin-bottom: 1.5rem;
     font-family: 'Salesforce Sans', Arial, sans-serif;
-}
-
-/* Field container styling */
-.field-container {
-    margin-bottom: 1rem;
-}
-
-.field-wrapper {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-}
-
-/* Label container styling */
-.label-container {
-    min-width: 120px;
-    text-align: right;
-    padding-top: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.25rem;
 }
 
 .field-label {
+    text-align: right;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
     color: #3E3E3C;
-    font-size: 0.875rem;
     font-weight: 400;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.form-field {
+    width: 100%;
+    max-width: 400px;
     font-family: 'Salesforce Sans', Arial, sans-serif;
 }
 
-.required-asterisk {
-    color: #C23934;
-    font-weight: bold;
-    font-size: 0.875rem;
+.slds-form_stacked .slds-form-element__label {
+    text-align: right;
+    margin-bottom: 0.25rem;
 }
 
-/* Input field styling */
-.custom-input,
-.custom-combobox {
-    flex: 1;
-    max-width: 300px;
+.slds-form-element__control {
+    margin-left: 0;
 }
 
-/* Override lightning component styles */
-.custom-input lightning-input,
-.custom-combobox lightning-combobox {
-    --sds-c-input-sizing-border: 1px solid #D8DDE6;
-    --sds-c-input-color-border-focus: #1B96FF;
+.slds-required {
+    color: #c23934;
+    margin-right: 0.25rem;
 }
 
-/* Responsive design */
-@media (max-width: 767px) {
-    .field-wrapper {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .label-container {
+/* Responsive behavior */
+@media (max-width: 768px) {
+    .field-label {
         text-align: left;
-        justify-content: flex-start;
-        min-width: auto;
-        padding-top: 0;
     }
     
-    .custom-input,
-    .custom-combobox {
+    .slds-form_stacked .slds-form-element__label {
+        text-align: left;
+    }
+    
+    .form-field {
         max-width: 100%;
     }
-    
-    .section-heading {
-        font-size: 1rem;
-        margin-bottom: 1rem;
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .form-field {
+        max-width: 350px;
     }
 }
 
-@media (max-width: 479px) {
-    .slds-card {
-        margin: 0 0.5rem;
-    }
-    
-    .form-section {
-        margin-bottom: 1.5rem;
-    }
-    
-    .field-container {
-        margin-bottom: 0.75rem;
+@media (min-width: 1025px) {
+    .form-field {
+        max-width: 400px;
     }
 }
 
-/* Ensure consistent field widths */
-.custom-input lightning-input .slds-input,
-.custom-combobox lightning-combobox .slds-combobox__input {
-    width: 100%;
+/* Consistent spacing */
+.slds-form-element {
+    margin-bottom: 1rem;
 }
 
-/* Custom styling for combobox dropdown arrow */
-.custom-combobox lightning-combobox .slds-combobox__input-entity-icon {
+.slds-form-element:last-child {
+    margin-bottom: 0;
+}
+
+/* Select dropdown styling */
+.slds-select_container {
+    position: relative;
+}
+
+.slds-select_container::after {
+    content: '';
+    position: absolute;
     right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #706e6b;
+    pointer-events: none;
+}
+
+/* Error styling */
+.slds-text-color_error {
+    color: #c23934;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+/* Form actions */
+.slds-form-element__control .slds-button {
+    margin-right: 0.5rem;
+}
+
+.slds-form-element__control .slds-button:last-child {
+    margin-right: 0;
 }
