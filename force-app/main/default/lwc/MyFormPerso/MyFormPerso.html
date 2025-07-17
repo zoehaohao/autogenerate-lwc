@@ -1,0 +1,127 @@
+<template>
+    <div class="form-container">
+        <!-- Personal Information Section -->
+        <div class="form-section">
+            <h2 class="section-heading">Personal information</h2>
+            <div class="slds-grid slds-wrap slds-gutters_medium">
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="field-container">
+                        <div class="field-label-container">
+                            <span class="required-asterisk">*</span>
+                            <label class="field-label">First name</label>
+                        </div>
+                        <lightning-input
+                            type="text"
+                            value={firstName}
+                            onchange={handleFirstNameChange}
+                            class="form-input"
+                            variant="standard"
+                            required>
+                        </lightning-input>
+                    </div>
+                </div>
+                
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="field-container">
+                        <div class="field-label-container">
+                            <label class="field-label">Middle name</label>
+                        </div>
+                        <lightning-input
+                            type="text"
+                            value={middleName}
+                            onchange={handleMiddleNameChange}
+                            class="form-input"
+                            variant="standard">
+                        </lightning-input>
+                    </div>
+                </div>
+                
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="field-container">
+                        <div class="field-label-container">
+                            <span class="required-asterisk">*</span>
+                            <label class="field-label">Last name</label>
+                        </div>
+                        <lightning-input
+                            type="text"
+                            value={lastName}
+                            onchange={handleLastNameChange}
+                            class="form-input"
+                            variant="standard"
+                            required>
+                        </lightning-input>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Address Section -->
+        <div class="form-section">
+            <h2 class="section-heading">Address</h2>
+            <div class="slds-grid slds-wrap slds-gutters_medium">
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="field-container">
+                        <div class="field-label-container">
+                            <label class="field-label">Address</label>
+                        </div>
+                        <lightning-input
+                            type="text"
+                            value={address}
+                            onchange={handleAddressChange}
+                            class="form-input"
+                            variant="standard">
+                        </lightning-input>
+                    </div>
+                </div>
+                
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="field-container">
+                        <div class="field-label-container">
+                            <label class="field-label">City or Town</label>
+                        </div>
+                        <lightning-input
+                            type="text"
+                            value={city}
+                            onchange={handleCityChange}
+                            class="form-input"
+                            variant="standard">
+                        </lightning-input>
+                    </div>
+                </div>
+                
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="field-container">
+                        <div class="field-label-container">
+                            <label class="field-label">State</label>
+                        </div>
+                        <lightning-combobox
+                            value={selectedState}
+                            placeholder="Choose a State"
+                            options={stateOptions}
+                            onchange={handleStateChange}
+                            class="form-input"
+                            variant="standard">
+                        </lightning-combobox>
+                    </div>
+                </div>
+                
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="field-container">
+                        <div class="field-label-container">
+                            <span class="required-asterisk">*</span>
+                            <label class="field-label">Zip code</label>
+                        </div>
+                        <lightning-input
+                            type="text"
+                            value={zipCode}
+                            onchange={handleZipCodeChange}
+                            class="form-input"
+                            variant="standard"
+                            required>
+                        </lightning-input>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

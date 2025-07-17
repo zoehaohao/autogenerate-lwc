@@ -1,0 +1,128 @@
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.section-heading {
+    color: #1B3A57;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+}
+
+.field-container {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    min-height: 3rem;
+}
+
+.field-label-container {
+    display: flex;
+    align-items: center;
+    min-width: 120px;
+    padding-right: 1rem;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+}
+
+.field-label {
+    color: #333333;
+    font-size: 0.875rem;
+    font-weight: 400;
+    text-align: right;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+}
+
+.required-asterisk {
+    color: #d73c3c;
+    font-weight: bold;
+    margin-right: 0.25rem;
+}
+
+.form-input {
+    flex: 1;
+    max-width: 300px;
+}
+
+/* Responsive Design */
+@media (max-width: 767px) {
+    .form-container {
+        padding: 0.5rem;
+    }
+    
+    .field-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .field-label-container {
+        justify-content: flex-start;
+        min-width: auto;
+        padding-right: 0;
+        margin-bottom: 0.5rem;
+        margin-top: 0;
+    }
+    
+    .form-input {
+        max-width: 100%;
+    }
+    
+    .section-heading {
+        font-size: 1.125rem;
+        margin-bottom: 1rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .form-container {
+        max-width: 500px;
+    }
+    
+    .field-label-container {
+        min-width: 100px;
+    }
+    
+    .form-input {
+        max-width: 280px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .form-container {
+        max-width: 600px;
+    }
+    
+    .field-label-container {
+        min-width: 120px;
+    }
+    
+    .form-input {
+        max-width: 300px;
+    }
+}
+
+/* Lightning Input Overrides */
+.form-input lightning-input,
+.form-input lightning-combobox {
+    --sds-c-input-sizing-border: 1px solid #d8dde6;
+    --sds-c-input-color-border-focus: #1b96ff;
+}
+
+/* Ensure consistent field widths */
+.form-input lightning-input input,
+.form-input lightning-combobox .slds-combobox__form-element {
+    width: 100%;
+}
+
+/* Custom styling for combobox dropdown arrow */
+.form-input lightning-combobox .slds-combobox__input {
+    padding-right: 2rem;
+}
