@@ -1,0 +1,115 @@
+/* Component-specific styles */
+.section-heading {
+    color: #1B3A57;
+    font-weight: 600;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+}
+
+.field-container {
+    margin-bottom: 1rem;
+}
+
+.field-label {
+    text-align: right;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    color: #3E3E3C;
+    font-weight: 400;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.field-input {
+    width: 100%;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+}
+
+/* Required field asterisk styling */
+.slds-required {
+    color: #C23934;
+    margin-right: 0.25rem;
+}
+
+/* Responsive behavior */
+@media (max-width: 479px) {
+    .field-container {
+        margin-bottom: 0.75rem;
+    }
+    
+    .section-heading {
+        font-size: 1.125rem;
+    }
+}
+
+@media (min-width: 480px) and (max-width: 767px) {
+    .field-container {
+        margin-bottom: 0.875rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .field-container {
+        margin-bottom: 1rem;
+    }
+    
+    .field-label {
+        margin-bottom: 0.375rem;
+    }
+}
+
+/* Form validation error styling */
+.slds-form-element__help {
+    color: #C23934;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+/* Select dropdown styling */
+.slds-select_container::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    transform: translateY(-50%);
+    pointer-events: none;
+    border-left: 0.25rem solid transparent;
+    border-right: 0.25rem solid transparent;
+    border-top: 0.25rem solid #706e6b;
+}
+
+/* Consistent spacing */
+.slds-form {
+    max-width: 600px;
+}
+
+/* Card styling */
+.slds-card {
+    background-color: #ffffff;
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.10);
+}
+
+/* Input focus states */
+.field-input:focus {
+    border-color: #1589ee;
+    box-shadow: 0 0 3px #0176d3;
+    outline: none;
+}
+
+/* Consistent field width and alignment */
+.slds-form-element__control {
+    position: relative;
+}
+
+/* Typography consistency */
+.slds-form-element__label,
+.field-label {
+    font-size: 0.875rem;
+    line-height: 1.25;
+}
+
+.field-input {
+    font-size: 0.875rem;
+    line-height: 1.25;
+    padding: 0.5rem 0.75rem;
+}
