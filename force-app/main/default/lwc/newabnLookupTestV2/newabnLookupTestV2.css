@@ -1,59 +1,72 @@
-.result-card {
-    height: 100%;
-    transition: box-shadow 0.2s ease-in-out;
-}
-
-.result-card:hover {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.custom-find-abn-button {
+    background-color: #2c3e50;
+    border-color: #2c3e50;
 }
 
 .search-input {
-    width: 100%;
+    border-radius: 0;
 }
 
-.slds-list_horizontal dt {
-    width: 40%;
-    margin-right: 1rem;
-    margin-bottom: 0.5rem;
+.search-button {
+    background-color: #2c5f5f;
+    border-color: #2c5f5f;
+    border-radius: 0;
 }
 
-.slds-list_horizontal dd {
-    width: 55%;
-    margin-bottom: 0.5rem;
+.result-card {
+    border: 1px solid #d8dde6;
+    border-radius: 4px;
+    min-height: 280px;
 }
 
+.result-card .slds-card__body {
+    padding: 1rem;
+}
+
+.entity-details {
+    font-size: 0.875rem;
+}
+
+.entity-details .slds-form-element__label {
+    font-weight: normal;
+    color: #3e3e3c;
+}
+
+.select-button {
+    background-color: #2c3e50;
+    border-color: #2c3e50;
+    min-width: 100px;
+}
+
+.select-button:hover {
+    background-color: #34495e;
+    border-color: #34495e;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
-    .slds-list_horizontal dt,
-    .slds-list_horizontal dd {
+    .result-card {
+        min-height: auto;
+    }
+    
+    .slds-col.slds-medium-size_1-of-2 {
         width: 100%;
-        margin-right: 0;
-    }
-    
-    .slds-list_horizontal dt {
-        font-weight: bold;
-        margin-bottom: 0.25rem;
-    }
-    
-    .slds-list_horizontal dd {
-        margin-bottom: 1rem;
     }
 }
 
-.slds-card__header-title .slds-text-heading_small {
-    font-weight: bold;
-    color: #0176d3;
+/* Loading state styling */
+.slds-spinner_container {
+    position: relative;
+    min-height: 100px;
 }
 
-.slds-notify {
-    border-radius: 0.25rem;
+/* Alert styling */
+.slds-notify.slds-alert_warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #212529;
 }
 
-.slds-alert_error {
-    background-color: #fef7f7;
-    border-left: 4px solid #ea001e;
-}
-
-.slds-alert_warning {
-    background-color: #fefaf6;
-    border-left: 4px solid #fe9339;
+.slds-notify.slds-alert_warning .slds-icon {
+    fill: #212529;
 }
