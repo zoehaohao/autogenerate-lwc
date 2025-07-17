@@ -11,10 +11,8 @@
         <target>lightningCommunity__Default</target>
     </targets>
     <targetConfigs>
-        <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage,lightningCommunity__Default">
-            <property name="recordId" type="String" label="Record ID" description="Record ID for data binding"/>
-            <property name="initialData" type="String" label="Initial Data" description="JSON string of initial form data"/>
-            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Set form to read-only mode"/>
+        <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage">
+            <property name="recordId" type="String" label="Record ID" description="Optional record ID for data binding"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
