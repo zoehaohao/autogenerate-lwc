@@ -1,128 +1,133 @@
-.form-container {
+/* Form container styling */
+.slds-card {
     max-width: 600px;
     margin: 0 auto;
-    padding: 1rem;
-    font-family: 'Salesforce Sans', Arial, sans-serif;
 }
 
+/* Section styling */
 .form-section {
     margin-bottom: 2rem;
 }
 
 .section-heading {
     color: #1B3A57;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     font-weight: 600;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     font-family: 'Salesforce Sans', Arial, sans-serif;
 }
 
+/* Field container styling */
 .field-container {
-    display: flex;
-    align-items: flex-start;
     margin-bottom: 1rem;
-    min-height: 3rem;
 }
 
-.field-label-container {
+.field-wrapper {
     display: flex;
-    align-items: center;
-    min-width: 120px;
-    padding-right: 1rem;
-    justify-content: flex-end;
-    margin-top: 0.5rem;
+    flex-direction: column;
+    width: 100%;
 }
 
+/* Label styling */
 .field-label {
-    color: #333333;
+    color: #3E3E3C;
     font-size: 0.875rem;
     font-weight: 400;
-    text-align: right;
+    margin-bottom: 0.25rem;
+    text-align: left;
     font-family: 'Salesforce Sans', Arial, sans-serif;
+    display: flex;
+    align-items: center;
+}
+
+.required-field {
+    position: relative;
 }
 
 .required-asterisk {
-    color: #d73c3c;
-    font-weight: bold;
+    color: #C23934;
     margin-right: 0.25rem;
+    font-weight: bold;
 }
 
+/* Input field styling */
 .form-input {
-    flex: 1;
-    max-width: 300px;
+    width: 100%;
 }
 
-/* Responsive Design */
-@media (max-width: 767px) {
-    .form-container {
-        padding: 0.5rem;
+.form-input lightning-input,
+.form-input lightning-combobox {
+    --slds-c-input-sizing-border: 1px solid #D8DDE6;
+    --slds-c-input-color-border-focus: #1B96FF;
+}
+
+/* Error message styling */
+.error-message {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+}
+
+/* Responsive design */
+@media (max-width: 479px) {
+    .slds-card {
+        margin: 0 0.5rem;
     }
     
-    .field-container {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .field-label-container {
-        justify-content: flex-start;
-        min-width: auto;
-        padding-right: 0;
-        margin-bottom: 0.5rem;
-        margin-top: 0;
-    }
-    
-    .form-input {
-        max-width: 100%;
+    .field-wrapper {
+        margin-bottom: 0.75rem;
     }
     
     .section-heading {
-        font-size: 1.125rem;
-        margin-bottom: 1rem;
+        font-size: 1rem;
     }
 }
 
-@media (min-width: 768px) and (max-width: 1023px) {
-    .form-container {
-        max-width: 500px;
-    }
-    
-    .field-label-container {
-        min-width: 100px;
-    }
-    
-    .form-input {
-        max-width: 280px;
+@media (min-width: 480px) and (max-width: 767px) {
+    .slds-card {
+        margin: 0 1rem;
     }
 }
 
-@media (min-width: 1024px) {
-    .form-container {
-        max-width: 600px;
-    }
-    
-    .field-label-container {
+@media (min-width: 768px) {
+    .field-label {
+        text-align: right;
+        padding-right: 1rem;
         min-width: 120px;
     }
     
+    .field-wrapper {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+    
     .form-input {
+        flex: 1;
         max-width: 300px;
     }
 }
 
-/* Lightning Input Overrides */
-.form-input lightning-input,
-.form-input lightning-combobox {
-    --sds-c-input-sizing-border: 1px solid #d8dde6;
-    --sds-c-input-color-border-focus: #1b96ff;
+/* Button styling */
+.slds-button {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
 }
 
-/* Ensure consistent field widths */
-.form-input lightning-input input,
-.form-input lightning-combobox .slds-combobox__form-element {
-    width: 100%;
+/* Focus states for accessibility */
+.form-input:focus-within {
+    outline: 2px solid #1B96FF;
+    outline-offset: 2px;
 }
 
-/* Custom styling for combobox dropdown arrow */
-.form-input lightning-combobox .slds-combobox__input {
-    padding-right: 2rem;
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .section-heading {
+        color: #000000;
+    }
+    
+    .field-label {
+        color: #000000;
+    }
+    
+    .required-asterisk {
+        color: #FF0000;
+    }
 }
