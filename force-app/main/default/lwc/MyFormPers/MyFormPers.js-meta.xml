@@ -10,4 +10,10 @@
         <target>lightningCommunity__Page</target>
         <target>lightningCommunity__Default</target>
     </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage,lightningCommunity__Default">
+            <property name="recordId" type="String" label="Record ID" description="Optional record ID for data binding"/>
+            <property name="configSettings" type="String" label="Configuration Settings" description="JSON configuration for component behavior"/>
+        </targetConfig>
+    </targetConfigs>
 </LightningComponentBundle>

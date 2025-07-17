@@ -1,80 +1,41 @@
-/* Component Container */
-.myform-container {
-    max-width: 600px;
-    margin: 0 auto;
+/* Section headers styling */
+.section-header {
+    color: #1b3a57;
+    font-weight: 600;
     font-family: 'Salesforce Sans', Arial, sans-serif;
 }
 
-/* Section Headers */
-.section-header {
-    color: #1B3A57;
-    font-weight: 600;
-    font-size: 1.125rem;
-    margin-bottom: 1rem;
-}
-
-/* Field Container */
-.field-container {
-    margin-bottom: 1rem;
-}
-
-/* Grid Layout for Label and Input Alignment */
-.field-container .slds-grid {
-    align-items: center;
-    min-height: 2.5rem;
-}
-
-/* Label Container */
-.label-container {
-    flex: 0 0 35%;
-    max-width: 35%;
-    padding-right: 1rem;
-    text-align: right;
-}
-
-/* Input Container */
-.input-container {
-    flex: 0 0 65%;
-    max-width: 65%;
-}
-
-/* Field Labels */
-.field-label {
-    color: #3E3E3C;
-    font-weight: 400;
-    font-size: 0.875rem;
-    display: inline-block;
-    text-align: right;
-    width: 100%;
-}
-
-/* Required Asterisk */
+/* Required asterisk styling */
 .required-asterisk {
-    color: #C23934;
-    margin-right: 0.25rem;
+    color: #c23934;
+    margin-right: 4px;
     font-weight: bold;
 }
 
-/* Form Inputs */
-.form-input {
+/* Label container for consistent alignment */
+.label-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-height: 2.25rem;
+}
+
+/* Form element labels */
+.slds-form-element__label {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    color: #3e3e3c;
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+/* Input field styling */
+.slds-input,
+.slds-select {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
     width: 100%;
-    max-width: 300px;
-    height: 2.25rem;
-    border: 1px solid #D8DDE6;
-    border-radius: 0.25rem;
-    padding: 0 0.75rem;
-    font-size: 0.875rem;
-    background-color: white;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-.form-input:focus {
-    outline: none;
-    border-color: #1B96FF;
-    box-shadow: 0 0 0 1px #1B96FF;
-}
-
-/* Select Dropdown Specific Styling */
+/* Select container for dropdown arrow */
 .slds-select_container {
     position: relative;
 }
@@ -82,131 +43,103 @@
 .slds-select_container::after {
     content: '';
     position: absolute;
-    top: 50%;
     right: 0.75rem;
+    top: 50%;
     transform: translateY(-50%);
     width: 0;
     height: 0;
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
-    border-top: 5px solid #706E6B;
+    border-top: 6px solid #706e6b;
     pointer-events: none;
 }
 
-.slds-select {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: none;
-    padding-right: 2rem;
-}
-
-/* Responsive Design */
+/* Responsive design */
 @media (max-width: 767px) {
-    .field-container .slds-grid {
-        flex-direction: column;
-        align-items: stretch;
+    .slds-grid {
+        display: block;
     }
     
     .label-container {
-        flex: none;
-        max-width: none;
-        text-align: left;
-        padding-right: 0;
-        margin-bottom: 0.5rem;
+        justify-content: flex-start;
+        margin-bottom: 0.25rem;
     }
     
-    .input-container {
-        flex: none;
-        max-width: none;
+    .slds-text-align_right {
+        text-align: left !important;
     }
     
-    .form-input {
-        max-width: none;
-    }
-    
-    .field-label {
-        text-align: left;
+    .slds-col {
+        width: 100% !important;
+        flex: none !important;
     }
 }
 
-@media (max-width: 479px) {
-    .myform-container {
-        padding: 0 0.5rem;
-    }
-    
-    .section-header {
-        font-size: 1rem;
-    }
-    
-    .field-label {
-        font-size: 0.8125rem;
-    }
-    
-    .form-input {
-        font-size: 0.8125rem;
-        height: 2rem;
-    }
-}
-
-/* Medium screens - tablets */
 @media (min-width: 768px) and (max-width: 1023px) {
-    .label-container {
-        flex: 0 0 40%;
-        max-width: 40%;
+    .slds-size_1-of-3 {
+        width: 35%;
     }
     
-    .input-container {
-        flex: 0 0 60%;
-        max-width: 60%;
+    .slds-size_2-of-3 {
+        width: 65%;
     }
 }
 
-/* Large screens - desktops */
-@media (min-width: 1024px) {
-    .myform-container {
-        max-width: 700px;
-    }
-    
-    .form-input {
-        max-width: 350px;
-    }
+/* Form spacing and layout */
+.slds-form {
+    max-width: 600px;
+    margin: 0 auto;
 }
 
-/* Extra large screens */
-@media (min-width: 1440px) {
-    .myform-container {
-        max-width: 800px;
-    }
-    
-    .form-input {
-        max-width: 400px;
-    }
+/* Consistent field spacing */
+.slds-form-element {
+    margin-bottom: 1rem;
 }
 
-/* Focus and Hover States */
-.form-input:hover {
-    border-color: #1B96FF;
+.slds-m-bottom_small {
+    margin-bottom: 0.75rem;
 }
 
-.form-input:invalid {
-    border-color: #C23934;
+.slds-m-bottom_medium {
+    margin-bottom: 1rem;
 }
 
-.form-input:invalid:focus {
-    border-color: #C23934;
-    box-shadow: 0 0 0 1px #C23934;
+.slds-m-bottom_large {
+    margin-bottom: 1.5rem;
 }
 
-/* Section Spacing */
-.slds-form-element:first-child {
-    margin-bottom: 2rem;
+/* Grid gutters for proper spacing */
+.slds-gutters_small > .slds-col {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 }
 
-/* Card Styling */
+/* Card styling */
 .slds-card {
-    background: white;
-    border: 1px solid #D8DDE6;
+    background: #ffffff;
+    border: 1px solid #dddbda;
     border-radius: 0.25rem;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Focus states for accessibility */
+.slds-input:focus,
+.slds-select:focus {
+    outline: none;
+    border-color: #1589ee;
+    box-shadow: 0 0 3px #0176d3;
+}
+
+/* Error state styling */
+.slds-has-error .slds-input,
+.slds-has-error .slds-select {
+    border-color: #c23934;
+    box-shadow: 0 0 3px #c23934;
+}
+
+/* Validation error messages */
+.slds-form-element__help {
+    color: #c23934;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
 }

@@ -3,152 +3,133 @@ import { LightningElement, api, track } from 'lwc';
 export default class MyFormPers extends LightningElement {
     // Public API properties for parent component integration
     @api recordId;
+    @api configSettings;
     @api initialData;
     @api isReadOnly = false;
-    
+
     // Form data properties
     @track firstName = '';
     @track middleName = '';
     @track lastName = '';
     @track address = '';
     @track city = '';
-    @track selectedState = '';
+    @track state = '';
     @track zipCode = '';
-    
-    // State options for dropdown
-    stateOptions = [
-        { label: 'Alabama', value: 'AL' },
-        { label: 'Alaska', value: 'AK' },
-        { label: 'Arizona', value: 'AZ' },
-        { label: 'Arkansas', value: 'AR' },
-        { label: 'California', value: 'CA' },
-        { label: 'Colorado', value: 'CO' },
-        { label: 'Connecticut', value: 'CT' },
-        { label: 'Delaware', value: 'DE' },
-        { label: 'Florida', value: 'FL' },
-        { label: 'Georgia', value: 'GA' },
-        { label: 'Hawaii', value: 'HI' },
-        { label: 'Idaho', value: 'ID' },
-        { label: 'Illinois', value: 'IL' },
-        { label: 'Indiana', value: 'IN' },
-        { label: 'Iowa', value: 'IA' },
-        { label: 'Kansas', value: 'KS' },
-        { label: 'Kentucky', value: 'KY' },
-        { label: 'Louisiana', value: 'LA' },
-        { label: 'Maine', value: 'ME' },
-        { label: 'Maryland', value: 'MD' },
-        { label: 'Massachusetts', value: 'MA' },
-        { label: 'Michigan', value: 'MI' },
-        { label: 'Minnesota', value: 'MN' },
-        { label: 'Mississippi', value: 'MS' },
-        { label: 'Missouri', value: 'MO' },
-        { label: 'Montana', value: 'MT' },
-        { label: 'Nebraska', value: 'NE' },
-        { label: 'Nevada', value: 'NV' },
-        { label: 'New Hampshire', value: 'NH' },
-        { label: 'New Jersey', value: 'NJ' },
-        { label: 'New Mexico', value: 'NM' },
-        { label: 'New York', value: 'NY' },
-        { label: 'North Carolina', value: 'NC' },
-        { label: 'North Dakota', value: 'ND' },
-        { label: 'Ohio', value: 'OH' },
-        { label: 'Oklahoma', value: 'OK' },
-        { label: 'Oregon', value: 'OR' },
-        { label: 'Pennsylvania', value: 'PA' },
-        { label: 'Rhode Island', value: 'RI' },
-        { label: 'South Carolina', value: 'SC' },
-        { label: 'South Dakota', value: 'SD' },
-        { label: 'Tennessee', value: 'TN' },
-        { label: 'Texas', value: 'TX' },
-        { label: 'Utah', value: 'UT' },
-        { label: 'Vermont', value: 'VT' },
-        { label: 'Virginia', value: 'VA' },
-        { label: 'Washington', value: 'WA' },
-        { label: 'West Virginia', value: 'WV' },
-        { label: 'Wisconsin', value: 'WI' },
-        { label: 'Wyoming', value: 'WY' }
-    ];
-    
+
+    // Validation state
+    @track validationErrors = {};
+
+    // Initialize component with initial data if provided
     connectedCallback() {
-        // Initialize with data from parent if provided
         if (this.initialData) {
-            this.loadInitialData();
+            this.populateFormData(this.initialData);
         }
     }
-    
-    // Load initial data from parent component
-    loadInitialData() {
-        if (this.initialData.firstName) this.firstName = this.initialData.firstName;
-        if (this.initialData.middleName) this.middleName = this.initialData.middleName;
-        if (this.initialData.lastName) this.lastName = this.initialData.lastName;
-        if (this.initialData.address) this.address = this.initialData.address;
-        if (this.initialData.city) this.city = this.initialData.city;
-        if (this.initialData.state) this.selectedState = this.initialData.state;
-        if (this.initialData.zipCode) this.zipCode = this.initialData.zipCode;
+
+    // Populate form with initial data
+    populateFormData(data) {
+        this.firstName = data.firstName || '';
+        this.middleName = data.middleName || '';
+        this.lastName = data.lastName || '';
+        this.address = data.address || '';
+        this.city = data.city || '';
+        this.state = data.state || '';
+        this.zipCode = data.zipCode || '';
     }
-    
+
     // Event handlers for form fields
     handleFirstNameChange(event) {
-        const oldValue = this.firstName;
         this.firstName = event.target.value;
-        this.notifyParentOfChange('firstName', this.firstName, oldValue);
+        this.validateField('firstName', this.firstName);
+        this.notifyParentOfChange('firstName', this.firstName);
     }
-    
+
     handleMiddleNameChange(event) {
-        const oldValue = this.middleName;
         this.middleName = event.target.value;
-        this.notifyParentOfChange('middleName', this.middleName, oldValue);
+        this.notifyParentOfChange('middleName', this.middleName);
     }
-    
+
     handleLastNameChange(event) {
-        const oldValue = this.lastName;
         this.lastName = event.target.value;
-        this.notifyParentOfChange('lastName', this.lastName, oldValue);
+        this.validateField('lastName', this.lastName);
+        this.notifyParentOfChange('lastName', this.lastName);
     }
-    
+
     handleAddressChange(event) {
-        const oldValue = this.address;
         this.address = event.target.value;
-        this.notifyParentOfChange('address', this.address, oldValue);
+        this.notifyParentOfChange('address', this.address);
     }
-    
+
     handleCityChange(event) {
-        const oldValue = this.city;
         this.city = event.target.value;
-        this.notifyParentOfChange('city', this.city, oldValue);
+        this.notifyParentOfChange('city', this.city);
     }
-    
+
     handleStateChange(event) {
-        const oldValue = this.selectedState;
-        this.selectedState = event.target.value;
-        this.notifyParentOfChange('state', this.selectedState, oldValue);
+        this.state = event.target.value;
+        this.notifyParentOfChange('state', this.state);
     }
-    
+
     handleZipCodeChange(event) {
-        const oldValue = this.zipCode;
         this.zipCode = event.target.value;
-        this.notifyParentOfChange('zipCode', this.zipCode, oldValue);
+        this.validateField('zipCode', this.zipCode);
+        this.notifyParentOfChange('zipCode', this.zipCode);
     }
-    
-    // Notify parent component of data changes
-    notifyParentOfChange(fieldName, newValue, oldValue) {
-        const changeEvent = new CustomEvent('datachange', {
-            detail: {
-                componentName: 'MyFormPers',
-                fieldName: fieldName,
-                newValue: newValue,
-                oldValue: oldValue,
-                formData: this.getFormData(),
-                isValid: this.validateForm(),
-                timestamp: new Date().toISOString()
-            },
-            bubbles: true,
-            composed: true
-        });
-        this.dispatchEvent(changeEvent);
+
+    // Field validation
+    validateField(fieldName, value) {
+        const errors = { ...this.validationErrors };
+        
+        switch (fieldName) {
+            case 'firstName':
+                if (!value || value.trim().length === 0) {
+                    errors.firstName = 'First name is required';
+                } else {
+                    delete errors.firstName;
+                }
+                break;
+            case 'lastName':
+                if (!value || value.trim().length === 0) {
+                    errors.lastName = 'Last name is required';
+                } else {
+                    delete errors.lastName;
+                }
+                break;
+            case 'zipCode':
+                if (!value || value.trim().length === 0) {
+                    errors.zipCode = 'Zip code is required';
+                } else if (!/^\d{5}(-\d{4})?$/.test(value.trim())) {
+                    errors.zipCode = 'Please enter a valid zip code';
+                } else {
+                    delete errors.zipCode;
+                }
+                break;
+        }
+        
+        this.validationErrors = errors;
+        return Object.keys(errors).length === 0;
     }
-    
-    // Public API method for parent to get form data
+
+    // Form validation
+    @api
+    validateForm() {
+        const isFirstNameValid = this.validateField('firstName', this.firstName);
+        const isLastNameValid = this.validateField('lastName', this.lastName);
+        const isZipCodeValid = this.validateField('zipCode', this.zipCode);
+        
+        const isValid = isFirstNameValid && isLastNameValid && isZipCodeValid;
+        
+        if (!isValid) {
+            this.notifyParentOfError({
+                message: 'Please correct the validation errors',
+                errors: this.validationErrors
+            });
+        }
+        
+        return isValid;
+    }
+
+    // Get form data
     @api
     getFormData() {
         return {
@@ -157,46 +138,13 @@ export default class MyFormPers extends LightningElement {
             lastName: this.lastName,
             address: this.address,
             city: this.city,
-            state: this.selectedState,
-            zipCode: this.zipCode
+            state: this.state,
+            zipCode: this.zipCode,
+            isValid: this.validateForm()
         };
     }
-    
-    // Public API method for parent to validate form
-    @api
-    validateForm() {
-        const requiredFields = [
-            { name: 'firstName', value: this.firstName },
-            { name: 'lastName', value: this.lastName },
-            { name: 'zipCode', value: this.zipCode }
-        ];
-        
-        const validationResults = requiredFields.map(field => ({
-            fieldName: field.name,
-            isValid: field.value && field.value.trim().length > 0,
-            errorMessage: field.value && field.value.trim().length > 0 ? '' : `${field.name} is required`
-        }));
-        
-        const isFormValid = validationResults.every(result => result.isValid);
-        
-        if (!isFormValid) {
-            const errorEvent = new CustomEvent('error', {
-                detail: {
-                    componentName: 'MyFormPers',
-                    errorMessage: 'Please fill in all required fields',
-                    validationResults: validationResults,
-                    timestamp: new Date().toISOString()
-                },
-                bubbles: true,
-                composed: true
-            });
-            this.dispatchEvent(errorEvent);
-        }
-        
-        return isFormValid;
-    }
-    
-    // Public API method for parent to reset form
+
+    // Reset form
     @api
     resetForm() {
         this.firstName = '';
@@ -204,32 +152,65 @@ export default class MyFormPers extends LightningElement {
         this.lastName = '';
         this.address = '';
         this.city = '';
-        this.selectedState = '';
+        this.state = '';
         this.zipCode = '';
+        this.validationErrors = {};
         
-        const resetEvent = new CustomEvent('reset', {
+        this.notifyParentOfChange('reset', null);
+    }
+
+    // Refresh component data
+    @api
+    refreshData() {
+        if (this.initialData) {
+            this.populateFormData(this.initialData);
+        }
+    }
+
+    // Notify parent of data changes
+    notifyParentOfChange(fieldName, newValue) {
+        const changeEvent = new CustomEvent('datachange', {
             detail: {
                 componentName: 'MyFormPers',
-                message: 'Form has been reset',
+                fieldName: fieldName,
+                newValue: newValue,
+                formData: this.getFormData(),
+                isValid: Object.keys(this.validationErrors).length === 0,
                 timestamp: new Date().toISOString()
             },
             bubbles: true,
             composed: true
         });
-        this.dispatchEvent(resetEvent);
+        this.dispatchEvent(changeEvent);
     }
-    
-    // Public API method for parent to set form data
-    @api
-    setFormData(data) {
-        if (data) {
-            this.firstName = data.firstName || '';
-            this.middleName = data.middleName || '';
-            this.lastName = data.lastName || '';
-            this.address = data.address || '';
-            this.city = data.city || '';
-            this.selectedState = data.state || '';
-            this.zipCode = data.zipCode || '';
-        }
+
+    // Notify parent of errors
+    notifyParentOfError(error) {
+        const errorEvent = new CustomEvent('error', {
+            detail: {
+                componentName: 'MyFormPers',
+                errorMessage: error.message,
+                errors: error.errors,
+                timestamp: new Date().toISOString()
+            },
+            bubbles: true,
+            composed: true
+        });
+        this.dispatchEvent(errorEvent);
+    }
+
+    // Notify parent of successful operations
+    notifyParentOfSuccess(result) {
+        const successEvent = new CustomEvent('success', {
+            detail: {
+                componentName: 'MyFormPers',
+                result: result,
+                message: 'Form data updated successfully',
+                timestamp: new Date().toISOString()
+            },
+            bubbles: true,
+            composed: true
+        });
+        this.dispatchEvent(successEvent);
     }
 }
