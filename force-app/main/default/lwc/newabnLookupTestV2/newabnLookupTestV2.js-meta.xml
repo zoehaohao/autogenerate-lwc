@@ -12,10 +12,10 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage,lightningCommunity__Default">
-            <property name="recordId" type="String" label="Record ID" description="Record ID for context"/>
-            <property name="initialSearchTerm" type="String" label="Initial Search Term" description="Pre-populate search field"/>
-            <property name="showActionButton" type="Boolean" label="Show Action Button" description="Display Find ABN/Verify toggle button" default="true"/>
-            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Make component read-only"/>
+            <property name="recordId" type="String" label="Record ID" description="The record ID to associate with the component"/>
+            <property name="configSettings" type="String" label="Configuration Settings" description="JSON string containing component configuration"/>
+            <property name="initialData" type="String" label="Initial Data" description="JSON string containing initial search data"/>
+            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Set component to read-only mode"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
