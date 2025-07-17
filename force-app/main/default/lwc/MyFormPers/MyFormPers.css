@@ -1,0 +1,117 @@
+/* Section Headers */
+.section-header {
+    color: #1B3A57;
+    font-weight: 600;
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+}
+
+/* Field Container */
+.field-container {
+    margin-bottom: 1rem;
+}
+
+/* Field Labels */
+.field-label {
+    text-align: right;
+    font-weight: 500;
+    color: #3E3E3C;
+    margin-bottom: 0.25rem;
+    display: block;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+}
+
+/* Required Asterisk */
+.required-asterisk {
+    color: #EA001E;
+    margin-right: 0.25rem;
+    font-weight: bold;
+}
+
+/* Form Inputs */
+.form-input {
+    width: 100%;
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+    .field-container {
+        max-width: 400px;
+    }
+    
+    .field-label {
+        min-width: 120px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .field-container {
+        max-width: 450px;
+    }
+}
+
+/* Lightning Input Overrides */
+.form-input lightning-input,
+.form-input lightning-combobox {
+    --sds-c-input-sizing-border: 1px solid #D8DDE6;
+    --sds-c-input-color-border-focus: #1B96FF;
+}
+
+/* Consistent Field Widths */
+lightning-input,
+lightning-combobox {
+    display: block;
+    width: 100%;
+}
+
+/* Form Section Spacing */
+.slds-section__content {
+    padding-top: 1rem;
+}
+
+/* Button Styling */
+lightning-button {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+}
+
+/* Card Styling */
+.slds-card {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 479px) {
+    .field-label {
+        text-align: left;
+        margin-bottom: 0.5rem;
+    }
+    
+    .slds-card {
+        margin: 0;
+        border-radius: 0;
+    }
+    
+    .field-container {
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* Tablet Responsiveness */
+@media (min-width: 480px) and (max-width: 767px) {
+    .field-container {
+        max-width: 350px;
+    }
+}
+
+/* Desktop Responsiveness */
+@media (min-width: 1440px) {
+    .field-container {
+        max-width: 500px;
+    }
+    
+    .slds-card {
+        max-width: 700px;
+    }
+}
