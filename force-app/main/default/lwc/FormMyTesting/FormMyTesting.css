@@ -1,0 +1,45 @@
+.search-input {
+    width: 100%;
+}
+
+.search-button {
+    width: 100%;
+}
+
+.result-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.result-card .slds-card__body {
+    flex-grow: 1;
+}
+
+.result-card .slds-card__footer {
+    margin-top: auto;
+    text-align: right;
+}
+
+@media (max-width: 768px) {
+    .search-button {
+        margin-top: 0.5rem;
+        margin-left: 0 !important;
+    }
+    
+    .slds-col {
+        margin-bottom: 0.5rem;
+    }
+}
+
+.slds-form_stacked .slds-form-element {
+    margin-bottom: 0.75rem;
+}
+
+.slds-notify {
+    border-radius: 0.25rem;
+}
+
+.slds-card__header-title .slds-text-heading_small {
+    font-weight: 600;
+}
