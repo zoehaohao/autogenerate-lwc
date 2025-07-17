@@ -1,23 +1,45 @@
 .search-input {
-    border-radius: 0.25rem 0 0 0.25rem;
+    width: 100%;
+}
+
+.search-button {
+    width: 100%;
 }
 
 .result-card {
     height: 100%;
-    transition: box-shadow 0.2s ease-in-out;
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
 }
 
 .result-card:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+    transition: all 0.2s ease-in-out;
 }
 
-.slds-card__body_inner {
-    padding: 1rem;
+.select-button {
+    min-width: 120px;
+}
+
+.selected-result-card {
+    border: 2px solid #1589ee;
+    background-color: #f3f9ff;
+}
+
+.change-abn-button {
+    min-width: 120px;
 }
 
 @media (max-width: 767px) {
+    .search-button {
+        margin-top: 0.5rem;
+        margin-left: 0 !important;
+    }
+    
     .slds-col {
-        margin-bottom: 0.5rem;
+        padding-left: 0;
+        padding-right: 0;
     }
     
     .result-card {
@@ -26,13 +48,21 @@
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
-    .result-card {
-        min-height: 300px;
+    .slds-medium-size_1-of-2 {
+        width: 50%;
     }
 }
 
 @media (min-width: 1024px) {
-    .result-card {
-        min-height: 280px;
+    .slds-large-size_1-of-2 {
+        width: 50%;
     }
+}
+
+.slds-notify {
+    border-radius: 0.25rem;
+}
+
+.slds-form .slds-form-element {
+    margin-bottom: 0.75rem;
 }
