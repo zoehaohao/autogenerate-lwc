@@ -14,8 +14,7 @@
         <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage,lightningCommunity__Default">
             <property name="recordId" type="String" label="Record ID" description="Record ID for context"/>
             <property name="configSettings" type="String" label="Configuration Settings" description="JSON configuration for component behavior"/>
-            <property name="initialData" type="String" label="Initial Search Value" description="Initial value to populate in search field"/>
-            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Set component to read-only mode"/>
+            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Enable read-only mode"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
