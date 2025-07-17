@@ -4,59 +4,62 @@ public with sharing class ABNLookupCompController {
     private static final Integer TIMEOUT_SECONDS = 30;
     
     @AuraEnabled(cacheable=false)
-    public static ResponseWrapper searchABN(String searchTerm, String searchType) {
+    public static ResponseWrapper searchABN(String searchParams) {
         try {
-            // Input validation
+            if (String.isBlank(searchParams)) {
+                return new ResponseWrapper(false, 'Search parameters are required', null);
+            }
+            
+            Map<String, Object> params = (Map<String, Object>) JSON.deserializeUntyped(searchParams);
+            String searchTerm = (String) params.get('searchTerm');
+            String searchType = (String) params.get('searchType');
+            
             if (String.isBlank(searchTerm)) {
                 return new ResponseWrapper(false, 'Search term is required', null);
             }
             
-            // Sanitize input
-            String sanitizedTerm = String.escapeSingleQuotes(searchTerm.trim());
-            
-            // Validate search type and term format
-            if (!validateSearchInput(sanitizedTerm, searchType)) {
+            // Validate input based on search type
+            if (!validateSearchInput(searchTerm, searchType)) {
                 return new ResponseWrapper(false, 'Invalid search input format', null);
             }
             
-            // Make API call
-            HttpResponse response = makeAPICall(sanitizedTerm, searchType);
+            // Perform API callout
+            HttpResponse response = performAPICallout(searchTerm, searchType);
             
             if (response.getStatusCode() == 200) {
-                // Parse response safely
-                Object responseData = parseAPIResponse(response.getBody());
-                
-                if (responseData != null) {
-                    return new ResponseWrapper(true, 'Search completed successfully', responseData);
-                } else {
-                    return new ResponseWrapper(false, 'No results found', null);
-                }
+                List<ABNResult> results = parseAPIResponse(response.getBody());
+                return new ResponseWrapper(true, 'Search completed successfully', results);
             } else if (response.getStatusCode() == 404) {
-                return new ResponseWrapper(false, 'No matching results found', null);
+                return new ResponseWrapper(true, 'No results found', new List<ABNResult>());
             } else {
-                System.debug('API Error - Status: ' + response.getStatusCode() + ', Body: ' + response.getBody());
-                return new ResponseWrapper(false, 'Search service temporarily unavailable', null);
+                return new ResponseWrapper(false, 'API request failed with status: ' + response.getStatusCode(), null);
             }
             
         } catch (CalloutException e) {
             System.debug('Callout Exception: ' + e.getMessage());
-            return new ResponseWrapper(false, 'Unable to connect to search service', null);
+            return new ResponseWrapper(false, 'Unable to connect to ABN service. Please try again later.', null);
         } catch (Exception e) {
-            System.debug('Unexpected Exception: ' + e.getMessage());
-            return new ResponseWrapper(false, 'An unexpected error occurred', null);
+            System.debug('General Exception: ' + e.getMessage());
+            return new ResponseWrapper(false, 'An unexpected error occurred. Please try again.', null);
         }
     }
     
     private static Boolean validateSearchInput(String searchTerm, String searchType) {
+        if (String.isBlank(searchTerm)) {
+            return false;
+        }
+        
+        String trimmedTerm = searchTerm.trim();
+        
         switch on searchType {
-            when 'ABN' {
-                return Pattern.matches('^\\d{11}$', searchTerm);
+            when 'abn' {
+                return Pattern.matches('^\\d{11}$', trimmedTerm);
             }
-            when 'ACN' {
-                return Pattern.matches('^\\d{9}$', searchTerm);
+            when 'acn' {
+                return Pattern.matches('^\\d{9}$', trimmedTerm);
             }
-            when 'NAME' {
-                return searchTerm.length() >= 2;
+            when 'name' {
+                return trimmedTerm.length() >= 2;
             }
             when else {
                 return false;
@@ -64,124 +67,163 @@ public with sharing class ABNLookupCompController {
         }
     }
     
-    private static HttpResponse makeAPICall(String searchTerm, String searchType) {
+    private static HttpResponse performAPICallout(String searchTerm, String searchType) {
         Http http = new Http();
         HttpRequest request = new HttpRequest();
         
         // Build endpoint with query parameters
         String endpoint = API_ENDPOINT;
-        switch on searchType {
-            when 'ABN' {
-                endpoint += '?abn=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            }
-            when 'ACN' {
-                endpoint += '?acn=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            }
-            when 'NAME' {
-                endpoint += '?name=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            }
+        if (searchType == 'abn') {
+            endpoint += '?abn=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
+        } else if (searchType == 'acn') {
+            endpoint += '?acn=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
+        } else {
+            endpoint += '?name=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
         }
         
         request.setEndpoint(endpoint);
         request.setMethod('GET');
         request.setHeader('Content-Type', 'application/json');
-        request.setHeader('Accept', 'application/json');
         request.setTimeout(TIMEOUT_SECONDS * 1000);
         
         return http.send(request);
     }
     
-    private static Object parseAPIResponse(String responseBody) {
+    private static List<ABNResult> parseAPIResponse(String responseBody) {
+        List<ABNResult> results = new List<ABNResult>();
+        
         try {
-            if (String.isBlank(responseBody)) {
-                return null;
-            }
-            
-            // Safe JSON parsing
             Object tempResult = JSON.deserializeUntyped(responseBody);
             
-            if (tempResult == null) {
-                return null;
-            }
-            
-            // Handle both single object and array responses
-            if (tempResult instanceof List<Object>) {
-                List<Object> tempList = (List<Object>) tempResult;
-                if (tempList.isEmpty()) {
-                    return null;
+            // Handle single result
+            if (tempResult instanceof Map<String, Object>) {
+                Map<String, Object> singleResult = (Map<String, Object>) tempResult;
+                ABNResult abnResult = parseABNRecord(singleResult);
+                if (abnResult != null) {
+                    results.add(abnResult);
                 }
-                
-                List<Map<String, Object>> resultList = new List<Map<String, Object>>();
+            }
+            // Handle multiple results
+            else if (tempResult instanceof List<Object>) {
+                List<Object> tempList = (List<Object>) tempResult;
                 for (Object item : tempList) {
                     if (item instanceof Map<String, Object>) {
-                        resultList.add((Map<String, Object>) item);
+                        ABNResult abnResult = parseABNRecord((Map<String, Object>) item);
+                        if (abnResult != null) {
+                            results.add(abnResult);
+                        }
                     }
                 }
-                return resultList;
-            } else if (tempResult instanceof Map<String, Object>) {
-                return (Map<String, Object>) tempResult;
             }
             
-            return tempResult;
-            
-        } catch (JSONException e) {
-            System.debug('JSON Parse Error: ' + e.getMessage());
-            return null;
         } catch (Exception e) {
-            System.debug('Parse Error: ' + e.getMessage());
-            return null;
+            System.debug('Error parsing API response: ' + e.getMessage());
         }
+        
+        return results;
     }
     
-    @AuraEnabled(cacheable=true)
-    public static ResponseWrapper getABNDetails(String abnNumber) {
+    private static ABNResult parseABNRecord(Map<String, Object> record) {
         try {
-            if (String.isBlank(abnNumber)) {
-                return new ResponseWrapper(false, 'ABN number is required', null);
+            ABNResult result = new ABNResult();
+            
+            // Parse ABN information
+            if (record.containsKey('abn') && record.get('abn') != null) {
+                Map<String, Object> abnInfo = (Map<String, Object>) record.get('abn');
+                result.abnNumber = (String) abnInfo.get('identifier_value');
             }
             
-            String sanitizedABN = String.escapeSingleQuotes(abnNumber.trim());
-            
-            if (!Pattern.matches('^\\d{11}$', sanitizedABN)) {
-                return new ResponseWrapper(false, 'Invalid ABN format', null);
+            // Parse entity status
+            if (record.containsKey('entity_status') && record.get('entity_status') != null) {
+                Map<String, Object> entityStatus = (Map<String, Object>) record.get('entity_status');
+                String statusCode = (String) entityStatus.get('entity_status_code');
+                String effectiveFrom = (String) entityStatus.get('effective_from');
+                result.abnStatus = statusCode + (String.isNotBlank(effectiveFrom) ? ' from ' + formatDate(effectiveFrom) : '');
             }
             
-            HttpResponse response = makeAPICall(sanitizedABN, 'ABN');
-            
-            if (response.getStatusCode() == 200) {
-                Object responseData = parseAPIResponse(response.getBody());
-                return new ResponseWrapper(true, 'ABN details retrieved successfully', responseData);
-            } else {
-                return new ResponseWrapper(false, 'ABN not found', null);
+            // Parse entity name from other_trading_name
+            if (record.containsKey('other_trading_name') && record.get('other_trading_name') != null) {
+                Map<String, Object> tradingName = (Map<String, Object>) record.get('other_trading_name');
+                result.entityName = (String) tradingName.get('organisation_name');
             }
+            
+            // Parse entity type
+            if (record.containsKey('entity_type') && record.get('entity_type') != null) {
+                Map<String, Object> entityType = (Map<String, Object>) record.get('entity_type');
+                result.entityType = (String) entityType.get('entity_description');
+            }
+            
+            // Parse GST information
+            if (record.containsKey('goods_and_services_tax') && record.get('goods_and_services_tax') != null) {
+                Map<String, Object> gstInfo = (Map<String, Object>) record.get('goods_and_services_tax');
+                String effectiveFrom = (String) gstInfo.get('effective_from');
+                result.gstStatus = String.isNotBlank(effectiveFrom) ? 'Registered from ' + formatDate(effectiveFrom) : 'Not registered';
+            }
+            
+            // Parse ASIC number for business location
+            if (record.containsKey('asic_number') && record.get('asic_number') != null) {
+                result.businessLocation = 'VIC ' + (String) record.get('asic_number');
+            }
+            
+            // Set default values if not found
+            if (String.isBlank(result.abnNumber)) result.abnNumber = 'N/A';
+            if (String.isBlank(result.entityName)) result.entityName = 'N/A';
+            if (String.isBlank(result.abnStatus)) result.abnStatus = 'N/A';
+            if (String.isBlank(result.entityType)) result.entityType = 'N/A';
+            if (String.isBlank(result.gstStatus)) result.gstStatus = 'N/A';
+            if (String.isBlank(result.businessLocation)) result.businessLocation = 'N/A';
+            
+            return result;
             
         } catch (Exception e) {
-            System.debug('Get ABN Details Error: ' + e.getMessage());
-            return new ResponseWrapper(false, 'Unable to retrieve ABN details', null);
+            System.debug('Error parsing ABN record: ' + e.getMessage());
+            return null;
         }
     }
     
+    private static String formatDate(String dateString) {
+        try {
+            if (String.isNotBlank(dateString) && dateString != '0001-01-01') {
+                Date parsedDate = Date.valueOf(dateString);
+                return parsedDate.format();
+            }
+        } catch (Exception e) {
+            System.debug('Error formatting date: ' + e.getMessage());
+        }
+        return dateString;
+    }
+    
+    // Response wrapper class
     public class ResponseWrapper {
         @AuraEnabled public Boolean success;
         @AuraEnabled public String message;
         @AuraEnabled public Object data;
         @AuraEnabled public List<String> errors;
-        @AuraEnabled public String timestamp;
         
         public ResponseWrapper(Boolean success, String message, Object data) {
             this.success = success;
             this.message = message;
             this.data = data;
             this.errors = new List<String>();
-            this.timestamp = DateTime.now().formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
         }
+    }
+    
+    // ABN Result class
+    public class ABNResult {
+        @AuraEnabled public String abnNumber;
+        @AuraEnabled public String entityName;
+        @AuraEnabled public String abnStatus;
+        @AuraEnabled public String entityType;
+        @AuraEnabled public String gstStatus;
+        @AuraEnabled public String businessLocation;
         
-        public ResponseWrapper(Boolean success, String message, Object data, List<String> errors) {
-            this.success = success;
-            this.message = message;
-            this.data = data;
-            this.errors = errors != null ? errors : new List<String>();
-            this.timestamp = DateTime.now().formatGMT('yyyy-MM-dd\'T\'HH:mm:ss\'Z\'');
+        public ABNResult() {
+            this.abnNumber = '';
+            this.entityName = '';
+            this.abnStatus = '';
+            this.entityType = '';
+            this.gstStatus = '';
+            this.businessLocation = '';
         }
     }
 }
