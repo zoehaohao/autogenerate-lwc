@@ -1,73 +1,77 @@
-/* MyFormPers Component Styles */
-
-.myform-container {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-/* Section Headers */
-.section-header {
-    color: #1B365D;
+/* Component styles matching UI requirements */
+.section-heading {
+    color: #1B3A57;
     font-weight: 600;
-    font-size: 1.125rem;
-    margin-bottom: 1rem;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
 }
 
-/* Field Container */
-.field-container {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-}
-
-/* Field Labels */
 .field-label {
     text-align: right;
     color: #333333;
     font-weight: 500;
-    font-size: 0.875rem;
-    min-width: 120px;
-    padding-right: 12px;
-    padding-top: 8px;
-    flex-shrink: 0;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 0.25rem;
 }
 
-/* Required Asterisk */
 .required-asterisk {
-    color: #D32F2F;
-    margin-right: 4px;
+    color: #c23934;
+    margin-right: 0.25rem;
     font-weight: bold;
 }
 
-/* Field Control Container */
-.field-control {
-    flex: 1;
-    max-width: 300px;
-}
-
-/* Input Fields */
-.field-input {
+.form-field-width {
     width: 100%;
-    padding: 8px 12px;
-    border: 1px solid #D0D7DE;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    background-color: #FFFFFF;
-    transition: border-color 0.2s ease-in-out;
+    max-width: 400px;
 }
 
-.field-input:focus {
-    outline: none;
-    border-color: #1B96FF;
-    box-shadow: 0 0 0 2px rgba(27, 150, 255, 0.1);
+.slds-form-element__control {
+    display: flex;
+    justify-content: flex-end;
 }
 
-.field-input:hover {
-    border-color: #8B949E;
+.error-message {
+    color: #c23934;
+    font-size: 0.75rem;
+    text-align: right;
+    margin-top: 0.25rem;
 }
 
-/* Select Dropdown Specific Styles */
+/* Responsive Design */
+@media (max-width: 768px) {
+    .field-label {
+        text-align: left;
+        justify-content: flex-start;
+    }
+    
+    .slds-form-element__control {
+        justify-content: flex-start;
+    }
+    
+    .form-field-width {
+        max-width: 100%;
+    }
+    
+    .error-message {
+        text-align: left;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .form-field-width {
+        max-width: 350px;
+    }
+}
+
+@media (min-width: 1025px) {
+    .form-field-width {
+        max-width: 400px;
+    }
+}
+
+/* Custom select styling to match requirements */
 .slds-select_container {
     position: relative;
 }
@@ -75,103 +79,43 @@
 .slds-select_container::after {
     content: '';
     position: absolute;
-    right: 12px;
     top: 50%;
+    right: 0.75rem;
     transform: translateY(-50%);
     width: 0;
     height: 0;
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
-    border-top: 6px solid #666;
+    border-top: 4px solid #706e6b;
     pointer-events: none;
 }
 
-select.field-input {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: none;
-    padding-right: 32px;
-    cursor: pointer;
+/* Form container styling */
+.slds-card {
+    background: #ffffff;
+    border: 1px solid #dddbda;
+    border-radius: 0.25rem;
 }
 
-select.field-input::-ms-expand {
-    display: none;
+/* Consistent spacing */
+.slds-form-element {
+    margin-bottom: 1rem;
 }
 
-/* Responsive Design */
-@media (max-width: 767px) {
-    .field-container {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .field-label {
-        text-align: left;
-        min-width: auto;
-        padding-right: 0;
-        padding-bottom: 4px;
-        padding-top: 0;
-    }
-    
-    .field-control {
-        max-width: 100%;
-    }
-    
-    .myform-container {
-        padding: 0 16px;
-    }
+.slds-form-element:last-child {
+    margin-bottom: 0;
 }
 
-@media (min-width: 768px) and (max-width: 1023px) {
-    .field-control {
-        max-width: 350px;
-    }
-    
-    .field-label {
-        min-width: 140px;
-    }
+/* Focus states */
+.slds-input:focus,
+.slds-select:focus {
+    border-color: #1B96FF;
+    box-shadow: 0 0 3px #1B96FF;
+    outline: none;
 }
 
-@media (min-width: 1024px) {
-    .field-control {
-        max-width: 400px;
-    }
-    
-    .field-label {
-        min-width: 160px;
-    }
-}
-
-/* Form Validation States */
-.field-input.slds-has-error {
-    border-color: #D32F2F;
-}
-
-.field-input.slds-has-error:focus {
-    border-color: #D32F2F;
-    box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.1);
-}
-
-/* Accessibility Improvements */
-.field-input:focus-visible {
-    outline: 2px solid #1B96FF;
-    outline-offset: 2px;
-}
-
-/* Print Styles */
-@media print {
-    .myform-container {
-        max-width: none;
-        font-size: 12pt;
-    }
-    
-    .field-container {
-        margin-bottom: 8pt;
-    }
-    
-    .section-header {
-        font-size: 14pt;
-        margin-bottom: 8pt;
-    }
+/* Hover states */
+.slds-input:hover,
+.slds-select:hover {
+    border-color: #706e6b;
 }
