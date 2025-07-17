@@ -12,10 +12,9 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage,lightningCommunity__Default">
-            <property name="recordId" type="String" label="Record ID" description="Record ID for context"/>
-            <property name="initialPersonalData" type="String" label="Initial Personal Data" description="JSON string of initial personal information"/>
-            <property name="initialAddressData" type="String" label="Initial Address Data" description="JSON string of initial address information"/>
-            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Set form to read-only mode"/>
+            <property name="recordId" type="String" label="Record ID" description="Optional record ID for data binding"/>
+            <property name="showActions" type="Boolean" label="Show Form Actions" description="Show Save and Reset buttons" default="true"/>
+            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Make form read-only" default="false"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

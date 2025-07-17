@@ -1,185 +1,143 @@
 <template>
-    <div class="slds-card slds-p-around_medium">
-        <div class="slds-form slds-form_stacked">
-            <!-- Personal Information Section -->
-            <div class="slds-form-element slds-m-bottom_large">
-                <h3 class="slds-text-heading_medium slds-m-bottom_medium section-header">Personal Information</h3>
+    <div class="form-container">
+        <!-- Personal Information Section -->
+        <div class="form-section">
+            <h2 class="section-heading">Personal information</h2>
+            <div class="slds-grid slds-wrap slds-gutters_small">
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="field-container">
+                        <div class="field-label-container">
+                            <span class="required-asterisk">*</span>
+                            <label class="field-label">First name</label>
+                        </div>
+                        <lightning-input
+                            type="text"
+                            value={firstName}
+                            onchange={handleFirstNameChange}
+                            class="form-input"
+                            variant="standard"
+                            required>
+                        </lightning-input>
+                    </div>
+                </div>
                 
-                <div class="slds-grid slds-wrap slds-gutters_small">
-                    <!-- First Name -->
-                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
-                        <div class="slds-form-element">
-                            <label class="slds-form-element__label field-label" for="firstName">
-                                <span class="required-asterisk">*</span>
-                                First Name
-                            </label>
-                            <div class="slds-form-element__control">
-                                <input 
-                                    type="text" 
-                                    id="firstName" 
-                                    name="firstName"
-                                    class="slds-input form-field" 
-                                    value={personalInfo.firstName}
-                                    onchange={handlePersonalInfoChange}
-                                    required />
-                            </div>
-                            <template if:true={errors.firstName}>
-                                <div class="slds-form-element__help error-message">{errors.firstName}</div>
-                            </template>
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="field-container">
+                        <div class="field-label-container">
+                            <label class="field-label">Middle name</label>
                         </div>
-                    </div>
-                    
-                    <!-- Middle Name -->
-                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
-                        <div class="slds-form-element">
-                            <label class="slds-form-element__label field-label" for="middleName">
-                                Middle Name
-                            </label>
-                            <div class="slds-form-element__control">
-                                <input 
-                                    type="text" 
-                                    id="middleName" 
-                                    name="middleName"
-                                    class="slds-input form-field" 
-                                    value={personalInfo.middleName}
-                                    onchange={handlePersonalInfoChange} />
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Last Name -->
-                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
-                        <div class="slds-form-element">
-                            <label class="slds-form-element__label field-label" for="lastName">
-                                <span class="required-asterisk">*</span>
-                                Last Name
-                            </label>
-                            <div class="slds-form-element__control">
-                                <input 
-                                    type="text" 
-                                    id="lastName" 
-                                    name="lastName"
-                                    class="slds-input form-field" 
-                                    value={personalInfo.lastName}
-                                    onchange={handlePersonalInfoChange}
-                                    required />
-                            </div>
-                            <template if:true={errors.lastName}>
-                                <div class="slds-form-element__help error-message">{errors.lastName}</div>
-                            </template>
-                        </div>
+                        <lightning-input
+                            type="text"
+                            value={middleName}
+                            onchange={handleMiddleNameChange}
+                            class="form-input"
+                            variant="standard">
+                        </lightning-input>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Address Section -->
-            <div class="slds-form-element slds-m-bottom_large">
-                <h3 class="slds-text-heading_medium slds-m-bottom_medium section-header">Address</h3>
                 
-                <div class="slds-grid slds-wrap slds-gutters_small">
-                    <!-- Address -->
-                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
-                        <div class="slds-form-element">
-                            <label class="slds-form-element__label field-label" for="address">
-                                Address
-                            </label>
-                            <div class="slds-form-element__control">
-                                <input 
-                                    type="text" 
-                                    id="address" 
-                                    name="address"
-                                    class="slds-input form-field" 
-                                    value={addressInfo.address}
-                                    onchange={handleAddressInfoChange} />
-                            </div>
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="field-container">
+                        <div class="field-label-container">
+                            <span class="required-asterisk">*</span>
+                            <label class="field-label">Last name</label>
                         </div>
-                    </div>
-                    
-                    <!-- City or Town -->
-                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
-                        <div class="slds-form-element">
-                            <label class="slds-form-element__label field-label" for="city">
-                                City or Town
-                            </label>
-                            <div class="slds-form-element__control">
-                                <input 
-                                    type="text" 
-                                    id="city" 
-                                    name="city"
-                                    class="slds-input form-field" 
-                                    value={addressInfo.city}
-                                    onchange={handleAddressInfoChange} />
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- State -->
-                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
-                        <div class="slds-form-element">
-                            <label class="slds-form-element__label field-label" for="state">
-                                State
-                            </label>
-                            <div class="slds-form-element__control">
-                                <div class="slds-select_container">
-                                    <select 
-                                        id="state" 
-                                        name="state"
-                                        class="slds-select form-field" 
-                                        value={addressInfo.state}
-                                        onchange={handleAddressInfoChange}>
-                                        <option value="">Choose a State</option>
-                                        <template for:each={stateOptions} for:item="state">
-                                            <option key={state.value} value={state.value}>{state.label}</option>
-                                        </template>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Zip Code -->
-                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-1 slds-large-size_1-of-1">
-                        <div class="slds-form-element">
-                            <label class="slds-form-element__label field-label" for="zipCode">
-                                <span class="required-asterisk">*</span>
-                                Zip Code
-                            </label>
-                            <div class="slds-form-element__control">
-                                <input 
-                                    type="text" 
-                                    id="zipCode" 
-                                    name="zipCode"
-                                    class="slds-input form-field" 
-                                    value={addressInfo.zipCode}
-                                    onchange={handleAddressInfoChange}
-                                    required />
-                            </div>
-                            <template if:true={errors.zipCode}>
-                                <div class="slds-form-element__help error-message">{errors.zipCode}</div>
-                            </template>
-                        </div>
+                        <lightning-input
+                            type="text"
+                            value={lastName}
+                            onchange={handleLastNameChange}
+                            class="form-input"
+                            variant="standard"
+                            required>
+                        </lightning-input>
                     </div>
                 </div>
             </div>
-            
-            <!-- Form Actions -->
-            <div class="slds-form-element slds-m-top_large">
-                <div class="slds-grid slds-gutters_small">
-                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                        <lightning-button 
-                            variant="brand" 
-                            label="Save" 
-                            onclick={handleSave}
-                            class="slds-m-right_small">
-                        </lightning-button>
-                        <lightning-button 
-                            variant="neutral" 
-                            label="Reset" 
-                            onclick={handleReset}>
-                        </lightning-button>
+        </div>
+
+        <!-- Address Section -->
+        <div class="form-section">
+            <h2 class="section-heading">Address</h2>
+            <div class="slds-grid slds-wrap slds-gutters_small">
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="field-container">
+                        <div class="field-label-container">
+                            <label class="field-label">Address</label>
+                        </div>
+                        <lightning-input
+                            type="text"
+                            value={address}
+                            onchange={handleAddressChange}
+                            class="form-input"
+                            variant="standard">
+                        </lightning-input>
+                    </div>
+                </div>
+                
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="field-container">
+                        <div class="field-label-container">
+                            <label class="field-label">City or Town</label>
+                        </div>
+                        <lightning-input
+                            type="text"
+                            value={city}
+                            onchange={handleCityChange}
+                            class="form-input"
+                            variant="standard">
+                        </lightning-input>
+                    </div>
+                </div>
+                
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="field-container">
+                        <div class="field-label-container">
+                            <label class="field-label">State</label>
+                        </div>
+                        <lightning-combobox
+                            value={state}
+                            placeholder="Choose a State"
+                            options={stateOptions}
+                            onchange={handleStateChange}
+                            class="form-input"
+                            variant="standard">
+                        </lightning-combobox>
+                    </div>
+                </div>
+                
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="field-container">
+                        <div class="field-label-container">
+                            <span class="required-asterisk">*</span>
+                            <label class="field-label">Zip code</label>
+                        </div>
+                        <lightning-input
+                            type="text"
+                            value={zipCode}
+                            onchange={handleZipCodeChange}
+                            class="form-input"
+                            variant="standard"
+                            required>
+                        </lightning-input>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Form Actions (if needed by parent) -->
+        <div class="form-actions slds-m-top_large">
+            <lightning-button
+                variant="brand"
+                label="Save"
+                onclick={handleSave}
+                disabled={isFormInvalid}>
+            </lightning-button>
+            <lightning-button
+                variant="neutral"
+                label="Reset"
+                onclick={handleReset}
+                class="slds-m-left_small">
+            </lightning-button>
         </div>
     </div>
 </template>
