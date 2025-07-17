@@ -1,71 +1,72 @@
-.search-input {
-    width: 100%;
+.custom-find-abn-button {
+    background-color: #2c3e50;
+    border-color: #2c3e50;
+}
+
+.custom-find-abn-button:hover {
+    background-color: #34495e;
+    border-color: #34495e;
+}
+
+.search-input .slds-input {
+    padding-left: 2.5rem;
 }
 
 .result-card {
     height: 100%;
-    border: 1px solid #d8dde6;
-    border-radius: 0.25rem;
-    transition: box-shadow 0.2s ease;
+    transition: box-shadow 0.2s ease-in-out;
 }
 
 .result-card:hover {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.entity-name {
-    color: #0176d3;
-    font-weight: 600;
-    word-wrap: break-word;
-}
-
-.select-button {
-    min-width: 100px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .results-section {
-    margin-top: 1rem;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.selected-result-section {
+    border-top: 1px solid #e5e5e5;
+    padding-top: 1rem;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .result-card {
-        margin-bottom: 1rem;
+    .slds-medium-size_1-of-2 {
+        flex: 0 0 100%;
+        max-width: 100%;
     }
     
-    .entity-name {
-        font-size: 1rem;
+    .slds-medium-size_3-of-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-bottom: 0.5rem;
     }
-}
-
-/* Loading state */
-.slds-spinner_container {
-    position: relative;
-    min-height: 6rem;
-}
-
-/* Error and info messages */
-.slds-notify {
-    border-radius: 0.25rem;
+    
+    .slds-medium-size_1-of-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
 }
 
 /* Accessibility improvements */
-.search-input:focus {
-    box-shadow: 0 0 3px #0176d3;
+.result-card:focus-within {
+    outline: 2px solid #0176d3;
+    outline-offset: 2px;
 }
 
-.select-button:focus {
-    box-shadow: 0 0 3px #0176d3;
-}
-
-/* Card spacing */
-.slds-card__body_inner {
-    padding: 1rem;
-}
-
-/* Grid adjustments for better mobile experience */
-@media (max-width: 480px) {
-    .slds-gutters_x-small > .slds-col {
-        padding: 0.25rem;
-    }
+/* Loading state styling */
+.slds-spinner_container {
+    background-color: rgba(255, 255, 255, 0.8);
 }

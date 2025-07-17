@@ -12,11 +12,9 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage,lightningCommunity__Default">
-            <property name="recordId" type="String" label="Record ID" description="The record ID to associate with the search"/>
-            <property name="initialSearchTerm" type="String" label="Initial Search Term" description="Pre-populate the search field with this value"/>
-            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Disable search functionality"/>
-            <property name="showSelectButton" type="Boolean" label="Show Select Button" description="Display select buttons on result cards"/>
-            <property name="enablePagination" type="Boolean" label="Enable Pagination" description="Enable pagination for large result sets"/>
+            <property name="recordId" type="String" label="Record ID" description="The record ID to associate with the ABN lookup"/>
+            <property name="configSettings" type="String" label="Configuration Settings" description="JSON configuration for component behavior"/>
+            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Set component to read-only mode"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>

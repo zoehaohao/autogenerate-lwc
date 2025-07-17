@@ -1,30 +1,52 @@
 <template>
-    <lightning-card title="ABN Lookup" icon-name="standard:search">
+    <lightning-card title="ABN lookup pattern" icon-name="utility:search">
+        <div class="slds-card__header-actions">
+            <lightning-button-icon 
+                icon-name="utility:info" 
+                variant="border-filled" 
+                alternative-text="Information">
+            </lightning-button-icon>
+        </div>
+        
         <div class="slds-card__body slds-card__body_inner">
             <!-- Search Section -->
-            <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_medium">
-                <div class="slds-col slds-size_1-of-1">
-                    <div class="slds-form-element">
-                        <label class="slds-form-element__label" for="search-input">
-                            Search by Business Name, ABN or ACN
-                        </label>
-                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
+            <div class="slds-m-bottom_medium">
+                <lightning-button 
+                    label="Find ABN" 
+                    variant="brand" 
+                    class="slds-m-bottom_medium custom-find-abn-button">
+                </lightning-button>
+                
+                <div class="slds-box slds-theme_shade slds-m-bottom_medium">
+                    <p class="slds-text-body_regular slds-m-bottom_medium">
+                        You can find an Australian Business Number (ABN) using the ABN itself, 
+                        Company / Business / Trading name or Australian Company Number (ACN). 
+                        Once the correct entity has been identified you can select it for use.
+                    </p>
+                    
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_3-of-4">
                             <lightning-input
-                                id="search-input"
                                 type="text"
-                                value={searchTerm}
                                 placeholder={searchPlaceholder}
+                                value={searchTerm}
                                 onchange={handleSearchTermChange}
-                                onkeyup={handleKeyUp}
+                                variant="label-hidden"
                                 class="search-input">
+                                <lightning-icon 
+                                    icon-name="utility:search" 
+                                    size="small" 
+                                    slot="left-icon">
+                                </lightning-icon>
                             </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-4">
                             <lightning-button
-                                variant="brand"
                                 label={searchButtonLabel}
-                                title={searchButtonLabel}
+                                variant="brand"
                                 onclick={handleSearch}
                                 disabled={isSearchDisabled}
-                                class="slds-m-left_x-small">
+                                class="slds-size_1-of-1">
                             </lightning-button>
                         </div>
                     </div>
@@ -34,7 +56,10 @@
             <!-- Loading Spinner -->
             <template lwc:if={isLoading}>
                 <div class="slds-align_absolute-center slds-m-vertical_large">
-                    <lightning-spinner alternative-text="Searching..." size="medium"></lightning-spinner>
+                    <lightning-spinner 
+                        alternative-text="Searching..." 
+                        size="medium">
+                    </lightning-spinner>
                 </div>
             </template>
 
@@ -43,21 +68,13 @@
                 <div class="slds-m-bottom_medium">
                     <div class="slds-notify slds-notify_alert slds-alert_warning" role="alert">
                         <span class="slds-icon_container slds-icon-utility-warning slds-m-right_x-small">
-                            <lightning-icon icon-name="utility:warning" size="x-small" variant="inverse"></lightning-icon>
+                            <lightning-icon 
+                                icon-name="utility:warning" 
+                                size="x-small" 
+                                variant="inverse">
+                            </lightning-icon>
                         </span>
                         <h2>{errorMessage}</h2>
-                    </div>
-                </div>
-            </template>
-
-            <!-- No Results Message -->
-            <template lwc:if={showNoResults}>
-                <div class="slds-m-bottom_medium">
-                    <div class="slds-notify slds-notify_alert slds-alert_offline" role="alert">
-                        <span class="slds-icon_container slds-icon-utility-info slds-m-right_x-small">
-                            <lightning-icon icon-name="utility:info" size="x-small" variant="inverse"></lightning-icon>
-                        </span>
-                        <h2>No matching results found. Please check your search term and try again.</h2>
                     </div>
                 </div>
             </template>
@@ -65,92 +82,56 @@
             <!-- Results Section -->
             <template lwc:if={hasResults}>
                 <div class="results-section">
-                    <h3 class="slds-text-heading_small slds-m-bottom_medium">Search Results</h3>
-                    
                     <!-- Results Grid -->
                     <div class="slds-grid slds-wrap slds-gutters">
                         <template for:each={searchResults} for:item="result">
                             <div key={result.id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-2">
-                                <lightning-card class="result-card">
+                                <lightning-card class="result-card slds-m-bottom_medium">
                                     <div class="slds-card__body slds-card__body_inner">
-                                        <!-- Entity Name -->
-                                        <h4 class="slds-text-heading_small slds-m-bottom_small entity-name">
-                                            {result.entityName}
-                                        </h4>
+                                        <div class="slds-m-bottom_medium">
+                                            <h3 class="slds-text-heading_small slds-m-bottom_x-small">
+                                                ABN: {result.abnNumber}
+                                            </h3>
+                                            <p class="slds-text-heading_small slds-text-color_default">
+                                                Entity Name: {result.entityName}
+                                            </p>
+                                        </div>
                                         
-                                        <!-- ABN Information -->
-                                        <div class="slds-grid slds-wrap slds-gutters_x-small slds-m-bottom_small">
-                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                        <div class="slds-grid slds-wrap slds-gutters_xx-small">
+                                            <div class="slds-col slds-size_1-of-1">
                                                 <c-acds-read-only-field 
-                                                    field-label="ABN" 
-                                                    field-value={result.abnNumber}>
-                                                </c-acds-read-only-field>
-                                            </div>
-                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                                                <c-acds-read-only-field 
-                                                    field-label="ABN Status" 
+                                                    field-label="ABN status:" 
                                                     field-value={result.abnStatus}>
                                                 </c-acds-read-only-field>
                                             </div>
-                                        </div>
-
-                                        <!-- Entity Details -->
-                                        <div class="slds-grid slds-wrap slds-gutters_x-small slds-m-bottom_small">
-                                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                            <div class="slds-col slds-size_1-of-1">
                                                 <c-acds-read-only-field 
-                                                    field-label="Entity Type" 
+                                                    field-label="Entity type:" 
                                                     field-value={result.entityType}>
                                                 </c-acds-read-only-field>
                                             </div>
-                                            <template lwc:if={result.acnNumber}>
-                                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                                                    <c-acds-read-only-field 
-                                                        field-label="ACN" 
-                                                        field-value={result.acnNumber}>
-                                                    </c-acds-read-only-field>
-                                                </div>
-                                            </template>
-                                        </div>
-
-                                        <!-- GST and Location -->
-                                        <div class="slds-grid slds-wrap slds-gutters_x-small slds-m-bottom_small">
-                                            <template lwc:if={result.gstStatus}>
-                                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                                                    <c-acds-read-only-field 
-                                                        field-label="GST Status" 
-                                                        field-value={result.gstStatus}>
-                                                    </c-acds-read-only-field>
-                                                </div>
-                                            </template>
-                                            <template lwc:if={result.businessLocation}>
-                                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                                                    <c-acds-read-only-field 
-                                                        field-label="Main Business Location" 
-                                                        field-value={result.businessLocation}>
-                                                    </c-acds-read-only-field>
-                                                </div>
-                                            </template>
-                                        </div>
-
-                                        <!-- Last Updated -->
-                                        <template lwc:if={result.lastUpdated}>
-                                            <div class="slds-m-bottom_small">
+                                            <div class="slds-col slds-size_1-of-1">
                                                 <c-acds-read-only-field 
-                                                    field-label="Last Updated" 
-                                                    field-value={result.lastUpdated}>
+                                                    field-label="Goods & Services Tax (GST):" 
+                                                    field-value={result.gstStatus}>
                                                 </c-acds-read-only-field>
                                             </div>
-                                        </template>
-
-                                        <!-- Select Button -->
-                                        <div class="slds-align_absolute-center slds-m-top_medium">
+                                            <div class="slds-col slds-size_1-of-1">
+                                                <c-acds-read-only-field 
+                                                    field-label="Main business location" 
+                                                    field-value={result.businessLocation}>
+                                                </c-acds-read-only-field>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="slds-m-top_medium slds-text-align_right">
                                             <lightning-button
-                                                variant="brand"
                                                 label="Select"
-                                                title="Select this business"
-                                                onclick={handleSelectBusiness}
-                                                data-business-id={result.id}
-                                                class="select-button">
+                                                variant="brand"
+                                                onclick={handleSelectResult}
+                                                data-result-id={result.id}
+                                                icon-name="utility:forward"
+                                                icon-position="right">
                                             </lightning-button>
                                         </div>
                                     </div>
@@ -158,10 +139,10 @@
                             </div>
                         </template>
                     </div>
-
+                    
                     <!-- Pagination -->
                     <template lwc:if={showPagination}>
-                        <div class="slds-m-top_large">
+                        <div class="slds-m-top_medium">
                             <c-acds-pagination
                                 data={allResults}
                                 onpaginationdatachange={handlePaginationDataChange}
@@ -169,6 +150,75 @@
                             </c-acds-pagination>
                         </div>
                     </template>
+                </div>
+            </template>
+
+            <!-- No Results Message -->
+            <template lwc:if={showNoResults}>
+                <div class="slds-align_absolute-center slds-m-vertical_large">
+                    <div class="slds-text-align_center">
+                        <lightning-icon 
+                            icon-name="utility:search" 
+                            size="large" 
+                            class="slds-m-bottom_small">
+                        </lightning-icon>
+                        <p class="slds-text-heading_medium">No matching results found</p>
+                        <p class="slds-text-body_regular slds-text-color_weak">
+                            Please check your search criteria and try again
+                        </p>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Selected Result Display -->
+            <template lwc:if={selectedResult}>
+                <div class="selected-result-section slds-m-top_large">
+                    <lightning-button 
+                        label="Change ABN" 
+                        variant="neutral" 
+                        onclick={handleChangeAbn}
+                        class="slds-m-bottom_medium">
+                    </lightning-button>
+                    
+                    <lightning-card title="Selected ABN Details">
+                        <div class="slds-card__body slds-card__body_inner">
+                            <div class="slds-m-bottom_medium">
+                                <h3 class="slds-text-heading_small slds-m-bottom_x-small">
+                                    ABN: {selectedResult.abnNumber}
+                                </h3>
+                                <p class="slds-text-heading_small slds-text-color_default">
+                                    Entity Name: {selectedResult.entityName}
+                                </p>
+                            </div>
+                            
+                            <div class="slds-grid slds-wrap slds-gutters">
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                    <c-acds-read-only-field 
+                                        field-label="ABN status:" 
+                                        field-value={selectedResult.abnStatus}>
+                                    </c-acds-read-only-field>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                    <c-acds-read-only-field 
+                                        field-label="Entity type:" 
+                                        field-value={selectedResult.entityType}>
+                                    </c-acds-read-only-field>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                    <c-acds-read-only-field 
+                                        field-label="Goods & Services Tax (GST):" 
+                                        field-value={selectedResult.gstStatus}>
+                                    </c-acds-read-only-field>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                    <c-acds-read-only-field 
+                                        field-label="Main business location" 
+                                        field-value={selectedResult.businessLocation}>
+                                    </c-acds-read-only-field>
+                                </div>
+                            </div>
+                        </div>
+                    </lightning-card>
                 </div>
             </template>
         </div>

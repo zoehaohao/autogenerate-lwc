@@ -10,8 +10,11 @@ public with sharing class myformabnLookupTestV2Controller {
                 return new ResponseWrapper(false, 'Search parameters are required', null);
             }
             
-            // Parse search parameters
-            Map<String, Object> params = (Map<String, Object>) JSON.deserializeUntyped(searchParams);
+            Map<String, Object> params = parseSearchParams(searchParams);
+            if (params == null) {
+                return new ResponseWrapper(false, 'Invalid search parameters', null);
+            }
+            
             String searchTerm = (String) params.get('searchTerm');
             String searchType = (String) params.get('searchType');
             
@@ -25,23 +28,28 @@ public with sharing class myformabnLookupTestV2Controller {
             }
             
             // Perform API callout
-            String apiResponse = performAPICallout(searchTerm, searchType);
+            Object apiResponse = performAPICallout(searchTerm, searchType);
             
-            if (String.isBlank(apiResponse)) {
-                return new ResponseWrapper(false, 'No response received from ABN service', null);
+            if (apiResponse == null) {
+                return new ResponseWrapper(false, 'No results found', null);
             }
             
-            // Parse and process response
-            Object processedData = processAPIResponse(apiResponse);
+            return new ResponseWrapper(true, 'Search completed successfully', apiResponse);
             
-            return new ResponseWrapper(true, 'Search completed successfully', processedData);
-            
-        } catch (CalloutException e) {
-            System.debug('Callout Exception: ' + e.getMessage());
-            return new ResponseWrapper(false, 'Unable to connect to ABN service. Please try again later.', null);
         } catch (Exception e) {
-            System.debug('Search Exception: ' + e.getMessage());
-            return new ResponseWrapper(false, 'An error occurred during search. Please try again.', null);
+            System.debug('Error in searchABN: ' + e.getMessage());
+            System.debug('Stack trace: ' + e.getStackTraceString());
+            return new ResponseWrapper(false, 'An error occurred while searching: ' + e.getMessage(), null);
+        }
+    }
+    
+    private static Map<String, Object> parseSearchParams(String searchParams) {
+        try {
+            Object tempData = JSON.deserializeUntyped(searchParams);
+            return (Map<String, Object>) tempData;
+        } catch (Exception e) {
+            System.debug('Error parsing search parameters: ' + e.getMessage());
+            return null;
         }
     }
     
@@ -52,115 +60,108 @@ public with sharing class myformabnLookupTestV2Controller {
         
         String cleanTerm = searchTerm.replaceAll('\\s', '');
         
-        switch on searchType {
-            when 'abn' {
+        switch (searchType) {
+            case 'abn':
                 return Pattern.matches('^\\d{11}$', cleanTerm);
-            }
-            when 'acn' {
+            case 'acn':
                 return Pattern.matches('^\\d{9}$', cleanTerm);
-            }
-            when 'name' {
-                return searchTerm.length() >= 2;
-            }
-            when else {
-                return searchTerm.length() >= 2;
-            }
+            case 'name':
+                return searchTerm.trim().length() >= 2;
+            default:
+                return searchTerm.trim().length() >= 2;
         }
     }
     
-    private static String performAPICallout(String searchTerm, String searchType) {
-        Http http = new Http();
-        HttpRequest request = new HttpRequest();
-        
-        // Build endpoint with query parameters
-        String endpoint = buildEndpointURL(searchTerm, searchType);
-        request.setEndpoint(endpoint);
-        request.setMethod('GET');
-        request.setHeader('Content-Type', 'application/json');
-        request.setHeader('Accept', 'application/json');
-        request.setTimeout(TIMEOUT_SECONDS * 1000);
-        
+    private static Object performAPICallout(String searchTerm, String searchType) {
         try {
+            Http http = new Http();
+            HttpRequest request = new HttpRequest();
+            
+            // Build endpoint with query parameters
+            String endpoint = buildEndpoint(searchTerm, searchType);
+            request.setEndpoint(endpoint);
+            request.setMethod('GET');
+            request.setHeader('Content-Type', 'application/json');
+            request.setTimeout(TIMEOUT_SECONDS * 1000);
+            
             HttpResponse response = http.send(request);
             
             if (response.getStatusCode() == 200) {
-                return response.getBody();
+                return parseAPIResponse(response.getBody());
             } else if (response.getStatusCode() == 404) {
-                return '{"error": "No results found"}';
+                System.debug('No results found for search term: ' + searchTerm);
+                return null;
             } else {
-                throw new CalloutException('HTTP ' + response.getStatusCode() + ': ' + response.getStatus());
+                System.debug('API Error - Status Code: ' + response.getStatusCode() + ', Body: ' + response.getBody());
+                throw new CalloutException('API returned error: ' + response.getStatusCode());
             }
+            
         } catch (System.CalloutException e) {
-            throw new CalloutException('API request failed: ' + e.getMessage());
+            System.debug('Callout error: ' + e.getMessage());
+            throw new CalloutException('Unable to connect to ABN lookup service: ' + e.getMessage());
+        } catch (Exception e) {
+            System.debug('Unexpected error during API callout: ' + e.getMessage());
+            throw new CalloutException('An unexpected error occurred: ' + e.getMessage());
         }
     }
     
-    private static String buildEndpointURL(String searchTerm, String searchType) {
-        String baseURL = API_ENDPOINT;
-        String queryParam = '';
+    private static String buildEndpoint(String searchTerm, String searchType) {
+        String endpoint = API_ENDPOINT;
         
-        switch on searchType {
-            when 'abn' {
-                queryParam = '?abn=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            }
-            when 'acn' {
-                queryParam = '?acn=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            }
-            when 'name' {
-                queryParam = '?name=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            }
-            when else {
-                queryParam = '?q=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            }
+        // Add query parameters based on search type
+        switch (searchType) {
+            case 'abn':
+                endpoint += '?abn=' + EncodingUtil.urlEncode(searchTerm.replaceAll('\\s', ''), 'UTF-8');
+                break;
+            case 'acn':
+                endpoint += '?acn=' + EncodingUtil.urlEncode(searchTerm.replaceAll('\\s', ''), 'UTF-8');
+                break;
+            case 'name':
+                endpoint += '?name=' + EncodingUtil.urlEncode(searchTerm.trim(), 'UTF-8');
+                break;
+            default:
+                endpoint += '?q=' + EncodingUtil.urlEncode(searchTerm.trim(), 'UTF-8');
         }
         
-        return baseURL + queryParam;
+        return endpoint;
     }
     
-    private static Object processAPIResponse(String apiResponse) {
+    private static Object parseAPIResponse(String responseBody) {
         try {
-            // Check for error response
-            if (apiResponse.contains('"error"')) {
-                Map<String, Object> errorResponse = (Map<String, Object>) JSON.deserializeUntyped(apiResponse);
-                if (errorResponse.containsKey('error')) {
-                    return null; // Return null for no results found
-                }
+            if (String.isBlank(responseBody)) {
+                return null;
             }
             
-            // Parse the JSON response safely
-            Object tempResult = JSON.deserializeUntyped(apiResponse);
+            Object tempResponse = JSON.deserializeUntyped(responseBody);
             
-            // Handle different response formats
-            if (tempResult instanceof List<Object>) {
-                // Multiple results
-                List<Object> tempList = (List<Object>) tempResult;
-                List<Map<String, Object>> results = new List<Map<String, Object>>();
+            // Handle both single object and array responses
+            if (tempResponse instanceof List<Object>) {
+                List<Object> tempList = (List<Object>) tempResponse;
+                List<Map<String, Object>> resultList = new List<Map<String, Object>>();
                 
                 for (Object item : tempList) {
                     if (item instanceof Map<String, Object>) {
-                        results.add((Map<String, Object>) item);
+                        resultList.add((Map<String, Object>) item);
                     }
                 }
-                return results;
-            } else if (tempResult instanceof Map<String, Object>) {
-                // Single result
-                return (Map<String, Object>) tempResult;
-            } else {
-                return tempResult;
+                
+                return resultList;
+            } else if (tempResponse instanceof Map<String, Object>) {
+                return (Map<String, Object>) tempResponse;
             }
             
-        } catch (JSONException e) {
-            System.debug('JSON Parse Exception: ' + e.getMessage());
-            throw new AuraHandledException('Invalid response format from ABN service');
+            return tempResponse;
+            
         } catch (Exception e) {
-            System.debug('Response Processing Exception: ' + e.getMessage());
-            throw new AuraHandledException('Error processing ABN service response');
+            System.debug('Error parsing API response: ' + e.getMessage());
+            System.debug('Response body: ' + responseBody);
+            throw new CalloutException('Invalid response format from ABN lookup service');
         }
     }
     
-    // Test method for API endpoint validation
-    @AuraEnabled(cacheable=true)
-    public static ResponseWrapper validateAPIEndpoint() {
+    // Utility method for testing
+    @AuraEnabled(cacheable=false)
+    public static ResponseWrapper testConnection() {
         try {
             Http http = new Http();
             HttpRequest request = new HttpRequest();
@@ -170,35 +171,15 @@ public with sharing class myformabnLookupTestV2Controller {
             
             HttpResponse response = http.send(request);
             
-            if (response.getStatusCode() >= 200 && response.getStatusCode() < 300) {
-                return new ResponseWrapper(true, 'API endpoint is accessible', null);
-            } else {
-                return new ResponseWrapper(false, 'API endpoint returned status: ' + response.getStatusCode(), null);
-            }
+            return new ResponseWrapper(
+                response.getStatusCode() == 200, 
+                'Status Code: ' + response.getStatusCode(), 
+                response.getBody()
+            );
+            
         } catch (Exception e) {
-            return new ResponseWrapper(false, 'API endpoint validation failed: ' + e.getMessage(), null);
+            return new ResponseWrapper(false, 'Connection test failed: ' + e.getMessage(), null);
         }
-    }
-    
-    // Utility method for input sanitization
-    @AuraEnabled(cacheable=true)
-    public static String sanitizeInput(String input) {
-        if (String.isBlank(input)) {
-            return '';
-        }
-        
-        // Remove potentially harmful characters
-        String sanitized = input.replaceAll('[<>"\']', '');
-        
-        // Trim whitespace
-        sanitized = sanitized.trim();
-        
-        // Limit length to prevent abuse
-        if (sanitized.length() > 100) {
-            sanitized = sanitized.substring(0, 100);
-        }
-        
-        return sanitized;
     }
     
     // Response wrapper class
@@ -226,6 +207,6 @@ public with sharing class myformabnLookupTestV2Controller {
         }
     }
     
-    // Custom exception for callout errors
+    // Custom exception class
     public class CalloutException extends Exception {}
 }
