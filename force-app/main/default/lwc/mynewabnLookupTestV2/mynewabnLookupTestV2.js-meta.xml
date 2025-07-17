@@ -2,7 +2,6 @@
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>62.0</apiVersion>
     <isExposed>true</isExposed>
-    <description>ABN Lookup Component - Search for Australian Business Numbers using ABN, ACN, or Company Name</description>
     <targets>
         <target>lightning__AppPage</target>
         <target>lightning__RecordPage</target>
@@ -13,10 +12,9 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage">
-            <property name="recordId" type="String" label="Record ID" description="The record ID to associate with the ABN lookup"/>
-            <property name="initialSearchTerm" type="String" label="Initial Search Term" description="Pre-populate the search field with this value"/>
-            <property name="maxResults" type="Integer" default="50" label="Maximum Results" description="Maximum number of results to return from search"/>
-            <property name="isReadOnly" type="Boolean" default="false" label="Read Only Mode" description="Display component in read-only mode"/>
+            <property name="recordId" type="String" label="Record ID" description="Record ID for context"/>
+            <property name="initialSearchTerm" type="String" label="Initial Search Term" description="Pre-populate search field"/>
+            <property name="isReadOnly" type="Boolean" label="Read Only Mode" description="Make component read-only"/>
         </targetConfig>
     </targetConfigs>
 </LightningComponentBundle>
