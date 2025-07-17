@@ -1,126 +1,129 @@
-/* Form Section Styling */
-.form-section {
-    padding: 1rem;
-    border-radius: 0.25rem;
+/* Form container styling */
+.slds-card {
+    max-width: 600px;
+    margin: 0 auto;
 }
 
-.section-heading {
-    color: #1B3A57; /* Dark blue/navy */
+/* Section headers */
+.section-header {
+    color: #1B3A57;
     font-weight: 600;
     font-family: 'Salesforce Sans', Arial, sans-serif;
     margin-bottom: 1rem;
 }
 
-/* Field Container and Label Styling */
-.field-container {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-}
-
+/* Field labels styling */
 .field-label {
     text-align: right;
-    width: 150px;
-    padding-right: 1rem;
-    padding-top: 0.5rem;
-    color: #3E3E3C; /* Dark grey */
-    font-weight: 400;
+    color: #3E3E3C;
+    font-weight: 500;
     font-family: 'Salesforce Sans', Arial, sans-serif;
-    flex-shrink: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 0.25rem;
 }
 
-.slds-form-element__control {
-    flex: 1;
-    min-width: 0;
-}
-
-/* Required Field Asterisk */
+/* Required asterisk styling */
 .required-asterisk {
-    color: #EA001E; /* Red */
+    color: #EA001E;
     margin-right: 0.25rem;
     font-weight: bold;
 }
 
-/* Input Field Styling */
-.slds-form-element lightning-input,
-.slds-form-element lightning-combobox {
+/* Form field styling */
+.form-field {
     width: 100%;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+    border: 1px solid #D8DDE6;
+    border-radius: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
 }
 
-/* Error Message Styling */
+.form-field:focus {
+    border-color: #1B96FF;
+    box-shadow: 0 0 0 1px #1B96FF;
+    outline: none;
+}
+
+/* Select dropdown styling */
+.slds-select_container {
+    position: relative;
+}
+
+.slds-select_container::after {
+    content: '';
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid #706E6B;
+    pointer-events: none;
+}
+
+/* Error message styling */
 .error-message {
     color: #EA001E;
     font-size: 0.75rem;
     margin-top: 0.25rem;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .field-container {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
+/* Form sections spacing */
+.slds-form-element {
+    margin-bottom: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
     .field-label {
         text-align: left;
-        width: 100%;
-        padding-right: 0;
-        padding-bottom: 0.25rem;
-        padding-top: 0;
+        justify-content: flex-start;
     }
     
-    .form-section {
-        padding: 0.5rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .section-heading {
-        font-size: 1.125rem;
-    }
-    
-    .slds-grid.slds-gutters {
+    .slds-card {
         margin: 0;
-    }
-    
-    .slds-col {
-        padding: 0.25rem;
+        max-width: 100%;
     }
 }
 
-/* Focus and Hover States */
-.slds-form-element lightning-input:focus-within,
-.slds-form-element lightning-combobox:focus-within {
-    box-shadow: 0 0 3px #1B96FF;
-}
-
-/* Button Styling */
-.slds-grid_align-center {
-    justify-content: center;
-}
-
-/* Card Styling */
-.slds-card {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border: 1px solid #D8DDE6;
-}
-
-/* Consistent Field Width */
-.slds-form-element__control lightning-input,
-.slds-form-element__control lightning-combobox {
-    max-width: 300px;
-}
-
-/* Section Spacing */
-.form-section + .form-section {
-    border-left: 1px solid #D8DDE6;
-}
-
-@media (max-width: 1023px) {
-    .form-section + .form-section {
-        border-left: none;
-        border-top: 1px solid #D8DDE6;
-        margin-top: 1rem;
-        padding-top: 1rem;
+@media (min-width: 768px) and (max-width: 1023px) {
+    .slds-card {
+        max-width: 90%;
     }
+}
+
+/* Button styling */
+.slds-button {
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+}
+
+/* Consistent field spacing */
+.slds-form .slds-form-element {
+    margin-bottom: 1.5rem;
+}
+
+.slds-form .slds-form-element:last-child {
+    margin-bottom: 0;
+}
+
+/* Input field consistency */
+.slds-input,
+.slds-select {
+    height: 2.25rem;
+    line-height: 1.5;
+}
+
+/* Form layout improvements */
+.slds-form_stacked .slds-form-element__label {
+    margin-bottom: 0.25rem;
+}
+
+.slds-form_stacked .slds-form-element__control {
+    margin-top: 0.25rem;
 }
