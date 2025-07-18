@@ -3,7 +3,7 @@ import searchAbnEntities from '@salesforce/apex/abnLookupTestV2Controller.search
 import verifyAbnEntity from '@salesforce/apex/abnLookupTestV2Controller.verifyAbnEntity';
 
 export default class AbnLookupTestV2 extends LightningElement {
-    @api mode = 'Search'; // Search or Verify
+    @api mode = 'Search'; // 'Search' or 'Verify'
     @api pageSize = 10;
     
     @track searchTerm = '';
@@ -12,9 +12,10 @@ export default class AbnLookupTestV2 extends LightningElement {
     @track isLoading = false;
     @track errorMessage = '';
     @track currentPage = 1;
-    @track totalRecords = 0;
+    @track totalResults = 0;
+    @track hasSearched = false;
 
-    // Computed properties
+    // Computed properties for UI state
     get isSearchMode() {
         return this.mode === 'Search';
     }
@@ -38,28 +39,42 @@ export default class AbnLookupTestV2 extends LightningElement {
         return this.isSearchMode ? 'Search by Business name, ABN or ACN' : 'Enter ABN or ACN';
     }
 
-    get actionButtonLabel() {
+    get searchButtonLabel() {
         return this.isSearchMode ? 'Search' : 'Verify';
     }
 
-    get selectionButtonLabel() {
+    get selectButtonLabel() {
         return this.isSearchMode ? 'Select' : 'Confirm';
-    }
-
-    get showResults() {
-        return this.searchResults.length > 0 && !this.isLoading && !this.selectedEntity;
     }
 
     get showSelectedEntity() {
         return this.selectedEntity !== null;
     }
 
-    get showPagination() {
-        return this.totalRecords > this.pageSize;
+    get showSearchInterface() {
+        return this.selectedEntity === null;
+    }
+
+    get showResults() {
+        return this.hasSearched && !this.isLoading && this.searchResults.length > 0 && !this.errorMessage;
+    }
+
+    get showNoResults() {
+        return this.hasSearched && !this.isLoading && this.searchResults.length === 0 && !this.errorMessage;
+    }
+
+    get paginatedResults() {
+        const startIndex = (this.currentPage - 1) * this.pageSize;
+        const endIndex = startIndex + this.pageSize;
+        return this.searchResults.slice(startIndex, endIndex);
     }
 
     get totalPages() {
-        return Math.ceil(this.totalRecords / this.pageSize);
+        return Math.ceil(this.searchResults.length / this.pageSize);
+    }
+
+    get showPagination() {
+        return this.totalPages > 1;
     }
 
     get isFirstPage() {
@@ -71,57 +86,39 @@ export default class AbnLookupTestV2 extends LightningElement {
     }
 
     get startRecord() {
-        return ((this.currentPage - 1) * this.pageSize) + 1;
+        return this.searchResults.length > 0 ? (this.currentPage - 1) * this.pageSize + 1 : 0;
     }
 
     get endRecord() {
         const end = this.currentPage * this.pageSize;
-        return end > this.totalRecords ? this.totalRecords : end;
-    }
-
-    get paginatedResults() {
-        const start = (this.currentPage - 1) * this.pageSize;
-        const end = start + this.pageSize;
-        return this.searchResults.slice(start, end);
+        return end > this.searchResults.length ? this.searchResults.length : end;
     }
 
     get pageNumbers() {
         const pages = [];
-        const totalPages = this.totalPages;
-        const current = this.currentPage;
+        const maxVisiblePages = 5;
+        let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(this.totalPages, startPage + maxVisiblePages - 1);
         
-        // Show first page
-        if (current > 3) {
-            pages.push({ value: 1, variant: 'neutral' });
-            if (current > 4) {
-                pages.push({ value: '...', variant: 'neutral', disabled: true });
-            }
+        if (endPage - startPage + 1 < maxVisiblePages) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
         }
-        
-        // Show pages around current
-        for (let i = Math.max(1, current - 2); i <= Math.min(totalPages, current + 2); i++) {
-            pages.push({ 
-                value: i, 
-                variant: i === current ? 'brand' : 'neutral' 
+
+        for (let i = startPage; i <= endPage; i++) {
+            pages.push({
+                label: i.toString(),
+                value: i,
+                variant: i === this.currentPage ? 'brand' : 'neutral'
             });
         }
-        
-        // Show last page
-        if (current < totalPages - 2) {
-            if (current < totalPages - 3) {
-                pages.push({ value: '...', variant: 'neutral', disabled: true });
-            }
-            pages.push({ value: totalPages, variant: 'neutral' });
-        }
-        
         return pages;
     }
 
     get resultCardClass() {
-        // Responsive grid classes based on requirements
-        return 'slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-x-large-size_1-of-4';
+        return 'slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3';
     }
 
+    // Event handlers
     handleSearchTermChange(event) {
         this.searchTerm = event.target.value;
         this.errorMessage = '';
@@ -133,19 +130,30 @@ export default class AbnLookupTestV2 extends LightningElement {
         }
     }
 
-    async handleSearch() {
+    handleSearch() {
         if (!this.searchTerm.trim()) {
             this.errorMessage = 'Please enter a search term';
             return;
         }
 
         // Validate input format
-        if (!this.validateInput(this.searchTerm.trim())) {
-            return;
+        const trimmedTerm = this.searchTerm.trim();
+        const isNumeric = /^\d+$/.test(trimmedTerm);
+        
+        if (isNumeric) {
+            if (trimmedTerm.length !== 11 && trimmedTerm.length !== 9) {
+                this.errorMessage = 'An ABN requires 11 digits and an ACN requires 9 digits, check the number and try again';
+                return;
+            }
         }
 
+        this.performSearch();
+    }
+
+    async performSearch() {
         this.isLoading = true;
         this.errorMessage = '';
+        this.hasSearched = false;
         this.currentPage = 1;
 
         try {
@@ -158,19 +166,16 @@ export default class AbnLookupTestV2 extends LightningElement {
                 });
             } else {
                 result = await verifyAbnEntity({ 
-                    abnOrAcn: this.searchTerm.trim() 
+                    abnOrAcn: this.searchTerm.trim()
                 });
             }
 
             if (result.success) {
-                this.searchResults = this.processSearchResults(result.data.entities || []);
-                this.totalRecords = result.data.totalCount || this.searchResults.length;
-                
-                if (this.searchResults.length === 0) {
-                    this.errorMessage = `No matching results for ${this.searchTerm}, please check the inputs and try again.`;
-                }
+                this.searchResults = this.processSearchResults(result.data);
+                this.totalResults = this.searchResults.length;
+                this.hasSearched = true;
             } else {
-                this.errorMessage = result.message || 'An error occurred during search';
+                this.errorMessage = result.message || 'An error occurred while searching';
                 this.searchResults = [];
             }
         } catch (error) {
@@ -182,47 +187,32 @@ export default class AbnLookupTestV2 extends LightningElement {
         }
     }
 
-    validateInput(input) {
-        const cleanInput = input.replace(/\s/g, '');
+    processSearchResults(data) {
+        if (!data) return [];
         
-        // Check if it's numeric (ABN or ACN)
-        if (/^\d+$/.test(cleanInput)) {
-            if (cleanInput.length === 11) {
-                // Valid ABN length
-                return true;
-            } else if (cleanInput.length === 9) {
-                // Valid ACN length
-                return true;
-            } else {
-                this.errorMessage = 'An ABN requires 11 digits and an ACN requires 9 digits, check the number and try again';
-                return false;
-            }
-        }
+        // Handle both single result and array of results
+        const results = Array.isArray(data) ? data : [data];
         
-        // For search mode, allow business names
-        if (this.isSearchMode) {
-            return true;
-        }
-        
-        // For verify mode, only allow ABN/ACN
-        this.errorMessage = 'Please enter a valid ABN (11 digits) or ACN (9 digits)';
-        return false;
-    }
+        return results.map((item, index) => {
+            const abn = item.abn?.identifier_value || '';
+            const entityName = item.entity_name || item.other_trading_name?.organisation_name || 'N/A';
+            const status = item.entity_status?.entity_status_code || 'Unknown';
+            const entityType = item.entity_type?.entity_description || 'N/A';
+            const gstStatus = item.goods_and_services_tax ? 'Registered' : 'Not Registered';
+            const location = item.main_business_location || 'N/A';
 
-    processSearchResults(entities) {
-        return entities.map(entity => ({
-            abn: entity.abn?.identifier_value || '',
-            formattedAbn: this.formatAbn(entity.abn?.identifier_value || ''),
-            entityName: entity.entity_name || entity.other_trading_name?.organisation_name || 'N/A',
-            status: entity.entity_status?.entity_status_code === 'Active' ? 
-                   `Active from ${this.formatDate(entity.entity_status?.effective_from)}` : 
-                   entity.entity_status?.entity_status_code || 'Unknown',
-            entityType: entity.entity_type?.entity_description || 'N/A',
-            gstStatus: entity.goods_and_services_tax?.effective_from ? 
-                      `Registered from ${this.formatDate(entity.goods_and_services_tax.effective_from)}` : 
-                      'Not registered',
-            location: entity.main_business_location || 'N/A'
-        }));
+            return {
+                id: `${abn}-${index}`,
+                abn: abn,
+                formattedAbn: this.formatAbn(abn),
+                entityName: entityName,
+                status: status,
+                entityType: entityType,
+                gstStatus: gstStatus,
+                location: location,
+                rawData: item
+            };
+        });
     }
 
     formatAbn(abn) {
@@ -230,38 +220,13 @@ export default class AbnLookupTestV2 extends LightningElement {
         return `${abn.substring(0, 2)} ${abn.substring(2, 5)} ${abn.substring(5, 8)} ${abn.substring(8, 11)}`;
     }
 
-    formatDate(dateString) {
-        if (!dateString || dateString === '0001-01-01') return '';
-        try {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('en-AU', { 
-                day: '2-digit', 
-                month: 'short', 
-                year: 'numeric' 
-            });
-        } catch (error) {
-            return dateString;
-        }
-    }
-
     handleSelectEntity(event) {
-        const selectedAbn = event.target.dataset.abn;
-        const entity = this.searchResults.find(result => result.abn === selectedAbn);
+        const selectedId = event.target.dataset.id;
+        const entity = this.searchResults.find(result => result.id === selectedId);
         
         if (entity) {
-            this.selectedEntity = { ...entity };
-            
-            // Dispatch selection event to parent
-            const selectionEvent = new CustomEvent('entityselection', {
-                detail: {
-                    selectedEntity: this.selectedEntity,
-                    mode: this.mode,
-                    timestamp: new Date().toISOString()
-                },
-                bubbles: true,
-                composed: true
-            });
-            this.dispatchEvent(selectionEvent);
+            this.selectedEntity = entity;
+            this.dispatchSelectionEvent(entity);
         }
     }
 
@@ -269,31 +234,42 @@ export default class AbnLookupTestV2 extends LightningElement {
         this.selectedEntity = null;
         this.searchResults = [];
         this.searchTerm = '';
+        this.hasSearched = false;
         this.errorMessage = '';
         this.currentPage = 1;
-        this.totalRecords = 0;
     }
 
+    // Pagination handlers
     handlePreviousPage() {
-        if (!this.isFirstPage) {
+        if (this.currentPage > 1) {
             this.currentPage--;
-            this.handleSearch();
         }
     }
 
     handleNextPage() {
-        if (!this.isLastPage) {
+        if (this.currentPage < this.totalPages) {
             this.currentPage++;
-            this.handleSearch();
         }
     }
 
     handlePageClick(event) {
-        const page = parseInt(event.target.dataset.page);
-        if (page && page !== this.currentPage) {
-            this.currentPage = page;
-            this.handleSearch();
-        }
+        const pageNumber = parseInt(event.target.dataset.page, 10);
+        this.currentPage = pageNumber;
+    }
+
+    // Parent communication
+    dispatchSelectionEvent(entity) {
+        const selectionEvent = new CustomEvent('entityselected', {
+            detail: {
+                componentName: 'abnLookupTestV2',
+                selectedEntity: entity,
+                mode: this.mode,
+                timestamp: new Date().toISOString()
+            },
+            bubbles: true,
+            composed: true
+        });
+        this.dispatchEvent(selectionEvent);
     }
 
     // Public API methods for parent components
@@ -311,7 +287,7 @@ export default class AbnLookupTestV2 extends LightningElement {
     setMode(newMode) {
         if (newMode === 'Search' || newMode === 'Verify') {
             this.mode = newMode;
-            this.handleChangeAbn();
+            this.handleChangeAbn(); // Reset component state
         }
     }
 }

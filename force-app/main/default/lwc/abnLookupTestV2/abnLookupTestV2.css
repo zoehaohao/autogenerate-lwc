@@ -1,43 +1,39 @@
 .result-card {
-    transition: transform 0.2s ease-in-out;
+    transition: box-shadow 0.2s ease-in-out;
 }
 
 .result-card:hover {
-    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.slds-card {
-    height: 100%;
+.slds-box {
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
 }
 
-.slds-card__body {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+.slds-button-group .slds-button {
+    margin: 0 2px;
 }
 
-.slds-align_absolute-center {
-    margin-top: auto;
-}
-
-@media (max-width: 768px) {
-    .slds-button-group {
-        flex-wrap: wrap;
+@media (max-width: 767px) {
+    .slds-grid .slds-col {
+        margin-bottom: 0.5rem;
     }
     
-    .slds-button-group .slds-button {
-        margin-bottom: 0.25rem;
+    .slds-text-align_right {
+        text-align: left !important;
     }
 }
 
-.pagination-info {
-    font-size: 0.875rem;
-    color: #706e6b;
+.slds-notify {
+    border-radius: 0.25rem;
 }
 
-.loading-container {
-    min-height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.slds-item_label {
+    width: 40%;
+    margin-right: 0.5rem;
+}
+
+.slds-item_detail {
+    width: 55%;
 }

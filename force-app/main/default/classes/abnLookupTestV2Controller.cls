@@ -10,53 +10,19 @@ public with sharing class abnLookupTestV2Controller {
                 return new ResponseWrapper(false, 'Search term is required', null);
             }
             
-            // Determine search type and build parameters
-            Map<String, String> queryParams = buildSearchParams(searchTerm);
+            // Determine search parameter based on input
+            String searchParam = determineSearchParameter(searchTerm.trim());
+            Object searchResults = callAbnApi(searchParam, searchTerm.trim());
             
-            // Make API call
-            HttpResponse response = makeApiCall(queryParams);
-            
-            if (response.getStatusCode() == 200) {
-                Object responseData = JSON.deserializeUntyped(response.getBody());
-                List<Object> entities = new List<Object>();
-                
-                // Handle different response structures
-                if (responseData instanceof List<Object>) {
-                    List<Object> tempList = (List<Object>) responseData;
-                    for (Object item : tempList) {
-                        entities.add(item);
-                    }
-                } else if (responseData instanceof Map<String, Object>) {
-                    entities.add(responseData);
-                }
-                
-                // Apply pagination
-                Integer totalCount = entities.size();
-                Integer startIndex = (pageNumber - 1) * pageSize;
-                Integer endIndex = Math.min(startIndex + pageSize, totalCount);
-                
-                List<Object> paginatedEntities = new List<Object>();
-                for (Integer i = startIndex; i < endIndex; i++) {
-                    paginatedEntities.add(entities[i]);
-                }
-                
-                Map<String, Object> resultData = new Map<String, Object>{
-                    'entities' => paginatedEntities,
-                    'totalCount' => totalCount,
-                    'currentPage' => pageNumber,
-                    'pageSize' => pageSize
-                };
-                
-                return new ResponseWrapper(true, 'Search completed successfully', resultData);
+            if (searchResults != null) {
+                return new ResponseWrapper(true, 'Search completed successfully', searchResults);
             } else {
-                System.debug('API Error - Status: ' + response.getStatusCode() + ', Body: ' + response.getBody());
-                return new ResponseWrapper(false, 'External service error: ' + response.getStatus(), null);
+                return new ResponseWrapper(false, 'No results found', null);
             }
             
         } catch (Exception e) {
             System.debug('Search error: ' + e.getMessage());
-            System.debug('Stack trace: ' + e.getStackTraceString());
-            return new ResponseWrapper(false, 'An error occurred during search: ' + e.getMessage(), null);
+            return new ResponseWrapper(false, 'An error occurred while searching: ' + e.getMessage(), null);
         }
     }
     
@@ -67,106 +33,92 @@ public with sharing class abnLookupTestV2Controller {
                 return new ResponseWrapper(false, 'ABN or ACN is required', null);
             }
             
-            // Clean input
-            String cleanInput = abnOrAcn.replaceAll('\\s', '');
+            String cleanInput = abnOrAcn.trim().replaceAll('\\s+', '');
             
-            // Validate format
-            if (!Pattern.matches('^\\d{9}$|^\\d{11}$', cleanInput)) {
-                return new ResponseWrapper(false, 'Invalid ABN or ACN format', null);
+            // Validate input format
+            if (!Pattern.matches('^\\d+$', cleanInput)) {
+                return new ResponseWrapper(false, 'Invalid format. Please enter numbers only.', null);
             }
             
-            // Build query parameters
-            Map<String, String> queryParams = new Map<String, String>();
-            if (cleanInput.length() == 11) {
-                queryParams.put('abn', cleanInput);
-            } else {
-                queryParams.put('acn', cleanInput);
+            if (cleanInput.length() != 11 && cleanInput.length() != 9) {
+                return new ResponseWrapper(false, 'An ABN requires 11 digits and an ACN requires 9 digits', null);
             }
             
-            // Make API call
-            HttpResponse response = makeApiCall(queryParams);
+            Object verifyResult = callAbnApi('abn', cleanInput);
             
-            if (response.getStatusCode() == 200) {
-                Object responseData = JSON.deserializeUntyped(response.getBody());
-                List<Object> entities = new List<Object>();
-                
-                if (responseData instanceof Map<String, Object>) {
-                    entities.add(responseData);
-                } else if (responseData instanceof List<Object>) {
-                    List<Object> tempList = (List<Object>) responseData;
-                    for (Object item : tempList) {
-                        entities.add(item);
-                    }
-                }
-                
-                Map<String, Object> resultData = new Map<String, Object>{
-                    'entities' => entities,
-                    'totalCount' => entities.size(),
-                    'currentPage' => 1,
-                    'pageSize' => entities.size()
-                };
-                
-                return new ResponseWrapper(true, 'Verification completed successfully', resultData);
+            if (verifyResult != null) {
+                return new ResponseWrapper(true, 'Verification completed successfully', verifyResult);
             } else {
-                System.debug('API Error - Status: ' + response.getStatusCode() + ', Body: ' + response.getBody());
-                return new ResponseWrapper(false, 'External service error: ' + response.getStatus(), null);
+                return new ResponseWrapper(false, 'No matching entity found', null);
             }
             
         } catch (Exception e) {
             System.debug('Verify error: ' + e.getMessage());
-            System.debug('Stack trace: ' + e.getStackTraceString());
-            return new ResponseWrapper(false, 'An error occurred during verification: ' + e.getMessage(), null);
+            return new ResponseWrapper(false, 'An error occurred while verifying: ' + e.getMessage(), null);
         }
     }
     
-    private static Map<String, String> buildSearchParams(String searchTerm) {
-        Map<String, String> params = new Map<String, String>();
-        String cleanTerm = searchTerm.replaceAll('\\s', '');
+    private static String determineSearchParameter(String searchTerm) {
+        // Remove spaces and check if numeric
+        String cleanTerm = searchTerm.replaceAll('\\s+', '');
         
-        // Check if it's a number (ABN or ACN)
         if (Pattern.matches('^\\d+$', cleanTerm)) {
             if (cleanTerm.length() == 11) {
-                params.put('abn', cleanTerm);
+                return 'abn';
             } else if (cleanTerm.length() == 9) {
-                params.put('acn', cleanTerm);
-            } else {
-                // For invalid numeric inputs, still try ABN search
-                params.put('abn', cleanTerm);
+                return 'acn';
             }
-        } else {
-            // Business name search
-            params.put('name', searchTerm);
         }
         
-        return params;
+        // Default to name search for non-numeric or invalid length numeric inputs
+        return 'name';
     }
     
-    private static HttpResponse makeApiCall(Map<String, String> queryParams) {
-        Http http = new Http();
-        HttpRequest request = new HttpRequest();
-        
-        // Build URL with query parameters
-        String url = API_ENDPOINT;
-        if (!queryParams.isEmpty()) {
-            List<String> paramList = new List<String>();
-            for (String key : queryParams.keySet()) {
-                paramList.add(key + '=' + EncodingUtil.urlEncode(queryParams.get(key), 'UTF-8'));
+    private static Object callAbnApi(String paramType, String paramValue) {
+        try {
+            Http http = new Http();
+            HttpRequest request = new HttpRequest();
+            
+            // Build URL with query parameter
+            String endpoint = API_ENDPOINT;
+            if (paramType == 'abn') {
+                endpoint += '?abn=' + EncodingUtil.urlEncode(paramValue, 'UTF-8');
+            } else if (paramType == 'acn') {
+                endpoint += '?acn=' + EncodingUtil.urlEncode(paramValue, 'UTF-8');
+            } else {
+                endpoint += '?name=' + EncodingUtil.urlEncode(paramValue, 'UTF-8');
             }
-            url += '?' + String.join(paramList, '&');
+            
+            request.setEndpoint(endpoint);
+            request.setMethod('GET');
+            request.setHeader('Content-Type', 'application/json');
+            request.setTimeout(TIMEOUT_SECONDS * 1000);
+            
+            HttpResponse response = http.send(request);
+            
+            if (response.getStatusCode() == 200) {
+                String responseBody = response.getBody();
+                if (String.isNotBlank(responseBody)) {
+                    Object parsedResponse = JSON.deserializeUntyped(responseBody);
+                    return parsedResponse;
+                }
+            } else if (response.getStatusCode() == 404) {
+                // No results found - this is a valid scenario
+                return null;
+            } else {
+                System.debug('API Error - Status Code: ' + response.getStatusCode() + ', Body: ' + response.getBody());
+                throw new CalloutException('API returned error status: ' + response.getStatusCode());
+            }
+            
+        } catch (CalloutException e) {
+            System.debug('Callout Exception: ' + e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            System.debug('General Exception in API call: ' + e.getMessage());
+            throw new CalloutException('Failed to connect to ABN service: ' + e.getMessage());
         }
         
-        request.setEndpoint(url);
-        request.setMethod('GET');
-        request.setHeader('Content-Type', 'application/json');
-        request.setTimeout(TIMEOUT_SECONDS * 1000);
-        
-        System.debug('Making API call to: ' + url);
-        
-        HttpResponse response = http.send(request);
-        System.debug('API Response Status: ' + response.getStatusCode());
-        System.debug('API Response Body: ' + response.getBody());
-        
-        return response;
+        return null;
     }
     
     public class ResponseWrapper {
@@ -180,6 +132,13 @@ public with sharing class abnLookupTestV2Controller {
             this.message = message;
             this.data = data;
             this.errors = new List<String>();
+        }
+        
+        public ResponseWrapper(Boolean success, String message, Object data, List<String> errors) {
+            this.success = success;
+            this.message = message;
+            this.data = data;
+            this.errors = errors != null ? errors : new List<String>();
         }
     }
 }
