@@ -1,9 +1,10 @@
 .result-card {
+    min-height: 120px;
     transition: box-shadow 0.2s ease;
 }
 
 .result-card:hover {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .search-input {
@@ -11,27 +12,33 @@
 }
 
 @media (max-width: 767px) {
-    .slds-button-group {
-        flex-wrap: wrap;
-    }
-    
     .slds-button-group .slds-button {
         margin-bottom: 0.25rem;
     }
-}
-
-/* Ensure proper spacing for mobile */
-@media (max-width: 479px) {
+    
     .result-card {
-        margin-bottom: 1rem;
+        min-height: auto;
     }
     
-    .slds-grid_align-spread {
-        flex-direction: column;
-    }
-    
-    .slds-text-align_right {
+    .slds-grid_align-spread .slds-col:last-child {
         text-align: left !important;
         margin-top: 0.5rem;
     }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .result-card {
+        min-height: 140px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .result-card {
+        min-height: 130px;
+    }
+}
+
+.slds-notify h2 {
+    font-size: 0.875rem;
+    font-weight: normal;
 }

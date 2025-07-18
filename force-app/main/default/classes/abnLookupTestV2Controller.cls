@@ -1,9 +1,12 @@
 public with sharing class abnLookupTestV2Controller {
     
+    private static final String API_ENDPOINT = 'https://api.mockfly.dev/mocks/d24e2248-c254-46be-8b45-0365cdca1a44/businessentities/abnid';
+    private static final Integer TIMEOUT_SECONDS = 30;
+    
     @AuraEnabled(cacheable=false)
     public static ResponseWrapper searchABN(String searchTerm, Integer pageSize, Integer pageNumber) {
         try {
-            // Validate input parameters
+            // Input validation
             if (String.isBlank(searchTerm)) {
                 return new ResponseWrapper(false, 'Search term is required', null);
             }
@@ -16,255 +19,191 @@ public with sharing class abnLookupTestV2Controller {
                 pageNumber = 1;
             }
             
-            // Determine search type and validate format
-            String searchType = determineSearchType(searchTerm.trim());
-            if (searchType == 'INVALID') {
-                return new ResponseWrapper(false, 'An ABN requires 11 digits and an ACN requires 9 digits, check the number and try again', null);
-            }
+            // Determine search type and build parameters
+            Map<String, String> queryParams = buildQueryParameters(searchTerm.trim());
             
             // Make API call
-            List<ABNEntity> results = callABNLookupAPI(searchTerm.trim(), searchType);
-            
-            // Transform results for UI
-            List<Map<String, Object>> transformedResults = transformResults(results);
-            
-            return new ResponseWrapper(true, 'Search completed successfully', transformedResults);
-            
-        } catch (Exception e) {
-            System.debug('Error in searchABN: ' + e.getMessage());
-            System.debug('Stack trace: ' + e.getStackTraceString());
-            return new ResponseWrapper(false, 'An error occurred while searching. Please try again.', null);
-        }
-    }
-    
-    private static String determineSearchType(String searchTerm) {
-        // Check if input is numeric
-        if (searchTerm.isNumeric()) {
-            if (searchTerm.length() == 11) {
-                return 'ABN';
-            } else if (searchTerm.length() == 9) {
-                return 'ACN';
-            } else {
-                return 'INVALID';
-            }
-        } else {
-            // Non-numeric input is treated as business name
-            return 'NAME';
-        }
-    }
-    
-    private static List<ABNEntity> callABNLookupAPI(String searchTerm, String searchType) {
-        List<ABNEntity> results = new List<ABNEntity>();
-        
-        try {
-            Http http = new Http();
-            HttpRequest request = new HttpRequest();
-            
-            // Build endpoint with query parameters
-            String endpoint = 'https://api.mockfly.dev/mocks/d24e2248-c254-46be-8b45-0365cdca1a44/businessentities/abnid';
-            
-            // Add query parameters based on search type
-            if (searchType == 'ABN') {
-                endpoint += '?abn=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            } else if (searchType == 'NAME') {
-                endpoint += '?name=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            } else if (searchType == 'ACN') {
-                // For ACN searches, we might need to use a different parameter or convert to ABN format
-                endpoint += '?abn=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            }
-            
-            request.setEndpoint(endpoint);
-            request.setMethod('GET');
-            request.setHeader('Content-Type', 'application/json');
-            request.setTimeout(30000); // 30 second timeout
-            
-            HttpResponse response = http.send(request);
+            HttpResponse response = makeAPICall(queryParams);
             
             if (response.getStatusCode() == 200) {
-                String responseBody = response.getBody();
-                results = parseAPIResponse(responseBody, searchTerm);
+                // Parse response
+                SearchResultData resultData = parseAPIResponse(response.getBody(), pageSize, pageNumber);
+                return new ResponseWrapper(true, 'Search completed successfully', resultData);
             } else {
-                System.debug('API Error - Status Code: ' + response.getStatusCode());
-                System.debug('API Error - Response: ' + response.getBody());
-                
-                // For demo purposes, return mock data if API fails
-                results = generateMockResults(searchTerm, searchType);
+                System.debug('API Error - Status: ' + response.getStatusCode() + ', Body: ' + response.getBody());
+                return new ResponseWrapper(false, 'External service error: ' + response.getStatus(), null);
             }
             
+        } catch (CalloutException e) {
+            System.debug('Callout Exception: ' + e.getMessage());
+            return new ResponseWrapper(false, 'Unable to connect to ABN lookup service. Please try again later.', null);
         } catch (Exception e) {
-            System.debug('HTTP Callout Error: ' + e.getMessage());
-            // Return mock data for demo purposes
-            results = generateMockResults(searchTerm, searchType);
+            System.debug('General Exception: ' + e.getMessage());
+            System.debug('Stack Trace: ' + e.getStackTraceString());
+            return new ResponseWrapper(false, 'An unexpected error occurred. Please try again.', null);
         }
-        
-        return results;
     }
     
-    private static List<ABNEntity> parseAPIResponse(String responseBody, String searchTerm) {
-        List<ABNEntity> entities = new List<ABNEntity>();
+    private static Map<String, String> buildQueryParameters(String searchTerm) {
+        Map<String, String> params = new Map<String, String>();
+        
+        // Remove spaces and check if numeric
+        String cleanedTerm = searchTerm.replace(' ', '');
+        
+        if (Pattern.matches('^\\d+$', cleanedTerm)) {
+            // Numeric search - determine if ABN or ACN
+            if (cleanedTerm.length() == 11) {
+                params.put('abn', cleanedTerm);
+            } else if (cleanedTerm.length() == 9) {
+                params.put('acn', cleanedTerm);
+            } else {
+                // Invalid numeric format - still search by name as fallback
+                params.put('name', searchTerm);
+            }
+        } else {
+            // Text search
+            params.put('name', searchTerm);
+        }
+        
+        return params;
+    }
+    
+    private static HttpResponse makeAPICall(Map<String, String> queryParams) {
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        
+        // Build URL with query parameters
+        String url = API_ENDPOINT;
+        if (!queryParams.isEmpty()) {
+            List<String> paramStrings = new List<String>();
+            for (String key : queryParams.keySet()) {
+                paramStrings.add(key + '=' + EncodingUtil.urlEncode(queryParams.get(key), 'UTF-8'));
+            }
+            url += '?' + String.join(paramStrings, '&');
+        }
+        
+        request.setEndpoint(url);
+        request.setMethod('GET');
+        request.setHeader('Content-Type', 'application/json');
+        request.setTimeout(TIMEOUT_SECONDS * 1000);
+        
+        return http.send(request);
+    }
+    
+    private static SearchResultData parseAPIResponse(String responseBody, Integer pageSize, Integer pageNumber) {
+        SearchResultData resultData = new SearchResultData();
         
         try {
-            // Parse the JSON response safely
+            // Parse JSON response safely
             Object tempData = JSON.deserializeUntyped(responseBody);
             
-            if (tempData instanceof Map<String, Object>) {
-                // Single result
-                Map<String, Object> data = (Map<String, Object>) tempData;
-                ABNEntity entity = parseEntityFromMap(data);
-                if (entity != null) {
-                    entities.add(entity);
-                }
-            } else if (tempData instanceof List<Object>) {
+            if (tempData instanceof List<Object>) {
                 // Multiple results
                 List<Object> tempList = (List<Object>) tempData;
+                List<ABNEntity> entities = new List<ABNEntity>();
+                
                 for (Object item : tempList) {
                     if (item instanceof Map<String, Object>) {
-                        Map<String, Object> data = (Map<String, Object>) item;
-                        ABNEntity entity = parseEntityFromMap(data);
-                        if (entity != null) {
-                            entities.add(entity);
-                        }
+                        Map<String, Object> entityMap = (Map<String, Object>) item;
+                        entities.add(parseEntityFromMap(entityMap));
                     }
                 }
+                
+                resultData.results = entities;
+                resultData.totalCount = entities.size();
+                
+            } else if (tempData instanceof Map<String, Object>) {
+                // Single result
+                Map<String, Object> entityMap = (Map<String, Object>) tempData;
+                ABNEntity entity = parseEntityFromMap(entityMap);
+                
+                resultData.results = new List<ABNEntity>{ entity };
+                resultData.totalCount = 1;
             }
             
         } catch (Exception e) {
             System.debug('JSON Parsing Error: ' + e.getMessage());
-            // Return mock data if parsing fails
-            entities = generateMockResults(searchTerm, 'NAME');
+            // Return empty results on parsing error
+            resultData.results = new List<ABNEntity>();
+            resultData.totalCount = 0;
         }
         
-        return entities;
+        return resultData;
     }
     
-    private static ABNEntity parseEntityFromMap(Map<String, Object> data) {
+    private static ABNEntity parseEntityFromMap(Map<String, Object> entityMap) {
+        ABNEntity entity = new ABNEntity();
+        
         try {
-            ABNEntity entity = new ABNEntity();
-            
             // Parse ABN information
-            if (data.containsKey('abn') && data.get('abn') != null) {
-                Map<String, Object> abnData = (Map<String, Object>) data.get('abn');
-                if (abnData.containsKey('identifier_value')) {
-                    entity.abn = (String) abnData.get('identifier_value');
-                }
-            }
-            
-            // Parse entity status
-            if (data.containsKey('entity_status') && data.get('entity_status') != null) {
-                Map<String, Object> statusData = (Map<String, Object>) data.get('entity_status');
-                if (statusData.containsKey('entity_status_code')) {
-                    entity.status = (String) statusData.get('entity_status_code');
-                }
-            }
-            
-            // Parse trading name
-            if (data.containsKey('other_trading_name') && data.get('other_trading_name') != null) {
-                Map<String, Object> nameData = (Map<String, Object>) data.get('other_trading_name');
-                if (nameData.containsKey('organisation_name')) {
-                    entity.businessName = (String) nameData.get('organisation_name');
+            if (entityMap.containsKey('abn') && entityMap.get('abn') != null) {
+                Map<String, Object> abnMap = (Map<String, Object>) entityMap.get('abn');
+                if (abnMap.containsKey('identifier_value')) {
+                    entity.abn = String.valueOf(abnMap.get('identifier_value'));
                 }
             }
             
             // Parse ASIC number (ACN)
-            if (data.containsKey('asic_number')) {
-                entity.acn = (String) data.get('asic_number');
+            if (entityMap.containsKey('asic_number') && entityMap.get('asic_number') != null) {
+                entity.acn = String.valueOf(entityMap.get('asic_number'));
             }
             
-            // Parse entity type for entity name
-            if (data.containsKey('entity_type') && data.get('entity_type') != null) {
-                Map<String, Object> typeData = (Map<String, Object>) data.get('entity_type');
-                if (typeData.containsKey('entity_description')) {
-                    entity.entityName = (String) typeData.get('entity_description');
+            // Parse entity status
+            if (entityMap.containsKey('entity_status') && entityMap.get('entity_status') != null) {
+                Map<String, Object> statusMap = (Map<String, Object>) entityMap.get('entity_status');
+                if (statusMap.containsKey('entity_status_code')) {
+                    entity.status = String.valueOf(statusMap.get('entity_status_code'));
                 }
             }
             
-            // Set default values if missing
+            // Parse trading name
+            if (entityMap.containsKey('other_trading_name') && entityMap.get('other_trading_name') != null) {
+                Map<String, Object> tradingMap = (Map<String, Object>) entityMap.get('other_trading_name');
+                if (tradingMap.containsKey('organisation_name')) {
+                    entity.businessName = String.valueOf(tradingMap.get('organisation_name'));
+                }
+            }
+            
+            // Parse entity type
+            if (entityMap.containsKey('entity_type') && entityMap.get('entity_type') != null) {
+                Map<String, Object> typeMap = (Map<String, Object>) entityMap.get('entity_type');
+                if (typeMap.containsKey('entity_description')) {
+                    entity.entityType = String.valueOf(typeMap.get('entity_description'));
+                    entity.entityName = entity.entityType; // Use as entity name if no other name available
+                }
+            }
+            
+            // Parse last updated date
+            if (entityMap.containsKey('record_last_updated_date') && entityMap.get('record_last_updated_date') != null) {
+                entity.lastUpdated = String.valueOf(entityMap.get('record_last_updated_date'));
+            }
+            
+            // Set default values if not found
             if (String.isBlank(entity.entityName)) {
                 entity.entityName = entity.businessName;
             }
-            if (String.isBlank(entity.status)) {
-                entity.status = 'Active';
+            if (String.isBlank(entity.entityName)) {
+                entity.entityName = 'Unknown Entity';
             }
-            
-            // Set a default state (this would typically come from the API)
-            entity.state = 'NSW'; // Default state
-            
-            return entity;
+            if (String.isBlank(entity.status)) {
+                entity.status = 'Unknown';
+            }
             
         } catch (Exception e) {
-            System.debug('Error parsing entity: ' + e.getMessage());
-            return null;
-        }
-    }
-    
-    private static List<ABNEntity> generateMockResults(String searchTerm, String searchType) {
-        List<ABNEntity> mockResults = new List<ABNEntity>();
-        
-        if (searchType == 'ABN' || searchType == 'ACN') {
-            // Return single result for specific number searches
-            ABNEntity entity = new ABNEntity();
-            entity.abn = searchType == 'ABN' ? searchTerm : '33051775556';
-            entity.acn = searchType == 'ACN' ? searchTerm : '004085616';
-            entity.entityName = 'Sample Business Entity';
-            entity.businessName = 'Sample Trading Name';
-            entity.status = 'Active';
-            entity.state = 'NSW';
-            mockResults.add(entity);
-        } else {
-            // Return multiple results for name searches
-            List<String> states = new List<String>{'NSW', 'VIC', 'QLD', 'SA', 'WA', 'TAS', 'NT', 'ACT'};
-            
-            for (Integer i = 0; i < 5; i++) {
-                ABNEntity entity = new ABNEntity();
-                entity.abn = '3305177555' + i;
-                entity.acn = '00408561' + i;
-                entity.entityName = searchTerm + ' Entity ' + (i + 1);
-                entity.businessName = searchTerm + ' Trading ' + (i + 1);
-                entity.status = 'Active';
-                entity.state = states[Math.mod(i, states.size())];
-                mockResults.add(entity);
+            System.debug('Entity parsing error: ' + e.getMessage());
+            // Return entity with default values
+            if (String.isBlank(entity.entityName)) {
+                entity.entityName = 'Unknown Entity';
+            }
+            if (String.isBlank(entity.status)) {
+                entity.status = 'Unknown';
             }
         }
         
-        return mockResults;
+        return entity;
     }
     
-    private static List<Map<String, Object>> transformResults(List<ABNEntity> entities) {
-        List<Map<String, Object>> transformedResults = new List<Map<String, Object>>();
-        
-        for (Integer i = 0; i < entities.size(); i++) {
-            ABNEntity entity = entities[i];
-            Map<String, Object> result = new Map<String, Object>();
-            
-            result.put('id', String.valueOf(i));
-            result.put('abn', entity.abn);
-            result.put('acn', entity.acn);
-            result.put('entityName', entity.entityName);
-            result.put('businessName', entity.businessName);
-            result.put('status', entity.status);
-            result.put('state', entity.state);
-            
-            // Format display number (ABN with spaces)
-            String displayNumber = '';
-            if (String.isNotBlank(entity.abn) && entity.abn.length() == 11) {
-                displayNumber = 'ABN ' + entity.abn.substring(0, 2) + ' ' + 
-                               entity.abn.substring(2, 5) + ' ' + 
-                               entity.abn.substring(5, 8) + ' ' + 
-                               entity.abn.substring(8, 11);
-            } else if (String.isNotBlank(entity.acn) && entity.acn.length() == 9) {
-                displayNumber = 'ACN ' + entity.acn.substring(0, 3) + ' ' + 
-                               entity.acn.substring(3, 6) + ' ' + 
-                               entity.acn.substring(6, 9);
-            }
-            result.put('displayNumber', displayNumber);
-            
-            transformedResults.add(result);
-        }
-        
-        return transformedResults;
-    }
-    
-    // Inner classes
+    // Response wrapper class
     public class ResponseWrapper {
         @AuraEnabled public Boolean success;
         @AuraEnabled public String message;
@@ -279,12 +218,38 @@ public with sharing class abnLookupTestV2Controller {
         }
     }
     
-    private class ABNEntity {
-        public String abn;
-        public String acn;
-        public String entityName;
-        public String businessName;
-        public String status;
-        public String state;
+    // Search result data structure
+    public class SearchResultData {
+        @AuraEnabled public List<ABNEntity> results;
+        @AuraEnabled public Integer totalCount;
+        
+        public SearchResultData() {
+            this.results = new List<ABNEntity>();
+            this.totalCount = 0;
+        }
+    }
+    
+    // ABN Entity data structure
+    public class ABNEntity {
+        @AuraEnabled public String abn;
+        @AuraEnabled public String acn;
+        @AuraEnabled public String entityName;
+        @AuraEnabled public String businessName;
+        @AuraEnabled public String status;
+        @AuraEnabled public String state;
+        @AuraEnabled public String entityType;
+        @AuraEnabled public String lastUpdated;
+        
+        public ABNEntity() {
+            // Initialize with empty strings to avoid null values
+            this.abn = '';
+            this.acn = '';
+            this.entityName = '';
+            this.businessName = '';
+            this.status = '';
+            this.state = '';
+            this.entityType = '';
+            this.lastUpdated = '';
+        }
     }
 }
