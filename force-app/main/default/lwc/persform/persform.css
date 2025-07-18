@@ -1,0 +1,51 @@
+.slds-section__title {
+    font-weight: bold;
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+}
+
+.slds-section__content {
+    padding: 0.75rem 0.5rem;
+}
+
+.slds-alert_error {
+    margin-top: 1rem;
+}
+
+.slds-list_dotted {
+    margin-left: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    .slds-section__title {
+        font-size: 1rem;
+    }
+    
+    .slds-card__body {
+        padding: 0.75rem;
+    }
+}
+
+/* Custom styling for required fields */
+.slds-form-element__label {
+    font-weight: 600;
+}
+
+/* Focus states for better accessibility */
+.slds-input:focus,
+.slds-textarea:focus {
+    border-color: #1589ee;
+    box-shadow: 0 0 3px #1589ee;
+}
+
+/* Button spacing */
+.slds-button + .slds-button {
+    margin-left: 0.5rem;
+}
+
+/* Section spacing */
+.slds-section + .slds-section {
+    border-top: 1px solid #dddbda;
+    padding-top: 1rem;
+}
