@@ -12,7 +12,6 @@
     </targets>
     <targetConfigs>
         <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage,lightningCommunity__Default">
-            <property name="mode" type="String" default="Search" label="Component Mode" description="Set to 'Search' for search functionality or 'Verify' for verification mode"/>
             <property name="pageSize" type="Integer" default="10" label="Page Size" description="Number of results to display per page"/>
         </targetConfig>
     </targetConfigs>
