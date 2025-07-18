@@ -1,0 +1,46 @@
+.result-card {
+    min-height: 200px;
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.result-card:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.selected-entity {
+    border-left: 4px solid #1589ee;
+}
+
+.search-button {
+    min-width: 100px;
+}
+
+@media (max-width: 767px) {
+    .search-button {
+        width: 100%;
+    }
+    
+    .result-card {
+        margin-bottom: 1rem;
+    }
+}
+
+.slds-list_horizontal dt {
+    margin-right: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.slds-list_horizontal dd {
+    margin-bottom: 0.5rem;
+}
+
+/* Ensure proper spacing for mobile */
+@media (max-width: 479px) {
+    .slds-grid.slds-wrap .slds-col {
+        padding: 0.25rem;
+    }
+    
+    .result-card {
+        padding: 1rem;
+    }
+}
