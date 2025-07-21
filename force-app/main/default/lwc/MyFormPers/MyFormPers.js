@@ -1,29 +1,29 @@
 import { LightningElement, api, track } from 'lwc';
 
 export default class MyFormPers extends LightningElement {
+    // Track form data
     @track formData = {
         firstName: '',
         middleName: '',
-        lastName: '',
-        address: '',
+        street: '',
         city: '',
         state: '',
-        zipCode: ''
+        postalCode: '',
+        country: ''
     };
 
-    get stateOptions() {
-        return [
-            { label: 'Alabama', value: 'AL' },
-            { label: 'Alaska', value: 'AK' },
-            // ... Add all US states
-            { label: 'Wyoming', value: 'WY' }
-        ].map(state => 
-            `<option value="${state.value}">${state.label}</option>`
-        ).join('');
-    }
+    // Getters for form fields
+    get firstName() { return this.formData.firstName; }
+    get middleName() { return this.formData.middleName; }
+    get street() { return this.formData.street; }
+    get city() { return this.formData.city; }
+    get state() { return this.formData.state; }
+    get postalCode() { return this.formData.postalCode; }
+    get country() { return this.formData.country; }
 
+    // Handle input changes
     handleInputChange(event) {
-        const field = event.target.dataset.field;
+        const field = event.target.name;
         const value = event.target.value;
         
         this.formData = {
@@ -31,65 +31,47 @@ export default class MyFormPers extends LightningElement {
             [field]: value
         };
 
-        // Dispatch change event to parent
+        // Notify parent of data change
         this.dispatchEvent(new CustomEvent('formchange', {
             detail: {
-                formData: this.formData,
-                isValid: this.validateForm()
+                formData: this.formData
             }
         }));
     }
 
+    // Public method to validate form
     @api
     validateForm() {
-        const requiredFields = ['firstName', 'lastName', 'zipCode'];
-        const allInputs = this.template.querySelectorAll('input, select');
+        const inputFields = this.template.querySelectorAll('lightning-input');
         let isValid = true;
 
-        allInputs.forEach(input => {
-            if (requiredFields.includes(input.dataset.field)) {
-                if (!input.value) {
-                    isValid = false;
-                    input.classList.add('slds-has-error');
-                } else {
-                    input.classList.remove('slds-has-error');
-                }
-            }
-
-            // Validate zip code format
-            if (input.dataset.field === 'zipCode' && input.value) {
-                const zipRegex = /^\d{5}$/;
-                if (!zipRegex.test(input.value)) {
-                    isValid = false;
-                    input.classList.add('slds-has-error');
-                }
+        inputFields.forEach(field => {
+            if (field.required && !field.value) {
+                field.reportValidity();
+                isValid = false;
             }
         });
 
         return isValid;
     }
 
+    // Public method to get form data
     @api
     getFormData() {
         return this.formData;
     }
 
+    // Public method to reset form
     @api
     resetForm() {
         this.formData = {
             firstName: '',
             middleName: '',
-            lastName: '',
-            address: '',
+            street: '',
             city: '',
             state: '',
-            zipCode: ''
+            postalCode: '',
+            country: ''
         };
-        
-        const allInputs = this.template.querySelectorAll('input, select');
-        allInputs.forEach(input => {
-            input.value = '';
-            input.classList.remove('slds-has-error');
-        });
     }
 }
