@@ -1,0 +1,28 @@
+.search-input {
+    width: 100%;
+}
+
+.result-card {
+    height: 100%;
+    margin-bottom: 1rem;
+}
+
+.result-card .slds-card__body {
+    padding: 1rem;
+}
+
+@media (max-width: 768px) {
+    .slds-large-m-left_small {
+        margin-left: 0 !important;
+        margin-top: 0.5rem;
+    }
+    
+    .result-card {
+        margin-bottom: 0.5rem;
+    }
+}
+
+.acds-badge-large {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem;
+}

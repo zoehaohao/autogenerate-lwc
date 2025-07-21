@@ -1,0 +1,169 @@
+<template>
+    <lightning-card title="ABN Lookup" icon-name="standard:search">
+        <div class="slds-card__body slds-card__body_inner">
+            <!-- Search Section -->
+            <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_medium">
+                <div class="slds-col slds-size_1-of-1 slds-large-size_8-of-12">
+                    <lightning-input
+                        type="text"
+                        label="Search"
+                        placeholder={searchPlaceholder}
+                        value={searchTerm}
+                        onchange={handleSearchTermChange}
+                        variant="label-hidden"
+                        class="search-input">
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-large-size_4-of-12">
+                    <lightning-button
+                        variant="brand"
+                        label="Search"
+                        icon-name="utility:search"
+                        onclick={handleSearch}
+                        disabled={isSearchDisabled}
+                        class="slds-m-left_none slds-large-m-left_small">
+                    </lightning-button>
+                </div>
+            </div>
+
+            <!-- Search Type Indicator -->
+            <template if:true={searchTypeIndicator}>
+                <div class="slds-m-bottom_medium">
+                    <lightning-badge label={searchTypeIndicator} variant="inverse"></lightning-badge>
+                </div>
+            </template>
+
+            <!-- Loading Spinner -->
+            <template if:true={isLoading}>
+                <div class="slds-align_absolute-center slds-m-vertical_large">
+                    <lightning-spinner alternative-text="Searching..." size="medium"></lightning-spinner>
+                    <p class="slds-m-top_small slds-text-align_center">Searching for business information...</p>
+                </div>
+            </template>
+
+            <!-- Error Message -->
+            <template if:true={errorMessage}>
+                <div class="slds-m-bottom_medium">
+                    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                        <span class="slds-assistive-text">Error</span>
+                        <lightning-icon icon-name="utility:error" size="x-small" variant="inverse" class="slds-m-right_x-small"></lightning-icon>
+                        <h2>{errorMessage}</h2>
+                    </div>
+                </div>
+            </template>
+
+            <!-- No Results Message -->
+            <template if:true={showNoResults}>
+                <div class="slds-align_absolute-center slds-m-vertical_large">
+                    <lightning-icon icon-name="utility:search" size="large" class="slds-m-bottom_small"></lightning-icon>
+                    <p class="slds-text-heading_small">No results found</p>
+                    <p class="slds-text-color_weak">Try adjusting your search criteria</p>
+                </div>
+            </template>
+
+            <!-- Results Section -->
+            <template if:true={hasResults}>
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <template for:each={searchResults} for:item="result">
+                        <div key={result.id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+                            <lightning-card class="result-card">
+                                <div class="slds-card__body slds-card__body_inner">
+                                    <!-- ABN Information -->
+                                    <template if:true={result.abn}>
+                                        <dhaccommon-acds-read-only-field 
+                                            field-label="ABN" 
+                                            field-value={result.abn.identifier_value}>
+                                        </dhaccommon-acds-read-only-field>
+                                        
+                                        <dhaccommon-acds-read-only-field 
+                                            field-label="Status">
+                                            <span slot="fieldValue">
+                                                <lightning-badge 
+                                                    label={result.abn.is_current_indicator} 
+                                                    variant={result.abnStatusVariant}
+                                                    class="acds-badge-large">
+                                                </lightning-badge>
+                                            </span>
+                                        </dhaccommon-acds-read-only-field>
+                                    </template>
+
+                                    <!-- Entity Status -->
+                                    <template if:true={result.entity_status}>
+                                        <dhaccommon-acds-read-only-field 
+                                            field-label="Entity Status" 
+                                            field-value={result.entity_status.entity_status_code}>
+                                        </dhaccommon-acds-read-only-field>
+                                        
+                                        <dhaccommon-acds-read-only-field 
+                                            field-label="Effective From" 
+                                            field-value={result.formattedEffectiveFrom}>
+                                        </dhaccommon-acds-read-only-field>
+                                    </template>
+
+                                    <!-- Trading Name -->
+                                    <template if:true={result.other_trading_name}>
+                                        <dhaccommon-acds-read-only-field 
+                                            field-label="Trading Name" 
+                                            field-value={result.other_trading_name.organisation_name}>
+                                        </dhaccommon-acds-read-only-field>
+                                    </template>
+
+                                    <!-- ASIC Number -->
+                                    <template if:true={result.asic_number}>
+                                        <dhaccommon-acds-read-only-field 
+                                            field-label="ASIC Number" 
+                                            field-value={result.asic_number}>
+                                        </dhaccommon-acds-read-only-field>
+                                    </template>
+
+                                    <!-- Entity Type -->
+                                    <template if:true={result.entity_type}>
+                                        <dhaccommon-acds-read-only-field 
+                                            field-label="Entity Type" 
+                                            field-value={result.entity_type.entity_description}>
+                                        </dhaccommon-acds-read-only-field>
+                                    </template>
+
+                                    <!-- GST Information -->
+                                    <template if:true={result.goods_and_services_tax}>
+                                        <dhaccommon-acds-read-only-field 
+                                            field-label="GST Effective From" 
+                                            field-value={result.formattedGstFrom}>
+                                        </dhaccommon-acds-read-only-field>
+                                    </template>
+
+                                    <!-- DGR Endorsement -->
+                                    <template if:true={result.dgr_endorsement}>
+                                        <dhaccommon-acds-read-only-field 
+                                            field-label="DGR Status">
+                                            <span slot="fieldValue">
+                                                <lightning-badge 
+                                                    label={result.dgr_endorsement.entity_endorsement} 
+                                                    variant="success"
+                                                    class="acds-badge-large">
+                                                </lightning-badge>
+                                            </span>
+                                        </dhaccommon-acds-read-only-field>
+                                        
+                                        <dhaccommon-acds-read-only-field 
+                                            field-label="DGR Item" 
+                                            field-value={result.dgr_endorsement.item_number}>
+                                        </dhaccommon-acds-read-only-field>
+                                    </template>
+
+                                    <!-- Last Updated -->
+                                    <template if:true={result.formattedLastUpdated}>
+                                        <dhaccommon-acds-read-only-field 
+                                            field-label="Last Updated" 
+                                            field-value={result.formattedLastUpdated}>
+                                        </dhaccommon-acds-read-only-field>
+                                    </template>
+                                </div>
+                            </lightning-card>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
