@@ -14,7 +14,7 @@
             <template lwc:if={isSearchMode}>
                 <div class="slds-form-element">
                     <label class="slds-form-element__label" for="search-input">
-                        Search Business
+                        Search for Business
                     </label>
                     <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
                         <input 
@@ -24,7 +24,7 @@
                             placeholder="Search by Business name, ABN or ACN"
                             value={searchTerm}
                             onchange={handleSearchTermChange}
-                            onkeyup={handleKeyUp}
+                            onkeydown={handleKeyDown}
                         />
                         <lightning-icon 
                             icon-name="utility:search" 
@@ -75,39 +75,41 @@
                 <template lwc:if={hasResults}>
                     <div class="slds-m-top_medium">
                         <div class="slds-text-body_small slds-m-bottom_medium">
-                            {resultCountText}
+                            Showing {startRecord}-{endRecord} of {totalResults} results
                         </div>
                         
                         <!-- Responsive Grid -->
                         <div class="slds-grid slds-wrap slds-gutters">
                             <template for:each={paginatedResults} for:item="result">
                                 <div key={result.id} class={resultCardClass}>
-                                    <div class="slds-box slds-theme_default">
-                                        <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-start">
-                                            <div class="slds-col slds-size_8-of-12">
-                                                <div class="slds-text-heading_small slds-m-bottom_x-small">
-                                                    {result.formattedABN}
+                                    <div class="slds-card slds-card_boundary">
+                                        <div class="slds-card__body slds-card__body_inner">
+                                            <div class="slds-grid slds-grid_align-spread">
+                                                <div class="slds-col slds-size_3-of-4">
+                                                    <div class="slds-text-heading_small slds-m-bottom_x-small">
+                                                        ABN: {result.formattedABN}
+                                                    </div>
+                                                    <div class="slds-text-body_regular slds-m-bottom_x-small">
+                                                        <strong>{result.EntityName}</strong>
+                                                    </div>
+                                                    <div class="slds-text-body_small slds-text-color_weak">
+                                                        {result.EntityType}
+                                                    </div>
+                                                    <div class="slds-text-body_small slds-text-color_weak">
+                                                        Status: {result.ABNStatus}
+                                                    </div>
+                                                    <div class="slds-text-body_small slds-text-color_weak">
+                                                        Location: {result.MainBusinessLocation}
+                                                    </div>
                                                 </div>
-                                                <div class="slds-text-body_regular slds-m-bottom_x-small">
-                                                    <strong>{result.EntityName}</strong>
+                                                <div class="slds-col slds-size_1-of-4 slds-text-align_right">
+                                                    <lightning-button 
+                                                        variant="neutral" 
+                                                        label="Select" 
+                                                        onclick={handleSelect}
+                                                        data-id={result.id}>
+                                                    </lightning-button>
                                                 </div>
-                                                <div class="slds-text-body_small slds-text-color_weak slds-m-bottom_x-small">
-                                                    {result.EntityType}
-                                                </div>
-                                                <div class="slds-text-body_small slds-m-bottom_x-small">
-                                                    Status: {result.ABNStatus}
-                                                </div>
-                                                <div class="slds-text-body_small">
-                                                    Location: {result.MainBusinessLocation}
-                                                </div>
-                                            </div>
-                                            <div class="slds-col slds-size_4-of-12 slds-text-align_right">
-                                                <lightning-button 
-                                                    variant="neutral" 
-                                                    label="Select" 
-                                                    onclick={handleSelect}
-                                                    data-id={result.id}>
-                                                </lightning-button>
                                             </div>
                                         </div>
                                     </div>
@@ -119,33 +121,25 @@
                         <template lwc:if={showPagination}>
                             <div class="slds-m-top_medium">
                                 <div class="slds-grid slds-grid_align-center">
-                                    <div class="slds-col">
-                                        <div class="slds-button-group" role="group">
-                                            <lightning-button 
-                                                variant="neutral" 
-                                                label="Previous" 
-                                                onclick={handlePrevious}
-                                                disabled={isPreviousDisabled}>
-                                            </lightning-button>
-                                            
-                                            <template for:each={pageNumbers} for:item="pageNum">
-                                                <lightning-button 
-                                                    key={pageNum}
-                                                    variant={pageNum.variant}
-                                                    label={pageNum.label} 
-                                                    onclick={handlePageClick}
-                                                    data-page={pageNum.value}>
-                                                </lightning-button>
-                                            </template>
-                                            
-                                            <lightning-button 
-                                                variant="neutral" 
-                                                label="Next" 
-                                                onclick={handleNext}
-                                                disabled={isNextDisabled}>
-                                            </lightning-button>
-                                        </div>
-                                    </div>
+                                    <lightning-button 
+                                        variant="neutral" 
+                                        label="Previous" 
+                                        onclick={handlePrevious}
+                                        disabled={isFirstPage}
+                                        class="slds-m-right_small">
+                                    </lightning-button>
+                                    
+                                    <span class="slds-m-horizontal_medium">
+                                        Page {currentPage} of {totalPages}
+                                    </span>
+                                    
+                                    <lightning-button 
+                                        variant="neutral" 
+                                        label="Next" 
+                                        onclick={handleNext}
+                                        disabled={isLastPage}
+                                        class="slds-m-left_small">
+                                    </lightning-button>
                                 </div>
                             </div>
                         </template>
@@ -154,16 +148,14 @@
 
                 <!-- No Results -->
                 <template lwc:if={showNoResults}>
-                    <div class="slds-m-top_medium">
-                        <div class="slds-notify slds-notify_alert slds-alert_warning">
-                            <span class="slds-assistive-text">Warning</span>
-                            <lightning-icon 
-                                icon-name="utility:warning" 
-                                size="x-small" 
-                                alternative-text="Warning"
-                                class="slds-icon slds-icon_x-small slds-m-right_x-small">
-                            </lightning-icon>
-                            <h2>No results found. Please try a different search term.</h2>
+                    <div class="slds-m-top_medium slds-text-align_center">
+                        <div class="slds-illustration slds-illustration_small">
+                            <div class="slds-text-longform">
+                                <h3 class="slds-text-heading_medium">No results found</h3>
+                                <p class="slds-text-body_regular">
+                                    Try adjusting your search terms or check the spelling.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </template>
@@ -171,31 +163,46 @@
 
             <!-- Read-Only Mode -->
             <template lwc:if={isReadOnlyMode}>
-                <div class="slds-box slds-theme_success">
-                    <div class="slds-grid slds-grid_align-spread slds-grid_vertical-align-start">
-                        <div class="slds-col slds-size_8-of-12">
-                            <div class="slds-text-heading_small slds-m-bottom_x-small">
-                                Selected Entity: {selectedEntity.formattedABN}
+                <div class="slds-card slds-card_boundary">
+                    <div class="slds-card__body slds-card__body_inner">
+                        <div class="slds-grid slds-grid_align-spread slds-m-bottom_medium">
+                            <div class="slds-col">
+                                <h3 class="slds-text-heading_small">Selected Business</h3>
                             </div>
-                            <div class="slds-text-body_regular slds-m-bottom_x-small">
-                                <strong>{selectedEntity.EntityName}</strong>
-                            </div>
-                            <div class="slds-text-body_small slds-text-color_weak slds-m-bottom_x-small">
-                                {selectedEntity.EntityType}
-                            </div>
-                            <div class="slds-text-body_small slds-m-bottom_x-small">
-                                Status: {selectedEntity.ABNStatus}
-                            </div>
-                            <div class="slds-text-body_small">
-                                Location: {selectedEntity.MainBusinessLocation}
+                            <div class="slds-col slds-no-flex">
+                                <lightning-button 
+                                    variant="neutral" 
+                                    label="Change ABN" 
+                                    onclick={handleChangeABN}>
+                                </lightning-button>
                             </div>
                         </div>
-                        <div class="slds-col slds-size_4-of-12 slds-text-align_right">
-                            <lightning-button 
-                                variant="neutral" 
-                                label="Change ABN" 
-                                onclick={handleChangeABN}>
-                            </lightning-button>
+                        
+                        <div class="slds-form slds-form_stacked">
+                            <dhaccommon-acds-read-only-field 
+                                field-label="ABN" 
+                                field-value={selectedEntity.formattedABN}>
+                            </dhaccommon-acds-read-only-field>
+                            
+                            <dhaccommon-acds-read-only-field 
+                                field-label="Entity Name" 
+                                field-value={selectedEntity.EntityName}>
+                            </dhaccommon-acds-read-only-field>
+                            
+                            <dhaccommon-acds-read-only-field 
+                                field-label="Entity Type" 
+                                field-value={selectedEntity.EntityType}>
+                            </dhaccommon-acds-read-only-field>
+                            
+                            <dhaccommon-acds-read-only-field 
+                                field-label="Status" 
+                                field-value={selectedEntity.ABNStatus}>
+                            </dhaccommon-acds-read-only-field>
+                            
+                            <dhaccommon-acds-read-only-field 
+                                field-label="Location" 
+                                field-value={selectedEntity.MainBusinessLocation}>
+                            </dhaccommon-acds-read-only-field>
                         </div>
                     </div>
                 </div>

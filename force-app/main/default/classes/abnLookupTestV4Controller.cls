@@ -8,7 +8,7 @@ public with sharing class abnLookupTestV4Controller {
         try {
             // Input validation
             if (String.isBlank(searchTerm)) {
-                return new ResponseWrapper(false, 'Search term cannot be empty', null);
+                return new ResponseWrapper(false, 'Search term is required', null);
             }
             
             // Sanitize input
@@ -28,29 +28,21 @@ public with sharing class abnLookupTestV4Controller {
             HttpResponse response = http.send(request);
             
             if (response.getStatusCode() == 200) {
-                // Safe JSON parsing
-                Object tempResult = JSON.deserializeUntyped(response.getBody());
-                List<Object> tempList = (List<Object>) tempResult;
-                List<Map<String, Object>> searchResults = new List<Map<String, Object>>();
-                
-                for (Object item : tempList) {
-                    Map<String, Object> resultItem = (Map<String, Object>) item;
-                    searchResults.add(resultItem);
-                }
+                // Parse response safely
+                List<Map<String, Object>> results = parseSearchResults(response.getBody());
                 
                 // Process and validate results
-                List<ABNSearchResult> processedResults = processSearchResults(searchResults);
+                List<ABNEntity> entities = processSearchResults(results);
                 
-                return new ResponseWrapper(true, 'Search completed successfully', processedResults);
-                
+                return new ResponseWrapper(true, 'Search completed successfully', entities);
             } else {
                 System.debug('API Error - Status Code: ' + response.getStatusCode() + ', Body: ' + response.getBody());
-                return new ResponseWrapper(false, 'External service error: ' + response.getStatus(), null);
+                return new ResponseWrapper(false, 'Search service temporarily unavailable. Please try again later.', null);
             }
             
         } catch (CalloutException e) {
             System.debug('Callout Exception: ' + e.getMessage());
-            return new ResponseWrapper(false, 'Network error occurred. Please check your connection and try again.', null);
+            return new ResponseWrapper(false, 'Unable to connect to search service. Please check your connection and try again.', null);
         } catch (Exception e) {
             System.debug('General Exception: ' + e.getMessage());
             System.debug('Stack Trace: ' + e.getStackTraceString());
@@ -58,35 +50,68 @@ public with sharing class abnLookupTestV4Controller {
         }
     }
     
-    private static List<ABNSearchResult> processSearchResults(List<Map<String, Object>> rawResults) {
-        List<ABNSearchResult> processedResults = new List<ABNSearchResult>();
-        
-        for (Map<String, Object> rawResult : rawResults) {
-            try {
-                ABNSearchResult result = new ABNSearchResult();
+    private static List<Map<String, Object>> parseSearchResults(String jsonResponse) {
+        try {
+            // Safe JSON parsing
+            Object tempResult = JSON.deserializeUntyped(jsonResponse);
+            
+            if (tempResult instanceof List<Object>) {
+                List<Object> tempList = (List<Object>) tempResult;
+                List<Map<String, Object>> results = new List<Map<String, Object>>();
                 
-                // Safe field extraction with null checks
-                result.id = rawResult.containsKey('id') ? String.valueOf(rawResult.get('id')) : '';
-                result.ABN = rawResult.containsKey('ABN') ? String.valueOf(rawResult.get('ABN')) : '';
-                result.ABNStatus = rawResult.containsKey('ABNStatus') ? String.valueOf(rawResult.get('ABNStatus')) : '';
-                result.EntityType = rawResult.containsKey('EntityType') ? String.valueOf(rawResult.get('EntityType')) : '';
-                result.EntityName = rawResult.containsKey('EntityName') ? String.valueOf(rawResult.get('EntityName')) : '';
-                result.GoodsServicesGST = rawResult.containsKey('GoodsServicesGST') ? String.valueOf(rawResult.get('GoodsServicesGST')) : '';
-                result.MainBusinessLocation = rawResult.containsKey('MainBusinessLocation') ? String.valueOf(rawResult.get('MainBusinessLocation')) : '';
+                for (Object item : tempList) {
+                    if (item instanceof Map<String, Object>) {
+                        results.add((Map<String, Object>) item);
+                    }
+                }
+                
+                return results;
+            } else {
+                System.debug('Unexpected JSON structure: ' + jsonResponse);
+                return new List<Map<String, Object>>();
+            }
+            
+        } catch (Exception e) {
+            System.debug('JSON Parsing Error: ' + e.getMessage());
+            return new List<Map<String, Object>>();
+        }
+    }
+    
+    private static List<ABNEntity> processSearchResults(List<Map<String, Object>> rawResults) {
+        List<ABNEntity> entities = new List<ABNEntity>();
+        
+        for (Map<String, Object> result : rawResults) {
+            try {
+                ABNEntity entity = new ABNEntity();
+                
+                // Safely extract and validate data
+                entity.id = getStringValue(result, 'id');
+                entity.ABN = getStringValue(result, 'ABN');
+                entity.ABNStatus = getStringValue(result, 'ABNStatus');
+                entity.EntityType = getStringValue(result, 'EntityType');
+                entity.EntityName = getStringValue(result, 'EntityName');
+                entity.GoodsServicesGST = getStringValue(result, 'GoodsServicesGST');
+                entity.MainBusinessLocation = getStringValue(result, 'MainBusinessLocation');
                 
                 // Validate required fields
-                if (String.isNotBlank(result.ABN) && String.isNotBlank(result.EntityName)) {
-                    processedResults.add(result);
+                if (String.isNotBlank(entity.id) && String.isNotBlank(entity.EntityName)) {
+                    entities.add(entity);
                 }
                 
             } catch (Exception e) {
-                System.debug('Error processing individual result: ' + e.getMessage());
+                System.debug('Error processing result: ' + e.getMessage());
                 // Continue processing other results
-                continue;
             }
         }
         
-        return processedResults;
+        return entities;
+    }
+    
+    private static String getStringValue(Map<String, Object> data, String key) {
+        if (data != null && data.containsKey(key) && data.get(key) != null) {
+            return String.valueOf(data.get(key));
+        }
+        return '';
     }
     
     // Response wrapper class
@@ -104,8 +129,8 @@ public with sharing class abnLookupTestV4Controller {
         }
     }
     
-    // ABN Search Result class
-    public class ABNSearchResult {
+    // ABN Entity class
+    public class ABNEntity {
         @AuraEnabled public String id;
         @AuraEnabled public String ABN;
         @AuraEnabled public String ABNStatus;
@@ -114,7 +139,7 @@ public with sharing class abnLookupTestV4Controller {
         @AuraEnabled public String GoodsServicesGST;
         @AuraEnabled public String MainBusinessLocation;
         
-        public ABNSearchResult() {
+        public ABNEntity() {
             // Default constructor
         }
     }
