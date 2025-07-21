@@ -1,14 +1,21 @@
-.slds-button_stretch {
-    width: 100%;
+.search-input {
+    max-width: 500px;
+}
+
+.slds-card {
+    background: white;
 }
 
 .slds-item_label {
-    width: 40%;
-    padding: 0.5rem;
-    font-weight: bold;
+    width: 30%;
+    color: rgb(62, 62, 60);
+    font-size: .75rem;
+    line-height: 1.25;
+    padding-right: .75rem;
 }
 
 .slds-item_detail {
-    width: 60%;
-    padding: 0.5rem;
+    width: 70%;
+    font-size: .75rem;
+    line-height: 1.25;
 }

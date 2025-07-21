@@ -3,9 +3,9 @@ public with sharing class newabnLookupTestV2Controller {
     private static final Integer TIMEOUT = 30000; // 30 seconds
 
     @AuraEnabled
-    public static ResponseWrapper searchABN(String searchTerm, String searchType) {
+    public static ResponseWrapper searchABN(String searchTerm) {
         try {
-            // Validate input
+            // Input validation
             if (String.isBlank(searchTerm)) {
                 return new ResponseWrapper(false, 'Search term cannot be empty', null);
             }
@@ -13,67 +13,33 @@ public with sharing class newabnLookupTestV2Controller {
             // Prepare HTTP request
             Http http = new Http();
             HttpRequest request = new HttpRequest();
-            request.setEndpoint(API_ENDPOINT + buildQueryString(searchTerm, searchType));
+            request.setEndpoint(API_ENDPOINT + '?q=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8'));
             request.setMethod('GET');
             request.setTimeout(TIMEOUT);
+            request.setHeader('Content-Type', 'application/json');
 
-            // Send request
+            // Make the callout
             HttpResponse response = http.send(request);
 
             // Process response
             if (response.getStatusCode() == 200) {
-                return processSuccessResponse(response.getBody());
+                Object parsedResponse = JSON.deserializeUntyped(response.getBody());
+                if (parsedResponse instanceof List<Object>) {
+                    return new ResponseWrapper(true, 'Success', parsedResponse);
+                } else {
+                    return new ResponseWrapper(false, 'Invalid response format', null);
+                }
             } else {
-                return processErrorResponse(response);
+                return new ResponseWrapper(
+                    false, 
+                    'API Error: ' + response.getStatusCode() + ' ' + response.getStatus(),
+                    null
+                );
             }
         } catch (Exception e) {
             System.debug(LoggingLevel.ERROR, 'Error in searchABN: ' + e.getMessage());
-            return new ResponseWrapper(false, 'An unexpected error occurred', null);
+            return new ResponseWrapper(false, 'An unexpected error occurred: ' + e.getMessage(), null);
         }
-    }
-
-    private static String buildQueryString(String searchTerm, String searchType) {
-        String queryParam;
-        switch on searchType {
-            when 'ABN' {
-                queryParam = 'abn=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            }
-            when 'ACN' {
-                queryParam = 'acn=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            }
-            when else {
-                queryParam = 'name=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8');
-            }
-        }
-        return '?' + queryParam;
-    }
-
-    private static ResponseWrapper processSuccessResponse(String responseBody) {
-        try {
-            Object parsedResponse = JSON.deserializeUntyped(responseBody);
-            if (parsedResponse instanceof List<Object>) {
-                return new ResponseWrapper(true, 'Success', parsedResponse);
-            } else if (parsedResponse instanceof Map<String, Object>) {
-                List<Object> resultList = new List<Object>{parsedResponse};
-                return new ResponseWrapper(true, 'Success', resultList);
-            }
-            return new ResponseWrapper(false, 'Invalid response format', null);
-        } catch (Exception e) {
-            return new ResponseWrapper(false, 'Error processing response', null);
-        }
-    }
-
-    private static ResponseWrapper processErrorResponse(HttpResponse response) {
-        String message = 'Error: HTTP ' + response.getStatusCode();
-        try {
-            Map<String, Object> errorResponse = (Map<String, Object>)JSON.deserializeUntyped(response.getBody());
-            if (errorResponse.containsKey('message')) {
-                message = String.valueOf(errorResponse.get('message'));
-            }
-        } catch (Exception e) {
-            // Use default error message if can't parse response
-        }
-        return new ResponseWrapper(false, message, null);
     }
 
     public class ResponseWrapper {
