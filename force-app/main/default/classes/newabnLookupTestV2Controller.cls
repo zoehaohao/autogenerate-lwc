@@ -16,29 +16,37 @@ public with sharing class newabnLookupTestV2Controller {
             request.setEndpoint(API_ENDPOINT + '?q=' + EncodingUtil.urlEncode(searchTerm, 'UTF-8'));
             request.setMethod('GET');
             request.setTimeout(TIMEOUT);
-            request.setHeader('Content-Type', 'application/json');
 
             // Make the callout
             HttpResponse response = http.send(request);
 
             // Process response
             if (response.getStatusCode() == 200) {
-                Object parsedResponse = JSON.deserializeUntyped(response.getBody());
-                if (parsedResponse instanceof List<Object>) {
+                Object parsedResponse = safelyParseJSON(response.getBody());
+                if (parsedResponse != null) {
                     return new ResponseWrapper(true, 'Success', parsedResponse);
-                } else {
-                    return new ResponseWrapper(false, 'Invalid response format', null);
                 }
-            } else {
-                return new ResponseWrapper(
-                    false, 
-                    'API Error: ' + response.getStatusCode() + ' ' + response.getStatus(),
-                    null
-                );
+                return new ResponseWrapper(false, 'Invalid response format', null);
             }
+            
+            return new ResponseWrapper(
+                false, 
+                'API Error: ' + response.getStatusCode() + ' ' + response.getStatus(), 
+                null
+            );
+
         } catch (Exception e) {
             System.debug(LoggingLevel.ERROR, 'Error in searchABN: ' + e.getMessage());
-            return new ResponseWrapper(false, 'An unexpected error occurred: ' + e.getMessage(), null);
+            return new ResponseWrapper(false, 'An unexpected error occurred', null);
+        }
+    }
+
+    private static Object safelyParseJSON(String jsonString) {
+        try {
+            return JSON.deserializeUntyped(jsonString);
+        } catch (Exception e) {
+            System.debug(LoggingLevel.ERROR, 'JSON parsing error: ' + e.getMessage());
+            return null;
         }
     }
 
@@ -46,7 +54,7 @@ public with sharing class newabnLookupTestV2Controller {
         @AuraEnabled public Boolean success;
         @AuraEnabled public String message;
         @AuraEnabled public Object data;
-
+        
         public ResponseWrapper(Boolean success, String message, Object data) {
             this.success = success;
             this.message = message;

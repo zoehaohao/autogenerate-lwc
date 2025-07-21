@@ -2,20 +2,11 @@
     max-width: 500px;
 }
 
-.slds-card {
-    background: white;
+.result-card {
+    height: 100%;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
 }
 
-.slds-item_label {
-    width: 30%;
-    color: rgb(62, 62, 60);
-    font-size: .75rem;
-    line-height: 1.25;
-    padding-right: .75rem;
-}
-
-.slds-item_detail {
-    width: 70%;
-    font-size: .75rem;
-    line-height: 1.25;
+.results-grid {
+    margin-top: 1rem;
 }

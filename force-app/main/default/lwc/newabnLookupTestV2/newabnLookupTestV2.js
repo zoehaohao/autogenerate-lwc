@@ -7,8 +7,7 @@ export default class NewabnLookupTestV2 extends LightningElement {
     @track searchResults = [];
     @track errorMessage = '';
     @track isSearching = false;
-    @track selectedABN;
-
+    
     get searchInstructions() {
         return 'You can find an Australian Business Number (ABN) using the ABN itself, Company / Business / Trading name or Australian Company Number (ACN). Once the correct entity has been identified you can select it for use.';
     }
@@ -31,7 +30,7 @@ export default class NewabnLookupTestV2 extends LightningElement {
     }
 
     async handleSearch() {
-        if (!this.searchTerm || this.searchTerm.length < 2) {
+        if (!this.searchTerm || this.searchTerm.trim().length < 2) {
             this.errorMessage = 'Please enter at least 2 characters to search';
             return;
         }
@@ -59,18 +58,16 @@ export default class NewabnLookupTestV2 extends LightningElement {
     }
 
     handleSelect(event) {
-        const selectedABN = event.currentTarget.dataset.abn;
-        const selectedResult = this.searchResults.find(
-            result => result.abn.identifier_value === selectedABN
+        const selectedAbn = event.currentTarget.dataset.abn;
+        const selectedResult = this.searchResults.find(result => 
+            result.abn.identifier_value === selectedAbn
         );
 
-        if (selectedResult) {
-            this.selectedABN = selectedResult;
-            this.dispatchEvent(new CustomEvent('selection', {
-                detail: {
-                    selectedABN: selectedResult
-                }
-            }));
-        }
+        this.dispatchEvent(new CustomEvent('abnselected', {
+            detail: {
+                abn: selectedAbn,
+                entityDetails: selectedResult
+            }
+        }));
     }
 }
