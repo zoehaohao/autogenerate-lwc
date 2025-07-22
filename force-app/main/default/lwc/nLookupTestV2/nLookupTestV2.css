@@ -1,0 +1,10 @@
+/* Custom styles for the component */
+:host {
+    --slds-c-button-brand-color-background: #006778;
+    --slds-c-button-brand-color-background-hover: #005666;
+}
+
+.select-button {
+    --slds-c-button-brand-color-background: #1a0f3d;
+    --slds-c-button-brand-color-background-hover: #150c32;
+}
