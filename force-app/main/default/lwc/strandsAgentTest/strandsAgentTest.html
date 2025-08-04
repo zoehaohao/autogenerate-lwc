@@ -1,0 +1,71 @@
+<template>
+    <!-- Header -->
+    <div class="slds-card">
+        <div class="slds-page-header">
+            <h1 class="slds-page-header__title">Provider Contact</h1>
+        </div>
+
+        <!-- About Section -->
+        <div class="slds-box slds-m-around_medium">
+            <div class="slds-accordion__section">
+                <div class="slds-accordion__summary">
+                    <h2 class="slds-accordion__summary-heading">
+                        <button class="slds-button slds-button_reset slds-accordion__summary-action" 
+                                onclick={toggleAboutSection} 
+                                aria-controls="aboutSection" 
+                                aria-expanded={isAboutSectionExpanded}>
+                            <lightning-icon icon-name={aboutSectionIcon} 
+                                          size="x-small" 
+                                          class="slds-accordion__summary-action-icon slds-button__icon_left">
+                            </lightning-icon>
+                            <span class="slds-truncate">About this section</span>
+                        </button>
+                    </h2>
+                </div>
+                <div id="aboutSection" class={aboutSectionClass}>
+                    <div class="slds-accordion__content">
+                        <p>Please provide details for a nominated contact person to be associated with your Quarterly Financial Report for July - September 2024. Please make sure the email address you enter is valid as it will be used at the end of this process to provide you with a receipt/notification of submission.</p>
+                        <p class="slds-m-top_small">If you encounter any difficulties or require further information, please contact Forms Administration on (02) 4403 0640.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Details Section -->
+        <div class="slds-box slds-m-around_medium">
+            <h2 class="slds-text-heading_medium slds-m-bottom_medium">
+                Check and confirm your contact details for this submission. Edit if necessary.
+            </h2>
+
+            <!-- Provider Details -->
+            <div class="slds-form">
+                <div class="slds-text-heading_small slds-m-bottom_small">
+                    {providerName}
+                </div>
+                <div class="slds-text-body_small slds-m-bottom_medium">
+                    NAPS ID {napsId}
+                </div>
+
+                <!-- QFR Primary Contact -->
+                <div class="slds-box slds-theme_shade">
+                    <div class="slds-grid slds-grid_align-spread">
+                        <h3 class="slds-text-heading_small">QFR Primary Contact</h3>
+                        <lightning-button-icon 
+                            icon-name="utility:edit" 
+                            variant="bare" 
+                            alternative-text="Edit Contact" 
+                            title="Edit Contact"
+                            onclick={handleEdit}>
+                        </lightning-button-icon>
+                    </div>
+                    <div class="slds-m-top_medium">
+                        <p class="slds-text-heading_small">{contactName}</p>
+                        <p>{contactRole}</p>
+                        <p>{contactPhone}</p>
+                        <p>{contactEmail}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
