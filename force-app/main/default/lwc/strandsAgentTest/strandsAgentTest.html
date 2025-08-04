@@ -1,63 +1,111 @@
 <template>
     <div class="slds-card">
-        <div class="slds-card__header">
-            <h2 class="slds-card__header-title">Provider Contact</h2>
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <span class="slds-text-heading_medium">Provider Contact</span>
+                    </h2>
+                </div>
+            </header>
         </div>
         <div class="slds-card__body slds-card__body_inner">
-            <!-- Information Section -->
-            <div class="slds-box slds-theme_shade slds-m-bottom_medium">
-                <div class="slds-grid slds-grid_vertical">
-                    <lightning-icon icon-name="utility:info" size="small" class="slds-m-right_x-small"></lightning-icon>
+            <!-- About this section -->
+            <div class="slds-box slds-theme_default">
+                <div class="slds-grid slds-gutters">
                     <div class="slds-col">
-                        <p class="slds-text-body_regular">
-                            Please provide details for a nominated contact person to be associated with your Quarterly Financial Report for July - September 2024. Please make sure the email address you enter is valid as it will be used at the end of this process to provide you with a receipt/notification of submission.
-                        </p>
-                        <p class="slds-text-body_small slds-m-top_small">
-                            If you encounter any difficulties or require further information, please contact Forms Administration on (02) 4403 0640.
-                        </p>
+                        <lightning-icon icon-name="utility:info" size="x-small" alternative-text="About this section"></lightning-icon>
+                        <span class="slds-p-left_small">About this section</span>
                     </div>
+                </div>
+                <div class="slds-p-top_small">
+                    <p>Please provide details for a nominated contact person to be associated with your Quarterly Financial Report for July - September 2024. Please make sure the email address you enter is valid as it will be used at the end of this process to provide you with a receipt/notification of submission.</p>
+                    <p class="slds-p-top_small">If you encounter any difficulties or require further information, please contact Forms Administration on (02) 4403 0640.</p>
                 </div>
             </div>
 
-            <!-- Contact Details Section -->
-            <div class="slds-box slds-theme_default">
-                <h3 class="slds-text-heading_small slds-m-bottom_medium">
-                    Check and confirm your contact details for this submission. Edit if necessary.
-                </h3>
-
-                <div class="slds-form">
-                    <!-- Account Details -->
-                    <div class="slds-form-element slds-m-bottom_large">
-                        <div class="slds-text-heading_medium">
-                            Account AP Test1 30 SepNot for Profit Provider
-                        </div>
-                        <div class="slds-text-body_regular">
-                            NAPS ID PRV-71431173
-                        </div>
+            <!-- Provider Details -->
+            <div class="slds-p-top_medium">
+                <h3 class="slds-text-heading_small slds-p-bottom_small">Check and confirm your contact details for this submission. Edit if necessary.</h3>
+                
+                <div class="slds-box slds-theme_default">
+                    <div class="slds-text-heading_medium slds-p-bottom_small">
+                        Account AP Test1 30 SepNot for Profit Provider
+                    </div>
+                    <div class="slds-text-body_small slds-p-bottom_medium">
+                        NAPS ID PRV-71431173
                     </div>
 
-                    <!-- QFR Primary Contact -->
-                    <div class="slds-box slds-theme_shade">
-                        <div class="slds-grid slds-grid_align-spread">
-                            <div class="slds-col">
-                                <h3 class="slds-text-heading_small slds-m-bottom_small">QFR Primary Contact</h3>
-                                <div class="contact-details">
-                                    <p class="slds-text-heading_medium">{contactName}</p>
-                                    <p class="slds-text-body_regular">{position}</p>
-                                    <p class="slds-text-body_regular">{phone}</p>
-                                    <p class="slds-text-body_regular">{email}</p>
+                    <template if:false={isEditing}>
+                        <div class="slds-box slds-theme_shade">
+                            <div class="slds-grid slds-grid_align-spread">
+                                <div>
+                                    <h3 class="slds-text-heading_small">QFR Primary Contact</h3>
+                                    <div class="slds-p-top_small">
+                                        <p>{contactName}</p>
+                                        <p>{position}</p>
+                                        <p>{phone}</p>
+                                        <p>{email}</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <lightning-button-icon 
+                                        icon-name="utility:edit" 
+                                        variant="bare"
+                                        alternative-text="Edit"
+                                        title="Edit"
+                                        onclick={handleEdit}>
+                                    </lightning-button-icon>
                                 </div>
                             </div>
-                            <div class="slds-col slds-col_bump-left">
-                                <lightning-button 
-                                    label="Edit" 
-                                    variant="neutral" 
-                                    icon-name="utility:edit"
-                                    onclick={handleEdit}>
+                        </div>
+                    </template>
+
+                    <template if:true={isEditing}>
+                        <div class="slds-form">
+                            <lightning-input
+                                label="Name"
+                                value={contactName}
+                                onchange={handleNameChange}
+                                required>
+                            </lightning-input>
+                            <lightning-input
+                                label="Position"
+                                value={position}
+                                onchange={handlePositionChange}
+                                class="slds-p-top_small"
+                                required>
+                            </lightning-input>
+                            <lightning-input
+                                label="Phone"
+                                value={phone}
+                                type="tel"
+                                onchange={handlePhoneChange}
+                                class="slds-p-top_small"
+                                required>
+                            </lightning-input>
+                            <lightning-input
+                                label="Email"
+                                value={email}
+                                type="email"
+                                onchange={handleEmailChange}
+                                class="slds-p-top_small"
+                                required>
+                            </lightning-input>
+                            <div class="slds-p-top_medium">
+                                <lightning-button
+                                    label="Save"
+                                    variant="brand"
+                                    onclick={handleSave}
+                                    class="slds-p-right_small">
+                                </lightning-button>
+                                <lightning-button
+                                    label="Cancel"
+                                    onclick={handleCancel}>
                                 </lightning-button>
                             </div>
                         </div>
-                    </div>
+                    </template>
                 </div>
             </div>
         </div>
