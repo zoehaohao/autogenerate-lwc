@@ -1,7 +1,3 @@
-.contact-details {
-    margin-top: 0.5rem;
-}
-
-.contact-details p {
-    margin-bottom: 0.5rem;
+.slds-cursor-pointer {
+    cursor: pointer;
 }
