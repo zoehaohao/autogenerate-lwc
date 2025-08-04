@@ -1,18 +1,7 @@
-/* Custom styles for the component */
-:host {
-    display: block;
+.contact-details {
+    margin-top: 0.5rem;
 }
 
-.slds-accordion__summary-action-icon {
-    transform: rotate(-90deg);
-}
-
-.slds-accordion__summary-action[aria-expanded="true"] .slds-accordion__summary-action-icon {
-    transform: rotate(0deg);
-}
-
-.slds-box.slds-theme_shade {
-    background-color: #f3f2f2;
-    border-radius: 4px;
-    padding: 1rem;
+.contact-details p {
+    margin-bottom: 0.5rem;
 }
