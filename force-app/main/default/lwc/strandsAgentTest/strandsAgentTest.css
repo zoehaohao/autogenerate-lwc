@@ -1,7 +1,8 @@
-.contact-details {
-    margin-top: 0.5rem;
+/* Custom styles */
+.slds-section__title {
+    background: #f3f2f2;
 }
 
-.contact-details p {
-    margin-bottom: 0.5rem;
+.slds-section__content {
+    background: #ffffff;
 }
