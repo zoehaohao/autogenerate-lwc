@@ -1,0 +1,19 @@
+.slds-card {
+    background: white;
+    border-radius: 0.25rem;
+    border: 1px solid #d8dde6;
+}
+
+.slds-card__body_inner {
+    padding: 1rem;
+}
+
+.slds-form-element {
+    max-width: 500px;
+}
+
+@media screen and (max-width: 768px) {
+    .slds-form-element {
+        max-width: 100%;
+    }
+}
