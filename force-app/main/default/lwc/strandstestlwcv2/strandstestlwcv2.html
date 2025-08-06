@@ -1,0 +1,70 @@
+&lt;template&gt;
+    &lt;div class=&quot;slds-card&quot;&gt;
+        &lt;div class=&quot;slds-card__header&quot;&gt;
+            &lt;h2 class=&quot;slds-card__header-title&quot;&gt;
+                &lt;span class=&quot;slds-text-heading_medium&quot;&gt;Provider Contact&lt;/span&gt;
+            &lt;/h2&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;slds-card__body slds-card__body_inner&quot;&gt;
+            &lt;div class=&quot;slds-form&quot;&gt;
+                &lt;div class=&quot;slds-form-element slds-m-bottom_medium&quot;&gt;
+                    &lt;label class=&quot;slds-form-element__label&quot; for=&quot;provider-name&quot;&gt;
+                        &lt;abbr class=&quot;slds-required&quot; title=&quot;required&quot;&gt;*&lt;/abbr&gt;
+                        Provider Name
+                    &lt;/label&gt;
+                    &lt;div class=&quot;slds-form-element__control&quot;&gt;
+                        &lt;input type=&quot;text&quot; 
+                               id=&quot;provider-name&quot; 
+                               class=&quot;slds-input&quot; 
+                               value={providerName} 
+                               onchange={handleNameChange}
+                               required /&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;slds-form-element slds-m-bottom_medium&quot;&gt;
+                    &lt;label class=&quot;slds-form-element__label&quot; for=&quot;provider-role&quot;&gt;Role&lt;/label&gt;
+                    &lt;div class=&quot;slds-form-element__control&quot;&gt;
+                        &lt;input type=&quot;text&quot; 
+                               id=&quot;provider-role&quot; 
+                               class=&quot;slds-input&quot; 
+                               value={role} 
+                               onchange={handleRoleChange} /&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;slds-form-element slds-m-bottom_medium&quot;&gt;
+                    &lt;label class=&quot;slds-form-element__label&quot; for=&quot;provider-phone&quot;&gt;
+                        &lt;abbr class=&quot;slds-required&quot; title=&quot;required&quot;&gt;*&lt;/abbr&gt;
+                        Phone Number
+                    &lt;/label&gt;
+                    &lt;div class=&quot;slds-form-element__control&quot;&gt;
+                        &lt;input type=&quot;tel&quot; 
+                               id=&quot;provider-phone&quot; 
+                               class=&quot;slds-input&quot; 
+                               value={phone} 
+                               onchange={handlePhoneChange}
+                               required /&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;slds-form-element slds-m-bottom_medium&quot;&gt;
+                    &lt;label class=&quot;slds-form-element__label&quot; for=&quot;provider-email&quot;&gt;
+                        &lt;abbr class=&quot;slds-required&quot; title=&quot;required&quot;&gt;*&lt;/abbr&gt;
+                        Email
+                    &lt;/label&gt;
+                    &lt;div class=&quot;slds-form-element__control&quot;&gt;
+                        &lt;input type=&quot;email&quot; 
+                               id=&quot;provider-email&quot; 
+                               class=&quot;slds-input&quot; 
+                               value={email} 
+                               onchange={handleEmailChange}
+                               required /&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;slds-m-top_medium&quot;&gt;
+                    &lt;button class=&quot;slds-button slds-button_brand&quot; onclick={handleSubmit}&gt;
+                        Save Contact Details
+                    &lt;/button&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
