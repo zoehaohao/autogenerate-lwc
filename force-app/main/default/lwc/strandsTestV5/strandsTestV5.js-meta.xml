@@ -3,17 +3,11 @@
     <apiVersion>57.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>Strands Test V5</masterLabel>
-    <description>A comprehensive test component demonstrating LWC best practices</description>
+    <description>A comprehensive demo component showcasing various LWC capabilities</description>
     <targets>
         <target>lightning__AppPage</target>
         <target>lightning__RecordPage</target>
         <target>lightning__HomePage</target>
         <target>lightningCommunity__Page</target>
-        <target>lightningCommunity__Default</target>
     </targets>
-    <targetConfigs>
-        <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage">
-            <property name="recordId" type="String" label="Record ID" description="The record ID for context"/>
-        </targetConfig>
-    </targetConfigs>
 </LightningComponentBundle>
