@@ -1,107 +1,87 @@
+<!-- strandsTestV5.html -->
 <template>
-    <div class="slds-card slds-p-around_medium">
-        <header class="slds-card__header">
-            <h2 class="slds-text-heading_medium slds-m-bottom_medium">
-                Contact Information Form
+    <div class="slds-card">
+        <!-- Header -->
+        <div class="slds-card__header">
+            <h2 class="slds-card__header-title">
+                <span class="slds-text-heading_medium">Strands Test Component</span>
             </h2>
-        </header>
+        </div>
 
-        <div class="slds-card__body">
-            <form class="slds-form" onsubmit={handleSubmit}>
-                <!-- Loading spinner -->
-                <template if:true={isLoading}>
-                    <lightning-spinner
-                        alternative-text="Loading"
-                        size="small"
-                    ></lightning-spinner>
-                </template>
-
-                <!-- Form fields -->
-                <div class="slds-grid slds-gutters slds-wrap">
-                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
-                        <lightning-input
-                            label="First Name"
-                            name="firstName"
-                            value={formData.firstName}
-                            required
+        <!-- Body -->
+        <div class="slds-card__body slds-card__body_inner">
+            <!-- Form Section -->
+            <div class="slds-form" role="group" aria-labelledby="form-heading">
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <!-- Input Field -->
+                        <lightning-input 
+                            type="text" 
+                            label="Name" 
+                            value={inputValue}
                             onchange={handleInputChange}
-                            class="required-field"
-                            aria-describedby="firstNameError"
-                            message-when-value-missing="Please enter your first name"
-                        ></lightning-input>
-                        <div if:true={errors.firstName} class="slds-text-color_error slds-p-top_xx-small" id="firstNameError">
-                            {errors.firstName}
-                        </div>
-                    </div>
-
-                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
-                        <lightning-input
-                            label="Last Name"
-                            name="lastName"
-                            value={formData.lastName}
                             required
-                            onchange={handleInputChange}
-                            class="required-field"
-                            aria-describedby="lastNameError"
-                            message-when-value-missing="Please enter your last name"
-                        ></lightning-input>
-                        <div if:true={errors.lastName} class="slds-text-color_error slds-p-top_xx-small" id="lastNameError">
-                            {errors.lastName}
-                        </div>
-                    </div>
+                            class="slds-m-bottom_small">
+                        </lightning-input>
 
-                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
-                        <lightning-input
-                            type="email"
+                        <!-- Email Field -->
+                        <lightning-input 
+                            type="email" 
                             label="Email"
-                            name="email"
-                            value={formData.email}
+                            value={emailValue}
+                            onchange={handleEmailChange}
                             required
-                            onchange={handleInputChange}
-                            class="required-field"
-                            aria-describedby="emailError"
-                            message-when-value-missing="Please enter your email"
-                        ></lightning-input>
-                        <div if:true={errors.email} class="slds-text-color_error slds-p-top_xx-small" id="emailError">
-                            {errors.email}
-                        </div>
-                    </div>
+                            class="slds-m-bottom_small">
+                        </lightning-input>
 
-                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
-                        <lightning-input
-                            type="tel"
-                            label="Phone"
-                            name="phone"
-                            value={formData.phone}
-                            required
-                            onchange={handleInputChange}
-                            class="required-field"
-                            aria-describedby="phoneError"
-                            message-when-value-missing="Please enter your phone number"
-                        ></lightning-input>
-                        <div if:true={errors.phone} class="slds-text-color_error slds-p-top_xx-small" id="phoneError">
-                            {errors.phone}
-                        </div>
+                        <!-- Combobox -->
+                        <lightning-combobox
+                            name="status"
+                            label="Status"
+                            value={selectedStatus}
+                            options={statusOptions}
+                            onchange={handleStatusChange}
+                            class="slds-m-bottom_small">
+                        </lightning-combobox>
                     </div>
                 </div>
 
-                <!-- Form buttons -->
-                <div class="slds-grid slds-grid_align-center slds-m-top_medium">
-                    <button
-                        class="slds-button slds-button_neutral slds-m-right_small"
-                        type="button"
-                        onclick={resetForm}
-                    >
-                        Reset
-                    </button>
-                    <button
-                        class="slds-button slds-button_brand"
-                        type="submit"
-                    >
-                        Submit
-                    </button>
+                <!-- Submit Button -->
+                <div class="slds-m-top_medium">
+                    <lightning-button 
+                        variant="brand"
+                        label="Submit"
+                        onclick={handleSubmit}
+                        disabled={isSubmitDisabled}>
+                    </lightning-button>
                 </div>
-            </form>
+
+                <!-- Success/Error Message -->
+                <div class="slds-m-top_small">
+                    <template if:true={showSuccessMessage}>
+                        <div class="slds-notify slds-notify_alert slds-alert_success" role="alert">
+                            <span class="slds-assistive-text">Success</span>
+                            <h2>{successMessage}</h2>
+                        </div>
+                    </template>
+                    <template if:true={showErrorMessage}>
+                        <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                            <span class="slds-assistive-text">Error</span>
+                            <h2>{errorMessage}</h2>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="slds-m-top_large">
+                <lightning-datatable
+                    key-field="id"
+                    data={tableData}
+                    columns={columns}
+                    hide-checkbox-column>
+                </lightning-datatable>
+            </div>
         </div>
     </div>
 </template>
