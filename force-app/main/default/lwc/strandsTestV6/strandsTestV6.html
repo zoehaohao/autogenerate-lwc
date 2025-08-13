@@ -1,0 +1,115 @@
+&lt;template&gt;
+    &lt;div class=&quot;slds-card&quot;&gt;
+        &lt;!-- Header Section --&gt;
+        &lt;div class=&quot;slds-card__header slds-grid&quot;&gt;
+            &lt;header class=&quot;slds-media slds-media_center slds-has-flexi-truncate&quot;&gt;
+                &lt;div class=&quot;slds-media__body&quot;&gt;
+                    &lt;h2 class=&quot;slds-card__header-title&quot;&gt;
+                        &lt;span class=&quot;slds-text-heading_medium&quot;&gt;Strands Test Component&lt;/span&gt;
+                    &lt;/h2&gt;
+                &lt;/div&gt;
+            &lt;/header&gt;
+        &lt;/div&gt;
+
+        &lt;!-- Body Section --&gt;
+        &lt;div class=&quot;slds-card__body slds-card__body_inner&quot;&gt;
+            &lt;!-- Form Section --&gt;
+            &lt;div class=&quot;slds-form&quot; role=&quot;group&quot; aria-labelledby=&quot;form-heading&quot;&gt;
+                &lt;div class=&quot;slds-grid slds-gutters slds-wrap&quot;&gt;
+                    &lt;!-- Input Field --&gt;
+                    &lt;div class=&quot;slds-col slds-size_1-of-2 slds-p-bottom_medium&quot;&gt;
+                        &lt;lightning-input 
+                            type=&quot;text&quot; 
+                            label=&quot;Name&quot; 
+                            value={inputValue}
+                            onchange={handleInputChange}
+                            required
+                            class=&quot;required-field&quot;
+                            aria-describedby=&quot;nameHelpText&quot;&gt;
+                        &lt;/lightning-input&gt;
+                        &lt;div id=&quot;nameHelpText&quot; class=&quot;slds-form-element__help&quot;&gt;Enter your full name&lt;/div&gt;
+                    &lt;/div&gt;
+
+                    &lt;!-- Email Field --&gt;
+                    &lt;div class=&quot;slds-col slds-size_1-of-2 slds-p-bottom_medium&quot;&gt;
+                        &lt;lightning-input 
+                            type=&quot;email&quot; 
+                            label=&quot;Email&quot; 
+                            value={emailValue}
+                            onchange={handleEmailChange}
+                            required
+                            class=&quot;required-field&quot;
+                            pattern=&quot;[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$&quot;&gt;
+                        &lt;/lightning-input&gt;
+                    &lt;/div&gt;
+
+                    &lt;!-- Description Field --&gt;
+                    &lt;div class=&quot;slds-col slds-size_1-of-1 slds-p-bottom_medium&quot;&gt;
+                        &lt;lightning-textarea 
+                            label=&quot;Description&quot; 
+                            value={description}
+                            onchange={handleDescriptionChange}
+                            maxlength=&quot;500&quot;&gt;
+                        &lt;/lightning-textarea&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+
+                &lt;!-- Action Buttons --&gt;
+                &lt;div class=&quot;slds-grid slds-gutters slds-p-top_medium&quot;&gt;
+                    &lt;div class=&quot;slds-col&quot;&gt;
+                        &lt;lightning-button 
+                            label=&quot;Submit&quot; 
+                            variant=&quot;brand&quot; 
+                            onclick={handleSubmit}
+                            class=&quot;slds-m-right_x-small&quot;&gt;
+                        &lt;/lightning-button&gt;
+                        &lt;lightning-button 
+                            label=&quot;Reset&quot; 
+                            onclick={handleReset}&gt;
+                        &lt;/lightning-button&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Data Display Section --&gt;
+            &lt;div class=&quot;slds-p-top_medium&quot;&gt;
+                &lt;template if:true={showData}&gt;
+                    &lt;div class=&quot;slds-box slds-theme_default&quot;&gt;
+                        &lt;lightning-datatable
+                            key-field=&quot;id&quot;
+                            data={tableData}
+                            columns={columns}
+                            hide-checkbox-column
+                            sorted-by={sortedBy}
+                            sorted-direction={sortedDirection}
+                            onsort={handleSort}&gt;
+                        &lt;/lightning-datatable&gt;
+                    &lt;/div&gt;
+                &lt;/template&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Toast Container for Notifications --&gt;
+            &lt;div class=&quot;slds-notify_container&quot;&gt;
+                &lt;template if:true={showToast}&gt;
+                    &lt;div class={toastClass} role=&quot;status&quot;&gt;
+                        &lt;span class=&quot;slds-assistive-text&quot;&gt;{toastVariant}&lt;/span&gt;
+                        &lt;span class=&quot;slds-icon_container slds-icon-utility-success&quot;&gt;
+                            &lt;lightning-icon icon-name={toastIcon} size=&quot;small&quot; variant=&quot;inverse&quot;&gt;&lt;/lightning-icon&gt;
+                        &lt;/span&gt;
+                        &lt;div class=&quot;slds-notify__content&quot;&gt;
+                            &lt;h2 class=&quot;slds-text-heading_small&quot;&gt;{toastMessage}&lt;/h2&gt;
+                        &lt;/div&gt;
+                        &lt;div class=&quot;slds-notify__close&quot;&gt;
+                            &lt;lightning-button-icon 
+                                icon-name=&quot;utility:close&quot; 
+                                size=&quot;small&quot; 
+                                variant=&quot;bare-inverse&quot; 
+                                onclick={closeToast}&gt;
+                            &lt;/lightning-button-icon&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                &lt;/template&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
