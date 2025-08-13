@@ -1,11 +1,35 @@
-.required-field {
-    --slds-c-input-color-border: var(--lwc-colorBorderInput,rgb(201, 201, 201));
+/* strandsTestV5.css */
+.slds-card {
+    background: #ffffff;
+    border-radius: 0.25rem;
 }
 
-.required-field.slds-has-error {
-    --slds-c-input-color-border: var(--lwc-colorBorderError,rgb(194, 57, 52));
+.slds-card__body {
+    padding: 1rem;
 }
 
-.slds-spinner_container {
-    position: fixed;
+.slds-notify {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+}
+
+.slds-alert_success {
+    background-color: #4bca81;
+    color: #ffffff;
+}
+
+.slds-alert_error {
+    background-color: #c23934;
+    color: #ffffff;
+}
+
+.custom-datatable {
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .slds-card__body {
+        padding: 0.5rem;
+    }
 }
