@@ -1,0 +1,11 @@
+.required-field {
+    --slds-c-input-color-border: var(--lwc-colorBorderInput,rgb(201, 201, 201));
+}
+
+.required-field.slds-has-error {
+    --slds-c-input-color-border: var(--lwc-colorBorderError,rgb(194, 57, 52));
+}
+
+.slds-spinner_container {
+    position: fixed;
+}
