@@ -1,0 +1,43 @@
+.slds-card {
+    background: #ffffff;
+    border-radius: 0.25rem;
+    border: 1px solid #d8dde6;
+    margin: 0.5rem;
+}
+
+.slds-card__body {
+    padding: 1rem;
+}
+
+.slds-form__row {
+    margin-bottom: 1rem;
+}
+
+.slds-has-error {
+    border-color: #c23934;
+}
+
+.slds-form-element__help {
+    color: #c23934;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.slds-notify_alert {
+    margin-bottom: 1rem;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .slds-card {
+        margin: 0.25rem;
+    }
+
+    .slds-card__body {
+        padding: 0.5rem;
+    }
+
+    .slds-form__row {
+        margin-bottom: 0.5rem;
+    }
+}
