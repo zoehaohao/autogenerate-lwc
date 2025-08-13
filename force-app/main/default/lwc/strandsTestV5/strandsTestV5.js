@@ -1,101 +1,150 @@
+// strandsTestV5.js
 import { LightningElement, api, track } from 'lwc';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class StrandsTestV5 extends LightningElement {
+    // Public properties
     @api recordId;
-    @track formData = {
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: ''
-    };
-    @track errors = {};
-    @track isLoading = false;
+    
+    // Private reactive properties
+    @track inputValue = '';
+    @track emailValue = '';
+    @track selectedStatus = '';
+    @track showSuccessMessage = false;
+    @track showErrorMessage = false;
+    @track successMessage = '';
+    @track errorMessage = '';
+    @track tableData = [];
 
-    // Lifecycle hook
-    connectedCallback() {
-        // Initialize component
-        this.loadInitialData();
+    // Non-reactive properties
+    statusOptions = [
+        { label: 'Active', value: 'active' },
+        { label: 'Inactive', value: 'inactive' },
+        { label: 'Pending', value: 'pending' }
+    ];
+
+    columns = [
+        { label: 'Name', fieldName: 'name', type: 'text' },
+        { label: 'Email', fieldName: 'email', type: 'email' },
+        { label: 'Status', fieldName: 'status', type: 'text' },
+        { label: 'Created Date', fieldName: 'createdDate', type: 'date' }
+    ];
+
+    // Computed properties
+    get isSubmitDisabled() {
+        return !this.inputValue || !this.emailValue || !this.selectedStatus;
     }
 
-    // Private methods
-    loadInitialData() {
-        // Simulate data loading
-        this.isLoading = true;
-        setTimeout(() => {
-            this.isLoading = false;
-        }, 1000);
-    }
-
+    // Event handlers
     handleInputChange(event) {
-        const { name, value } = event.target;
-        this.formData = { ...this.formData, [name]: value };
-        // Clear error when user starts typing
-        if (this.errors[name]) {
-            this.errors = { ...this.errors, [name]: '' };
+        this.inputValue = event.target.value;
+        this.clearMessages();
+    }
+
+    handleEmailChange(event) {
+        this.emailValue = event.target.value;
+        this.clearMessages();
+    }
+
+    handleStatusChange(event) {
+        this.selectedStatus = event.target.value;
+        this.clearMessages();
+    }
+
+    handleSubmit() {
+        if (this.validateInputs()) {
+            try {
+                // Create new record object
+                const newRecord = {
+                    id: this.generateUniqueId(),
+                    name: this.inputValue,
+                    email: this.emailValue,
+                    status: this.selectedStatus,
+                    createdDate: new Date()
+                };
+
+                // Add to table data
+                this.tableData = [...this.tableData, newRecord];
+
+                // Show success message
+                this.showSuccessMessage = true;
+                this.successMessage = 'Record created successfully!';
+
+                // Clear form
+                this.clearForm();
+
+                // Dispatch custom event
+                this.dispatchEvent(new CustomEvent('recordcreated', {
+                    detail: newRecord
+                }));
+            } catch (error) {
+                this.handleError(error);
+            }
         }
     }
 
-    validateForm() {
-        const newErrors = {};
+    // Helper methods
+    validateInputs() {
+        // Email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!this.formData.firstName) {
-            newErrors.firstName = 'First name is required';
-        }
-        if (!this.formData.lastName) {
-            newErrors.lastName = 'Last name is required';
-        }
-        if (!this.formData.email) {
-            newErrors.email = 'Email is required';
-        } else if (!emailRegex.test(this.formData.email)) {
-            newErrors.email = 'Please enter a valid email';
-        }
-        if (!this.formData.phone) {
-            newErrors.phone = 'Phone is required';
+        if (!emailRegex.test(this.emailValue)) {
+            this.showErrorMessage = true;
+            this.errorMessage = 'Please enter a valid email address';
+            return false;
         }
 
-        this.errors = newErrors;
-        return Object.keys(newErrors).length === 0;
+        // Name validation
+        if (this.inputValue.length < 2) {
+            this.showErrorMessage = true;
+            this.errorMessage = 'Name must be at least 2 characters long';
+            return false;
+        }
+
+        return true;
     }
 
-    handleSubmit(event) {
-        event.preventDefault();
-        
-        if (this.validateForm()) {
-            this.isLoading = true;
-            
-            // Simulate API call
-            setTimeout(() => {
-                this.isLoading = false;
-                this.dispatchEvent(
-                    new CustomEvent('formsubmit', {
-                        detail: this.formData
-                    })
-                );
-                this.showToast('Success', 'Form submitted successfully', 'success');
-                this.resetForm();
-            }, 1500);
+    clearMessages() {
+        this.showSuccessMessage = false;
+        this.showErrorMessage = false;
+        this.successMessage = '';
+        this.errorMessage = '';
+    }
+
+    clearForm() {
+        this.inputValue = '';
+        this.emailValue = '';
+        this.selectedStatus = '';
+    }
+
+    handleError(error) {
+        this.showErrorMessage = true;
+        this.errorMessage = error.message || 'An unexpected error occurred';
+        console.error('Error in StrandsTestV5:', error);
+    }
+
+    generateUniqueId() {
+        return Math.random().toString(36).substr(2, 9);
+    }
+
+    // Lifecycle hooks
+    connectedCallback() {
+        try {
+            // Initialize component
+            this.loadInitialData();
+        } catch (error) {
+            this.handleError(error);
         }
     }
 
-    resetForm() {
-        this.formData = {
-            firstName: '',
-            lastName: '',
-            email: '',
-            phone: ''
-        };
-        this.errors = {};
-    }
-
-    showToast(title, message, variant) {
-        this.dispatchEvent(
-            new ShowToastEvent({
-                title,
-                message,
-                variant
-            })
-        );
+    loadInitialData() {
+        // Sample data - replace with actual data loading logic
+        this.tableData = [
+            {
+                id: this.generateUniqueId(),
+                name: 'Sample Record',
+                email: 'sample@example.com',
+                status: 'active',
+                createdDate: new Date()
+            }
+        ];
     }
 }
