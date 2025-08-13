@@ -1,35 +1,24 @@
-/* strandsTestV5.css */
 .slds-card {
     background: #ffffff;
     border-radius: 0.25rem;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.1);
 }
 
-.slds-card__body {
-    padding: 1rem;
+.slds-form {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.slds-tabs_default__nav {
+    margin-bottom: 1rem;
 }
 
 .slds-notify {
-    margin-top: 1rem;
-    padding: 0.75rem;
-    border-radius: 0.25rem;
+    margin-bottom: 1rem;
 }
 
-.slds-alert_success {
-    background-color: #4bca81;
-    color: #ffffff;
-}
-
-.slds-alert_error {
-    background-color: #c23934;
-    color: #ffffff;
-}
-
-.custom-datatable {
-    margin-top: 1rem;
-}
-
-@media (max-width: 768px) {
-    .slds-card__body {
-        padding: 0.5rem;
+@media screen and (max-width: 48em) {
+    .slds-size_1-of-2 {
+        width: 100%;
     }
 }
