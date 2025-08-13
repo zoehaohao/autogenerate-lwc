@@ -1,0 +1,107 @@
+<template>
+    <div class="slds-card slds-p-around_medium">
+        <header class="slds-card__header">
+            <h2 class="slds-text-heading_medium slds-m-bottom_medium">
+                Contact Information Form
+            </h2>
+        </header>
+
+        <div class="slds-card__body">
+            <form class="slds-form" onsubmit={handleSubmit}>
+                <!-- Loading spinner -->
+                <template if:true={isLoading}>
+                    <lightning-spinner
+                        alternative-text="Loading"
+                        size="small"
+                    ></lightning-spinner>
+                </template>
+
+                <!-- Form fields -->
+                <div class="slds-grid slds-gutters slds-wrap">
+                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                        <lightning-input
+                            label="First Name"
+                            name="firstName"
+                            value={formData.firstName}
+                            required
+                            onchange={handleInputChange}
+                            class="required-field"
+                            aria-describedby="firstNameError"
+                            message-when-value-missing="Please enter your first name"
+                        ></lightning-input>
+                        <div if:true={errors.firstName} class="slds-text-color_error slds-p-top_xx-small" id="firstNameError">
+                            {errors.firstName}
+                        </div>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                        <lightning-input
+                            label="Last Name"
+                            name="lastName"
+                            value={formData.lastName}
+                            required
+                            onchange={handleInputChange}
+                            class="required-field"
+                            aria-describedby="lastNameError"
+                            message-when-value-missing="Please enter your last name"
+                        ></lightning-input>
+                        <div if:true={errors.lastName} class="slds-text-color_error slds-p-top_xx-small" id="lastNameError">
+                            {errors.lastName}
+                        </div>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                        <lightning-input
+                            type="email"
+                            label="Email"
+                            name="email"
+                            value={formData.email}
+                            required
+                            onchange={handleInputChange}
+                            class="required-field"
+                            aria-describedby="emailError"
+                            message-when-value-missing="Please enter your email"
+                        ></lightning-input>
+                        <div if:true={errors.email} class="slds-text-color_error slds-p-top_xx-small" id="emailError">
+                            {errors.email}
+                        </div>
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                        <lightning-input
+                            type="tel"
+                            label="Phone"
+                            name="phone"
+                            value={formData.phone}
+                            required
+                            onchange={handleInputChange}
+                            class="required-field"
+                            aria-describedby="phoneError"
+                            message-when-value-missing="Please enter your phone number"
+                        ></lightning-input>
+                        <div if:true={errors.phone} class="slds-text-color_error slds-p-top_xx-small" id="phoneError">
+                            {errors.phone}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form buttons -->
+                <div class="slds-grid slds-grid_align-center slds-m-top_medium">
+                    <button
+                        class="slds-button slds-button_neutral slds-m-right_small"
+                        type="button"
+                        onclick={resetForm}
+                    >
+                        Reset
+                    </button>
+                    <button
+                        class="slds-button slds-button_brand"
+                        type="submit"
+                    >
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</template>
