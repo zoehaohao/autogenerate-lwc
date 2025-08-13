@@ -1,101 +1,125 @@
-import { LightningElement, api, track } from 'lwc';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+// strandsTestV5.js
+import { LightningElement, api } from 'lwc';
 
 export default class StrandsTestV5 extends LightningElement {
     @api recordId;
-    @track formData = {
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: ''
-    };
-    @track errors = {};
-    @track isLoading = false;
+    
+    firstName = '';
+    lastName = '';
+    email = '';
+    phone = '';
+    
+    firstNameError = '';
+    lastNameError = '';
+    emailError = '';
+    showSuccessMessage = false;
 
-    // Lifecycle hook
-    connectedCallback() {
-        // Initialize component
-        this.loadInitialData();
+    get firstNameClass() {
+        return this.firstNameError ? 'slds-has-error' : '';
     }
 
-    // Private methods
-    loadInitialData() {
-        // Simulate data loading
-        this.isLoading = true;
-        setTimeout(() => {
-            this.isLoading = false;
-        }, 1000);
+    get lastNameClass() {
+        return this.lastNameError ? 'slds-has-error' : '';
     }
 
-    handleInputChange(event) {
-        const { name, value } = event.target;
-        this.formData = { ...this.formData, [name]: value };
-        // Clear error when user starts typing
-        if (this.errors[name]) {
-            this.errors = { ...this.errors, [name]: '' };
+    get emailClass() {
+        return this.emailError ? 'slds-has-error' : '';
+    }
+
+    handleFirstNameChange(event) {
+        this.firstName = event.target.value;
+        this.validateFirstName();
+    }
+
+    handleLastNameChange(event) {
+        this.lastName = event.target.value;
+        this.validateLastName();
+    }
+
+    handleEmailChange(event) {
+        this.email = event.target.value;
+        this.validateEmail();
+    }
+
+    handlePhoneChange(event) {
+        this.phone = event.target.value;
+    }
+
+    validateFirstName() {
+        if (!this.firstName || this.firstName.trim().length === 0) {
+            this.firstNameError = 'First Name is required';
+            return false;
         }
+        this.firstNameError = '';
+        return true;
+    }
+
+    validateLastName() {
+        if (!this.lastName || this.lastName.trim().length === 0) {
+            this.lastNameError = 'Last Name is required';
+            return false;
+        }
+        this.lastNameError = '';
+        return true;
+    }
+
+    validateEmail() {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!this.email || !emailRegex.test(this.email)) {
+            this.emailError = 'Please enter a valid email address';
+            return false;
+        }
+        this.emailError = '';
+        return true;
     }
 
     validateForm() {
-        const newErrors = {};
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!this.formData.firstName) {
-            newErrors.firstName = 'First name is required';
-        }
-        if (!this.formData.lastName) {
-            newErrors.lastName = 'Last name is required';
-        }
-        if (!this.formData.email) {
-            newErrors.email = 'Email is required';
-        } else if (!emailRegex.test(this.formData.email)) {
-            newErrors.email = 'Please enter a valid email';
-        }
-        if (!this.formData.phone) {
-            newErrors.phone = 'Phone is required';
-        }
-
-        this.errors = newErrors;
-        return Object.keys(newErrors).length === 0;
-    }
-
-    handleSubmit(event) {
-        event.preventDefault();
+        const isFirstNameValid = this.validateFirstName();
+        const isLastNameValid = this.validateLastName();
+        const isEmailValid = this.validateEmail();
         
+        return isFirstNameValid && isLastNameValid && isEmailValid;
+    }
+
+    handleSubmit() {
         if (this.validateForm()) {
-            this.isLoading = true;
-            
-            // Simulate API call
+            // Dispatch custom event with form data
+            const formData = {
+                firstName: this.firstName,
+                lastName: this.lastName,
+                email: this.email,
+                phone: this.phone
+            };
+
+            this.dispatchEvent(new CustomEvent('formsubmit', {
+                detail: formData,
+                bubbles: true,
+                composed: true
+            }));
+
+            // Show success message
+            this.showSuccessMessage = true;
             setTimeout(() => {
-                this.isLoading = false;
-                this.dispatchEvent(
-                    new CustomEvent('formsubmit', {
-                        detail: this.formData
-                    })
-                );
-                this.showToast('Success', 'Form submitted successfully', 'success');
-                this.resetForm();
-            }, 1500);
+                this.showSuccessMessage = false;
+            }, 3000);
+
+            // Reset form
+            this.handleReset();
         }
     }
 
-    resetForm() {
-        this.formData = {
-            firstName: '',
-            lastName: '',
-            email: '',
-            phone: ''
-        };
-        this.errors = {};
-    }
-
-    showToast(title, message, variant) {
-        this.dispatchEvent(
-            new ShowToastEvent({
-                title,
-                message,
-                variant
-            })
-        );
+    handleReset() {
+        this.firstName = '';
+        this.lastName = '';
+        this.email = '';
+        this.phone = '';
+        this.firstNameError = '';
+        this.lastNameError = '';
+        this.emailError = '';
+        
+        // Reset all lightning-input fields
+        this.template.querySelectorAll('lightning-input').forEach(input => {
+            input.value = '';
+        });
     }
 }
