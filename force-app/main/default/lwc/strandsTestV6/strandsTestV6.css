@@ -1,42 +1,13 @@
 .slds-card {
-    background: #ffffff;
-    border-radius: 0.25rem;
-}
-
-.slds-notify_container {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: auto;
-    z-index: 10000;
-}
-
-.slds-notify_toast {
-    min-width: 300px;
-}
-
-.required-field label::after {
-    content: " *";
-    color: rgb(194, 57, 52);
-}
-
-.slds-form-element__help {
-    font-size: 0.75rem;
-    color: #706e6b;
-    margin-top: 0.25rem;
+    margin: 1rem;
 }
 
 .slds-box {
-    border: 1px solid #d8dde6;
-    border-radius: 0.25rem;
+    min-height: 100px;
 }
 
-@media (max-width: 768px) {
-    .slds-size_1-of-2 {
-        width: 100%;
-    }
-    
-    .slds-notify_toast {
-        min-width: 100%;
+@media screen and (max-width: 768px) {
+    .slds-card {
+        margin: 0.5rem;
     }
 }
