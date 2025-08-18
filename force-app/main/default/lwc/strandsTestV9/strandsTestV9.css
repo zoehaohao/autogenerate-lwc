@@ -1,0 +1,29 @@
+.container {
+    padding: 1rem;
+    background-color: #ffffff;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-results {
+    margin-top: 1rem;
+}
+
+.result-card {
+    padding: 1rem;
+    border: 1px solid #d8dde6;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.result-card p {
+    margin: 0.5rem 0;
+}
+
+.error-message {
+    color: #c23934;
+    padding: 0.5rem;
+    border: 1px solid #c23934;
+    border-radius: 4px;
+    background-color: #fafafa;
+}
