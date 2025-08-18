@@ -1,13 +1,8 @@
-.slds-card {
-    margin: 1rem;
+.container {
+    padding: 1rem;
 }
 
-.slds-box {
-    min-height: 100px;
-}
-
-@media screen and (max-width: 768px) {
-    .slds-card {
-        margin: 0.5rem;
-    }
+.content {
+    background-color: #ffffff;
+    border-radius: 0.25rem;
 }
