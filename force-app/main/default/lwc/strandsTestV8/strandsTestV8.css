@@ -1,16 +1,13 @@
-.slds-card {
-    background: white;
+/* strandsTestV8.css */
+.abn-lookup-container {
+    padding: 1rem;
+}
+
+.slds-box {
+    background-color: #ffffff;
     border-radius: 0.25rem;
 }
 
-.slds-input-has-icon {
-    position: relative;
-}
-
-.slds-border_bottom {
-    border-bottom: 1px solid #d8dde6;
-}
-
-.slds-border_bottom:last-child {
-    border-bottom: none;
+.slds-button_brand {
+    margin-right: 0.5rem;
 }

@@ -1,72 +1,58 @@
 <!-- strandsTestV8.html -->
 <template>
-    <div class="slds-card">
-        <div class="slds-p-around_medium">
-            <h2 class="slds-text-heading_medium slds-m-bottom_medium">ABN Lookup</h2>
+    <div class="abn-lookup-container">
+        <div class="slds-box slds-theme_default">
+            <h2 class="slds-text-heading_medium slds-m-bottom_medium">ABN Lookup Results</h2>
             
-            <!-- Search Input -->
-            <div class="slds-form-element">
-                <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
-                    <lightning-input 
-                        type="search"
-                        label="Search ABN"
-                        placeholder="Enter business name"
-                        value={searchTerm}
-                        onchange={handleSearchChange}>
-                    </lightning-input>
-                    <lightning-button 
-                        label="Search"
-                        variant="brand"
-                        onclick={handleSearch}
-                        class="slds-m-left_x-small">
-                    </lightning-button>
+            <div class="slds-form">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="abn-search">
+                        Search ABN
+                    </label>
+                    <div class="slds-form-element__control">
+                        <input type="text" 
+                               id="abn-search" 
+                               class="slds-input" 
+                               placeholder="Enter business name or ABN"
+                               onchange={handleSearchChange}
+                               value={searchTerm}/>
+                    </div>
+                </div>
+                
+                <div class="slds-m-top_medium">
+                    <button class="slds-button slds-button_brand" onclick={handleSearch}>
+                        Search
+                    </button>
                 </div>
             </div>
 
-            <!-- Results Section -->
-            <div class="slds-m-top_medium">
-                <template if:true={searchResults.length}>
-                    <div class="slds-box slds-theme_default">
-                        <template for:each={searchResults} for:item="result">
-                            <div key={result.abn} class="slds-p-around_medium slds-border_bottom">
-                                <div class="slds-grid slds-gutters">
-                                    <div class="slds-col slds-size_3-of-4">
-                                        <p class="slds-text-heading_small">{result.entityName}</p>
-                                        <p>ABN: {result.abn}</p>
-                                        <p>Status: {result.abnStatus}</p>
-                                        <p>Entity Type: {result.entityType}</p>
-                                        <p>Location: {result.location}</p>
-                                    </div>
-                                    <div class="slds-col slds-size_1-of-4 slds-align_absolute-center">
-                                        <lightning-button 
-                                            label="Select"
-                                            variant="neutral"
-                                            onclick={handleSelect}
-                                            data-abn={result.abn}>
-                                        </lightning-button>
-                                    </div>
+            <template if:true={searchResults}>
+                <div class="slds-m-top_large">
+                    <template for:each={searchResults} for:item="result">
+                        <div key={result.abn} class="slds-box slds-m-bottom_small">
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                    <p><strong>ABN:</strong> {result.abn}</p>
+                                    <p><strong>Entity Name:</strong> {result.entityName}</p>
+                                    <p><strong>Entity Type:</strong> {result.entityType}</p>
+                                </div>
+                                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                    <p><strong>ABN Status:</strong> {result.abnStatus}</p>
+                                    <p><strong>GST Status:</strong> {result.gstStatus}</p>
+                                    <p><strong>Location:</strong> {result.location}</p>
                                 </div>
                             </div>
-                        </template>
-                    </div>
-                </template>
-            </div>
-
-            <!-- Pagination -->
-            <div class="slds-grid slds-grid_align-center slds-m-top_medium">
-                <lightning-button-group>
-                    <lightning-button 
-                        label="Previous"
-                        onclick={handlePrevious}
-                        disabled={isFirstPage}>
-                    </lightning-button>
-                    <lightning-button 
-                        label="Next"
-                        onclick={handleNext}
-                        disabled={isLastPage}>
-                    </lightning-button>
-                </lightning-button-group>
-            </div>
+                            <div class="slds-m-top_small">
+                                <button class="slds-button slds-button_neutral" 
+                                        onclick={handleSelect} 
+                                        data-abn={result.abn}>
+                                    Select
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
         </div>
     </div>
 </template>
