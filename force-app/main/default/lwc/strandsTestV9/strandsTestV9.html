@@ -1,0 +1,22 @@
+&lt;template&gt;
+    &lt;div class=&quot;container&quot;&gt;
+        &lt;h2&gt;ABN Lookup Results&lt;/h2&gt;
+        &lt;div class=&quot;search-results&quot;&gt;
+            &lt;template if:true={abnDetails}&gt;
+                &lt;div class=&quot;result-card&quot;&gt;
+                    &lt;p&gt;&lt;strong&gt;ABN:&lt;/strong&gt; {abnDetails.abn}&lt;/p&gt;
+                    &lt;p&gt;&lt;strong&gt;Entity Name:&lt;/strong&gt; {abnDetails.entityName}&lt;/p&gt;
+                    &lt;p&gt;&lt;strong&gt;Entity Type:&lt;/strong&gt; {abnDetails.entityType}&lt;/p&gt;
+                    &lt;p&gt;&lt;strong&gt;Status:&lt;/strong&gt; {abnDetails.status}&lt;/p&gt;
+                    &lt;p&gt;&lt;strong&gt;GST Registration:&lt;/strong&gt; {abnDetails.gstRegistration}&lt;/p&gt;
+                    &lt;p&gt;&lt;strong&gt;Location:&lt;/strong&gt; {abnDetails.location}&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/template&gt;
+            &lt;template if:true={error}&gt;
+                &lt;div class=&quot;error-message&quot;&gt;
+                    {error}
+                &lt;/div&gt;
+            &lt;/template&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/template&gt;
