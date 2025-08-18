@@ -1,51 +1,17 @@
 <template>
-    <div class="slds-card">
-        <div class="slds-card__header slds-grid">
-            <header class="slds-media slds-media_center">
-                <div class="slds-media__body">
-                    <h2 class="slds-card__header-title">
-                        <span class="slds-text-heading_medium">Strands Test Component</span>
-                    </h2>
+    <div class="container">
+        <h1>Strands Test V6</h1>
+        <div class="content">
+            <lightning-card title="Test Component">
+                <div class="slds-p-around_medium">
+                    <p>Welcome to Strands Test V6!</p>
+                    <lightning-button 
+                        label="Click Me" 
+                        variant="brand" 
+                        onclick={handleClick}>
+                    </lightning-button>
                 </div>
-            </header>
-        </div>
-        <div class="slds-card__body slds-card__body_inner">
-            <div class="slds-grid slds-gutters slds-wrap">
-                <!-- Form Section -->
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                    <div class="slds-form-element">
-                        <label class="slds-form-element__label" for="input-name">Name</label>
-                        <div class="slds-form-element__control">
-                            <input type="text" id="input-name" 
-                                   class="slds-input" 
-                                   value={inputName} 
-                                   onchange={handleNameChange} />
-                        </div>
-                    </div>
-                    <div class="slds-form-element slds-m-top_small">
-                        <button class="slds-button slds-button_brand" 
-                                onclick={handleClick}>
-                            Submit
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Display Section -->
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                    <div class="slds-box slds-theme_default">
-                        <p class="slds-text-heading_small">Preview:</p>
-                        <p class="slds-m-top_small">{displayMessage}</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Child Component Section -->
-            <div class="slds-m-top_medium">
-                <c-strands-test-v6-child
-                    message={messageForChild}
-                    onchildevent={handleChildEvent}>
-                </c-strands-test-v6-child>
-            </div>
+            </lightning-card>
         </div>
     </div>
 </template>
