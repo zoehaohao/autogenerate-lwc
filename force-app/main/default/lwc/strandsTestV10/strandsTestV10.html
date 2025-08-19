@@ -1,1 +1,120 @@
-<!-- HTML content from above -->
+<template>
+    <div class="slds-card">
+        <!-- Header -->
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center">
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        ABN lookup pattern
+                    </h2>
+                </div>
+            </header>
+        </div>
+
+        <!-- Search Section -->
+        <div class="slds-card__body">
+            <div class="slds-p-around_medium">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label">
+                        You can find an Australian Business Number (ABN) using the ABN itself, Company / Business / Trading name or Australian Company Number (ACN). Once the correct entity has been identified you can select it for use.
+                    </label>
+                    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right">
+                        <lightning-input
+                            type="search"
+                            label="Search ABN"
+                            variant="label-hidden"
+                            placeholder="Enter search term"
+                            value={searchTerm}
+                            onchange={handleSearchChange}>
+                        </lightning-input>
+                        <lightning-button 
+                            label="Search"
+                            variant="brand"
+                            onclick={handleSearch}
+                            class="slds-m-left_x-small">
+                        </lightning-button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div if:true={hasResults} class="slds-p-around_medium">
+                <template for:each={abnResults} for:item="result">
+                    <div key={result.abn} class="slds-box slds-m-bottom_small">
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size_3-of-4">
+                                <div class="slds-text-heading_small">
+                                    ABN: {result.abn}
+                                </div>
+                                <div class="slds-text-title">
+                                    Entity Name: {result.entityName}
+                                </div>
+                                <div class="slds-grid slds-gutters slds-wrap">
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <div class="slds-form-element">
+                                            <span class="slds-form-element__label">ABN status:</span>
+                                            <div class="slds-form-element__static">{result.abnStatus}</div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <div class="slds-form-element">
+                                            <span class="slds-form-element__label">Entity type:</span>
+                                            <div class="slds-form-element__static">{result.entityType}</div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <div class="slds-form-element">
+                                            <span class="slds-form-element__label">Goods & Services Tax (GST):</span>
+                                            <div class="slds-form-element__static">{result.gst}</div>
+                                        </div>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <div class="slds-form-element">
+                                            <span class="slds-form-element__label">Main business location:</span>
+                                            <div class="slds-form-element__static">{result.location}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-4 slds-align_absolute-center">
+                                <lightning-button 
+                                    label="Select"
+                                    variant="neutral"
+                                    onclick={handleSelect}
+                                    data-abn={result.abn}>
+                                </lightning-button>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Pagination -->
+                <div class="slds-grid slds-grid_align-center slds-m-top_medium">
+                    <div class="slds-button-group">
+                        <lightning-button-icon 
+                            icon-name="utility:chevronleft"
+                            variant="border-filled"
+                            onclick={handlePrevious}
+                            disabled={isFirstPage}>
+                        </lightning-button-icon>
+                        <template for:each={pageNumbers} for:item="pageNumber">
+                            <lightning-button 
+                                key={pageNumber}
+                                label={pageNumber}
+                                variant={getPageButtonVariant}
+                                onclick={handlePageChange}
+                                data-page={pageNumber}>
+                            </lightning-button>
+                        </template>
+                        <lightning-button-icon 
+                            icon-name="utility:chevronright"
+                            variant="border-filled"
+                            onclick={handleNext}
+                            disabled={isLastPage}>
+                        </lightning-button-icon>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

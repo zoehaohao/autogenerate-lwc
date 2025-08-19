@@ -1,13 +1,12 @@
 public with sharing class strandsTestV10Controller {
     @AuraEnabled
-    public static List<ABNResult> searchABN(String searchTerm) {
+    public static SearchResult searchABN(String searchTerm, Integer pageNumber, Integer pageSize) {
         try {
-            // In a real implementation, this would call the ABN Lookup API
-            // For demo purposes, returning mock data
-            List<ABNResult> results = new List<ABNResult>();
+            // Mock data for demonstration - in real implementation, this would call the ABN Lookup API
+            List<ABNRecord> records = new List<ABNRecord>();
             
-            // Mock data based on the example
-            results.add(new ABNResult(
+            // Sample data based on the screenshot
+            records.add(new ABNRecord(
                 '45 004 189 708',
                 'COLES SUPERMARKETS AUSTRALIA PTY LTD',
                 'Active from 14 Feb 2000',
@@ -16,14 +15,30 @@ public with sharing class strandsTestV10Controller {
                 'VIC 3123'
             ));
             
-            return results;
+            // Calculate pagination
+            Integer startIndex = (pageNumber - 1) * pageSize;
+            Integer endIndex = Math.min(startIndex + pageSize, records.size());
+            
+            return new SearchResult(
+                records.subList(startIndex, endIndex),
+                records.size()
+            );
         } catch (Exception e) {
             throw new AuraHandledException('Error searching ABN: ' + e.getMessage());
         }
     }
     
-    // Wrapper class for ABN results
-    public class ABNResult {
+    public class SearchResult {
+        @AuraEnabled public List<ABNRecord> records;
+        @AuraEnabled public Integer totalRecords;
+        
+        public SearchResult(List<ABNRecord> records, Integer totalRecords) {
+            this.records = records;
+            this.totalRecords = totalRecords;
+        }
+    }
+    
+    public class ABNRecord {
         @AuraEnabled public String abn;
         @AuraEnabled public String entityName;
         @AuraEnabled public String abnStatus;
@@ -31,7 +46,7 @@ public with sharing class strandsTestV10Controller {
         @AuraEnabled public String gst;
         @AuraEnabled public String location;
         
-        public ABNResult(String abn, String entityName, String abnStatus, 
+        public ABNRecord(String abn, String entityName, String abnStatus, 
                         String entityType, String gst, String location) {
             this.abn = abn;
             this.entityName = entityName;
