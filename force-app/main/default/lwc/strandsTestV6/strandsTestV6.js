@@ -5,24 +5,13 @@ export default class StrandsTestV6 extends LightningElement {
     @track searchTerm = '';
     @track results = [];
     @track currentPage = 1;
-    @track totalPages = 0;
+    @track totalPages = 1;
     @track itemsPerPage = 10;
-    @track isLoading = false;
-    @track error;
+    @track displayedResults = [];
 
     // Computed properties
     get hasResults() {
-        return this.results && this.results.length > 0;
-    }
-
-    get showNoResults() {
-        return !this.isLoading && this.searchTerm && this.results.length === 0;
-    }
-
-    get displayedResults() {
-        const start = (this.currentPage - 1) * this.itemsPerPage;
-        const end = start + this.itemsPerPage;
-        return this.results.slice(start, end);
+        return this.results.length > 0;
     }
 
     get isFirstPage() {
@@ -34,15 +23,17 @@ export default class StrandsTestV6 extends LightningElement {
     }
 
     get pageNumbers() {
-        const pages = [];
+        let pages = [];
         for (let i = 1; i <= this.totalPages; i++) {
             pages.push(i);
         }
         return pages;
     }
 
-    getPageButtonVariant(pageNumber) {
-        return pageNumber === this.currentPage ? 'brand' : 'neutral';
+    get getPageButtonVariant() {
+        return (pageNumber) => {
+            return pageNumber === this.currentPage ? 'brand' : 'neutral';
+        };
     }
 
     // Event handlers
@@ -52,19 +43,24 @@ export default class StrandsTestV6 extends LightningElement {
 
     async handleSearch() {
         if (!this.searchTerm) return;
-
-        this.isLoading = true;
+        
         try {
-            const results = await searchABN({ searchTerm: this.searchTerm });
-            this.results = results;
-            this.totalPages = Math.ceil(results.length / this.itemsPerPage);
+            const searchResults = await searchABN({ searchTerm: this.searchTerm });
+            this.results = searchResults.map(result => ({
+                abn: result.abn,
+                entityName: result.entityName,
+                abnStatus: result.abnStatus,
+                entityType: result.entityType,
+                gst: result.gst,
+                location: result.location
+            }));
+            
+            this.totalPages = Math.ceil(this.results.length / this.itemsPerPage);
             this.currentPage = 1;
-            this.error = undefined;
+            this.updateDisplayedResults();
         } catch (error) {
-            this.error = error.message;
-            this.results = [];
-        } finally {
-            this.isLoading = false;
+            console.error('Error searching ABN:', error);
+            // Handle error appropriately
         }
     }
 
@@ -74,26 +70,34 @@ export default class StrandsTestV6 extends LightningElement {
         
         // Dispatch custom event with selected ABN details
         this.dispatchEvent(new CustomEvent('abnselected', {
-            detail: selectedResult,
-            bubbles: true,
-            composed: true
+            detail: selectedResult
         }));
+    }
+
+    handlePageChange(event) {
+        const pageNumber = parseInt(event.currentTarget.dataset.page, 10);
+        this.currentPage = pageNumber;
+        this.updateDisplayedResults();
     }
 
     handlePrevious() {
         if (!this.isFirstPage) {
             this.currentPage--;
+            this.updateDisplayedResults();
         }
     }
 
     handleNext() {
         if (!this.isLastPage) {
             this.currentPage++;
+            this.updateDisplayedResults();
         }
     }
 
-    handlePageChange(event) {
-        const pageNumber = parseInt(event.currentTarget.dataset.page, 10);
-        this.currentPage = pageNumber;
+    // Helper methods
+    updateDisplayedResults() {
+        const start = (this.currentPage - 1) * this.itemsPerPage;
+        const end = start + this.itemsPerPage;
+        this.displayedResults = this.results.slice(start, end);
     }
 }

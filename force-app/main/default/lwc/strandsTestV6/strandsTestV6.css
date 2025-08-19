@@ -1,10 +1,9 @@
-.slds-dl_horizontal__label {
-    float: left;
-    clear: left;
-    margin-right: .75rem;
-    font-weight: bold;
+.result-box {
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+    background-color: #ffffff;
 }
 
-.slds-dl_horizontal__detail {
-    margin-bottom: .5rem;
+.result-box:hover {
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
 }
