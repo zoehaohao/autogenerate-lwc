@@ -1,8 +1,10 @@
-.container {
-    padding: 1rem;
+.slds-dl_horizontal__label {
+    float: left;
+    clear: left;
+    margin-right: .75rem;
+    font-weight: bold;
 }
 
-.content {
-    background-color: #ffffff;
-    border-radius: 0.25rem;
+.slds-dl_horizontal__detail {
+    margin-bottom: .5rem;
 }
