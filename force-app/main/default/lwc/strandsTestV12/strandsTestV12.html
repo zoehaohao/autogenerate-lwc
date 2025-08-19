@@ -1,0 +1,83 @@
+<template>
+    <div class="slds-card">
+        <div class="slds-p-around_medium">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-1">
+                    <lightning-input
+                        type="text"
+                        label="Search Business"
+                        placeholder={searchPlaceholder}
+                        value={searchTerm}
+                        onchange={handleSearchChange}
+                        class="search-input"
+                        required
+                        message-when-value-missing="Please enter a search term"
+                    ></lightning-input>
+                </div>
+            </div>
+            <div class="slds-grid slds-gutters slds-m-top_small">
+                <div class="slds-col slds-size_1-of-1">
+                    <lightning-button 
+                        variant="brand"
+                        label="Search"
+                        title="Search"
+                        onclick={handleSearch}
+                        disabled={isSearching}
+                        class="slds-m-right_x-small"
+                        icon-name="utility:search"
+                    ></lightning-button>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div if:true={errorMessage} class="slds-m-top_small">
+                <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                    <span class="slds-assistive-text">error</span>
+                    <h2>{errorMessage}</h2>
+                </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div if:true={isSearching} class="slds-is-relative slds-m-top_medium">
+                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+            </div>
+
+            <!-- Results Section -->
+            <div if:true={hasResults} class="slds-m-top_medium">
+                <template for:each={searchResults} for:item="result">
+                    <div key={result.abn.identifier_value} class="slds-m-bottom_small">
+                        <lightning-card>
+                            <h3 slot="title">
+                                <div class="slds-text-heading_medium">
+                                    {result.other_trading_name.organisation_name}
+                                </div>
+                            </h3>
+                            <div class="slds-p-horizontal_small">
+                                <div class="slds-grid slds-wrap">
+                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                        <p><strong>ABN:</strong> {result.abn.identifier_value}</p>
+                                        <p><strong>Status:</strong> {result.entity_status.entity_status_code}</p>
+                                        <p><strong>Entity Type:</strong> {result.entity_type.entity_description}</p>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                        <p><strong>ASIC Number:</strong> {result.asic_number}</p>
+                                        <p><strong>GST Registered From:</strong> {result.goods_and_services_tax.effective_from}</p>
+                                        <p><strong>Last Updated:</strong> {result.record_last_updated_date}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </lightning-card>
+                    </div>
+                </template>
+            </div>
+
+            <!-- No Results Message -->
+            <div if:true={showNoResults} class="slds-m-top_medium">
+                <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_info" role="alert">
+                    <span class="slds-assistive-text">information</span>
+                    <h2>No matching results found. Please try a different search term.</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
