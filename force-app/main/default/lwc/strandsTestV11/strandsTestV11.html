@@ -1,0 +1,113 @@
+<!-- Component HTML content -->
+<template>
+    <div class="slds-card">
+        <div class="slds-p-around_medium">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-1">
+                    <lightning-card title="ABN Lookup" icon-name="standard:account">
+                        <!-- Search Section -->
+                        <div class="slds-p-horizontal_small">
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control">
+                                    <lightning-input
+                                        type="search"
+                                        label="Search"
+                                        placeholder={searchPlaceholder}
+                                        value={searchTerm}
+                                        onchange={handleSearchChange}
+                                        class="search-input"
+                                        message-when-too-short="Please enter at least 2 characters"
+                                        min-length="2"
+                                    ></lightning-input>
+                                </div>
+                            </div>
+                            <div class="slds-p-top_small slds-text-align_right">
+                                <lightning-button
+                                    label="Search"
+                                    variant="brand"
+                                    onclick={handleSearch}
+                                    disabled={isSearchDisabled}
+                                    icon-name="utility:search"
+                                ></lightning-button>
+                            </div>
+                        </div>
+
+                        <!-- Loading Spinner -->
+                        <template if:true={isLoading}>
+                            <div class="slds-p-around_medium slds-text-align_center">
+                                <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                            </div>
+                        </template>
+
+                        <!-- Error Message -->
+                        <template if:true={hasError}>
+                            <div class="slds-p-around_medium">
+                                <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                                    <span class="slds-assistive-text">error</span>
+                                    <h2>{errorMessage}</h2>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- Results Section -->
+                        <template if:true={hasResults}>
+                            <div class="slds-p-around_medium">
+                                <template for:each={searchResults} for:item="result">
+                                    <div key={result.abn.identifier_value} class="slds-p-bottom_small">
+                                        <lightning-card>
+                                            <div class="slds-p-around_medium">
+                                                <div class="slds-grid slds-wrap">
+                                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                                        <div class="slds-form-element">
+                                                            <span class="slds-form-element__label">ABN</span>
+                                                            <div class="slds-form-element__control">
+                                                                <div class="slds-text-heading_small">{result.abn.identifier_value}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                                        <div class="slds-form-element">
+                                                            <span class="slds-form-element__label">Status</span>
+                                                            <div class="slds-form-element__control">
+                                                                <div class="slds-text-heading_small">{result.entity_status.entity_status_code}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_1-of-1">
+                                                        <div class="slds-form-element">
+                                                            <span class="slds-form-element__label">Entity Type</span>
+                                                            <div class="slds-form-element__control">
+                                                                <div class="slds-text-body_regular">{result.entity_type.entity_description}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="slds-col slds-size_1-of-1">
+                                                        <div class="slds-form-element">
+                                                            <span class="slds-form-element__label">GST Registration</span>
+                                                            <div class="slds-form-element__control">
+                                                                <div class="slds-text-body_regular">
+                                                                    From: {result.goods_and_services_tax.effective_from}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </lightning-card>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+
+                        <!-- No Results Message -->
+                        <template if:true={showNoResults}>
+                            <div class="slds-p-around_medium slds-text-align_center">
+                                <div class="slds-text-color_weak">No results found. Please try a different search term.</div>
+                            </div>
+                        </template>
+                    </lightning-card>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
