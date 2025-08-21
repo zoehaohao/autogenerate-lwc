@@ -1,12 +1,7 @@
-.slds-card {
-    background: white;
+.slds-card__body_inner {
+    padding: 1rem;
 }
 
-.slds-button-group {
-    display: flex;
-    align-items: center;
-}
-
-.slds-button-group lightning-button {
-    margin: 0 0.125rem;
+lightning-button {
+    margin-top: 1.5rem;
 }
