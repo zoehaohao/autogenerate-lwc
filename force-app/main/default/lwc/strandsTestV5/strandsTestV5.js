@@ -25,7 +25,7 @@ export default class StrandsTestV5 extends LightningElement {
         if (this.abnNumber === '45 004 189 708') {
             this.abnData = {
                 abn: '45 004 189 708',
-                entityName: 'Entity Name: COLES SUPERMARKETS AUSTRALIA PTY LTD',
+                entityName: 'COLES SUPERMARKETS AUSTRALIA PTY LTD',
                 activeFrom: '14 Feb 2000',
                 entityType: 'Australian Private Company',
                 gstRegisteredFrom: '01 Jul 2000',
