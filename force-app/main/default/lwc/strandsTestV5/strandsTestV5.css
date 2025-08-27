@@ -1,7 +1,15 @@
-.slds-form-element__label {
-    font-weight: bold;
+.slds-dl_horizontal__label {
+    color: rgb(62, 62, 60);
+    font-size: 0.75rem;
+    line-height: 1.25;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
 }
 
 .slds-dl_horizontal__detail {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.slds-form-element__label {
+    font-weight: 700;
 }

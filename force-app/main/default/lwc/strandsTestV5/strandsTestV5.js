@@ -1,46 +1,38 @@
 import { LightningElement, api, track } from 'lwc';
-import lookupABN from '@salesforce/apex/strandsTestV5Controller.lookupABN';
 
 export default class StrandsTestV5 extends LightningElement {
     @api recordId;
     @track abnNumber = '';
-    @track abnDetails;
-    @track error;
+    @track abnData = null;
+
+    get hasAbnData() {
+        return this.abnData !== null;
+    }
 
     handleAbnChange(event) {
         this.abnNumber = event.target.value;
-        this.error = null;
+        // In a real implementation, this would call an Apex method to fetch ABN data
+        this.mockAbnLookup();
     }
 
-    async handleLookup() {
-        if (!this.validateABN()) {
-            this.error = 'Please enter a valid 11-digit ABN number';
-            return;
-        }
-
-        try {
-            this.error = null;
-            const result = await lookupABN({ abnNumber: this.abnNumber });
-            if (result.success) {
-                this.abnDetails = {
-                    abn: result.data.abn,
-                    entityName: result.data.entityName,
-                    abnStatus: result.data.status,
-                    entityType: result.data.entityType,
-                    gstStatus: result.data.gstStatus,
-                    location: result.data.location
-                };
-            } else {
-                this.error = result.message || 'ABN lookup failed';
-                this.abnDetails = null;
-            }
-        } catch (error) {
-            this.error = error.message || 'An unexpected error occurred';
-            this.abnDetails = null;
-        }
+    handleChangeField() {
+        this.abnNumber = '';
+        this.abnData = null;
     }
 
-    validateABN() {
-        return /^\d{11}$/.test(this.abnNumber);
+    // Mock method to simulate ABN lookup - in production, replace with actual API call
+    mockAbnLookup() {
+        if (this.abnNumber === '45 004 189 708') {
+            this.abnData = {
+                abn: '45 004 189 708',
+                entityName: 'Entity Name: COLES SUPERMARKETS AUSTRALIA PTY LTD',
+                activeFrom: '14 Feb 2000',
+                entityType: 'Australian Private Company',
+                gstRegisteredFrom: '01 Jul 2000',
+                mainLocation: 'VIC 3123'
+            };
+        } else {
+            this.abnData = null;
+        }
     }
 }
