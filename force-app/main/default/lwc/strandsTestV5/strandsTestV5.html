@@ -1,33 +1,64 @@
 <template>
     <div class="slds-card">
         <div class="slds-card__header slds-grid">
-            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <header class="slds-media slds-media_center">
                 <div class="slds-media__body">
                     <h2 class="slds-card__header-title">
-                        <span class="slds-text-heading_small">Strands Test V5</span>
+                        <span class="slds-text-heading_small">ABN lookup pattern</span>
                     </h2>
+                </div>
+                <div class="slds-no-flex">
+                    <lightning-button 
+                        variant="neutral"
+                        label="Change field"
+                        onclick={handleChangeField}>
+                    </lightning-button>
                 </div>
             </header>
         </div>
         <div class="slds-card__body slds-card__body_inner">
-            <div class="slds-grid slds-wrap slds-gutters">
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
-                    <lightning-input 
-                        label="Sample Input" 
-                        type="text"
-                        value={inputValue}
-                        onchange={handleInputChange}>
-                    </lightning-input>
+            <div class="slds-form">
+                <div class="slds-form-element slds-form-element_stacked">
+                    <span class="slds-form-element__label">ABN</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{abn}</div>
+                    </div>
                 </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
-                    <lightning-button 
-                        label="Submit"
-                        variant="brand"
-                        onclick={handleSubmit}>
-                    </lightning-button>
+                <div class="slds-form-element slds-form-element_stacked">
+                    <span class="slds-form-element__label">Entity Name</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{entityName}</div>
+                    </div>
+                </div>
+                <div class="slds-form-element slds-form-element_stacked">
+                    <span class="slds-form-element__label">ABN status</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">
+                            Active from {activeFromDate}
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element slds-form-element_stacked">
+                    <span class="slds-form-element__label">Entity type</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{entityType}</div>
+                    </div>
+                </div>
+                <div class="slds-form-element slds-form-element_stacked">
+                    <span class="slds-form-element__label">Goods & Services Tax (GST)</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">
+                            {gstStatus} from {gstDate}
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form-element slds-form-element_stacked">
+                    <span class="slds-form-element__label">Main business location</span>
+                    <div class="slds-form-element__control">
+                        <div class="slds-form-element__static">{businessLocation}</div>
+                    </div>
                 </div>
             </div>
-            {displayMessage}
         </div>
     </div>
 </template>
