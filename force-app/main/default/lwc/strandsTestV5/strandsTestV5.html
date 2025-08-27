@@ -1,63 +1,85 @@
 <template>
-    <div class="slds-card">
-        <div class="slds-card__header slds-grid">
-            <header class="slds-media slds-media_center">
-                <div class="slds-media__body">
-                    <h2 class="slds-card__header-title">
-                        <span class="slds-text-heading_small">ABN lookup pattern</span>
-                    </h2>
-                </div>
-                <div class="slds-no-flex">
-                    <lightning-button 
-                        variant="neutral"
-                        label="Change field"
-                        onclick={handleChangeField}>
-                    </lightning-button>
-                </div>
-            </header>
-        </div>
-        <div class="slds-card__body slds-card__body_inner">
-            <div class="slds-form">
-                <div class="slds-form-element slds-form-element_stacked">
-                    <span class="slds-form-element__label">ABN</span>
-                    <div class="slds-form-element__control">
-                        <div class="slds-form-element__static">{abn}</div>
-                    </div>
-                </div>
-                <div class="slds-form-element slds-form-element_stacked">
-                    <span class="slds-form-element__label">Entity Name</span>
-                    <div class="slds-form-element__control">
-                        <div class="slds-form-element__static">{entityName}</div>
-                    </div>
-                </div>
-                <div class="slds-form-element slds-form-element_stacked">
-                    <span class="slds-form-element__label">ABN status</span>
-                    <div class="slds-form-element__control">
-                        <div class="slds-form-element__static">
-                            Active from {activeFromDate}
+    <div class="slds-card slds-p-around_medium">
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col">
+                <div class="slds-form-element">
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_4-of-6">
+                            <lightning-input 
+                                type="text" 
+                                label="ABN lookup pattern" 
+                                value={abnNumber}
+                                onchange={handleAbnChange}
+                                pattern="[0-9]{11}"
+                                message-when-pattern-mismatch="Please enter a valid 11-digit ABN number"
+                                required>
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-6 slds-align-end">
+                            <lightning-button 
+                                label="Change ABN" 
+                                variant="brand"
+                                onclick={handleLookup}
+                                class="slds-m-top_medium">
+                            </lightning-button>
                         </div>
                     </div>
                 </div>
-                <div class="slds-form-element slds-form-element_stacked">
-                    <span class="slds-form-element__label">Entity type</span>
-                    <div class="slds-form-element__control">
-                        <div class="slds-form-element__static">{entityType}</div>
+
+                <template if:true={abnDetails}>
+                    <div class="slds-box slds-theme_default slds-m-top_medium">
+                        <dl class="slds-dl_horizontal slds-wrap">
+                            <dt class="slds-dl_horizontal__label slds-size_1-of-3">
+                                <span class="slds-form-element__label">ABN:</span>
+                            </dt>
+                            <dd class="slds-dl_horizontal__detail slds-size_2-of-3">
+                                {abnDetails.abn}
+                            </dd>
+                            
+                            <dt class="slds-dl_horizontal__label slds-size_1-of-3">
+                                <span class="slds-form-element__label">Entity Name:</span>
+                            </dt>
+                            <dd class="slds-dl_horizontal__detail slds-size_2-of-3">
+                                {abnDetails.entityName}
+                            </dd>
+                            
+                            <dt class="slds-dl_horizontal__label slds-size_1-of-3">
+                                <span class="slds-form-element__label">ABN Status:</span>
+                            </dt>
+                            <dd class="slds-dl_horizontal__detail slds-size_2-of-3">
+                                {abnDetails.abnStatus}
+                            </dd>
+                            
+                            <dt class="slds-dl_horizontal__label slds-size_1-of-3">
+                                <span class="slds-form-element__label">Entity Type:</span>
+                            </dt>
+                            <dd class="slds-dl_horizontal__detail slds-size_2-of-3">
+                                {abnDetails.entityType}
+                            </dd>
+                            
+                            <dt class="slds-dl_horizontal__label slds-size_1-of-3">
+                                <span class="slds-form-element__label">GST Status:</span>
+                            </dt>
+                            <dd class="slds-dl_horizontal__detail slds-size_2-of-3">
+                                {abnDetails.gstStatus}
+                            </dd>
+                            
+                            <dt class="slds-dl_horizontal__label slds-size_1-of-3">
+                                <span class="slds-form-element__label">Main Business Location:</span>
+                            </dt>
+                            <dd class="slds-dl_horizontal__detail slds-size_2-of-3">
+                                {abnDetails.location}
+                            </dd>
+                        </dl>
                     </div>
-                </div>
-                <div class="slds-form-element slds-form-element_stacked">
-                    <span class="slds-form-element__label">Goods & Services Tax (GST)</span>
-                    <div class="slds-form-element__control">
-                        <div class="slds-form-element__static">
-                            {gstStatus} from {gstDate}
-                        </div>
+                </template>
+
+                <template if:true={error}>
+                    <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert">
+                        <span class="slds-assistive-text">error</span>
+                        <h2>{error}</h2>
                     </div>
-                </div>
-                <div class="slds-form-element slds-form-element_stacked">
-                    <span class="slds-form-element__label">Main business location</span>
-                    <div class="slds-form-element__control">
-                        <div class="slds-form-element__static">{businessLocation}</div>
-                    </div>
-                </div>
+                </template>
             </div>
         </div>
     </div>
