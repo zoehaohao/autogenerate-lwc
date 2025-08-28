@@ -1,15 +1,15 @@
+.abn-details {
+    background-color: #ffffff;
+}
+
 .slds-dl_horizontal__label {
-    color: rgb(62, 62, 60);
-    font-size: 0.75rem;
-    line-height: 1.25;
-    margin-bottom: 0.25rem;
-    text-transform: uppercase;
+    color: #706e6b;
+    font-size: 0.875rem;
+    padding-right: 0.75rem;
+    width: 33%;
 }
 
 .slds-dl_horizontal__detail {
-    margin-bottom: 0.75rem;
-}
-
-.slds-form-element__label {
-    font-weight: 700;
+    font-size: 0.875rem;
+    padding-bottom: 0.5rem;
 }
