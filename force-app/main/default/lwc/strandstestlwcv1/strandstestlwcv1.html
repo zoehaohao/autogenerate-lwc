@@ -1,0 +1,60 @@
+&lt;template&gt;
+    &lt;lightning-card title=&quot;Document Upload and Processing&quot;&gt;
+        &lt;div class=&quot;slds-p-around_medium&quot;&gt;
+            &lt;!-- File Upload Section --&gt;
+            &lt;div class=&quot;slds-m-bottom_medium&quot;&gt;
+                &lt;lightning-file-upload
+                    label=&quot;Upload Documents&quot;
+                    name=&quot;fileUploader&quot;
+                    accept={acceptedFormats}
+                    record-id={recordId}
+                    onuploadfinished={handleUploadFinished}
+                    multiple&gt;
+                &lt;/lightning-file-upload&gt;
+            &lt;/div&gt;
+
+            &lt;!-- User Input Section --&gt;
+            &lt;div class=&quot;slds-m-bottom_medium&quot;&gt;
+                &lt;lightning-input
+                    type=&quot;text&quot;
+                    label=&quot;User Input&quot;
+                    value={userInput}
+                    onchange={handleUserInputChange}&gt;
+                &lt;/lightning-input&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Process Button --&gt;
+            &lt;div class=&quot;slds-m-bottom_medium&quot;&gt;
+                &lt;lightning-button
+                    label=&quot;Process Documents&quot;
+                    onclick={handleProcessDocuments}
+                    variant=&quot;brand&quot;
+                    disabled={isProcessing}&gt;
+                &lt;/lightning-button&gt;
+            &lt;/div&gt;
+
+            &lt;!-- Results Section --&gt;
+            &lt;template if:true={processingResult}&gt;
+                &lt;div class=&quot;slds-box slds-theme_default&quot;&gt;
+                    &lt;h2 class=&quot;slds-text-heading_medium slds-m-bottom_small&quot;&gt;Processing Results&lt;/h2&gt;
+                    &lt;lightning-formatted-rich-text value={processingResult}&gt;
+                    &lt;/lightning-formatted-rich-text&gt;
+                &lt;/div&gt;
+            &lt;/template&gt;
+
+            &lt;!-- Error Display --&gt;
+            &lt;template if:true={error}&gt;
+                &lt;div class=&quot;slds-notify slds-notify_alert slds-alert_error&quot; role=&quot;alert&quot;&gt;
+                    &lt;span class=&quot;slds-assistive-text&quot;&gt;error&lt;/span&gt;
+                    &lt;h2&gt;{error}&lt;/h2&gt;
+                &lt;/div&gt;
+            &lt;/template&gt;
+
+            &lt;!-- Loading Spinner --&gt;
+            &lt;template if:true={isProcessing}&gt;
+                &lt;lightning-spinner alternative-text=&quot;Processing&quot; size=&quot;medium&quot;&gt;
+                &lt;/lightning-spinner&gt;
+            &lt;/template&gt;
+        &lt;/div&gt;
+    &lt;/lightning-card&gt;
+&lt;/template&gt;
