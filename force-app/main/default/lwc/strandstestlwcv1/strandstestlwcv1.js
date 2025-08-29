@@ -1,80 +1,42 @@
 import { LightningElement, api, track } from 'lwc';
-import lookupAbn from '@salesforce/apex/strandstestlwcv1Controller.lookupAbn';
+import lookupAbn from '@salesforce/apex/StrandstestlwcV1Controller.lookupAbn';
 
 export default class Strandstestlwcv1 extends LightningElement {
-    @api recordId;
     @track abnNumber = '';
-    @track businessInfo = null;
-    @track errorMessage = '';
-    @track isLoading = false;
+    @track abnDetails = null;
+    @track error = null;
+    @track showSpinner = false;
+
+    get isButtonDisabled() {
+        return !this.abnNumber || this.abnNumber.length !== 11 || !/^\d+$/.test(this.abnNumber);
+    }
 
     handleAbnChange(event) {
         this.abnNumber = event.target.value;
-        this.errorMessage = '';
+        this.error = null;
+        this.abnDetails = null;
     }
 
-    async handleLookup() {
-        if (!this.abnNumber || this.abnNumber.trim() === '') {
-            this.errorMessage = 'Please enter an ABN number';
+    async handleLookupAbn() {
+        if (this.isButtonDisabled) {
             return;
         }
 
-        this.isLoading = true;
-        this.errorMessage = '';
-        this.businessInfo = null;
+        this.showSpinner = true;
+        this.error = null;
+        this.abnDetails = null;
 
         try {
             const result = await lookupAbn({ abnNumber: this.abnNumber });
-            
             if (result.success) {
-                this.businessInfo = result.data;
-                this.dispatchEvent(new CustomEvent('abnlookup', {
-                    detail: {
-                        componentName: 'strandstestlwcv1',
-                        abnNumber: this.abnNumber,
-                        businessInfo: this.businessInfo,
-                        timestamp: new Date().toISOString()
-                    },
-                    bubbles: true,
-                    composed: true
-                }));
+                this.abnDetails = result.data;
             } else {
-                this.errorMessage = result.message || 'Failed to lookup ABN';
-                this.dispatchEvent(new CustomEvent('error', {
-                    detail: {
-                        componentName: 'strandstestlwcv1',
-                        errorMessage: this.errorMessage,
-                        timestamp: new Date().toISOString()
-                    },
-                    bubbles: true,
-                    composed: true
-                }));
+                this.error = result.message || 'Failed to lookup ABN. Please try again.';
             }
         } catch (error) {
-            this.errorMessage = 'An error occurred while looking up ABN: ' + error.body?.message || error.message;
-            this.dispatchEvent(new CustomEvent('error', {
-                detail: {
-                    componentName: 'strandstestlwcv1',
-                    errorMessage: this.errorMessage,
-                    timestamp: new Date().toISOString()
-                },
-                bubbles: true,
-                composed: true
-            }));
+            this.error = error.body?.message || 'An unexpected error occurred. Please try again.';
         } finally {
-            this.isLoading = false;
+            this.showSpinner = false;
         }
-    }
-
-    @api
-    refreshData() {
-        if (this.abnNumber) {
-            this.handleLookup();
-        }
-    }
-
-    @api
-    validateComponent() {
-        return this.abnNumber && this.abnNumber.trim() !== '';
     }
 }

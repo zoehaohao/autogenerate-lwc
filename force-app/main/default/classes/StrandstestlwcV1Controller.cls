@@ -1,87 +1,44 @@
 public with sharing class StrandstestlwcV1Controller {
     @AuraEnabled
-    public static String processDocuments(List<String> fileIds, String userInput) {
+    public static ResponseWrapper lookupAbn(String abnNumber) {
         try {
-            // Input validation
-            if (fileIds == null || fileIds.isEmpty()) {
-                throw new AuraHandledException('No files provided for processing.');
+            // Validate ABN format
+            if (String.isEmpty(abnNumber) || abnNumber.length() != 11 || !abnNumber.isNumeric()) {
+                return new ResponseWrapper(false, 'Invalid ABN format. Please enter a valid 11-digit ABN.', null);
             }
 
-            // Process each file
-            List<ContentVersion> documents = [
-                SELECT Id, Title, VersionData, FileType
-                FROM ContentVersion
-                WHERE ContentDocumentId IN :fileIds
-                AND IsLatest = true
-            ];
-
-            // Process documents based on user input
-            String processedResult = processDocumentContent(documents, userInput);
-            return processedResult;
-
-        } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
-        }
-    }
-
-    private static String processDocumentContent(List<ContentVersion> documents, String userInput) {
-        try {
-            // Initialize StringBuilder for building response
-            StringBuilder result = new StringBuilder();
-            result.append('Processed ' + documents.size() + ' document(s)\n\n');
-
-            // Process each document
-            for (ContentVersion doc : documents) {
-                // Extract text content based on file type
-                String content = extractTextContent(doc);
-                
-                // Apply user input based processing
-                String processedContent = applyUserProcessing(content, userInput);
-                
-                // Add to results
-                result.append('Document: ' + doc.Title + '\n');
-                result.append('Results: ' + processedContent + '\n\n');
+            // In a real implementation, this would call the ABN Lookup API
+            // For demo purposes, returning mock data matching the UI mockup
+            if (abnNumber == '45004189708') {
+                Map<String, String> abnDetails = new Map<String, String>{
+                    'abn' => '45 004 189 708',
+                    'entityName' => 'ENTITY NAME: COLES SUPERMARKETS AUSTRALIA PTY LTD',
+                    'entityType' => 'Australian Private Company',
+                    'status' => 'Active from 14 Feb 2000',
+                    'gst' => 'Registered from 01 Jul 2000',
+                    'location' => 'VIC 3123'
+                };
+                return new ResponseWrapper(true, 'Success', abnDetails);
             }
 
-            return result.toString();
+            // If ABN not found
+            return new ResponseWrapper(false, 'ABN not found', null);
 
         } catch (Exception e) {
-            throw new AuraHandledException('Error processing documents: ' + e.getMessage());
+            System.debug(LoggingLevel.ERROR, 'Error in lookupAbn: ' + e.getMessage());
+            return new ResponseWrapper(false, 'An error occurred while looking up the ABN: ' + e.getMessage(), null);
         }
     }
 
-    private static String extractTextContent(ContentVersion doc) {
-        // Basic text extraction - in real implementation, would need proper file type handling
-        if (doc.FileType.equalsIgnoreCase('PDF')) {
-            // PDF processing logic would go here
-            return 'PDF content extracted';
-        } else if (doc.FileType.equalsIgnoreCase('WORD')) {
-            // Word document processing logic would go here
-            return 'Word document content extracted';
-        } else {
-            // Default to plain text
-            return EncodingUtil.base64Decode(EncodingUtil.base64Encode(doc.VersionData)).toString();
-        }
-    }
+    public class ResponseWrapper {
+        @AuraEnabled public Boolean success;
+        @AuraEnabled public String message;
+        @AuraEnabled public Object data;
 
-    private static String applyUserProcessing(String content, String userInput) {
-        // Apply processing based on user input
-        // This is a placeholder - actual implementation would depend on requirements
-        if (String.isNotBlank(userInput)) {
-            return 'Processed content based on user input: ' + userInput;
-        }
-        return 'Processed content with default settings';
-    }
-
-    private class StringBuilder {
-        private String[] parts = new String[]{};
-        
-        public void append(String part) {
-            parts.add(part);
-        }
-        
-        public override String toString() {
-            return String.join(parts, '');
+        public ResponseWrapper(Boolean success, String message, Object data) {
+            this.success = success;
+            this.message = message;
+            this.data = data;
         }
     }
 }
