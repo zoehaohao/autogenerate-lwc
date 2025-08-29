@@ -1,0 +1,67 @@
+<template>
+    <div class="slds-card">
+        <div class="slds-card__header">
+            <h2 class="slds-card__header-title">
+                <span class="slds-text-heading_medium">Personal Information Form</span>
+            </h2>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-grid slds-wrap slds-gutters">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input 
+                        type="text" 
+                        label="First Name" 
+                        required
+                        value={firstName}
+                        onchange={handleFirstNameChange}>
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input 
+                        type="text" 
+                        label="Last Name" 
+                        required
+                        value={lastName}
+                        onchange={handleLastNameChange}>
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input 
+                        type="email" 
+                        label="Email" 
+                        required
+                        value={email}
+                        onchange={handleEmailChange}>
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input 
+                        type="phone" 
+                        label="Phone" 
+                        value={phone}
+                        onchange={handlePhoneChange}>
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1">
+                    <lightning-textarea 
+                        label="Address"
+                        value={address}
+                        onchange={handleAddressChange}>
+                    </lightning-textarea>
+                </div>
+            </div>
+            <div class="slds-m-top_medium slds-text-align_center">
+                <lightning-button 
+                    variant="brand"
+                    label="Submit"
+                    onclick={handleSubmit}
+                    class="slds-m-right_x-small">
+                </lightning-button>
+                <lightning-button 
+                    label="Reset"
+                    onclick={handleReset}>
+                </lightning-button>
+            </div>
+        </div>
+    </div>
+</template>
