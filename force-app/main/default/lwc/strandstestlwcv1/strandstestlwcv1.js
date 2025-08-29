@@ -1,51 +1,80 @@
 import { LightningElement, api, track } from 'lwc';
-import processDocuments from '@salesforce/apex/StrandstestlwcV1Controller.processDocuments';
+import lookupAbn from '@salesforce/apex/strandstestlwcv1Controller.lookupAbn';
 
-export default class StrandstestlwcV1 extends LightningElement {
+export default class Strandstestlwcv1 extends LightningElement {
     @api recordId;
-    @track userInput = '';
-    @track processingResult;
-    @track error;
-    @track isProcessing = false;
+    @track abnNumber = '';
+    @track businessInfo = null;
+    @track errorMessage = '';
+    @track isLoading = false;
 
-    get acceptedFormats() {
-        return ['.pdf', '.doc', '.docx', '.txt'];
+    handleAbnChange(event) {
+        this.abnNumber = event.target.value;
+        this.errorMessage = '';
     }
 
-    uploadedFiles = [];
-
-    handleUserInputChange(event) {
-        this.userInput = event.target.value;
-    }
-
-    handleUploadFinished(event) {
-        const uploadedFiles = event.detail.files;
-        this.uploadedFiles = [...this.uploadedFiles, ...uploadedFiles];
-    }
-
-    async handleProcessDocuments() {
-        if (!this.uploadedFiles.length) {
-            this.error = 'Please upload at least one document.';
+    async handleLookup() {
+        if (!this.abnNumber || this.abnNumber.trim() === '') {
+            this.errorMessage = 'Please enter an ABN number';
             return;
         }
 
-        this.isProcessing = true;
-        this.error = null;
-        this.processingResult = null;
+        this.isLoading = true;
+        this.errorMessage = '';
+        this.businessInfo = null;
 
         try {
-            const fileIds = this.uploadedFiles.map(file => file.documentId);
-            const result = await processDocuments({
-                fileIds: fileIds,
-                userInput: this.userInput
-            });
-
-            this.processingResult = result;
-            this.uploadedFiles = []; // Reset for next upload
+            const result = await lookupAbn({ abnNumber: this.abnNumber });
+            
+            if (result.success) {
+                this.businessInfo = result.data;
+                this.dispatchEvent(new CustomEvent('abnlookup', {
+                    detail: {
+                        componentName: 'strandstestlwcv1',
+                        abnNumber: this.abnNumber,
+                        businessInfo: this.businessInfo,
+                        timestamp: new Date().toISOString()
+                    },
+                    bubbles: true,
+                    composed: true
+                }));
+            } else {
+                this.errorMessage = result.message || 'Failed to lookup ABN';
+                this.dispatchEvent(new CustomEvent('error', {
+                    detail: {
+                        componentName: 'strandstestlwcv1',
+                        errorMessage: this.errorMessage,
+                        timestamp: new Date().toISOString()
+                    },
+                    bubbles: true,
+                    composed: true
+                }));
+            }
         } catch (error) {
-            this.error = error.body?.message || 'An error occurred while processing the documents.';
+            this.errorMessage = 'An error occurred while looking up ABN: ' + error.body?.message || error.message;
+            this.dispatchEvent(new CustomEvent('error', {
+                detail: {
+                    componentName: 'strandstestlwcv1',
+                    errorMessage: this.errorMessage,
+                    timestamp: new Date().toISOString()
+                },
+                bubbles: true,
+                composed: true
+            }));
         } finally {
-            this.isProcessing = false;
+            this.isLoading = false;
         }
+    }
+
+    @api
+    refreshData() {
+        if (this.abnNumber) {
+            this.handleLookup();
+        }
+    }
+
+    @api
+    validateComponent() {
+        return this.abnNumber && this.abnNumber.trim() !== '';
     }
 }

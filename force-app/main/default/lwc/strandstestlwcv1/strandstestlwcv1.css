@@ -1,7 +1,42 @@
-.slds-box {
-    margin-top: 1rem;
+.business-info-container {
+    border: 1px solid #d8dde6;
+    border-radius: 4px;
+    padding: 1rem;
+    background-color: #fafaf9;
 }
 
-.slds-notify_alert {
-    margin: 1rem 0;
+.abn-display, .entity-name {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: #080707;
+}
+
+.info-item {
+    display: flex;
+    margin-bottom: 0.5rem;
+    align-items: flex-start;
+}
+
+.info-item .label {
+    font-weight: 600;
+    min-width: 140px;
+    margin-right: 0.5rem;
+    color: #3e3e3c;
+}
+
+.info-item .value {
+    color: #080707;
+    flex: 1;
+}
+
+@media (max-width: 767px) {
+    .info-item {
+        flex-direction: column;
+    }
+    
+    .info-item .label {
+        min-width: auto;
+        margin-right: 0;
+        margin-bottom: 0.25rem;
+    }
 }

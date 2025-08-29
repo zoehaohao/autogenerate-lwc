@@ -1,60 +1,86 @@
-&lt;template&gt;
-    &lt;lightning-card title=&quot;Document Upload and Processing&quot;&gt;
-        &lt;div class=&quot;slds-p-around_medium&quot;&gt;
-            &lt;!-- File Upload Section --&gt;
-            &lt;div class=&quot;slds-m-bottom_medium&quot;&gt;
-                &lt;lightning-file-upload
-                    label=&quot;Upload Documents&quot;
-                    name=&quot;fileUploader&quot;
-                    accept={acceptedFormats}
-                    record-id={recordId}
-                    onuploadfinished={handleUploadFinished}
-                    multiple&gt;
-                &lt;/lightning-file-upload&gt;
-            &lt;/div&gt;
+<template>
+    <lightning-card title="ABN Lookup" icon-name="standard:search">
+        <div class="slds-p-horizontal_medium">
+            <div class="slds-grid slds-wrap slds-gutters">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input
+                        label="ABN"
+                        value={abnNumber}
+                        onchange={handleAbnChange}
+                        placeholder="Enter ABN (e.g., 45 004 189 708)"
+                        class="slds-m-bottom_small">
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <div class="slds-m-top_large">
+                        <lightning-button
+                            label="Change ABN"
+                            onclick={handleLookup}
+                            variant="brand"
+                            disabled={isLoading}>
+                        </lightning-button>
+                    </div>
+                </div>
+            </div>
 
-            &lt;!-- User Input Section --&gt;
-            &lt;div class=&quot;slds-m-bottom_medium&quot;&gt;
-                &lt;lightning-input
-                    type=&quot;text&quot;
-                    label=&quot;User Input&quot;
-                    value={userInput}
-                    onchange={handleUserInputChange}&gt;
-                &lt;/lightning-input&gt;
-            &lt;/div&gt;
+            <template if:true={isLoading}>
+                <div class="slds-m-top_medium">
+                    <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                </div>
+            </template>
 
-            &lt;!-- Process Button --&gt;
-            &lt;div class=&quot;slds-m-bottom_medium&quot;&gt;
-                &lt;lightning-button
-                    label=&quot;Process Documents&quot;
-                    onclick={handleProcessDocuments}
-                    variant=&quot;brand&quot;
-                    disabled={isProcessing}&gt;
-                &lt;/lightning-button&gt;
-            &lt;/div&gt;
+            <template if:true={businessInfo}>
+                <div class="slds-m-top_medium">
+                    <div class="business-info-container">
+                        <div class="slds-grid slds-wrap slds-gutters">
+                            <div class="slds-col slds-size_1-of-1">
+                                <div class="abn-display">
+                                    <strong>ABN: {businessInfo.abn}</strong>
+                                </div>
+                                <div class="entity-name">
+                                    <strong>Entity Name: {businessInfo.entityName}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-grid slds-wrap slds-gutters slds-m-top_small">
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <div class="info-item">
+                                    <span class="label">ABN Status:</span>
+                                    <span class="value">{businessInfo.abnStatus}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Entity Type:</span>
+                                    <span class="value">{businessInfo.entityType}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Goods & Services Tax (GST):</span>
+                                    <span class="value">{businessInfo.gstStatus}</span>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <div class="info-item">
+                                    <span class="label">Active Since:</span>
+                                    <span class="value">{businessInfo.activeSince}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="label">Main Business Location:</span>
+                                    <span class="value">{businessInfo.mainBusinessLocation}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
 
-            &lt;!-- Results Section --&gt;
-            &lt;template if:true={processingResult}&gt;
-                &lt;div class=&quot;slds-box slds-theme_default&quot;&gt;
-                    &lt;h2 class=&quot;slds-text-heading_medium slds-m-bottom_small&quot;&gt;Processing Results&lt;/h2&gt;
-                    &lt;lightning-formatted-rich-text value={processingResult}&gt;
-                    &lt;/lightning-formatted-rich-text&gt;
-                &lt;/div&gt;
-            &lt;/template&gt;
-
-            &lt;!-- Error Display --&gt;
-            &lt;template if:true={error}&gt;
-                &lt;div class=&quot;slds-notify slds-notify_alert slds-alert_error&quot; role=&quot;alert&quot;&gt;
-                    &lt;span class=&quot;slds-assistive-text&quot;&gt;error&lt;/span&gt;
-                    &lt;h2&gt;{error}&lt;/h2&gt;
-                &lt;/div&gt;
-            &lt;/template&gt;
-
-            &lt;!-- Loading Spinner --&gt;
-            &lt;template if:true={isProcessing}&gt;
-                &lt;lightning-spinner alternative-text=&quot;Processing&quot; size=&quot;medium&quot;&gt;
-                &lt;/lightning-spinner&gt;
-            &lt;/template&gt;
-        &lt;/div&gt;
-    &lt;/lightning-card&gt;
-&lt;/template&gt;
+            <template if:true={errorMessage}>
+                <div class="slds-m-top_medium">
+                    <div class="slds-notify slds-notify_alert slds-alert_error">
+                        <span class="slds-assistive-text">Error</span>
+                        <h2>{errorMessage}</h2>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
