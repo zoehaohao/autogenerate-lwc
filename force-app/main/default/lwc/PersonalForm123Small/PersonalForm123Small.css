@@ -1,0 +1,17 @@
+.slds-card__body_inner {
+    padding: 1rem;
+}
+
+.slds-form__row {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.slds-form__item {
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.slds-form__item:last-child {
+    margin-right: 0;
+}
