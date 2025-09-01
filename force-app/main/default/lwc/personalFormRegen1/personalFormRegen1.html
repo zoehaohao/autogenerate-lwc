@@ -1,0 +1,71 @@
+<template>
+    <div class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <span class="slds-text-heading_small">Personal Information Form</span>
+                    </h2>
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-form" role="list">
+                <div class="slds-form__row">
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element">
+                            <lightning-input 
+                                type="text" 
+                                label="First Name" 
+                                required
+                                value={firstName}
+                                onchange={handleFirstNameChange}>
+                            </lightning-input>
+                        </div>
+                    </div>
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element">
+                            <lightning-input 
+                                type="text" 
+                                label="Last Name" 
+                                required
+                                value={lastName}
+                                onchange={handleLastNameChange}>
+                            </lightning-input>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-form__row">
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element">
+                            <lightning-input 
+                                type="email" 
+                                label="Email" 
+                                required
+                                value={email}
+                                onchange={handleEmailChange}>
+                            </lightning-input>
+                        </div>
+                    </div>
+                    <div class="slds-form__item" role="listitem">
+                        <div class="slds-form-element">
+                            <lightning-input 
+                                type="tel" 
+                                label="Phone" 
+                                value={phone}
+                                onchange={handlePhoneChange}>
+                            </lightning-input>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-m-top_medium">
+                <lightning-button 
+                    label="Submit" 
+                    variant="brand"
+                    onclick={handleSubmit}>
+                </lightning-button>
+            </div>
+        </div>
+    </div>
+</template>
