@@ -1,0 +1,15 @@
+.slds-card__body_inner {
+    padding: 1rem;
+}
+
+.slds-form__row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -0.5rem;
+}
+
+.slds-form__item {
+    flex: 1 1 300px;
+    padding: 0.5rem;
+    min-width: 0;
+}
