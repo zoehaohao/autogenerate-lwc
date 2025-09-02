@@ -1,0 +1,63 @@
+<template>
+    <div class="slds-form-element">
+        <label if:true={label} class="slds-form-element__label">
+            <abbr if:true={required} class="slds-required" title="required">*</abbr>
+            {label}
+        </label>
+        <div class="slds-form-element__control">
+            <div class={getContainerClass}>
+                <div class={getDropdownClass} role="combobox">
+                    <div class={getComboboxClass} aria-expanded={isExpanded} aria-haspopup="listbox">
+                        <div class="slds-form-element__control">
+                            <lightning-input
+                                type="search"
+                                variant="label-hidden"
+                                placeholder={placeholder}
+                                value={searchTerm}
+                                onkeyup={handleKeyUp}
+                                onfocus={handleFocus}
+                                onblur={handleBlur}
+                                disabled={disabled}
+                                required={required}>
+                            </lightning-input>
+                        </div>
+                        <div if:true={selectedRecord} class="slds-pill_container">
+                            <lightning-pill 
+                                label={selectedRecord.label}
+                                onremove={handleRemove}>
+                                <lightning-icon 
+                                    icon-name={iconName} 
+                                    size="x-small">
+                                </lightning-icon>
+                            </lightning-pill>
+                        </div>
+                    </div>
+                    <div if:true={showDropdown} class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid">
+                        <ul class="slds-listbox slds-listbox_vertical" role="listbox">
+                            <template if:true={records} for:each={records} for:item="record">
+                                <li key={record.value} role="presentation" class="slds-listbox__item">
+                                    <div class="slds-media slds-listbox__option slds-listbox__option_entity"
+                                        onclick={handleSelect} data-value={record.value} role="option">
+                                        <span class="slds-media__figure">
+                                            <lightning-icon 
+                                                icon-name={iconName} 
+                                                size="small">
+                                            </lightning-icon>
+                                        </span>
+                                        <span class="slds-media__body">
+                                            <span class="slds-listbox__option-text">{record.label}</span>
+                                        </span>
+                                    </div>
+                                </li>
+                            </template>
+                            <div if:true={showNoResults} class="slds-text-align_center slds-p-around_small">
+                                No results found.
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div if:true={errorMessage} class="slds-form-element__help">{errorMessage}</div>
+    </div>
+</template>
