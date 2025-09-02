@@ -6,12 +6,12 @@ public with sharing class strandstestlwcv0Controller {
                 return new ResponseWrapper(false, 'Input text cannot be empty', null);
             }
 
-            // Process the input text (example: reverse it)
-            String processedText = inputText.reverse();
+            // Process the input text (example processing)
+            String processedText = 'Processed: ' + inputText.toUpperCase();
             
             return new ResponseWrapper(true, 'Success', processedText);
         } catch (Exception e) {
-            System.debug('Error processing data: ' + e.getMessage());
+            System.debug('Error in processData: ' + e.getMessage());
             return new ResponseWrapper(false, 'Error processing data: ' + e.getMessage(), null);
         }
     }

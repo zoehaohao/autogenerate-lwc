@@ -2,6 +2,7 @@ import { LightningElement, api, track } from 'lwc';
 import processData from '@salesforce/apex/strandstestlwcv0Controller.processData';
 
 export default class Strandstestlwcv0 extends LightningElement {
+    @api recordId;
     @track inputText = '';
     @track result;
     @track error;
@@ -23,31 +24,23 @@ export default class Strandstestlwcv0 extends LightningElement {
             if (response.success) {
                 this.result = response.data;
                 this.error = null;
-                
-                // Dispatch success event
                 this.dispatchEvent(new CustomEvent('success', {
                     detail: {
                         message: 'Data processed successfully',
                         data: response.data
-                    },
-                    bubbles: true,
-                    composed: true
+                    }
                 }));
             } else {
-                this.error = response.message || 'Unknown error occurred';
+                this.error = response.message;
                 this.result = null;
             }
         } catch (error) {
             this.error = error.message || 'An unexpected error occurred';
             this.result = null;
-            
-            // Dispatch error event
             this.dispatchEvent(new CustomEvent('error', {
                 detail: {
                     error: this.error
-                },
-                bubbles: true,
-                composed: true
+                }
             }));
         }
     }
