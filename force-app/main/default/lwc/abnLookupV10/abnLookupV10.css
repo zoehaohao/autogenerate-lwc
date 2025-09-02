@@ -1,0 +1,15 @@
+.slds-listbox__option-text_entity {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.slds-listbox__option-meta_entity {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: rgb(112, 110, 107);
+    font-size: 0.75rem;
+}
