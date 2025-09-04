@@ -1,21 +1,36 @@
-import { LightningElement, track } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import processData from '@salesforce/apex/Strandstestlwcv0Controller.processData';
 
 export default class Strandstestlwcv0 extends LightningElement {
-    @track inputValue = '';
+    @track inputText = '';
     @track result;
     @track error;
 
     handleInputChange(event) {
-        this.inputValue = event.target.value;
+        this.inputText = event.target.value;
     }
 
-    async handleSubmit() {
+    async handleClick() {
         try {
-            this.result = await processData({ input: this.inputValue });
+            this.result = undefined;
+            this.error = undefined;
+            
+            const response = await processData({ inputText: this.inputText });
+            if (response.success) {
+                this.result = response.message;
+                this.dispatchEvent(new CustomEvent('success', {
+                    detail: response
+                }));
+            } else {
+                throw new Error(response.message);
+            }
         } catch (error) {
             this.error = error.message;
-            console.error('Error processing data:', error);
+            this.dispatchEvent(new CustomEvent('error', {
+                detail: {
+                    error: this.error
+                }
+            }));
         }
     }
 }
