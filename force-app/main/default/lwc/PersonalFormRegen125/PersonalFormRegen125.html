@@ -1,0 +1,86 @@
+<template>
+    <div class="slds-card">
+        <div class="slds-card__header">
+            <h2 class="slds-card__header-title">
+                <span class="slds-text-heading_medium">Personal Information Form</span>
+            </h2>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-grid slds-wrap slds-gutters">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input 
+                        type="text" 
+                        label="First Name" 
+                        required
+                        value={firstName}
+                        onchange={handleFirstNameChange}>
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input 
+                        type="text" 
+                        label="Last Name" 
+                        required
+                        value={lastName}
+                        onchange={handleLastNameChange}>
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input 
+                        type="email" 
+                        label="Email" 
+                        required
+                        value={email}
+                        onchange={handleEmailChange}>
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input 
+                        type="tel" 
+                        label="Phone" 
+                        value={phone}
+                        onchange={handlePhoneChange}>
+                    </lightning-input>
+                </div>
+                <div class="slds-col slds-size_1-of-1">
+                    <lightning-textarea 
+                        label="Address"
+                        value={address}
+                        onchange={handleAddressChange}>
+                    </lightning-textarea>
+                </div>
+            </div>
+            <div class="slds-m-top_medium">
+                <lightning-button 
+                    variant="brand"
+                    label="Submit"
+                    onclick={handleSubmit}
+                    class="slds-m-right_x-small">
+                </lightning-button>
+                <lightning-button 
+                    label="Reset"
+                    onclick={handleReset}>
+                </lightning-button>
+            </div>
+        </div>
+        <template if:true={showToast}>
+            <div class={toastClass} role="alert">
+                <span class="slds-assistive-text">success</span>
+                <span class="slds-icon_container slds-icon-utility-success slds-m-right_x-small">
+                    <lightning-icon icon-name={toastIcon} size="x-small" variant="inverse"></lightning-icon>
+                </span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">{toastMessage}</h2>
+                </div>
+                <div class="slds-notify__close">
+                    <lightning-button-icon 
+                        icon-name="utility:close" 
+                        size="small" 
+                        variant="bare-inverse" 
+                        onclick={closeToast}>
+                    </lightning-button-icon>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>
