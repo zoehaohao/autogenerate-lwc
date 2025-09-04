@@ -1,17 +1,14 @@
 public with sharing class Strandstestlwcv0Controller {
     @AuraEnabled
-    public static ResponseWrapper processData(String inputText) {
+    public static ResponseWrapper processData(String input) {
         try {
-            if (String.isBlank(inputText)) {
-                return new ResponseWrapper(false, 'Input text cannot be empty', null);
-            }
+            // Add your business logic here
+            String processedResult = 'Processed: ' + input;
             
-            // Process the input text (example: convert to uppercase)
-            String processedText = inputText.toUpperCase();
-            
-            return new ResponseWrapper(true, 'Successfully processed: ' + processedText, processedText);
+            return new ResponseWrapper(true, 'Successfully processed data', processedResult);
         } catch (Exception e) {
-            return new ResponseWrapper(false, 'Error processing data: ' + e.getMessage(), null);
+            System.debug('Error: ' + e.getMessage());
+            return new ResponseWrapper(false, e.getMessage(), null);
         }
     }
     

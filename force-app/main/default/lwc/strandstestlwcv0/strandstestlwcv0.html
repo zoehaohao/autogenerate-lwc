@@ -1,7 +1,7 @@
 <template>
     <div class="slds-card">
         <div class="slds-card__header slds-grid">
-            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+            <header class="slds-media slds-media_center">
                 <div class="slds-media__body">
                     <h2 class="slds-card__header-title">
                         <span class="slds-text-heading_small">Strands Test Component</span>
@@ -10,29 +10,30 @@
             </header>
         </div>
         <div class="slds-card__body slds-card__body_inner">
-            <div class="slds-grid slds-wrap slds-gutters">
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
                     <lightning-input 
                         type="text" 
-                        label="Enter Text"
-                        value={inputText}
+                        label="Sample Input"
+                        value={inputValue}
                         onchange={handleInputChange}>
                     </lightning-input>
                 </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
-                    <lightning-button 
-                        label="Process Data" 
-                        variant="brand"
-                        onclick={handleClick}
-                        class="slds-m-top_medium">
-                    </lightning-button>
-                </div>
             </div>
-            <template if:true={result}>
-                <div class="slds-m-top_medium">
-                    <p class="slds-text-body_regular">Result: {result}</p>
+            <div class="slds-m-top_medium">
+                <lightning-button 
+                    label="Submit" 
+                    variant="brand"
+                    onclick={handleSubmit}>
+                </lightning-button>
+            </div>
+            {#if message}
+                <div class="slds-m-top_small">
+                    <div class={messageClass} role="alert">
+                        {message}
+                    </div>
                 </div>
-            </template>
+            {/if}
         </div>
     </div>
 </template>
