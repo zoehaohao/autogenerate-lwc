@@ -10,32 +10,35 @@
             </header>
         </div>
         <div class="slds-card__body slds-card__body_inner">
+            <template if:true={error}>
+                <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                    <span class="slds-assistive-text">error</span>
+                    <h2>{error}</h2>
+                </div>
+            </template>
+            
             <div class="slds-grid slds-wrap slds-gutters">
                 <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
                     <lightning-input 
-                        type="text" 
-                        label="Enter Text" 
-                        value={inputText}
+                        label="Input Value" 
+                        value={inputValue}
                         onchange={handleInputChange}>
                     </lightning-input>
                 </div>
                 <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
                     <lightning-button 
-                        label="Process Data" 
+                        label="Process Data"
                         variant="brand"
-                        onclick={handleClick}
+                        onclick={handleProcessData}
                         class="slds-m-top_medium">
                     </lightning-button>
                 </div>
             </div>
+
             <template if:true={result}>
-                <div class="slds-m-top_medium">
-                    <p class="slds-text-body_regular">Result: {result}</p>
-                </div>
-            </template>
-            <template if:true={error}>
-                <div class="slds-m-top_medium">
-                    <div class="slds-text-color_error">{error}</div>
+                <div class="slds-box slds-theme_default slds-m-top_medium">
+                    <p class="slds-text-heading_small">Result:</p>
+                    <p>{result}</p>
                 </div>
             </template>
         </div>
