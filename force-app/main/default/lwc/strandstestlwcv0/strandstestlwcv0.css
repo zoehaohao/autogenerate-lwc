@@ -1,3 +1,4 @@
 .slds-card__body_inner {
+    min-height: 100px;
     padding: 1rem;
 }

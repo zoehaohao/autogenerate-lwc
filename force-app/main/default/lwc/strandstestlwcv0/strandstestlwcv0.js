@@ -1,17 +1,19 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api } from 'lwc';
 import processData from '@salesforce/apex/strandstestlwcv0Controller.processData';
 
 export default class Strandstestlwcv0 extends LightningElement {
     @api recordId;
-    @track inputValue = '';
-    @track result;
-    @track error;
+    
+    inputValue = '';
+    result = '';
+    error = '';
+    isProcessing = false;
 
     handleInputChange(event) {
         this.inputValue = event.target.value;
-        this.error = null;
+        this.error = '';
         
-        // Dispatch change event to parent
+        // Notify parent of change
         this.dispatchEvent(new CustomEvent('valuechange', {
             detail: {
                 value: this.inputValue,
@@ -24,30 +26,28 @@ export default class Strandstestlwcv0 extends LightningElement {
         return this.inputValue && this.inputValue.length > 0;
     }
 
-    async handleProcessData() {
+    async handleClick() {
         if (!this.validateInput()) {
             this.error = 'Please enter a valid input';
             return;
         }
 
+        this.isProcessing = true;
+        this.error = '';
+        this.result = '';
+
         try {
-            const response = await processData({ inputData: this.inputValue });
-            if (response.success) {
-                this.result = response.data;
-                this.error = null;
-                
-                // Notify parent of success
-                this.dispatchEvent(new CustomEvent('success', {
-                    detail: {
-                        result: response.data
-                    }
-                }));
-            } else {
-                throw new Error(response.message);
-            }
+            const response = await processData({ inputString: this.inputValue });
+            this.result = response.message;
+            
+            // Notify parent of success
+            this.dispatchEvent(new CustomEvent('success', {
+                detail: {
+                    result: response
+                }
+            }));
         } catch (error) {
-            this.error = error.message || 'An error occurred while processing the data';
-            this.result = null;
+            this.error = error.body?.message || 'An error occurred while processing the request';
             
             // Notify parent of error
             this.dispatchEvent(new CustomEvent('error', {
@@ -55,13 +55,16 @@ export default class Strandstestlwcv0 extends LightningElement {
                     error: this.error
                 }
             }));
+        } finally {
+            this.isProcessing = false;
         }
     }
 
     @api
-    reset() {
+    resetComponent() {
         this.inputValue = '';
-        this.result = null;
-        this.error = null;
+        this.result = '';
+        this.error = '';
+        this.isProcessing = false;
     }
 }
