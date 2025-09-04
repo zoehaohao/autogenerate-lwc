@@ -14,7 +14,7 @@
                 <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
                     <lightning-input 
                         type="text" 
-                        label="Input Field" 
+                        label="Sample Input" 
                         value={inputValue}
                         onchange={handleInputChange}>
                     </lightning-input>
@@ -23,14 +23,15 @@
                     <lightning-button 
                         label="Submit" 
                         variant="brand"
-                        onclick={handleSubmit}
-                        class="slds-m-top_medium">
+                        onclick={handleSubmit}>
                     </lightning-button>
                 </div>
             </div>
-            <div if:true={result} class="slds-m-top_medium">
-                <p class="slds-text-body_regular">{result}</p>
-            </div>
+            <template if:true={result}>
+                <div class="slds-m-top_medium">
+                    <p class="slds-text-body_regular">{result}</p>
+                </div>
+            </template>
         </div>
     </div>
 </template>

@@ -1,1 +1,4 @@
-/* Custom styles can be added here if needed */
+.slds-card__body_inner {
+    min-height: 100px;
+    padding: 1rem;
+}

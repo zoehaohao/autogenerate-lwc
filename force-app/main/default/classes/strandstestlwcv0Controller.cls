@@ -1,30 +1,17 @@
-public with sharing class strandstestlwcv0Controller {
+public with sharing class Strandstestlwcv0Controller {
     @AuraEnabled
-    public static ResponseWrapper processData(String inputString) {
+    public static String processData(String input) {
         try {
-            if (String.isBlank(inputString)) {
-                throw new AuraHandledException('Input string cannot be empty');
+            if (String.isBlank(input)) {
+                throw new AuraHandledException('Input cannot be blank');
             }
-
-            // Process the input string (example processing)
-            String processedResult = 'Processed: ' + inputString.toUpperCase();
-
-            return new ResponseWrapper(true, processedResult, null);
+            
+            // Process the input (example implementation)
+            String processedResult = 'Processed: ' + input;
+            
+            return processedResult;
         } catch (Exception e) {
-            System.debug('Error in processData: ' + e.getMessage());
             throw new AuraHandledException(e.getMessage());
-        }
-    }
-
-    public class ResponseWrapper {
-        @AuraEnabled public Boolean success;
-        @AuraEnabled public String message;
-        @AuraEnabled public Object data;
-
-        public ResponseWrapper(Boolean success, String message, Object data) {
-            this.success = success;
-            this.message = message;
-            this.data = data;
         }
     }
 }
