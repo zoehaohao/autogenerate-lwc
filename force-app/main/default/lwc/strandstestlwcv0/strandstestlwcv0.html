@@ -1,7 +1,7 @@
 <template>
     <div class="slds-card">
         <div class="slds-card__header slds-grid">
-            <header class="slds-media slds-media_center">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
                 <div class="slds-media__body">
                     <h2 class="slds-card__header-title">
                         <span class="slds-text-heading_small">Strands Test Component</span>
@@ -10,36 +10,27 @@
             </header>
         </div>
         <div class="slds-card__body slds-card__body_inner">
-            <template if:true={error}>
-                <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
-                    <span class="slds-assistive-text">error</span>
-                    <h2>{error}</h2>
-                </div>
-            </template>
-            
             <div class="slds-grid slds-wrap slds-gutters">
                 <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
                     <lightning-input 
-                        label="Input Value" 
+                        type="text" 
+                        label="Input Field" 
                         value={inputValue}
                         onchange={handleInputChange}>
                     </lightning-input>
                 </div>
                 <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
                     <lightning-button 
-                        label="Process Data" 
+                        label="Submit" 
                         variant="brand"
-                        onclick={handleClick}
-                        disabled={isProcessing}>
+                        onclick={handleSubmit}
+                        class="slds-m-top_medium">
                     </lightning-button>
                 </div>
             </div>
-            
-            <template if:true={result}>
-                <div class="slds-m-top_medium">
-                    <p class="slds-text-heading_small">Result: {result}</p>
-                </div>
-            </template>
+            <div if:true={result} class="slds-m-top_medium">
+                <p class="slds-text-body_regular">{result}</p>
+            </div>
         </div>
     </div>
 </template>
