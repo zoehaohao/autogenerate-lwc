@@ -1,4 +1,22 @@
-.slds-listbox {
+:host {
+    position: relative;
+    display: block;
+}
+
+.slds-listbox__option-text_entity {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.slds-listbox__option-meta {
+    display: block;
+    font-size: 0.75rem;
+    color: #706e6b;
+}
+
+.slds-dropdown {
     max-height: 300px;
     overflow-y: auto;
 }
