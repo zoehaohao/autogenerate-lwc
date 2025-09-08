@@ -1,4 +1,7 @@
-.slds-card__body_inner {
-    min-height: 100px;
-    padding: 1rem;
+.slds-m-top_medium {
+    margin-top: 1rem;
+}
+
+.slds-m-right_x-small {
+    margin-right: 0.5rem;
 }

@@ -1,31 +1,36 @@
 import { LightningElement, api, track } from 'lwc';
-import processData from '@salesforce/apex/Strandstestlwcv0Controller.processData';
+import processData from '@salesforce/apex/StrandstestlwcV0Controller.processData';
 
 export default class Strandstestlwcv0 extends LightningElement {
-    @track inputValue = '';
-    @track message = '';
-    @track messageClass = '';
+    @track inputText = '';
+    @track result;
+    @track error;
 
     handleInputChange(event) {
-        this.inputValue = event.target.value;
+        this.inputText = event.target.value;
     }
 
-    async handleSubmit() {
-        if (!this.inputValue) {
-            this.showMessage('Please enter a value', 'slds-text-color_error');
+    async handleClick() {
+        if (!this.inputText) {
             return;
         }
 
         try {
-            const result = await processData({ input: this.inputValue });
-            this.showMessage(result.message, 'slds-text-color_success');
+            this.result = await processData({ input: this.inputText });
         } catch (error) {
-            this.showMessage(error.body?.message || 'An error occurred', 'slds-text-color_error');
+            this.error = error.message;
+            console.error('Error processing data:', error);
         }
     }
 
-    showMessage(msg, cssClass) {
-        this.message = msg;
-        this.messageClass = cssClass;
+    handleClear() {
+        this.inputText = '';
+        this.result = null;
+        this.error = null;
+    }
+
+    @api
+    refresh() {
+        this.handleClear();
     }
 }

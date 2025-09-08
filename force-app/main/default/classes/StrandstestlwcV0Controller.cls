@@ -2,15 +2,12 @@ public with sharing class StrandstestlwcV0Controller {
     @AuraEnabled
     public static String processData(String input) {
         try {
-            // Basic input validation
             if (String.isBlank(input)) {
-                throw new AuraHandledException('Input cannot be empty');
+                throw new AuraHandledException('Input cannot be blank');
             }
             
-            // Process the input (example implementation)
-            String processedResult = 'Processed: ' + input;
-            
-            return processedResult;
+            // Process the input - for demo just reverse it
+            return input.reverse();
             
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
