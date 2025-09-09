@@ -6,24 +6,21 @@
                 value={inputText}
                 onchange={handleInputChange}>
             </lightning-input>
-            
             <div class="slds-m-top_small">
                 <lightning-button 
-                    label="Process" 
+                    label="Process Text"
                     variant="brand"
-                    onclick={handleClick}
-                    class="slds-m-right_x-small">
-                </lightning-button>
-                
-                <lightning-button 
-                    label="Clear" 
-                    onclick={handleClear}>
+                    onclick={handleClick}>
                 </lightning-button>
             </div>
-
             <template if:true={result}>
                 <div class="slds-m-top_medium">
-                    <p>Result: {result}</p>
+                    <p>Processed Result: {result}</p>
+                </div>
+            </template>
+            <template if:true={error}>
+                <div class="slds-m-top_medium">
+                    <div class="slds-text-color_error">{error}</div>
                 </div>
             </template>
         </div>

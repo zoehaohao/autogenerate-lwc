@@ -1,15 +1,14 @@
-public with sharing class Strandstestlwcv0Controller {
+public with sharing class strandstestlwcv0Controller {
     @AuraEnabled
-    public static String processData(String input) {
+    public static String processText(String inputText) {
         try {
-            if (String.isBlank(input)) {
-                throw new AuraHandledException('Input cannot be blank');
+            if (String.isBlank(inputText)) {
+                throw new AuraHandledException('Input text cannot be blank');
             }
             
-            // Process the input (example implementation)
-            String processedResult = 'Processed: ' + input;
+            // Simple processing - reverse the input text
+            return inputText.reverse();
             
-            return processedResult;
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }

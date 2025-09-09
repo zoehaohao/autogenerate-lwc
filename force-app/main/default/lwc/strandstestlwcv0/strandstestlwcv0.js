@@ -1,5 +1,5 @@
-import { LightningElement, api, track } from 'lwc';
-import processData from '@salesforce/apex/StrandstestlwcV0Controller.processData';
+import { LightningElement, track } from 'lwc';
+import processText from '@salesforce/apex/strandstestlwcv0Controller.processText';
 
 export default class Strandstestlwcv0 extends LightningElement {
     @track inputText = '';
@@ -8,29 +8,22 @@ export default class Strandstestlwcv0 extends LightningElement {
 
     handleInputChange(event) {
         this.inputText = event.target.value;
+        this.result = undefined;
+        this.error = undefined;
     }
 
     async handleClick() {
         if (!this.inputText) {
+            this.error = 'Please enter some text';
             return;
         }
 
         try {
-            this.result = await processData({ input: this.inputText });
+            this.result = await processText({ inputText: this.inputText });
+            this.error = undefined;
         } catch (error) {
-            this.error = error.message;
-            console.error('Error processing data:', error);
+            this.error = error.body.message;
+            this.result = undefined;
         }
-    }
-
-    handleClear() {
-        this.inputText = '';
-        this.result = null;
-        this.error = null;
-    }
-
-    @api
-    refresh() {
-        this.handleClear();
     }
 }
