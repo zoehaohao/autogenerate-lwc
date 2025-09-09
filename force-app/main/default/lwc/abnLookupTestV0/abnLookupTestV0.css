@@ -3,11 +3,6 @@
     cursor: pointer;
 }
 
-.slds-combobox__input {
-    transition: border-color 0.1s linear;
-}
-
-.slds-combobox__input:focus {
-    border-color: rgb(1, 118, 211);
-    box-shadow: 0 0 3px #0176d3;
+.slds-listbox__option.selected {
+    background-color: #ecebea;
 }

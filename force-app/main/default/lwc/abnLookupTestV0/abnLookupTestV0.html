@@ -1,6 +1,8 @@
 <template>
     <div class="slds-form-element">
-        <label class="slds-form-element__label" for="combobox">{label}</label>
+        <label if:true={label} class="slds-form-element__label" for="combobox">
+            {label}
+        </label>
         <div class="slds-form-element__control">
             <div class="slds-combobox_container">
                 <div class={comboboxClass} aria-expanded={isExpanded} aria-haspopup="listbox" role="combobox">
@@ -9,43 +11,27 @@
                                class="slds-input slds-combobox__input"
                                id="combobox"
                                aria-controls="listbox"
-                               aria-describedby="combobox-help-text"
                                autocomplete="off"
                                role="textbox"
                                placeholder={placeholder}
                                value={searchTerm}
                                onkeyup={handleKeyUp}
                                onfocus={handleFocus}
-                               onblur={handleBlur}
-                        />
+                               onblur={handleBlur}/>
                         <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right">
-                            <lightning-icon icon-name="utility:search" size="x-small"></lightning-icon>
+                            <lightning-icon icon-name="utility:search" size="x-small" class="slds-icon-text-default"></lightning-icon>
                         </span>
                     </div>
-                    <div class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid" role="listbox" id="listbox">
+                    <div id="listbox" role="listbox" class={listboxClass}>
                         <ul class="slds-listbox slds-listbox_vertical" role="presentation">
-                            <template if:true={showResults}>
-                                <template for:each={results} for:item="result">
-                                    <li key={result.id} role="presentation" class="slds-listbox__item">
-                                        <div class="slds-media slds-listbox__option slds-listbox__option_entity"
-                                             role="option"
-                                             onclick={handleResultClick}
-                                             data-id={result.id}
-                                             data-name={result.name}>
-                                            <span class="slds-media__body">
-                                                <span class="slds-listbox__option-text slds-listbox__option-text_entity">
-                                                    {result.name}
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </li>
-                                </template>
-                            </template>
-                            <template if:true={showNoResults}>
-                                <li role="presentation" class="slds-listbox__item">
-                                    <div class="slds-media slds-listbox__option" role="option">
+                            <template for:each={filteredOptions} for:item="option">
+                                <li key={option.value} role="presentation" class="slds-listbox__item">
+                                    <div class="slds-media slds-listbox__option slds-listbox__option_plain"
+                                         role="option"
+                                         onclick={handleOptionSelect}
+                                         data-value={option.value}>
                                         <span class="slds-media__body">
-                                            No results found.
+                                            <span class="slds-truncate">{option.label}</span>
                                         </span>
                                     </div>
                                 </li>
