@@ -1,58 +1,13 @@
-.result-card {
-    transition: box-shadow 0.2s ease;
-    min-height: 120px;
+.slds-listbox__option:hover {
+    background-color: #f3f2f2;
+    cursor: pointer;
 }
 
-.result-card:hover {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.slds-combobox__input {
+    transition: border-color 0.1s linear;
 }
 
-.selected-entity-display {
-    background-color: #f3f3f3;
-    border-left: 4px solid #1589ee;
-}
-
-.search-button {
-    min-width: 120px;
-}
-
-@media (max-width: 767px) {
-    .search-button {
-        width: 100%;
-        margin-top: 0.5rem;
-    }
-    
-    .result-card {
-        margin-bottom: 1rem;
-    }
-    
-    .slds-button-group {
-        flex-wrap: wrap;
-        gap: 0.25rem;
-    }
-    
-    .slds-button-group .slds-button {
-        min-width: 44px;
-        min-height: 44px;
-    }
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-    .result-card {
-        min-height: 140px;
-    }
-}
-
-@media (min-width: 1024px) {
-    .result-card {
-        min-height: 130px;
-    }
-}
-
-.slds-grid.slds-gutters {
-    margin: -0.5rem;
-}
-
-.slds-grid.slds-gutters > .slds-col {
-    padding: 0.5rem;
+.slds-combobox__input:focus {
+    border-color: rgb(1, 118, 211);
+    box-shadow: 0 0 3px #0176d3;
 }
