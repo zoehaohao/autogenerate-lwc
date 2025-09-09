@@ -1,0 +1,61 @@
+<template>
+    <div class="slds-form-element">
+        <label class="slds-form-element__label" for="lookup-input">{label}</label>
+        <div class="slds-form-element__control">
+            <div class="slds-combobox_container">
+                <div class={comboboxClass} aria-expanded={isExpanded} aria-haspopup="listbox" role="combobox">
+                    <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                        <input
+                            type="text"
+                            class="slds-input slds-combobox__input"
+                            id="lookup-input"
+                            aria-autocomplete="list"
+                            aria-controls="lookup-listbox"
+                            autocomplete="off"
+                            role="textbox"
+                            placeholder={placeholder}
+                            value={searchTerm}
+                            onkeyup={handleKeyUp}
+                            onfocus={handleFocus}
+                            onblur={handleBlur}
+                        />
+                        <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right">
+                            <lightning-icon 
+                                icon-name="utility:search" 
+                                size="x-small" 
+                                class="slds-icon slds-icon_x-small">
+                            </lightning-icon>
+                        </span>
+                    </div>
+                    <div id="lookup-listbox" class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
+                        <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                            <template if:true={results.length}>
+                                <template for:each={results} for:item="result">
+                                    <li key={result.id} role="presentation" class="slds-listbox__item">
+                                        <div class="slds-media slds-listbox__option slds-listbox__option_entity" 
+                             role="option"
+                             onclick={handleResultClick}
+                             data-id={result.id}>
+                                            <span class="slds-media__body">
+                                                <span class="slds-listbox__option-text slds-listbox__option-text_entity">
+                                                    {result.name}
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </li>
+                                </template>
+                            </template>
+                            <template if:true={noResults}>
+                                <li class="slds-listbox__item">
+                                    <div class="slds-media slds-listbox__option" role="option">
+                                        <span class="slds-media__body">No results found</span>
+                                    </div>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
