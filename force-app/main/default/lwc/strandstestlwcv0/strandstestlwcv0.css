@@ -1,4 +1,7 @@
-.slds-card {
-    background: #ffffff;
-    border-radius: 0.25rem;
+.slds-m-top_medium {
+    margin-top: 1rem;
+}
+
+.slds-text-color_error {
+    color: rgb(194, 57, 52);
 }

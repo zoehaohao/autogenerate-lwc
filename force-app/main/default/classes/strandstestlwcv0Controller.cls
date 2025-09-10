@@ -1,13 +1,15 @@
 public with sharing class strandstestlwcv0Controller {
-    @AuraEnabled
-    public static String processText(String inputText) {
+    @AuraEnabled(cacheable=false)
+    public static String processData(String formData) {
         try {
-            if (String.isBlank(inputText)) {
-                throw new AuraHandledException('Input text cannot be blank');
+            if (String.isBlank(formData)) {
+                throw new AuraHandledException('Input data cannot be empty');
             }
             
-            // Simple processing - reverse the input text
-            return inputText.reverse();
+            // Simple processing - reverse the string and make it uppercase
+            String processedData = formData.reverse().toUpperCase();
+            
+            return processedData;
             
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
