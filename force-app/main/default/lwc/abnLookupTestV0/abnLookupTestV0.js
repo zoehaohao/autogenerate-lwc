@@ -1,88 +1,100 @@
-import { LightningElement, api } from 'lwc';
-
-const DELAY = 300;
+import { LightningElement, api, track } from 'lwc';
 
 export default class AbnLookupTestV0 extends LightningElement {
-    @api label = 'Search';
     @api placeholder = 'Search...';
-    @api iconName = 'standard:account';
-    @api minSearchTermLength = 2;
+    @api label = 'Search';
+    @api required = false;
+    @api messageWhenInvalidValue = 'Please select a valid value';
+    
+    @track searchTerm = '';
+    @track searchResults = [];
+    @track showResults = false;
+    @track selectedValue;
+    @track selectedName;
 
-    searchTerm = '';
-    results = [];
-    showSpinner = false;
-    isExpanded = false;
-    delayTimeout;
-
-    get getComboboxClass() {
-        return `slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click ${
-            this.isExpanded ? 'slds-is-open' : ''
-        }`;
-    }
-
-    get getListboxClass() {
-        return `slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid`;
-    }
-
-    get noResults() {
-        return !this.showSpinner && this.results.length === 0 && this.searchTerm.length >= this.minSearchTermLength;
-    }
+    // Mock data for testing - replace with actual data source
+    mockData = [
+        { id: '1', name: 'Test Record 1' },
+        { id: '2', name: 'Test Record 2' },
+        { id: '3', name: 'Another Record' }
+    ];
 
     handleKeyUp(event) {
-        const searchTerm = event.target.value;
-        this.searchTerm = searchTerm;
-
-        if (this.delayTimeout) {
-            clearTimeout(this.delayTimeout);
+        this.searchTerm = event.target.value;
+        
+        // Minimum 2 characters to search
+        if (this.searchTerm.length < 2) {
+            this.searchResults = [];
+            this.showResults = false;
+            return;
         }
 
-        if (searchTerm.length >= this.minSearchTermLength) {
-            this.showSpinner = true;
-            this.isExpanded = true;
+        // Filter mock data - replace with actual search logic
+        this.searchResults = this.mockData.filter(item => 
+            item.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+        );
+        this.showResults = true;
+    }
 
-            this.delayTimeout = setTimeout(() => {
-                // Simulate API call with mock data
-                this.results = [
-                    { id: '1', name: 'Test Account 1' },
-                    { id: '2', name: 'Test Account 2' },
-                    { id: '3', name: 'Test Account 3' }
-                ].filter(item => 
-                    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-                );
-                this.showSpinner = false;
-            }, DELAY);
-        } else {
-            this.results = [];
-            this.isExpanded = false;
-        }
+    handleClick() {
+        this.showResults = true;
+    }
+
+    handleBlur() {
+        // Using setTimeout to allow click events to fire on results first
+        window.setTimeout(() => {
+            this.showResults = false;
+        }, 300);
     }
 
     handleResultClick(event) {
         const selectedId = event.currentTarget.dataset.id;
         const selectedName = event.currentTarget.dataset.name;
+        
+        this.selectedValue = selectedId;
+        this.selectedName = selectedName;
+        this.searchTerm = selectedName;
+        this.showResults = false;
 
-        this.dispatchEvent(new CustomEvent('select', {
+        // Dispatch selection event
+        this.dispatchEvent(new CustomEvent('selection', {
             detail: {
                 id: selectedId,
                 name: selectedName
             }
         }));
-
-        this.searchTerm = selectedName;
-        this.isExpanded = false;
-        this.results = [];
     }
 
-    handleFocus() {
-        if (this.searchTerm.length >= this.minSearchTermLength) {
-            this.isExpanded = true;
+    @api
+    isValid() {
+        if (this.required && !this.selectedValue) {
+            return false;
         }
+        return true;
     }
 
-    handleBlur() {
-        // Add delay to allow click event on results
-        setTimeout(() => {
-            this.isExpanded = false;
-        }, 300);
+    @api
+    reportValidity() {
+        const isValid = this.isValid();
+        if (!isValid) {
+            // Show error message
+            this.dispatchEvent(
+                new CustomEvent('error', {
+                    detail: {
+                        message: this.messageWhenInvalidValue
+                    }
+                })
+            );
+        }
+        return isValid;
+    }
+
+    @api
+    reset() {
+        this.searchTerm = '';
+        this.selectedValue = null;
+        this.selectedName = null;
+        this.searchResults = [];
+        this.showResults = false;
     }
 }

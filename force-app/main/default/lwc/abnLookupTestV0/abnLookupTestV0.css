@@ -3,7 +3,11 @@
     cursor: pointer;
 }
 
-.slds-dropdown {
-    max-height: 300px;
-    overflow-y: auto;
+.slds-combobox__input {
+    transition: border .1s linear, background-color .1s linear;
+}
+
+.slds-combobox__input:focus {
+    border-color: #1589ee;
+    box-shadow: 0 0 3px #0070D2;
 }
