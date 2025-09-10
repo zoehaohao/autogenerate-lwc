@@ -1,36 +1,29 @@
 <template>
-    <div class="slds-card">
-        <div class="slds-card__header slds-grid">
-            <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                <div class="slds-media__body">
-                    <h2 class="slds-card__header-title">
-                        <span class="slds-text-heading_small">Test Regeneration V0</span>
-                    </h2>
-                </div>
-            </header>
-        </div>
-        <div class="slds-card__body slds-card__body_inner">
-            <div class="slds-grid slds-gutters slds-wrap">
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
-                    <lightning-input 
-                        label="Sample Input" 
-                        type="text"
-                        value={inputValue}
-                        onchange={handleInputChange}>
-                    </lightning-input>
-                </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
-                    <lightning-button 
-                        label="Process" 
-                        variant="brand"
-                        onclick={handleClick}
-                        class="slds-m-top_medium">
-                    </lightning-button>
-                </div>
+    <lightning-card title="Test Regeneration V0" icon-name="standard:search">
+        <div class="slds-m-around_medium">
+            <lightning-input 
+                label="Search Input" 
+                value={searchTerm}
+                onchange={handleSearchTermChange}>
+            </lightning-input>
+            
+            <div class="slds-m-top_small">
+                <lightning-button 
+                    label="Search" 
+                    variant="brand"
+                    onclick={handleSearch}>
+                </lightning-button>
             </div>
-            <div class="slds-m-top_medium">
-                {outputMessage}
-            </div>
+
+            <template if:true={results}>
+                <div class="slds-m-top_medium">
+                    <template for:each={results} for:item="result">
+                        <div key={result.id} class="slds-m-bottom_small">
+                            {result.name}
+                        </div>
+                    </template>
+                </div>
+            </template>
         </div>
-    </div>
+    </lightning-card>
 </template>

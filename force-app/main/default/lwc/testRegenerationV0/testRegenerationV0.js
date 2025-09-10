@@ -1,39 +1,23 @@
-import { LightningElement, api, track } from 'lwc';
-import processData from '@salesforce/apex/testRegenerationV0Controller.processData';
+import { LightningElement, track } from 'lwc';
+import search from '@salesforce/apex/testRegenerationV0Controller.search';
 
 export default class TestRegenerationV0 extends LightningElement {
-    @api recordId;
-    @track inputValue = '';
-    @track outputMessage = '';
+    @track searchTerm = '';
+    @track results;
     
-    handleInputChange(event) {
-        this.inputValue = event.target.value;
+    handleSearchTermChange(event) {
+        this.searchTerm = event.target.value;
     }
     
-    async handleClick() {
-        try {
-            const result = await processData({ formData: this.inputValue });
-            if (result.success) {
-                this.outputMessage = result.message;
-                this.dispatchEvent(new CustomEvent('success', {
-                    detail: {
-                        message: result.message
-                    }
-                }));
-            } else {
-                this.handleError(result.message);
-            }
-        } catch (error) {
-            this.handleError(error.body?.message || 'An error occurred while processing the request');
+    handleSearch() {
+        if (this.searchTerm) {
+            search({ searchTerm: this.searchTerm })
+                .then(result => {
+                    this.results = result;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         }
-    }
-    
-    handleError(message) {
-        this.outputMessage = `Error: ${message}`;
-        this.dispatchEvent(new CustomEvent('error', {
-            detail: {
-                message: message
-            }
-        }));
     }
 }

@@ -1,7 +1,15 @@
-.slds-card__body_inner {
-    padding: 1rem;
+.slds-m-around_medium {
+    margin: 1rem;
 }
 
-lightning-button {
-    display: block;
+.slds-m-top_small {
+    margin-top: 0.75rem;
+}
+
+.slds-m-top_medium {
+    margin-top: 1rem;
+}
+
+.slds-m-bottom_small {
+    margin-bottom: 0.75rem;
 }
