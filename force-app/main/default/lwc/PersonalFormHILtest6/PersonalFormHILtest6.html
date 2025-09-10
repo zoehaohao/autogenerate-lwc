@@ -1,0 +1,46 @@
+<template>
+    <div class="slds-p-around_medium">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_small">
+                <lightning-input 
+                    type="text" 
+                    label="First Name"
+                    value={firstName}
+                    onchange={handleFirstNameChange}>
+                </lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_small">
+                <lightning-input 
+                    type="text" 
+                    label="Last Name"
+                    value={lastName}
+                    onchange={handleLastNameChange}>
+                </lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_small">
+                <lightning-input 
+                    type="email" 
+                    label="Email"
+                    value={email}
+                    onchange={handleEmailChange}>
+                </lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_small">
+                <lightning-input 
+                    type="phone" 
+                    label="Phone"
+                    value={phone}
+                    onchange={handlePhoneChange}>
+                </lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-p-around_small">
+                <lightning-button 
+                    label="Submit" 
+                    variant="brand"
+                    onclick={handleSubmit}
+                    class="slds-m-top_small">
+                </lightning-button>
+            </div>
+        </div>
+    </div>
+</template>
