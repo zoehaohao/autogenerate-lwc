@@ -1,0 +1,45 @@
+<template>
+    <div class="slds-card slds-p-around_medium">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_small">
+                <lightning-input 
+                    label="First Name" 
+                    type="text"
+                    name="firstName"
+                    onchange={handleInputChange}>
+                </lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_small">
+                <lightning-input 
+                    label="Last Name" 
+                    type="text"
+                    name="lastName"
+                    onchange={handleInputChange}>
+                </lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_small">
+                <lightning-input 
+                    label="Email" 
+                    type="email"
+                    name="email"
+                    onchange={handleInputChange}>
+                </lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-p-around_small">
+                <lightning-input 
+                    label="Phone" 
+                    type="tel"
+                    name="phone"
+                    onchange={handleInputChange}>
+                </lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-1 slds-p-around_small">
+                <lightning-button 
+                    label="Submit"
+                    variant="brand"
+                    onclick={handleSubmit}>
+                </lightning-button>
+            </div>
+        </div>
+    </div>
+</template>
