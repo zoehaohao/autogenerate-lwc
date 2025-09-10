@@ -1,0 +1,9 @@
+/* Custom styles */
+:host {
+    display: block;
+    margin: 1rem;
+}
+
+.slds-card__body_inner {
+    padding: 1rem;
+}
