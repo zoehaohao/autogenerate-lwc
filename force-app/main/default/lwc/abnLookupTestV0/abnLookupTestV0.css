@@ -3,6 +3,7 @@
     cursor: pointer;
 }
 
-.slds-listbox__option.selected {
-    background-color: #ecebea;
+.slds-dropdown {
+    max-height: 300px;
+    overflow-y: auto;
 }

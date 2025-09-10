@@ -1,76 +1,88 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api } from 'lwc';
+
+const DELAY = 300;
 
 export default class AbnLookupTestV0 extends LightningElement {
     @api label = 'Search';
     @api placeholder = 'Search...';
-    @api options = [];
-    
-    @track searchTerm = '';
-    @track isExpanded = false;
+    @api iconName = 'standard:account';
+    @api minSearchTermLength = 2;
 
-    get comboboxClass() {
+    searchTerm = '';
+    results = [];
+    showSpinner = false;
+    isExpanded = false;
+    delayTimeout;
+
+    get getComboboxClass() {
         return `slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click ${
             this.isExpanded ? 'slds-is-open' : ''
         }`;
     }
 
-    get listboxClass() {
-        return `slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid ${
-            this.isExpanded ? 'slds-show' : 'slds-hide'
-        }`;
+    get getListboxClass() {
+        return `slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid`;
     }
 
-    get filteredOptions() {
-        if (!this.searchTerm) {
-            return this.options;
-        }
-        const loweredSearchTerm = this.searchTerm.toLowerCase();
-        return this.options.filter(option =>
-            option.label.toLowerCase().includes(loweredSearchTerm)
-        );
+    get noResults() {
+        return !this.showSpinner && this.results.length === 0 && this.searchTerm.length >= this.minSearchTermLength;
     }
 
     handleKeyUp(event) {
-        this.searchTerm = event.target.value;
-        this.isExpanded = true;
-        this.dispatchEvent(new CustomEvent('search', {
-            detail: {
-                searchTerm: this.searchTerm
-            }
-        }));
-    }
+        const searchTerm = event.target.value;
+        this.searchTerm = searchTerm;
 
-    handleFocus() {
-        this.isExpanded = true;
-    }
+        if (this.delayTimeout) {
+            clearTimeout(this.delayTimeout);
+        }
 
-    handleBlur() {
-        // Use setTimeout to allow click events to fire before closing
-        setTimeout(() => {
+        if (searchTerm.length >= this.minSearchTermLength) {
+            this.showSpinner = true;
+            this.isExpanded = true;
+
+            this.delayTimeout = setTimeout(() => {
+                // Simulate API call with mock data
+                this.results = [
+                    { id: '1', name: 'Test Account 1' },
+                    { id: '2', name: 'Test Account 2' },
+                    { id: '3', name: 'Test Account 3' }
+                ].filter(item => 
+                    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+                this.showSpinner = false;
+            }, DELAY);
+        } else {
+            this.results = [];
             this.isExpanded = false;
-        }, 300);
-    }
-
-    handleOptionSelect(event) {
-        const selectedValue = event.currentTarget.dataset.value;
-        const selectedOption = this.options.find(option => option.value === selectedValue);
-        
-        if (selectedOption) {
-            this.searchTerm = selectedOption.label;
-            this.isExpanded = false;
-            
-            this.dispatchEvent(new CustomEvent('select', {
-                detail: {
-                    value: selectedValue,
-                    label: selectedOption.label
-                }
-            }));
         }
     }
 
-    @api
-    clearSelection() {
-        this.searchTerm = '';
+    handleResultClick(event) {
+        const selectedId = event.currentTarget.dataset.id;
+        const selectedName = event.currentTarget.dataset.name;
+
+        this.dispatchEvent(new CustomEvent('select', {
+            detail: {
+                id: selectedId,
+                name: selectedName
+            }
+        }));
+
+        this.searchTerm = selectedName;
         this.isExpanded = false;
+        this.results = [];
+    }
+
+    handleFocus() {
+        if (this.searchTerm.length >= this.minSearchTermLength) {
+            this.isExpanded = true;
+        }
+    }
+
+    handleBlur() {
+        // Add delay to allow click event on results
+        setTimeout(() => {
+            this.isExpanded = false;
+        }, 300);
     }
 }
