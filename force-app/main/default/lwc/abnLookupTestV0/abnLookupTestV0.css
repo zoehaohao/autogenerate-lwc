@@ -1,29 +1,12 @@
-.slds-combobox {
-    position: relative;
+.slds-listbox__option-text_entity {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
 }
 
-.slds-combobox__form-element {
-    position: relative;
-}
-
-.slds-dropdown {
-    position: absolute;
-    z-index: 7000;
-    background: white;
-    border: 1px solid #dddbda;
-    border-radius: 0.25rem;
-    padding: 0.25rem 0;
+.slds-listbox__option-meta_entity {
     font-size: 0.75rem;
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-.slds-dropdown_fluid {
-    min-width: 100%;
-    width: 100%;
-}
-
-.slds-listbox__option:hover {
-    background-color: #f3f2f2;
-    cursor: pointer;
+    color: #706e6b;
 }
