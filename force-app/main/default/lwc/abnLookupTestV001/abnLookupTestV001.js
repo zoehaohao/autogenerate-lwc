@@ -1,86 +1,47 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, track } from 'lwc';
 
 export default class AbnLookupTestV001 extends LightningElement {
-    @api label = 'Lookup Test';
-    @api placeholder = 'Search...';
-    @api minSearchTermLength = 2;
-    
     @track searchTerm = '';
-    @track results = [];
-    @track isDropdownOpen = false;
-    @track isLoading = false;
+    @track searchResults = [];
+    @track name = '';
 
-    get showResults() {
-        return this.results.length > 0 && this.isDropdownOpen;
-    }
-
-    get noResults() {
-        return this.results.length === 0 && this.isDropdownOpen && !this.isLoading;
-    }
-
-    get dropdownClass() {
-        return `slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid ${this.isDropdownOpen ? 'slds-is-open' : ''}`;
+    handleNameChange(event) {
+        this.name = event.target.value;
+        // Dispatch name change event
+        this.dispatchEvent(new CustomEvent('namechange', {
+            detail: {
+                value: this.name
+            }
+        }));
     }
 
     handleKeyUp(event) {
-        const searchTerm = event.target.value;
-        this.searchTerm = searchTerm;
-
-        if (searchTerm.length >= this.minSearchTermLength) {
-            this.isLoading = true;
-            this.performSearch(searchTerm);
+        this.searchTerm = event.target.value;
+        
+        // Mock search results for demonstration
+        if (this.searchTerm) {
+            this.searchResults = [
+                { Id: '1', Name: 'Result 1' },
+                { Id: '2', Name: 'Result 2' },
+                { Id: '3', Name: 'Result 3' }
+            ];
         } else {
-            this.results = [];
-            this.isDropdownOpen = false;
+            this.searchResults = [];
         }
-    }
-
-    handleFocus() {
-        if (this.searchTerm.length >= this.minSearchTermLength) {
-            this.isDropdownOpen = true;
-        }
-    }
-
-    handleBlur() {
-        // Using setTimeout to allow click events to fire before closing dropdown
-        setTimeout(() => {
-            this.isDropdownOpen = false;
-        }, 300);
     }
 
     handleResultClick(event) {
         const selectedId = event.currentTarget.dataset.id;
-        const selectedResult = this.results.find(result => result.id === selectedId);
+        const selectedResult = this.searchResults.find(result => result.Id === selectedId);
         
         if (selectedResult) {
-            this.dispatchEvent(new CustomEvent('select', {
-                detail: {
-                    id: selectedResult.id,
-                    name: selectedResult.name,
-                    record: selectedResult
-                }
-            }));
+            this.searchTerm = selectedResult.Name;
+            this.searchResults = [];
             
-            this.searchTerm = selectedResult.name;
-            this.isDropdownOpen = false;
+            // Dispatch event with selected result
+            this.dispatchEvent(new CustomEvent('selection', {
+                detail: selectedResult
+            }));
         }
-    }
-
-    performSearch(searchTerm) {
-        // Mock search results - replace with actual API call
-        const mockResults = [
-            { id: '1', name: 'Test Result 1' },
-            { id: '2', name: 'Test Result 2' },
-            { id: '3', name: 'Test Result 3' }
-        ];
-
-        // Simulate API delay
-        setTimeout(() => {
-            this.results = mockResults.filter(result => 
-                result.name.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            this.isLoading = false;
-            this.isDropdownOpen = true;
-        }, 300);
     }
 }
