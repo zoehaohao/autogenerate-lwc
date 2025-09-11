@@ -1,13 +1,20 @@
-/* Custom styles for the lookup component */
-:host {
+.search-input {
+    margin-bottom: 0;
+}
+
+.slds-listbox__option-text_entity {
+    max-width: 100%;
     display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.slds-listbox__option-text {
-    font-size: 0.875rem;
-}
-
-.slds-dropdown {
-    max-height: 300px;
-    overflow-y: auto;
+.slds-listbox__option-meta_entity {
+    max-width: 100%;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.75rem;
 }

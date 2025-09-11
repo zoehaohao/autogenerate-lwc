@@ -1,7 +1,8 @@
 import { LightningElement, api, track } from 'lwc';
 
 export default class AbnLookupTestV0 extends LightningElement {
-    @api label = 'Search';
+    @api placeholder = 'Search...';
+    @api iconName = 'standard:account';
     @track searchTerm = '';
     @track results = [];
     @track isExpanded = false;
@@ -10,28 +11,29 @@ export default class AbnLookupTestV0 extends LightningElement {
         return this.isExpanded && this.results.length > 0;
     }
 
-    get showNoResults() {
-        return this.isExpanded && this.results.length === 0 && this.searchTerm;
-    }
-
-    get comboboxClass() {
+    get computedComboboxClass() {
         return `slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click ${
             this.isExpanded ? 'slds-is-open' : ''
         }`;
     }
 
-    get dropdownClass() {
-        return `slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid`;
-    }
-
-    handleKeyUp(event) {
+    handleSearchTermChange(event) {
         this.searchTerm = event.target.value;
         if (this.searchTerm.length >= 2) {
             // Mock results for testing
             this.results = [
-                { id: '1', label: 'Result 1', value: 'result1' },
-                { id: '2', label: 'Result 2', value: 'result2' },
-                { id: '3', label: 'Result 3', value: 'result3' }
+                {
+                    id: '1',
+                    title: 'Test Result 1',
+                    subtitle: 'Subtitle 1',
+                    icon: this.iconName
+                },
+                {
+                    id: '2',
+                    title: 'Test Result 2',
+                    subtitle: 'Subtitle 2',
+                    icon: this.iconName
+                }
             ];
             this.isExpanded = true;
         } else {
@@ -40,32 +42,29 @@ export default class AbnLookupTestV0 extends LightningElement {
         }
     }
 
-    handleFocus() {
-        if (this.searchTerm.length >= 2) {
-            this.isExpanded = true;
-        }
-    }
-
-    handleBlur() {
-        // Add delay to allow click event on results
-        setTimeout(() => {
-            this.isExpanded = false;
-        }, 300);
+    handleSearchClick() {
+        this.isExpanded = true;
     }
 
     handleResultClick(event) {
         const selectedId = event.currentTarget.dataset.id;
-        const selectedValue = event.currentTarget.dataset.value;
+        const selectedResult = this.results.find(result => result.id === selectedId);
         
-        // Dispatch selection event
-        this.dispatchEvent(new CustomEvent('selection', {
-            detail: {
-                id: selectedId,
-                value: selectedValue
-            }
-        }));
+        if (selectedResult) {
+            this.dispatchEvent(new CustomEvent('select', {
+                detail: selectedResult
+            }));
+            
+            this.searchTerm = selectedResult.title;
+            this.isExpanded = false;
+            this.results = [];
+        }
+    }
 
-        this.searchTerm = event.currentTarget.querySelector('.slds-listbox__option-text').textContent;
+    @api
+    clearSelection() {
+        this.searchTerm = '';
+        this.results = [];
         this.isExpanded = false;
     }
 }
