@@ -1,12 +1,23 @@
 <template>
-    <lightning-card title="Test Regeneration V0" icon-name="custom:custom67">
+    <lightning-card title="Test Regeneration V0">
         <div class="slds-m-around_medium">
-            <lightning-button 
-                variant="brand" 
-                label="Search" 
-                onclick={handleClick}
-                class="slds-m-left_x-small">
-            </lightning-button>
+            <lightning-input 
+                label="Input" 
+                value={inputValue}
+                onchange={handleInputChange}>
+            </lightning-input>
+            
+            <div class="slds-m-top_small">
+                <lightning-button 
+                    label="Search"
+                    variant="brand"
+                    onclick={handleSearch}>
+                </lightning-button>
+            </div>
+
+            <div if:true={result} class="slds-m-top_medium">
+                Result: {result}
+            </div>
         </div>
     </lightning-card>
 </template>

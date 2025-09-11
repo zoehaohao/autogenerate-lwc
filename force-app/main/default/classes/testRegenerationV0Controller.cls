@@ -1,22 +1,16 @@
 public with sharing class testRegenerationV0Controller {
-    @AuraEnabled(cacheable=true)
-    public static List<SearchResult> search(String searchTerm) {
-        List<SearchResult> results = new List<SearchResult>();
+    @AuraEnabled
+    public static String processData(String input) {
         try {
-            // Perform search logic here
-            return results;
+            if (String.isBlank(input)) {
+                throw new AuraHandledException('Input cannot be blank');
+            }
+            
+            // Process the input (simple echo for demonstration)
+            return 'Processed: ' + input;
+            
         } catch (Exception e) {
-            throw new AuraHandledException('Error performing search: ' + e.getMessage());
-        }
-    }
-    
-    public class SearchResult {
-        @AuraEnabled public String id;
-        @AuraEnabled public String name;
-        
-        public SearchResult(String id, String name) {
-            this.id = id;
-            this.name = name;
+            throw new AuraHandledException(e.getMessage());
         }
     }
 }
