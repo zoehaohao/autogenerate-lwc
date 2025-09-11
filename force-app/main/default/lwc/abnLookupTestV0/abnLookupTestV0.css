@@ -1,12 +1,13 @@
-.slds-listbox__option-text_entity {
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+/* Custom styles for the lookup component */
+:host {
     display: block;
 }
 
-.slds-listbox__option-meta_entity {
-    font-size: 0.75rem;
-    color: #706e6b;
+.slds-listbox__option-text {
+    font-size: 0.875rem;
+}
+
+.slds-dropdown {
+    max-height: 300px;
+    overflow-y: auto;
 }
