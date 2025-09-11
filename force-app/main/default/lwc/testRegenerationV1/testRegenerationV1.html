@@ -1,7 +1,10 @@
 <template>
-    <lightning-card title="Sample Component" icon-name="custom:custom14">
-        <div class="slds-m-around_medium">
-            <lightning-input label="ABN/ACN number" type="text"></lightning-input>
+    <lightning-card title="Test Regeneration V1">
+        <div class="slds-p-around_medium">
+            <lightning-input label="ACN number" value={inputValue} onchange={handleInputChange}></lightning-input>
+            <div class="slds-p-top_small">
+                Input Value: {inputValue}
+            </div>
         </div>
     </lightning-card>
 </template>
