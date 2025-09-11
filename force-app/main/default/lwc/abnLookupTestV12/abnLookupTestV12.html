@@ -1,22 +1,8 @@
+<!-- abnLookupTestV12.html -->
 <template>
-    <lightning-card title="abnLookupTestV12" icon-name="custom:custom19">
-        <div class="slds-var-m-around_medium">
-            <!-- Adding new input text box -->
-            <lightning-input 
-                type="text" 
-                label="Enter text"
-                value={inputValue}
-                onchange={handleInputChange}>
-            </lightning-input>
-            
-            <!-- Existing content -->
-            <c-lookup-component
-                object-api-name="Account"
-                field-api-name="Name"
-                label="Account Lookup"
-                placeholder="Search Accounts..."
-                onselectionchange={handleSelectionChange}>
-            </c-lookup-component>
+    <div class="slds-form-element">
+        <div class="slds-form-element__control">
+            <input type="text" class="slds-input" placeholder="Enter text here..." />
         </div>
-    </lightning-card>
+    </div>
 </template>
