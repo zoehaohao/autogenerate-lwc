@@ -1,9 +1,17 @@
 <template>
     <lightning-card title="Test Regeneration V1">
-        <div class="slds-p-around_medium">
-            <lightning-input label="ACN number" value={inputValue} onchange={handleInputChange}></lightning-input>
-            <div class="slds-p-top_small">
-                Input Value: {inputValue}
+        <div class="slds-m-around_medium">
+            <lightning-input 
+                type="text" 
+                label="ABN Number" 
+                value={inputValue} 
+                onchange={handleInputChange}>
+            </lightning-input>
+            <div class="slds-m-top_small">
+                <lightning-button 
+                    label="Click Me" 
+                    onclick={handleClick}>
+                </lightning-button>
             </div>
         </div>
     </lightning-card>
