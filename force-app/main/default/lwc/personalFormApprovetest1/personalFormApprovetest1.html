@@ -1,0 +1,73 @@
+<template>
+    <lightning-card title="Personal Form Approve Test" icon-name="standard:approval">
+        <div class="slds-p-around_medium">
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="12" padding="around-small">
+                    <lightning-input 
+                        label="Name" 
+                        name="name"
+                        value={name}
+                        onchange={handleInputChange}
+                        required>
+                    </lightning-input>
+                </lightning-layout-item>
+                
+                <lightning-layout-item size="12" padding="around-small">
+                    <lightning-input 
+                        type="email"
+                        label="Email" 
+                        name="email"
+                        value={email}
+                        onchange={handleInputChange}
+                        required>
+                    </lightning-input>
+                </lightning-layout-item>
+                
+                <lightning-layout-item size="12" padding="around-small">
+                    <lightning-textarea 
+                        label="Comments"
+                        name="comments"
+                        value={comments}
+                        onchange={handleInputChange}>
+                    </lightning-textarea>
+                </lightning-layout-item>
+                
+                <lightning-layout-item size="12" padding="around-small">
+                    <lightning-button 
+                        label="Submit for Approval"
+                        variant="brand"
+                        onclick={handleSubmit}
+                        class="slds-m-right_x-small"
+                        disabled={isSubmitting}>
+                    </lightning-button>
+                    <lightning-button 
+                        label="Reset"
+                        onclick={handleReset}
+                        disabled={isSubmitting}>
+                    </lightning-button>
+                </lightning-layout-item>
+            </lightning-layout>
+            
+            <!-- Success/Error Toast -->
+            <template if:true={showToast}>
+                <div class={toastClass} role="alert">
+                    <span class="slds-assistive-text">{toastVariant}</span>
+                    <span class="slds-icon_container slds-icon-utility-success slds-m-right_small" title={toastVariant}>
+                        <lightning-icon icon-name={toastIcon} size="small" variant="inverse"></lightning-icon>
+                    </span>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small">{toastMessage}</h2>
+                    </div>
+                    <div class="slds-notify__close">
+                        <lightning-button-icon 
+                            icon-name="utility:close"
+                            size="small"
+                            variant="bare-inverse"
+                            onclick={closeToast}>
+                        </lightning-button-icon>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
