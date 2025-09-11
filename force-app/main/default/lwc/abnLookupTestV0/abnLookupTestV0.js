@@ -1,70 +1,106 @@
 import { LightningElement, api, track } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class AbnLookupTestV0 extends LightningElement {
+    @api label = 'Search';
     @api placeholder = 'Search...';
     @api iconName = 'standard:account';
+    @api delay = 300;
+    @api minSearchTermLength = 2;
+
     @track searchTerm = '';
     @track results = [];
-    @track isExpanded = false;
+    @track showResults = false;
+    @track showNoResults = false;
 
-    get showResults() {
-        return this.isExpanded && this.results.length > 0;
+    searchTimeoutId;
+
+    // Handle key up event on input field
+    handleKeyUp(event) {
+        const searchTerm = event.target.value;
+        this.searchTerm = searchTerm;
+
+        // Clear any existing timeout
+        window.clearTimeout(this.searchTimeoutId);
+
+        // Don't search if term is too short
+        if (searchTerm.length < this.minSearchTermLength) {
+            this.showResults = false;
+            return;
+        }
+
+        // Set timeout to prevent too many server calls
+        this.searchTimeoutId = window.setTimeout(() => {
+            this.performSearch(searchTerm);
+        }, this.delay);
     }
 
-    get computedComboboxClass() {
-        return `slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click ${
-            this.isExpanded ? 'slds-is-open' : ''
-        }`;
-    }
-
-    handleSearchTermChange(event) {
-        this.searchTerm = event.target.value;
-        if (this.searchTerm.length >= 2) {
-            // Mock results for testing
+    // Perform the actual search
+    async performSearch(searchTerm) {
+        try {
+            // Mock results for testing - replace with actual API call
             this.results = [
-                {
-                    id: '1',
-                    title: 'Test Result 1',
-                    subtitle: 'Subtitle 1',
-                    icon: this.iconName
-                },
-                {
-                    id: '2',
-                    title: 'Test Result 2',
-                    subtitle: 'Subtitle 2',
-                    icon: this.iconName
-                }
+                { id: '1', name: 'Test Account 1' },
+                { id: '2', name: 'Test Account 2' },
+                { id: '3', name: 'Test Account 3' }
             ];
-            this.isExpanded = true;
-        } else {
-            this.results = [];
-            this.isExpanded = false;
+            
+            this.showResults = true;
+            this.showNoResults = this.results.length === 0;
+
+        } catch (error) {
+            this.showError(error);
         }
     }
 
-    handleSearchClick() {
-        this.isExpanded = true;
-    }
-
+    // Handle result click
     handleResultClick(event) {
         const selectedId = event.currentTarget.dataset.id;
-        const selectedResult = this.results.find(result => result.id === selectedId);
-        
-        if (selectedResult) {
-            this.dispatchEvent(new CustomEvent('select', {
-                detail: selectedResult
-            }));
-            
-            this.searchTerm = selectedResult.title;
-            this.isExpanded = false;
-            this.results = [];
+        const selectedName = event.currentTarget.dataset.name;
+
+        // Dispatch custom event with selected record
+        const selectEvent = new CustomEvent('select', {
+            detail: {
+                id: selectedId,
+                name: selectedName
+            }
+        });
+        this.dispatchEvent(selectEvent);
+
+        // Clear results
+        this.clearResults();
+    }
+
+    // Handle input focus
+    handleFocus() {
+        if (this.searchTerm.length >= this.minSearchTermLength) {
+            this.showResults = true;
         }
     }
 
-    @api
-    clearSelection() {
+    // Handle input blur
+    handleBlur() {
+        // Use timeout to allow click event to fire before hiding results
+        window.setTimeout(() => {
+            this.showResults = false;
+        }, 300);
+    }
+
+    // Clear results
+    clearResults() {
         this.searchTerm = '';
         this.results = [];
-        this.isExpanded = false;
+        this.showResults = false;
+        this.showNoResults = false;
+    }
+
+    // Show error toast
+    showError(error) {
+        const evt = new ShowToastEvent({
+            title: 'Error',
+            message: error.message || 'An error occurred during search',
+            variant: 'error'
+        });
+        this.dispatchEvent(evt);
     }
 }

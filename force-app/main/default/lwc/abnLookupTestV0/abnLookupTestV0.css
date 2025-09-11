@@ -1,20 +1,9 @@
-.search-input {
-    margin-bottom: 0;
+.slds-listbox__option:hover {
+    background-color: #f3f2f2;
+    cursor: pointer;
 }
 
-.slds-listbox__option-text_entity {
-    max-width: 100%;
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.slds-listbox__option-meta_entity {
-    max-width: 100%;
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-size: 0.75rem;
+.slds-dropdown {
+    max-height: 300px;
+    overflow-y: auto;
 }
