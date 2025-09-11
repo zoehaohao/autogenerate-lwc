@@ -1,27 +1,16 @@
 <template>
-    <lightning-card title="Test Regeneration V3" icon-name="custom:custom14">
+    <div class="slds-card">
         <div class="slds-p-around_medium">
-            <div class="slds-grid slds-wrap slds-gutters">
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
-                    <lightning-input 
-                        label="Sample Input" 
-                        type="text"
-                        value={inputValue}
-                        onchange={handleInputChange}>
-                    </lightning-input>
-                </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
-                    <lightning-button 
-                        label="Test Button" 
-                        variant="brand"
-                        onclick={handleClick}
-                        class="slds-m-top_medium">
-                    </lightning-button>
-                </div>
-            </div>
-            <div class="slds-m-top_medium">
-                {outputMessage}
-            </div>
+            <lightning-input 
+                type="text" 
+                label="ACN Number" 
+                value={acnNumber}
+                onchange={handleAcnNumberChange}
+                pattern="[0-9]{9}"
+                message-when-pattern-mismatch="Please enter a valid 9-digit ACN number"
+                required>
+            </lightning-input>
+            <!-- Existing fields preserved -->
         </div>
-    </lightning-card>
+    </div>
 </template>

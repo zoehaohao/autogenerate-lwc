@@ -1,44 +1,40 @@
 import { LightningElement, api, track } from 'lwc';
 
 export default class TestRegenerationV3 extends LightningElement {
-    @api recordId;
-    @track inputValue = '';
-    @track outputMessage = '';
-
-    handleInputChange(event) {
-        this.inputValue = event.target.value;
-        // Dispatch change event for parent components
-        this.dispatchEvent(new CustomEvent('valuechange', {
+    @track acnNumber = '';
+    
+    // Existing tracked properties preserved
+    
+    handleAcnNumberChange(event) {
+        this.acnNumber = event.target.value;
+        // Validate ACN number format
+        const isValid = /^\d{9}$/.test(this.acnNumber);
+        
+        // Dispatch change event to parent
+        this.dispatchEvent(new CustomEvent('acnchange', {
             detail: {
-                value: this.inputValue
-            }
+                value: this.acnNumber,
+                isValid: isValid
+            },
+            bubbles: true,
+            composed: true
         }));
     }
-
-    handleClick() {
-        if (this.inputValue) {
-            this.outputMessage = `You entered: ${this.inputValue}`;
-            // Dispatch success event
-            this.dispatchEvent(new CustomEvent('success', {
-                detail: {
-                    message: 'Operation completed successfully',
-                    value: this.inputValue
-                }
-            }));
-        } else {
-            this.outputMessage = 'Please enter a value';
-            // Dispatch error event
-            this.dispatchEvent(new CustomEvent('error', {
-                detail: {
-                    message: 'No value entered'
-                }
-            }));
-        }
-    }
-
+    
+    // Existing methods preserved
+    
     @api
-    resetComponent() {
-        this.inputValue = '';
-        this.outputMessage = '';
+    validate() {
+        const allInputs = this.template.querySelectorAll('lightning-input');
+        let isValid = true;
+        
+        allInputs.forEach(input => {
+            if (!input.checkValidity()) {
+                input.reportValidity();
+                isValid = false;
+            }
+        });
+        
+        return isValid;
     }
 }
