@@ -1,32 +1,26 @@
 <template>
-    <div class="slds-card">
-        <div class="slds-card__header slds-grid">
-            <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                <div class="slds-media__body">
-                    <h2 class="slds-card__header-title">
-                        <span class="slds-text-heading_small">Test Regeneration V4</span>
-                    </h2>
-                </div>
-            </header>
+    <lightning-card title="Test Regeneration V4">
+        <div class="slds-m-around_medium">
+            <lightning-input 
+                type="text"
+                label="Name"
+                value={name}
+                onchange={handleNameChange}>
+            </lightning-input>
+            <lightning-input 
+                type="text"
+                label="Email"
+                value={email}
+                onchange={handleEmailChange}>
+            </lightning-input>
+            <lightning-input 
+                type="text"
+                label="ACN Number"
+                value={acnNumber}
+                pattern="[0-9]{9}"
+                message-when-pattern-mismatch="Please enter a valid 9-digit ACN number"
+                onchange={handleAcnNumberChange}>
+            </lightning-input>
         </div>
-        <div class="slds-card__body slds-card__body_inner">
-            <div class="slds-grid slds-wrap slds-gutters">
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
-                    <lightning-input 
-                        label="Sample Input" 
-                        type="text"
-                        value={inputValue}
-                        onchange={handleInputChange}>
-                    </lightning-input>
-                </div>
-            </div>
-            <div class="slds-m-top_medium">
-                <lightning-button 
-                    label="Submit"
-                    variant="brand"
-                    onclick={handleSubmit}>
-                </lightning-button>
-            </div>
-        </div>
-    </div>
+    </lightning-card>
 </template>

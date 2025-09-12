@@ -1,31 +1,19 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, track } from 'lwc';
 
 export default class TestRegenerationV4 extends LightningElement {
-    @track inputValue = '';
-    
-    @api recordId;
-    
-    handleInputChange(event) {
-        this.inputValue = event.target.value;
-        this.dispatchEvent(new CustomEvent('valuechange', {
-            detail: {
-                value: this.inputValue
-            }
-        }));
-    }
-    
-    handleSubmit() {
-        const submitEvent = new CustomEvent('submit', {
-            detail: {
-                value: this.inputValue,
-                recordId: this.recordId
-            }
-        });
-        this.dispatchEvent(submitEvent);
+    @track name = '';
+    @track email = '';
+    @track acnNumber = '';
+
+    handleNameChange(event) {
+        this.name = event.target.value;
     }
 
-    @api
-    resetInput() {
-        this.inputValue = '';
+    handleEmailChange(event) {
+        this.email = event.target.value;
+    }
+
+    handleAcnNumberChange(event) {
+        this.acnNumber = event.target.value;
     }
 }
