@@ -2,3 +2,8 @@
     background-color: #f3f2f2;
     cursor: pointer;
 }
+
+.slds-dropdown {
+    max-height: 300px;
+    overflow-y: auto;
+}

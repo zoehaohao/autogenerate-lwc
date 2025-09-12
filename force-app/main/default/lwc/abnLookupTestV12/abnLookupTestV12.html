@@ -1,41 +1,44 @@
-<!-- sldsValidatorIgnore -->
 <template>
     <div class="slds-form-element">
-        <!-- New Input Text Box -->
-        <div class="slds-form-element__control slds-m-bottom_small">
-            <input type="text" class="slds-input" placeholder="Enter text here" value={additionalText} 
-                   onchange={handleAdditionalTextChange} />
-        </div>
-        
         <div class="slds-form-element__control">
             <div class="slds-combobox_container">
-                <div class={getContainerClass} aria-expanded="true" aria-haspopup="listbox" role="combobox">
-                    <!-- Search Input -->
+                <div class={computedClass} aria-expanded={isExpanded} aria-haspopup="listbox" role="combobox">
                     <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
-                        <input type="text" class="slds-input slds-combobox__input" id="combobox-id-1" aria-controls="listbox-id-1"
-                            autocomplete="off" role="textbox" placeholder={placeholder} value={searchTerm}
-                            onkeyup={handleKeyUp} onfocus={handleFocus} onblur={handleBlur} />
-
-                        <!-- Search Icon -->
+                        <input type="text"
+                               class="slds-input slds-combobox__input"
+                               id="combobox-input"
+                               aria-controls="listbox-id"
+                               autocomplete="off"
+                               role="textbox"
+                               placeholder={placeholder}
+                               value={searchTerm}
+                               onkeyup={handleKeyUp}
+                               onfocus={handleFocus}
+                               onblur={handleBlur}/>
                         <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right">
-                            <lightning-icon icon-name="utility:search" size="xx-small" class="slds-icon slds-icon_x-small">
-                            </lightning-icon>
+                            <lightning-icon icon-name="utility:search" size="x-small" class="slds-icon-text-default"></lightning-icon>
                         </span>
                     </div>
-
-                    <!-- Result List Box -->
-                    <div id="listbox-id-1" class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid"
-                        role="listbox">
+                    <div id="listbox-id" class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
                         <ul class="slds-listbox slds-listbox_vertical" role="presentation">
-                            <template for:each={records} for:item="record">
-                                <li key={record.Id} role="presentation" class="slds-listbox__item"
-                                    onmousedown={handleSelection} data-id={record.Id}>
+                            <template if:true={showSpinner}>
+                                <div class="slds-align_absolute-center slds-p-top_medium">
+                                    <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                                </div>
+                            </template>
+                            <template for:each={results} for:item="result">
+                                <li key={result.id} role="presentation" class="slds-listbox__item">
                                     <div class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta"
-                                        role="option">
+                                         role="option"
+                                         onclick={handleResultClick}
+                                         data-id={result.id}
+                                         data-value={result.value}>
+                                        <span class="slds-media__figure">
+                                            <lightning-icon icon-name={iconName} size="small"></lightning-icon>
+                                        </span>
                                         <span class="slds-media__body">
-                                            <span class="slds-listbox__option-text slds-listbox__option-text_entity">
-                                                {record.Name}
-                                            </span>
+                                            <span class="slds-listbox__option-text slds-listbox__option-text_entity">{result.value}</span>
+                                            <span class="slds-listbox__option-meta slds-listbox__option-meta_entity">{result.subtitle}</span>
                                         </span>
                                     </div>
                                 </li>
