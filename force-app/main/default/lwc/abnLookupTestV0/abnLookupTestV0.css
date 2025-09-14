@@ -1,9 +1,13 @@
+/* Custom styles for the lookup component */
+:host {
+    display: block;
+}
+
 .slds-listbox__option:hover {
     background-color: #f3f2f2;
     cursor: pointer;
 }
 
-.slds-dropdown {
-    max-height: 300px;
-    overflow-y: auto;
+.slds-listbox__option.selected {
+    background-color: #ecebea;
 }

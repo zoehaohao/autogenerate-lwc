@@ -1,29 +1,37 @@
 public with sharing class abnLookupTestV0Controller {
     @AuraEnabled(cacheable=true)
-    public static List<SObject> search(String objectApiName, String searchTerm, List<String> searchFields) {
+    public static List<ResultWrapper> search(String searchTerm, String objectApiName, String fieldApiName) {
         try {
-            // Validate inputs
-            if (String.isBlank(objectApiName) || String.isBlank(searchTerm) || searchFields == null || searchFields.isEmpty()) {
-                throw new AuraHandledException('Invalid search parameters');
+            if (String.isBlank(searchTerm) || String.isBlank(objectApiName) || String.isBlank(fieldApiName)) {
+                return new List<ResultWrapper>();
             }
 
-            // Build the SOSL query
-            String searchQuery = 'FIND :searchTerm IN ALL FIELDS RETURNING ' + 
-                               String.escapeSingleQuotes(objectApiName) + 
-                               '(Id, Name, Type WHERE Name LIKE :likeSearchTerm) LIMIT 10';
-            
-            String likeSearchTerm = '%' + String.escapeSingleQuotes(searchTerm) + '%';
-            
-            // Perform the search
-            List<List<SObject>> searchResults = Search.query(searchQuery);
-            
-            if (!searchResults.isEmpty() && !searchResults[0].isEmpty()) {
-                return searchResults[0];
+            String searchQuery = 'SELECT Id, ' + String.escapeSingleQuotes(fieldApiName) + 
+                               ' FROM ' + String.escapeSingleQuotes(objectApiName) + 
+                               ' WHERE ' + String.escapeSingleQuotes(fieldApiName) + ' LIKE \'%' + String.escapeSingleQuotes(searchTerm) + '%\' ' +
+                               'LIMIT 10';
+
+            List<ResultWrapper> results = new List<ResultWrapper>();
+            for (SObject record : Database.query(searchQuery)) {
+                results.add(new ResultWrapper(
+                    (String)record.get('Id'),
+                    (String)record.get(fieldApiName)
+                ));
             }
-            
-            return new List<SObject>();
+            return results;
         } catch (Exception e) {
+            System.debug('Error in search: ' + e.getMessage());
             throw new AuraHandledException('Error performing search: ' + e.getMessage());
+        }
+    }
+
+    public class ResultWrapper {
+        @AuraEnabled public String id;
+        @AuraEnabled public String name;
+
+        public ResultWrapper(String id, String name) {
+            this.id = id;
+            this.name = name;
         }
     }
 }
