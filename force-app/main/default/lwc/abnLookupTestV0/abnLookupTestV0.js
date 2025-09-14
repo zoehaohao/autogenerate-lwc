@@ -1,106 +1,144 @@
 import { LightningElement, api, track } from 'lwc';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import searchRecords from '@salesforce/apex/abnLookupTestV0Controller.searchRecords';
 
 export default class AbnLookupTestV0 extends LightningElement {
-    @api label = 'Search';
-    @api placeholder = 'Search...';
+    @api objectApiName = 'Account';
+    @api searchFields = ['Name', 'AccountNumber'];
+    @api titleField = 'Name';
+    @api subtitleField = 'AccountNumber';
     @api iconName = 'standard:account';
-    @api delay = 300;
-    @api minSearchTermLength = 2;
+    @api label = 'Search';
+    @api required = false;
+    @api placeholder = 'Search...';
+    @api messageWhenInvalidSelection = 'Please select a valid option';
 
     @track searchTerm = '';
     @track results = [];
-    @track showResults = false;
-    @track showNoResults = false;
+    @track selectedId;
+    @track selectedTitle;
+    @track isLoading = false;
+    @track error;
 
-    searchTimeoutId;
+    blurTimeout;
 
-    // Handle key up event on input field
-    handleKeyUp(event) {
-        const searchTerm = event.target.value;
-        this.searchTerm = searchTerm;
+    get hasSelection() {
+        return this.selectedId != null;
+    }
 
-        // Clear any existing timeout
-        window.clearTimeout(this.searchTimeoutId);
+    get showResults() {
+        return this.searchTerm && this.hasFocus && !this.hasSelection;
+    }
 
-        // Don't search if term is too short
-        if (searchTerm.length < this.minSearchTermLength) {
-            this.showResults = false;
+    get showNoResults() {
+        return this.results.length === 0 && !this.isLoading;
+    }
+
+    get hasError() {
+        return this.error != null;
+    }
+
+    get getContainerClass() {
+        let css = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click';
+        if (this.hasFocus && !this.hasSelection) {
+            css += ' slds-is-open';
+        }
+        return css;
+    }
+
+    handleSearch(event) {
+        this.searchTerm = event.target.value;
+        
+        // Don't search if the string is too short
+        if (this.searchTerm.length < 2) {
+            this.results = [];
             return;
         }
 
-        // Set timeout to prevent too many server calls
-        this.searchTimeoutId = window.setTimeout(() => {
-            this.performSearch(searchTerm);
-        }, this.delay);
-    }
-
-    // Perform the actual search
-    async performSearch(searchTerm) {
-        try {
-            // Mock results for testing - replace with actual API call
-            this.results = [
-                { id: '1', name: 'Test Account 1' },
-                { id: '2', name: 'Test Account 2' },
-                { id: '3', name: 'Test Account 3' }
-            ];
-            
-            this.showResults = true;
-            this.showNoResults = this.results.length === 0;
-
-        } catch (error) {
-            this.showError(error);
-        }
-    }
-
-    // Handle result click
-    handleResultClick(event) {
-        const selectedId = event.currentTarget.dataset.id;
-        const selectedName = event.currentTarget.dataset.name;
-
-        // Dispatch custom event with selected record
-        const selectEvent = new CustomEvent('select', {
-            detail: {
-                id: selectedId,
-                name: selectedName
-            }
+        // Show loading spinner
+        this.isLoading = true;
+        
+        // Call Apex method
+        searchRecords({
+            objectApiName: this.objectApiName,
+            searchTerm: this.searchTerm,
+            searchFields: this.searchFields,
+            titleField: this.titleField,
+            subtitleField: this.subtitleField
+        })
+        .then(results => {
+            this.results = results.map(record => ({
+                id: record.Id,
+                title: record[this.titleField],
+                subtitle: record[this.subtitleField],
+                icon: this.iconName
+            }));
+            this.error = null;
+        })
+        .catch(error => {
+            this.error = error.message || 'Unknown error';
+            this.results = [];
+        })
+        .finally(() => {
+            this.isLoading = false;
         });
-        this.dispatchEvent(selectEvent);
-
-        // Clear results
-        this.clearResults();
     }
 
-    // Handle input focus
-    handleFocus() {
-        if (this.searchTerm.length >= this.minSearchTermLength) {
-            this.showResults = true;
+    handleResultClick(event) {
+        const recordId = event.currentTarget.dataset.id;
+        const result = this.results.find(r => r.id === recordId);
+        if (result) {
+            this.selectedId = result.id;
+            this.selectedTitle = result.title;
+            this.searchTerm = '';
+            this.results = [];
+            
+            // Dispatch selection event
+            this.dispatchEvent(new CustomEvent('select', {
+                detail: {
+                    recordId: result.id,
+                    record: result
+                }
+            }));
         }
     }
 
-    // Handle input blur
+    handleClearSelection() {
+        this.selectedId = null;
+        this.selectedTitle = null;
+        this.searchTerm = '';
+        this.results = [];
+        
+        // Dispatch clear event
+        this.dispatchEvent(new CustomEvent('clear'));
+    }
+
+    @api
+    validate() {
+        if (this.required && !this.hasSelection) {
+            return {
+                isValid: false,
+                errorMessage: this.messageWhenInvalidSelection
+            };
+        }
+        return { isValid: true };
+    }
+
+    handleFocus() {
+        this.hasFocus = true;
+        if (this.blurTimeout) {
+            clearTimeout(this.blurTimeout);
+        }
+    }
+
     handleBlur() {
-        // Use timeout to allow click event to fire before hiding results
-        window.setTimeout(() => {
-            this.showResults = false;
+        // Delay hiding the results to allow click events to fire
+        this.blurTimeout = setTimeout(() => {
+            this.hasFocus = false;
         }, 300);
     }
 
-    // Clear results
-    clearResults() {
-        this.searchTerm = '';
-        this.results = [];
-        this.showResults = false;
-        this.showNoResults = false;
-    }
-
-    // Show error toast
-    showError(error) {
-        const evt = new ShowToastEvent({
-            title: 'Error',
-            message: error.message || 'An error occurred during search',
-            variant: 'error'
-        });
-        this.dispatchEvent(evt);
+    @api
+    reset() {
+        this.handleClearSelection();
     }
 }

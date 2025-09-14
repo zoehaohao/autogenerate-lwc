@@ -1,29 +1,35 @@
 public with sharing class abnLookupTestV0Controller {
     @AuraEnabled(cacheable=true)
-    public static List<SObject> search(String objectApiName, String searchTerm, List<String> searchFields) {
+    public static List<SObject> searchRecords(String objectApiName, String searchTerm, List<String> searchFields, String titleField, String subtitleField) {
         try {
             // Validate inputs
             if (String.isBlank(objectApiName) || String.isBlank(searchTerm) || searchFields == null || searchFields.isEmpty()) {
                 throw new AuraHandledException('Invalid search parameters');
             }
 
-            // Build the SOSL query
-            String searchQuery = 'FIND :searchTerm IN ALL FIELDS RETURNING ' + 
-                               String.escapeSingleQuotes(objectApiName) + 
-                               '(Id, Name, Type WHERE Name LIKE :likeSearchTerm) LIMIT 10';
+            // Build SOSL query
+            String searchQuery = 'FIND :searchTerm IN ALL FIELDS RETURNING ' + objectApiName + '(Id';
             
-            String likeSearchTerm = '%' + String.escapeSingleQuotes(searchTerm) + '%';
+            // Add fields to return
+            Set<String> uniqueFields = new Set<String>();
+            uniqueFields.add(titleField);
+            uniqueFields.add(subtitleField);
+            uniqueFields.addAll(searchFields);
             
-            // Perform the search
-            List<List<SObject>> searchResults = Search.query(searchQuery);
-            
-            if (!searchResults.isEmpty() && !searchResults[0].isEmpty()) {
-                return searchResults[0];
+            for (String field : uniqueFields) {
+                searchQuery += ', ' + field;
             }
             
-            return new List<SObject>();
+            searchQuery += ' ORDER BY ' + titleField + ' LIMIT 10)';
+
+            // Execute search
+            List<List<SObject>> searchResults = Search.query(searchQuery);
+            
+            // Return first list of results (we're only searching one object)
+            return searchResults.isEmpty() ? new List<SObject>() : searchResults[0];
+            
         } catch (Exception e) {
-            throw new AuraHandledException('Error performing search: ' + e.getMessage());
+            throw new AuraHandledException(e.getMessage());
         }
     }
 }
