@@ -1,4 +1,13 @@
-.slds-dropdown {
-    max-height: 200px;
-    overflow-y: auto;
+.slds-listbox__option:hover {
+    background-color: #f3f2f2;
+    cursor: pointer;
+}
+
+.slds-combobox__input {
+    transition: border .1s linear, background-color .1s linear;
+}
+
+.slds-combobox__input:focus {
+    border-color: rgb(21, 137, 238);
+    box-shadow: 0 0 3px #0070d2;
 }
