@@ -3,11 +3,21 @@
     display: block;
 }
 
-.slds-listbox__option:hover {
-    background-color: #f3f2f2;
-    cursor: pointer;
+.slds-combobox_container {
+    max-width: 100%;
 }
 
-.slds-listbox__option.selected {
-    background-color: #ecebea;
+.slds-listbox__option:hover {
+    cursor: pointer;
+    background-color: #f3f2f2;
+}
+
+.slds-listbox__option-meta {
+    font-size: 0.75rem;
+    color: #706e6b;
+}
+
+.slds-dropdown {
+    max-height: 300px;
+    overflow-y: auto;
 }

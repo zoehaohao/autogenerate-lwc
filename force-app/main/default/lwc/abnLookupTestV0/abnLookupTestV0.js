@@ -1,17 +1,28 @@
-import { LightningElement, api, track } from 'lwc';
-import search from '@salesforce/apex/abnLookupTestV0Controller.search';
+import { LightningElement, api } from 'lwc';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+
+const DELAY = 300; // Debounce delay in milliseconds
+const MIN_SEARCH_CHARS = 2; // Minimum characters before search
 
 export default class AbnLookupTestV0 extends LightningElement {
     @api label = 'Search';
     @api placeholder = 'Search...';
+    @api iconName = 'standard:account';
     @api required = false;
-    @api objectApiName;
-    @api fieldApiName;
-    
-    @track searchTerm = '';
-    @track results = [];
-    @track isExpanded = false;
-    @track selectedItem = null;
+    @api messageWhenInvalid = 'Please select a valid option';
+
+    searchTerm = '';
+    isLoading = false;
+    hasError = false;
+    errorMessage = '';
+    results = [];
+    selectedId = '';
+    selectedValue = '';
+    delayTimeout;
+
+    get isExpanded() {
+        return this.results.length > 0 && this.hasFocus;
+    }
 
     get comboboxClass() {
         return `slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click ${
@@ -19,81 +30,116 @@ export default class AbnLookupTestV0 extends LightningElement {
         }`;
     }
 
-    get listboxClass() {
-        return `slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid ${
-            this.isExpanded ? 'slds-show' : 'slds-hide'
-        }`;
+    get noResults() {
+        return !this.isLoading && this.results.length === 0 && this.searchTerm.length >= MIN_SEARCH_CHARS;
     }
 
-    get noResults() {
-        return this.isExpanded && this.results.length === 0;
-    }
+    hasFocus = false;
 
     handleKeyUp(event) {
         const searchTerm = event.target.value;
         this.searchTerm = searchTerm;
-        
-        if (searchTerm.length >= 2) {
-            search({ 
-                searchTerm: searchTerm,
-                objectApiName: this.objectApiName,
-                fieldApiName: this.fieldApiName
-            })
-            .then(result => {
-                this.results = result;
-                this.isExpanded = true;
-            })
-            .catch(error => {
-                console.error('Error performing search:', error);
-                this.dispatchEvent(
-                    new CustomEvent('error', {
-                        detail: {
-                            error: error.body.message
-                        }
-                    })
-                );
-            });
-        } else {
+
+        // Clear any existing timeout
+        clearTimeout(this.delayTimeout);
+
+        // Reset results if search term is cleared
+        if (!searchTerm) {
             this.results = [];
-            this.isExpanded = false;
+            return;
         }
+
+        // Don't search until minimum characters are entered
+        if (searchTerm.length < MIN_SEARCH_CHARS) {
+            return;
+        }
+
+        // Set a new timeout for the search
+        this.delayTimeout = setTimeout(() => {
+            this.performSearch(searchTerm);
+        }, DELAY);
+    }
+
+    async performSearch(searchTerm) {
+        try {
+            this.isLoading = true;
+            this.hasError = false;
+
+            // Mock search results - replace with actual API call
+            this.results = [
+                { id: '1', value: 'Option 1', label: 'Option 1', sublabel: 'Description 1' },
+                { id: '2', value: 'Option 2', label: 'Option 2', sublabel: 'Description 2' },
+                { id: '3', value: 'Option 3', label: 'Option 3', sublabel: 'Description 3' }
+            ];
+        } catch (error) {
+            this.hasError = true;
+            this.errorMessage = error.message || 'An error occurred while searching';
+            this.dispatchToast('Error', this.errorMessage, 'error');
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    handleSelect(event) {
+        const selectedId = event.currentTarget.dataset.id;
+        const selectedValue = event.currentTarget.dataset.value;
+        
+        this.selectedId = selectedId;
+        this.selectedValue = selectedValue;
+        this.searchTerm = selectedValue;
+        this.results = [];
+
+        // Dispatch selection event
+        this.dispatchEvent(new CustomEvent('select', {
+            detail: {
+                id: selectedId,
+                value: selectedValue
+            }
+        }));
     }
 
     handleFocus() {
-        this.isExpanded = true;
-    }
-
-    handleBlur(event) {
-        // Add delay to allow click events to fire on results
-        setTimeout(() => {
-            this.isExpanded = false;
-        }, 300);
-    }
-
-    handleResultClick(event) {
-        const selectedId = event.currentTarget.dataset.id;
-        const selected = this.results.find(result => result.id === selectedId);
-        
-        if (selected) {
-            this.selectedItem = selected;
-            this.searchTerm = selected.name;
-            this.isExpanded = false;
-            
-            this.dispatchEvent(
-                new CustomEvent('select', {
-                    detail: {
-                        selectedItem: selected
-                    }
-                })
-            );
+        this.hasFocus = true;
+        if (this.searchTerm.length >= MIN_SEARCH_CHARS) {
+            this.performSearch(this.searchTerm);
         }
     }
 
+    handleBlur() {
+        // Delay closing to allow click events to fire
+        setTimeout(() => {
+            this.hasFocus = false;
+        }, 300);
+    }
+
     @api
-    clearSelection() {
+    validate() {
+        if (!this.required) return { isValid: true };
+        const isValid = !!this.selectedId;
+        if (!isValid) {
+            this.hasError = true;
+            this.errorMessage = this.messageWhenInvalid;
+        }
+        return { isValid, errorMessage: this.messageWhenInvalid };
+    }
+
+    dispatchToast(title, message, variant) {
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title,
+                message,
+                variant
+            })
+        );
+    }
+
+    @api
+    reset() {
         this.searchTerm = '';
-        this.selectedItem = null;
+        this.selectedId = '';
+        this.selectedValue = '';
         this.results = [];
-        this.isExpanded = false;
+        this.hasError = false;
+        this.errorMessage = '';
     }
 }
