@@ -1,0 +1,23 @@
+/* Custom styles for the lookup component */
+:host {
+    display: block;
+}
+
+.slds-listbox {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.slds-listbox__option:hover {
+    cursor: pointer;
+    background-color: #f3f2f2;
+}
+
+.slds-listbox__option.selected {
+    background-color: #ecebea;
+}
+
+.slds-combobox__input:disabled {
+    background-color: #f3f3f3;
+    border-color: #dddbda;
+}
