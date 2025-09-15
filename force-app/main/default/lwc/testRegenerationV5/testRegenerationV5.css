@@ -1,3 +1,11 @@
-.slds-m-top_medium {
-    margin-top: 1rem;
+/* Custom styles */
+.slds-box {
+    background-color: #f3f3f3;
+    border-radius: 4px;
+    padding: 1rem;
+}
+
+.slds-text-heading_small {
+    color: #2e844a;
+    font-weight: bold;
 }

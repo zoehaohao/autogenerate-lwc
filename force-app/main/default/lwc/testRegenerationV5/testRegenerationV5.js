@@ -1,47 +1,35 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, track } from 'lwc';
 
 export default class TestRegenerationV5 extends LightningElement {
-    @api recordId;
-    @track inputValue = '';
-    @track outputValue = '';
-    @track showResult = false;
+    @track inputText = '';
+    @track outputText = '';
+    @track showOutput = false;
 
     handleInputChange(event) {
-        this.inputValue = event.target.value;
-        // Dispatch change event for parent components
-        this.dispatchEvent(new CustomEvent('valuechange', {
-            detail: {
-                value: this.inputValue
-            }
-        }));
+        this.inputText = event.target.value;
     }
 
     handleClick() {
-        if (this.inputValue) {
-            this.outputValue = `Processed: ${this.inputValue}`;
-            this.showResult = true;
+        if (this.inputText) {
+            this.outputText = `You entered: ${this.inputText}`;
+            this.showOutput = true;
             
-            // Dispatch success event
-            this.dispatchEvent(new CustomEvent('success', {
+            // Dispatch custom event
+            this.dispatchEvent(new CustomEvent('textchange', {
                 detail: {
-                    message: 'Operation completed successfully',
-                    value: this.outputValue
-                }
-            }));
-        } else {
-            // Dispatch error event
-            this.dispatchEvent(new CustomEvent('error', {
-                detail: {
-                    message: 'Please enter a value',
-                }
+                    text: this.inputText,
+                    timestamp: new Date().toISOString()
+                },
+                bubbles: true,
+                composed: true
             }));
         }
     }
 
     @api
     resetComponent() {
-        this.inputValue = '';
-        this.outputValue = '';
-        this.showResult = false;
+        this.inputText = '';
+        this.outputText = '';
+        this.showOutput = false;
     }
 }

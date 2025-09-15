@@ -1,18 +1,18 @@
 <template>
     <lightning-card title="Test Regeneration V5" icon-name="custom:custom14">
-        <div class="slds-p-around_medium">
+        <div class="slds-m-around_medium">
             <div class="slds-grid slds-wrap slds-gutters">
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
                     <lightning-input 
-                        label="Sample Input" 
+                        label="Enter Text" 
                         type="text"
-                        value={inputValue}
+                        value={inputText}
                         onchange={handleInputChange}>
                     </lightning-input>
                 </div>
-                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
                     <lightning-button 
-                        label="Submit"
+                        label="Click Me" 
                         variant="brand"
                         onclick={handleClick}
                         class="slds-m-top_medium">
@@ -21,9 +21,9 @@
             </div>
             
             <div class="slds-m-top_medium">
-                <template if:true={showResult}>
-                    <div class="slds-text-heading_medium">
-                        {outputValue}
+                <template if:true={showOutput}>
+                    <div class="slds-box slds-theme_shade">
+                        <p class="slds-text-heading_small">Output: {outputText}</p>
                     </div>
                 </template>
             </div>
