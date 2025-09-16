@@ -1,39 +1,34 @@
-public with sharing class abnLookupCmpTestV1Controller {
+public with sharing class AbnLookupCmpTestV1Controller {
     @AuraEnabled(cacheable=true)
-    public static List<SearchResult> search(String searchTerm, String objectName) {
+    public static List<SObject> search(String objectApiName, String searchTerm, List<String> searchFields, String subtitleField) {
         try {
-            if (String.isBlank(searchTerm) || String.isBlank(objectName)) {
-                return new List<SearchResult>();
+            // Input validation
+            if (String.isBlank(objectApiName) || String.isBlank(searchTerm) || searchFields == null || searchFields.isEmpty()) {
+                throw new AuraHandledException('Invalid input parameters');
             }
 
-            String searchQuery = 'FIND :searchTerm IN ALL FIELDS RETURNING ' + 
-                String.escapeSingleQuotes(objectName) + '(Id, Name) LIMIT 10';
-            
-            List<List<SObject>> searchResults = Search.query(searchQuery);
-            
-            List<SearchResult> results = new List<SearchResult>();
-            if (!searchResults.isEmpty() && !searchResults[0].isEmpty()) {
-                for (SObject record : searchResults[0]) {
-                    results.add(new SearchResult(
-                        (String)record.get('Id'),
-                        (String)record.get('Name')
-                    ));
-                }
+            // Build field list for query
+            Set<String> fieldsToQuery = new Set<String>{'Id'};
+            fieldsToQuery.addAll(searchFields);
+            if (String.isNotBlank(subtitleField)) {
+                fieldsToQuery.add(subtitleField);
             }
-            
-            return results;
+
+            // Build search conditions
+            List<String> searchConditions = new List<String>();
+            for (String field : searchFields) {
+                searchConditions.add(field + ' LIKE \'%' + String.escapeSingleQuotes(searchTerm) + '%\'');
+            }
+
+            // Build and execute query
+            String query = 'SELECT ' + String.join(new List<String>(fieldsToQuery), ',') +
+                         ' FROM ' + String.escapeSingleQuotes(objectApiName) +
+                         ' WHERE ' + String.join(searchConditions, ' OR ') +
+                         ' LIMIT 10';
+
+            return Database.query(query);
         } catch (Exception e) {
-            throw new AuraHandledException('Error searching records: ' + e.getMessage());
-        }
-    }
-    
-    public class SearchResult {
-        @AuraEnabled public String id;
-        @AuraEnabled public String name;
-        
-        public SearchResult(String id, String name) {
-            this.id = id;
-            this.name = name;
+            throw new AuraHandledException(e.getMessage());
         }
     }
 }

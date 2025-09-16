@@ -6,13 +6,8 @@
         <target>lightning__AppPage</target>
         <target>lightning__RecordPage</target>
         <target>lightning__HomePage</target>
+        <target>lightning__Tab</target>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
     </targets>
-    <targetConfigs>
-        <targetConfig targets="lightning__AppPage,lightning__RecordPage,lightning__HomePage">
-            <property name="label" type="String" default="Search" label="Label"/>
-            <property name="placeholder" type="String" default="Search..." label="Placeholder Text"/>
-            <property name="iconName" type="String" default="standard:account" label="Icon Name"/>
-            <property name="objectName" type="String" required="true" label="Object API Name"/>
-        </targetConfig>
-    </targetConfigs>
 </LightningComponentBundle>
