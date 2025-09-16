@@ -1,108 +1,121 @@
 import { LightningElement, api, track } from 'lwc';
 
 export default class AbnLookupCmpTestV0 extends LightningElement {
-    @api label;
+    // Public properties
+    @api label = '';
     @api placeholder = 'Search...';
     @api iconName = 'standard:account';
-    @api minSearchTermLength = 2;
-    @api debounceDelay = 300;
+    @api required = false;
+    @api disabled = false;
+    @api readonly = false;
+    @api minSearchLength = 2;
+    @api debounceTime = 300;
 
+    // Private reactive properties
     @track searchTerm = '';
     @track results = [];
-    @track isLoading = false;
+    @track errorMessage = '';
+    @track isSearching = false;
     @track hasFocus = false;
 
-    _debounceTimer;
+    // Private non-reactive properties
+    searchTimeout;
+    selectedId;
+    selectedValue;
+
+    // Computed properties
+    get hasResults() {
+        return this.results && this.results.length > 0;
+    }
+
+    get showResults() {
+        return this.hasFocus && (this.hasResults || this.isSearching);
+    }
 
     get isExpanded() {
-        return this.hasFocus && (this.results.length > 0 || this.isLoading);
+        return this.showResults ? 'true' : 'false';
     }
 
-    get comboboxClass() {
-        return `slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click ${
-            this.isExpanded ? 'slds-is-open' : ''
-        }`;
+    get getContainerClass() {
+        let baseClass = 'slds-combobox_container';
+        if (this.selectedId) {
+            baseClass += ' slds-has-selection';
+        }
+        return baseClass;
     }
 
+    get getComboboxClass() {
+        let baseClass = 'slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click';
+        if (this.showResults) {
+            baseClass += ' slds-is-open';
+        }
+        return baseClass;
+    }
+
+    // Event handlers
     handleKeyUp(event) {
+        // Debounce search
+        window.clearTimeout(this.searchTimeout);
         const searchTerm = event.target.value;
         this.searchTerm = searchTerm;
 
-        // Clear any existing timer
-        if (this._debounceTimer) {
-            clearTimeout(this._debounceTimer);
-        }
-
-        // If search term is long enough, trigger search
-        if (searchTerm.length >= this.minSearchTermLength) {
-            this._debounceTimer = setTimeout(() => {
+        if (searchTerm.length >= this.minSearchLength) {
+            this.isSearching = true;
+            this.searchTimeout = window.setTimeout(() => {
                 this.performSearch(searchTerm);
-            }, this.debounceDelay);
+            }, this.debounceTime);
         } else {
             this.results = [];
+            this.isSearching = false;
         }
     }
 
     handleFocus() {
         this.hasFocus = true;
-        // Dispatch focus event
-        this.dispatchEvent(new CustomEvent('focus'));
     }
 
     handleBlur() {
-        // Use setTimeout to allow click events to fire before closing dropdown
-        setTimeout(() => {
+        // Delay hiding results to allow click events to fire
+        window.setTimeout(() => {
             this.hasFocus = false;
-            // Dispatch blur event
-            this.dispatchEvent(new CustomEvent('blur'));
         }, 300);
     }
 
     handleResultClick(event) {
         const selectedId = event.currentTarget.dataset.id;
         const selectedValue = event.currentTarget.dataset.value;
-
-        // Dispatch selection event
-        this.dispatchEvent(
-            new CustomEvent('selection', {
-                detail: {
-                    id: selectedId,
-                    value: selectedValue
-                }
-            })
-        );
-
-        // Clear results and search term
-        this.searchTerm = selectedValue;
-        this.results = [];
+        this.selectResult(selectedId, selectedValue);
     }
 
-    async performSearch(searchTerm) {
-        try {
-            this.isLoading = true;
-            
-            // Mock search results - replace with actual API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            this.results = [
-                { id: '1', value: 'Result 1', subtitle: 'Subtitle 1' },
-                { id: '2', value: 'Result 2', subtitle: 'Subtitle 2' },
-                { id: '3', value: 'Result 3', subtitle: 'Subtitle 3' }
-            ];
+    // Private methods
+    performSearch(searchTerm) {
+        // Mock search results - replace with actual search logic
+        this.results = [
+            { id: '1', label: 'Result 1', value: 'value1', sublabel: 'Sub Label 1' },
+            { id: '2', label: 'Result 2', value: 'value2', sublabel: 'Sub Label 2' }
+        ];
+        this.isSearching = false;
+    }
 
-        } catch (error) {
-            console.error('Search error:', error);
-            this.dispatchEvent(
-                new CustomEvent('error', {
-                    detail: error
-                })
-            );
-        } finally {
-            this.isLoading = false;
-        }
+    selectResult(id, value) {
+        this.selectedId = id;
+        this.selectedValue = value;
+        this.searchTerm = this.results.find(result => result.id === id)?.label || '';
+        this.results = [];
+        
+        // Dispatch selection event
+        this.dispatchEvent(new CustomEvent('select', {
+            detail: {
+                id: this.selectedId,
+                value: this.selectedValue
+            }
+        }));
     }
 
     @api
     clearSelection() {
+        this.selectedId = null;
+        this.selectedValue = null;
         this.searchTerm = '';
         this.results = [];
     }
