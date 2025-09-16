@@ -1,1 +1,48 @@
-<!-- Generated HTML content -->
+<!-- Lookup Component -->
+<template>
+    <div class="slds-form-element">
+        <div class="slds-form-element__control">
+            <div class="slds-combobox_container">
+                <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox">
+                    <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
+                        <input type="text"
+                               class="slds-input slds-combobox__input"
+                               id="combobox-id-1" 
+                               aria-controls="listbox-id-1"
+                               autocomplete="off"
+                               role="textbox"
+                               placeholder="Search..."
+                               value={searchTerm}
+                               onkeyup={handleKeyUp}
+                               onclick={handleClick}/>
+                        <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right">
+                            <lightning-icon icon-name="utility:search" size="xx-small" class="slds-icon slds-icon_x-small"></lightning-icon>
+                        </span>
+                    </div>
+                    <div id="listbox-id-1" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid" role="listbox">
+                        <ul class="slds-listbox slds-listbox_vertical" role="presentation">
+                            <template for:each={searchResults} for:item="result">
+                                <li key={result.Id} role="presentation" class="slds-listbox__item">
+                                    <div class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" 
+                                         role="option"
+                                         onclick={handleSelection}
+                                         data-id={result.Id}
+                                         data-name={result.Name}>
+                                        <span class="slds-media__figure">
+                                            <span class="slds-icon_container">
+                                                <lightning-icon icon-name={iconName} size="small"></lightning-icon>
+                                            </span>
+                                        </span>
+                                        <span class="slds-media__body">
+                                            <span class="slds-listbox__option-text slds-listbox__option-text_entity">{result.Name}</span>
+                                        </span>
+                                    </div>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
