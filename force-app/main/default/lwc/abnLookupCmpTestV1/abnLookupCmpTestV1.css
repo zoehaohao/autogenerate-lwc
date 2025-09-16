@@ -1,0 +1,24 @@
+.fullWidth {
+    width: 100%;
+}
+
+.slds-listbox__option:hover {
+    background-color: #f3f2f2;
+    cursor: pointer;
+}
+
+.slds-pill {
+    width: 100%;
+    height: 32px;
+}
+
+.slds-pill__action {
+    padding: 0.3rem;
+    width: calc(100% - 2rem);
+}
+
+.slds-pill__remove {
+    position: absolute;
+    right: 0.5rem;
+    top: 0.2rem;
+}
