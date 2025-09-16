@@ -2,7 +2,7 @@ import { LightningElement, track } from 'lwc';
 
 export default class TestRegenerationV7 extends LightningElement {
     @track inputText = '';
-    @track displayText = 'Enter some text and click the button';
+    @track displayText = 'Enter some text and click the button!';
 
     handleInputChange(event) {
         this.inputText = event.target.value;
@@ -11,17 +11,14 @@ export default class TestRegenerationV7 extends LightningElement {
     handleClick() {
         if (this.inputText) {
             this.displayText = `You entered: ${this.inputText}`;
-            // Dispatch a custom event
             this.dispatchEvent(new CustomEvent('textchange', {
                 detail: {
                     text: this.inputText,
                     timestamp: new Date().toISOString()
-                },
-                bubbles: true,
-                composed: true
+                }
             }));
         } else {
-            this.displayText = 'Please enter some text first';
+            this.displayText = 'Please enter some text first!';
         }
     }
 }
