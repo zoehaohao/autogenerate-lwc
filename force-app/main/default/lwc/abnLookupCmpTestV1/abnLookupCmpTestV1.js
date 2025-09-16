@@ -1,40 +1,93 @@
 import { LightningElement, api, track } from 'lwc';
 
 export default class AbnLookupCmpTestV1 extends LightningElement {
+    // Public properties
     @api label = 'Search';
     @api placeholder = 'Search...';
-    @api iconName = 'standard:account';
-    
+    @api minSearchLength = 2;
+    @api debounceTime = 300;
+    @api required = false;
+
+    // Private reactive properties
     @track searchTerm = '';
     @track results = [];
-    @track showResults = false;
-    
-    // Sample data - replace with actual data source
-    sampleData = [
-        { id: '1', value: 'Item 1', label: 'Item One', sublabel: 'Description 1', icon: 'standard:account' },
-        { id: '2', value: 'Item 2', label: 'Item Two', sublabel: 'Description 2', icon: 'standard:account' },
-        { id: '3', value: 'Item 3', label: 'Item Three', sublabel: 'Description 3', icon: 'standard:account' }
-    ];
-    
-    handleSearch(event) {
-        this.searchTerm = event.target.value;
-        
-        if (this.searchTerm.length >= 2) {
-            // Filter sample data based on search term
-            this.results = this.sampleData.filter(item =>
-                item.label.toLowerCase().includes(this.searchTerm.toLowerCase())
-            );
-            this.showResults = true;
-        } else {
-            this.results = [];
-            this.showResults = false;
+    @track loading = false;
+    @track errorMessage = '';
+    @track isExpanded = false;
+
+    // Private non-reactive properties
+    _debounceTimer;
+    _selectedId;
+    _selectedValue;
+
+    // Computed properties
+    get hasResults() {
+        return this.results.length > 0;
+    }
+
+    get comboboxClass() {
+        return `slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click ${this.isExpanded ? 'slds-is-open' : ''}`;
+    }
+
+    get dropdownClass() {
+        return `slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid ${this.isExpanded ? 'slds-show' : 'slds-hide'}`;
+    }
+
+    // Event handlers
+    handleKeyUp(event) {
+        const searchTerm = event.target.value;
+        this.searchTerm = searchTerm;
+
+        // Clear any existing timer
+        if (this._debounceTimer) {
+            clearTimeout(this._debounceTimer);
+        }
+
+        // If search term is empty, close dropdown and clear results
+        if (!searchTerm) {
+            this.clearResults();
+            return;
+        }
+
+        // If search term is shorter than minimum length, show error
+        if (searchTerm.length < this.minSearchLength) {
+            this.errorMessage = `Please enter at least ${this.minSearchLength} characters`;
+            this.clearResults();
+            return;
+        }
+
+        // Clear error message
+        this.errorMessage = '';
+
+        // Set up debounced search
+        this._debounceTimer = setTimeout(() => {
+            this.performSearch(searchTerm);
+        }, this.debounceTime);
+    }
+
+    handleFocus() {
+        // Show dropdown if we have results
+        if (this.hasResults) {
+            this.isExpanded = true;
         }
     }
-    
+
+    handleBlur() {
+        // Use setTimeout to allow click events to fire before closing
+        setTimeout(() => {
+            this.isExpanded = false;
+        }, 300);
+    }
+
     handleResultClick(event) {
         const selectedId = event.currentTarget.dataset.id;
         const selectedValue = event.currentTarget.dataset.value;
         
+        this._selectedId = selectedId;
+        this._selectedValue = selectedValue;
+        this.searchTerm = selectedValue;
+        this.isExpanded = false;
+
         // Dispatch selection event
         this.dispatchEvent(new CustomEvent('selection', {
             detail: {
@@ -42,10 +95,47 @@ export default class AbnLookupCmpTestV1 extends LightningElement {
                 value: selectedValue
             }
         }));
-        
-        // Clear search and results
-        this.searchTerm = '';
+    }
+
+    // Private methods
+    clearResults() {
         this.results = [];
-        this.showResults = false;
+        this.isExpanded = false;
+        this.loading = false;
+    }
+
+    performSearch(searchTerm) {
+        // Show loading state
+        this.loading = true;
+        this.isExpanded = true;
+
+        // Simulate API call - replace with actual API call
+        setTimeout(() => {
+            // Mock results
+            this.results = [
+                { id: '1', label: 'Result 1', value: 'Result 1', sublabel: 'Additional info 1' },
+                { id: '2', label: 'Result 2', value: 'Result 2', sublabel: 'Additional info 2' },
+                { id: '3', label: 'Result 3', value: 'Result 3', sublabel: 'Additional info 3' }
+            ];
+            this.loading = false;
+        }, 1000);
+    }
+
+    // Public methods
+    @api
+    getValue() {
+        return {
+            id: this._selectedId,
+            value: this._selectedValue
+        };
+    }
+
+    @api
+    reset() {
+        this.searchTerm = '';
+        this._selectedId = null;
+        this._selectedValue = null;
+        this.clearResults();
+        this.errorMessage = '';
     }
 }
