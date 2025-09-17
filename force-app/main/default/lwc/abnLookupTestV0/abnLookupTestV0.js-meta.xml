@@ -10,4 +10,6 @@
         <target>lightningCommunity__Page</target>
         <target>lightningCommunity__Default</target>
     </targets>
+    <masterLabel>ABN Lookup Test V0</masterLabel>
+    <description>A reusable lookup component for searching Salesforce records</description>
 </LightningComponentBundle>
