@@ -1,13 +1,11 @@
-.slds-listbox__option:hover {
-    background-color: #f3f2f2;
-    cursor: pointer;
+.searchBox {
+    min-height: 2rem;
 }
 
-.slds-combobox__input {
-    transition: border .1s linear;
+.slds-combobox__form-element {
+    min-height: 2rem;
 }
 
-.slds-combobox__input:focus {
-    border-color: rgb(1, 118, 211);
-    box-shadow: 0 0 3px #0176d3;
+.slds-pill_container {
+    padding: 0.125rem;
 }
