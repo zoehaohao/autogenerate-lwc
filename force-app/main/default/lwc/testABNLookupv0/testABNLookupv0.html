@@ -1,0 +1,65 @@
+<template>
+    <div class="slds-card">
+        <div class="slds-card__header">
+            <h2 class="slds-card__header-title">
+                ABN Lookup
+            </h2>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="abn-input">
+                    Enter ABN
+                </label>
+                <div class="slds-form-element__control">
+                    <input type="text" 
+                           id="abn-input" 
+                           class="slds-input" 
+                           value={abnNumber}
+                           onchange={handleAbnChange}
+                           placeholder="Enter 11 digit ABN"/>
+                </div>
+            </div>
+            <div class="slds-m-top_medium">
+                <lightning-button 
+                    label="Lookup ABN" 
+                    variant="brand"
+                    onclick={handleLookup}
+                    disabled={isSearchDisabled}>
+                </lightning-button>
+            </div>
+            
+            <template if:true={isLoading}>
+                <div class="slds-m-top_medium">
+                    <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+                </div>
+            </template>
+
+            <template if:true={hasResult}>
+                <div class="slds-m-top_medium">
+                    <dl class="slds-dl_horizontal">
+                        <dt class="slds-dl_horizontal__label">Entity Name:</dt>
+                        <dd class="slds-dl_horizontal__detail">{result.entityName}</dd>
+                        
+                        <dt class="slds-dl_horizontal__label">ABN Status:</dt>
+                        <dd class="slds-dl_horizontal__detail">{result.abnStatus}</dd>
+                        
+                        <dt class="slds-dl_horizontal__label">State:</dt>
+                        <dd class="slds-dl_horizontal__detail">{result.state}</dd>
+                        
+                        <dt class="slds-dl_horizontal__label">Type:</dt>
+                        <dd class="slds-dl_horizontal__detail">{result.entityType}</dd>
+                    </dl>
+                </div>
+            </template>
+
+            <template if:true={hasError}>
+                <div class="slds-m-top_medium">
+                    <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                        <span class="slds-assistive-text">error</span>
+                        <h2>{errorMessage}</h2>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+</template>
