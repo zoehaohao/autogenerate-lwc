@@ -1,0 +1,36 @@
+<template>
+    <div class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <span class="slds-text-heading_small">Test Human Inloop Component</span>
+                    </h2>
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col">
+                    <lightning-input 
+                        label="Enter Text"
+                        value={inputText}
+                        onchange={handleInputChange}>
+                    </lightning-input>
+                </div>
+            </div>
+            <div class="slds-m-top_medium">
+                <lightning-button 
+                    label="Click Me"
+                    variant="brand"
+                    onclick={handleClick}>
+                </lightning-button>
+            </div>
+            <template if:true={showMessage}>
+                <div class="slds-m-top_small">
+                    {displayMessage}
+                </div>
+            </template>
+        </div>
+    </div>
+</template>
