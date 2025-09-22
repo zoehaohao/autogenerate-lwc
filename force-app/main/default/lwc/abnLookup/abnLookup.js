@@ -1,57 +1,74 @@
-import { LightningElement, api, track } from 'lwc';
-import searchABN from '@salesforce/apex/abnLookupController.searchABN';
+import { LightningElement, api } from 'lwc';
+import validateABN from '@salesforce/apex/ABNLookupController.validateABN';
+import sendSMSNotification from '@salesforce/apex/ABNLookupController.sendSMSNotification';
 
 export default class AbnLookup extends LightningElement {
     @api recordId;
-    @track searchTerm = '';
-    @track searchResults = [];
-    @track errorMessage = '';
-    @track isLoading = false;
+    @api abnNumber;
+    @api isReadOnly = false;
+    @api mobileNumber;
 
-    handleSearchChange(event) {
-        this.searchTerm = event.target.value;
-        this.errorMessage = '';
-        if (this.searchTerm.length < 3) {
-            this.searchResults = [];
-        }
+    isLoading = false;
+    validationResult;
+    errorMessage;
+    showSuccessMessage = false;
+
+    handleAbnChange(event) {
+        this.abnNumber = event.target.value;
+        this.validationResult = undefined;
+        this.errorMessage = undefined;
+        this.showSuccessMessage = false;
     }
 
-    async handleSearch() {
-        if (!this.searchTerm || this.searchTerm.length < 3) {
-            this.errorMessage = 'Please enter at least 3 characters to search';
+    async handleValidateAbn() {
+        if (!this.abnNumber) {
+            this.errorMessage = 'Please enter an ABN number';
             return;
         }
 
         this.isLoading = true;
-        this.errorMessage = '';
+        this.errorMessage = undefined;
 
         try {
-            const results = await searchABN({ searchTerm: this.searchTerm });
-            this.searchResults = results.map(result => ({
-                ...result,
-                id: crypto.randomUUID()
-            }));
+            this.validationResult = await validateABN({ abnNumber: this.abnNumber });
+            if (this.validationResult.isValid) {
+                this.showSuccessMessage = true;
+                if (this.mobileNumber) {
+                    await this.sendNotification();
+                }
+            } else {
+                this.errorMessage = 'Invalid ABN number';
+            }
         } catch (error) {
-            this.errorMessage = error.body?.message || 'An error occurred while searching. Please try again.';
-            this.searchResults = [];
+            this.errorMessage = error.body?.message || 'Error validating ABN';
+            this.validationResult = undefined;
         } finally {
             this.isLoading = false;
         }
     }
 
-    handleSelect(event) {
-        const selectedId = event.currentTarget.dataset.id;
-        const selectedResult = this.searchResults.find(result => result.id === selectedId);
-        
-        if (selectedResult) {
-            // Dispatch custom event with selected ABN details
-            this.dispatchEvent(new CustomEvent('abnselected', {
-                detail: {
-                    abn: selectedResult.abn,
-                    businessName: selectedResult.businessName,
-                    status: selectedResult.status
-                }
-            }));
+    async sendNotification() {
+        try {
+            await sendSMSNotification({ 
+                mobileNumber: this.mobileNumber,
+                message: `ABN ${this.abnNumber} has been successfully validated.`
+            });
+        } catch (error) {
+            console.error('SMS notification error:', error);
+            // Don't show SMS errors to user as it's not critical to main functionality
         }
+    }
+
+    get buttonVariant() {
+        return this.validationResult?.isValid ? 'success' : 'brand';
+    }
+
+    get buttonLabel() {
+        return this.isLoading ? 'Validating...' : 'Validate ABN';
+    }
+
+    get abnInputClass() {
+        if (!this.validationResult) return '';
+        return this.validationResult.isValid ? 'valid-abn' : 'invalid-abn';
     }
 }

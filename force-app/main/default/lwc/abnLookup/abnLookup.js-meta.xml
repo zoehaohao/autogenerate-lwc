@@ -8,5 +8,13 @@
         <target>lightning__HomePage</target>
         <target>lightning__Tab</target>
         <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
     </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AppPage,lightning__HomePage,lightning__RecordPage">
+            <property name="abnNumber" type="String" label="Default ABN Number" description="Pre-populate the ABN field with this value"/>
+            <property name="isReadOnly" type="Boolean" default="false" label="Read Only" description="Make the ABN field read-only"/>
+            <property name="mobileNumber" type="String" label="Mobile Number" description="Mobile number for SMS notifications"/>
+        </targetConfig>
+    </targetConfigs>
 </LightningComponentBundle>
