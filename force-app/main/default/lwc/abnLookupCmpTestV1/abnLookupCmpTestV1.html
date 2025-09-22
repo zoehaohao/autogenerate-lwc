@@ -1,34 +1,103 @@
-<!-- sldsValidatorIgnore -->
+<!-- Lookup component with search and selection capabilities -->
 <template>
     <div class="slds-form-element">
+        <label if:true={label} class="slds-form-element__label" for="combobox">
+            <abbr if:true={required} class="slds-required" title="required">*</abbr>
+            {label}
+        </label>
         <div class="slds-form-element__control">
-            <div class="slds-combobox_container">
-                <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" aria-expanded="false" aria-haspopup="listbox" role="combobox">
+            <div class={getContainerClass}>
+                <div class={getDropdownClass} role="combobox">
+                    <!-- Search input -->
                     <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
-                        <input type="text" class="slds-input slds-combobox__input" id="combobox-id-1" aria-controls="listbox-id-1" autocomplete="off" role="textbox" placeholder="Search..." value={searchTerm} onkeyup={handleKeyUp} onclick={handleClick}/>
+                        <input 
+                            type="text"
+                            class={getInputClass}
+                            id="combobox"
+                            aria-controls="listbox"
+                            autocomplete="off"
+                            role="textbox"
+                            placeholder={placeholder}
+                            value={searchTerm}
+                            required={required}
+                            onkeyup={handleKeyUp}
+                            onfocus={handleFocus}
+                            onblur={handleBlur}
+                            disabled={disabled}
+                        />
+                        <!-- Input icons -->
                         <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right">
-                            <lightning-icon icon-name="utility:search" size="xx-small" class="slds-icon slds-icon_x-small"></lightning-icon>
+                            <lightning-icon 
+                                icon-name="utility:search"
+                                size="xx-small"
+                                class="slds-icon slds-icon_x-small slds-icon-text-default"
+                                if:false={isLoading}>
+                            </lightning-icon>
+                            <div if:true={isLoading} class="slds-is-relative slds-align_absolute-center">
+                                <lightning-spinner
+                                    alternative-text="Loading"
+                                    size="xx-small"
+                                    variant="brand">
+                                </lightning-spinner>
+                            </div>
                         </span>
                     </div>
-                    <div id="listbox-id-1" class="slds-dropdown slds-dropdown_length-5 slds-dropdown_fluid" role="listbox">
-                        <ul class="slds-listbox slds-listbox_vertical" role="presentation">
-                            <template for:each={searchResults} for:item="result">
-                                <li key={result.Id} role="presentation" class="slds-listbox__item">
-                                    <div class="slds-media slds-listbox__option slds-listbox__option_entity slds-listbox__option_has-meta" role="option" onclick={handleResultClick} data-id={result.Id} data-name={result.Name}>
-                                        <span class="slds-media__figure">
-                                            <span class="slds-icon_container">
-                                                <lightning-icon icon-name="standard:account" size="small"></lightning-icon>
-                                            </span>
+                    <!-- Result list -->
+                    <div id="listbox" role="listbox" if:true={showResults}>
+                        <ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid" role="presentation">
+                            <template for:each={results} for:item="result">
+                                <li key={result.id} role="presentation" class="slds-listbox__item">
+                                    <div 
+                                        class={getItemClass} 
+                                        role="option"
+                                        onclick={handleResultClick}
+                                        data-recordid={result.id}
+                                        data-name={result.title}>
+                                        <span class="slds-media__figure slds-listbox__option-icon">
+                                            <lightning-icon 
+                                                icon-name={iconName} 
+                                                size="small">
+                                            </lightning-icon>
                                         </span>
                                         <span class="slds-media__body">
-                                            <span class="slds-listbox__option-text slds-listbox__option-text_entity">{result.Name}</span>
+                                            <span class="slds-listbox__option-text slds-listbox__option-text_entity">
+                                                {result.title}
+                                            </span>
+                                            <span if:true={result.subtitle} class="slds-listbox__option-meta slds-listbox__option-meta_entity">
+                                                {result.subtitle}
+                                            </span>
                                         </span>
                                     </div>
                                 </li>
                             </template>
+                            <!-- No results message -->
+                            <li if:true={showNoResults} role="presentation" class="slds-listbox__item">
+                                <div class="slds-media slds-listbox__option slds-listbox__option_entity" role="option">
+                                    <span class="slds-media__body">
+                                        <span class="slds-listbox__option-text">No results found for "{searchTerm}"</span>
+                                    </span>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 </div>
+                <!-- Clear selection button -->
+                <div if:true={showClearButton} class="slds-input__icon-group slds-input__icon-group_right">
+                    <button 
+                        class="slds-button slds-button_icon slds-input__icon slds-input__icon_right" 
+                        title="Clear Selection"
+                        onclick={handleClearSelection}>
+                        <lightning-icon 
+                            icon-name="utility:close"
+                            size="xx-small"
+                            class="slds-icon slds-icon_x-small slds-icon-text-default">
+                        </lightning-icon>
+                    </button>
+                </div>
+            </div>
+            <!-- Error message -->
+            <div if:true={hasError} class="slds-form-element__help" id="error-message" role="alert">
+                {errorMessage}
             </div>
         </div>
     </div>

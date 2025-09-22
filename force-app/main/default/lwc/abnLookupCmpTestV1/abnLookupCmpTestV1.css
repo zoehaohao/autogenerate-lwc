@@ -1,24 +1,15 @@
-/* Custom styles for the lookup component */
-:host {
-    display: block;
+.slds-listbox__option-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.slds-combobox_container {
-    max-width: 100%;
-}
-
-.slds-listbox__option:hover {
-    background-color: #f3f2f2;
-    cursor: pointer;
-}
-
-.slds-listbox__option-text_entity {
-    display: block;
-    margin-bottom: 0.125rem;
-}
-
-.slds-listbox__option-meta_entity {
-    display: block;
+.slds-listbox__option-meta {
     font-size: 0.75rem;
     color: #706e6b;
+}
+
+.slds-dropdown {
+    max-height: 300px;
+    overflow-y: auto;
 }
