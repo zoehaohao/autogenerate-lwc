@@ -1,0 +1,29 @@
+<template>
+    <lightning-card title="Test My Metrics 2" icon-name="standard:metrics">
+        <div class="slds-p-around_medium">
+            <div class="slds-grid slds-wrap slds-gutters">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+                    <lightning-card title="Metric 1">
+                        <div class="slds-p-around_medium">
+                            <lightning-formatted-number value={metric1Value} format-style="decimal"></lightning-formatted-number>
+                        </div>
+                    </lightning-card>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+                    <lightning-card title="Metric 2">
+                        <div class="slds-p-around_medium">
+                            <lightning-formatted-number value={metric2Value} format-style="decimal"></lightning-formatted-number>
+                        </div>
+                    </lightning-card>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+                    <lightning-card title="Metric 3">
+                        <div class="slds-p-around_medium">
+                            <lightning-formatted-number value={metric3Value} format-style="decimal"></lightning-formatted-number>
+                        </div>
+                    </lightning-card>
+                </div>
+            </div>
+        </div>
+    </lightning-card>
+</template>
