@@ -1,0 +1,18 @@
+/* Custom styles for the metrics component */
+:host {
+    display: block;
+}
+
+.slds-text-heading_large {
+    font-weight: 300;
+    font-size: 2rem;
+    line-height: 1.25;
+    color: #032d60;
+}
+
+lightning-tile {
+    background: #ffffff;
+    border: 1px solid #dddbda;
+    border-radius: .25rem;
+    padding: 1rem;
+}

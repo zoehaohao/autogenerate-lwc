@@ -1,0 +1,37 @@
+<template>
+    <lightning-card title="Metrics" icon-name="utility:metrics">
+        <div class="slds-p-around_medium">
+            <div class="slds-grid slds-gutters slds-wrap">
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+                    <lightning-tile label="Total Records" class="slds-text-align_center">
+                        <p class="slds-text-heading_large">{totalRecords}</p>
+                    </lightning-tile>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+                    <lightning-tile label="Active Records" class="slds-text-align_center">
+                        <p class="slds-text-heading_large">{activeRecords}</p>
+                    </lightning-tile>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3">
+                    <lightning-tile label="Success Rate" class="slds-text-align_center">
+                        <p class="slds-text-heading_large">{successRate}%</p>
+                    </lightning-tile>
+                </div>
+            </div>
+            <div class="slds-m-top_medium">
+                <lightning-button-group>
+                    <lightning-button 
+                        label="Refresh" 
+                        icon-name="utility:refresh"
+                        onclick={handleRefresh}>
+                    </lightning-button>
+                    <lightning-button 
+                        label="Export" 
+                        icon-name="utility:download"
+                        onclick={handleExport}>
+                    </lightning-button>
+                </lightning-button-group>
+            </div>
+        </div>
+    </lightning-card>
+</template>
