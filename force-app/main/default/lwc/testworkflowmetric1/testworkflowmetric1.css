@@ -1,0 +1,12 @@
+.slds-card__body_inner {
+    padding: 1rem;
+}
+
+.slds-box {
+    background-color: #ffffff;
+}
+
+.slds-text-heading_large {
+    font-weight: bold;
+    color: #2a739e;
+}
