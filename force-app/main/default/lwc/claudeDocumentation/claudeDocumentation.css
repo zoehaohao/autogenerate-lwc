@@ -1,0 +1,28 @@
+.sidebar {
+    top: 100px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    width: calc(25% - 2rem);
+}
+
+.code-block {
+    background: #f3f3f3;
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+.code-block pre {
+    margin: 0;
+    white-space: pre-wrap;
+    font-family: monospace;
+}
+
+@media (max-width: 1023px) {
+    .sidebar {
+        position: relative !important;
+        top: 0;
+        width: 100%;
+        max-height: none;
+    }
+}

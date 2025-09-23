@@ -1,0 +1,74 @@
+<template>
+    <div class="slds-grid slds-wrap">
+        <!-- Header Section -->
+        <div class="slds-col slds-size_1-of-1 slds-p-around_medium">
+            <div class="slds-text-heading_large slds-text-align_center">
+                Claude Code Documentation
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="slds-col slds-size_1-of-1 slds-large-size_3-of-4 slds-p-around_medium">
+            <!-- Table of Contents -->
+            <div class="slds-box slds-m-bottom_medium">
+                <h2 class="slds-text-heading_medium slds-m-bottom_small">Contents</h2>
+                <ul class="slds-has-dividers_bottom-space">
+                    <template for:each={tableOfContents} for:item="item">
+                        <li key={item.id} class="slds-item">
+                            <a href={item.href} onclick={handleNavigation} data-section={item.id} 
+                               class="slds-text-link_reset">
+                                {item.title}
+                            </a>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+
+            <!-- Documentation Sections -->
+            <div class="doc-sections">
+                <template for:each={documentationSections} for:item="section">
+                    <div key={section.id} class="slds-box slds-m-bottom_medium" data-id={section.id}>
+                        <h2 class="slds-text-heading_medium slds-m-bottom_small">
+                            {section.title}
+                        </h2>
+                        <div class="slds-text-body_regular">
+                            <lightning-formatted-rich-text 
+                                value={section.content}>
+                            </lightning-formatted-rich-text>
+                        </div>
+                        
+                        <!-- Code Examples if present -->
+                        <template if:true={section.codeExample}>
+                            <div class="slds-box slds-theme_shade slds-m-top_small code-block">
+                                <pre><code>{section.codeExample}</code></pre>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Right Sidebar Navigation -->
+        <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-4 slds-p-around_medium">
+            <div class="slds-position_fixed sidebar">
+                <nav class="slds-nav-vertical" aria-label="Documentation Navigation">
+                    <div class="slds-nav-vertical__section">
+                        <h2 class="slds-nav-vertical__title">Quick Navigation</h2>
+                        <ul>
+                            <template for:each={tableOfContents} for:item="item">
+                                <li key={item.id} class="slds-nav-vertical__item">
+                                    <a href={item.href} 
+                                       class={item.navClass}
+                                       onclick={handleNavigation}
+                                       data-section={item.id}>
+                                        {item.title}
+                                    </a>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</template>
