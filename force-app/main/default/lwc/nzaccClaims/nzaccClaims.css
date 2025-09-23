@@ -1,0 +1,20 @@
+.toast-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9002;
+}
+
+.slds-modal__container {
+    max-width: 70rem;
+    width: 80%;
+}
+
+.slds-notify_container {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+}

@@ -1,0 +1,140 @@
+<template>
+    <lightning-card title="NZ ACC Claims" icon-name="standard:claim">
+        <div class="slds-p-around_medium">
+            <!-- Header Section -->
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col">
+                    <lightning-button-group>
+                        <lightning-button 
+                            label="New Claim" 
+                            icon-name="utility:add"
+                            onclick={handleNewClaim}>
+                        </lightning-button>
+                        <lightning-button 
+                            label="Refresh" 
+                            icon-name="utility:refresh"
+                            onclick={handleRefresh}>
+                        </lightning-button>
+                    </lightning-button-group>
+                </div>
+            </div>
+
+            <!-- Filters Section -->
+            <div class="slds-grid slds-gutters slds-m-bottom_medium">
+                <div class="slds-col">
+                    <lightning-input 
+                        type="search"
+                        label="Search Claims"
+                        onchange={handleSearch}>
+                    </lightning-input>
+                </div>
+                <div class="slds-col">
+                    <lightning-combobox
+                        label="Status Filter"
+                        value={selectedStatus}
+                        options={statusOptions}
+                        onchange={handleStatusFilter}>
+                    </lightning-combobox>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="slds-m-bottom_medium">
+                <lightning-datatable
+                    key-field="id"
+                    data={claims}
+                    columns={columns}
+                    hide-checkbox-column
+                    show-row-number-column
+                    sorted-by={sortedBy}
+                    sorted-direction={sortedDirection}
+                    onsort={handleSort}>
+                </lightning-datatable>
+            </div>
+
+            <!-- Modal for New/Edit Claim -->
+            <template if:true={isModalOpen}>
+                <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                    <div class="slds-modal__container">
+                        <!-- Modal Header -->
+                        <header class="slds-modal__header">
+                            <h2 class="slds-modal__title slds-hyphenate">
+                                {modalTitle}
+                            </h2>
+                        </header>
+
+                        <!-- Modal Body -->
+                        <div class="slds-modal__content slds-p-around_medium">
+                            <lightning-record-edit-form
+                                object-api-name="ACC_Claim__c"
+                                record-id={currentRecordId}
+                                onsubmit={handleSubmit}
+                                onsuccess={handleSuccess}
+                                onerror={handleError}>
+
+                                <lightning-messages></lightning-messages>
+                                
+                                <div class="slds-grid slds-gutters">
+                                    <div class="slds-col">
+                                        <lightning-input-field field-name="Claim_Number__c"></lightning-input-field>
+                                        <lightning-input-field field-name="Claimant_Name__c"></lightning-input-field>
+                                        <lightning-input-field field-name="Injury_Type__c"></lightning-input-field>
+                                    </div>
+                                    <div class="slds-col">
+                                        <lightning-input-field field-name="Incident_Date__c"></lightning-input-field>
+                                        <lightning-input-field field-name="Status__c"></lightning-input-field>
+                                        <lightning-input-field field-name="Description__c"></lightning-input-field>
+                                    </div>
+                                </div>
+                            </lightning-record-edit-form>
+                        </div>
+
+                        <!-- Modal Footer -->
+                        <footer class="slds-modal__footer">
+                            <lightning-button 
+                                label="Cancel" 
+                                onclick={closeModal} 
+                                class="slds-m-right_x-small">
+                            </lightning-button>
+                            <lightning-button 
+                                label="Save" 
+                                variant="brand"
+                                onclick={handleSave}>
+                            </lightning-button>
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </template>
+
+            <!-- Toast Container -->
+            <div class="toast-container">
+                <template if:true={showToast}>
+                    <div class="slds-notify_container">
+                        <div class={toastClass} role="status">
+                            <span class="slds-assistive-text">{toastVariant}</span>
+                            <span class="slds-icon_container slds-icon-utility-success">
+                                <lightning-icon 
+                                    icon-name={toastIcon}
+                                    size="small"
+                                    variant="inverse">
+                                </lightning-icon>
+                            </span>
+                            <div class="slds-notify__content">
+                                <h2 class="slds-text-heading_small">{toastMessage}</h2>
+                            </div>
+                            <div class="slds-notify__close">
+                                <lightning-button-icon 
+                                    icon-name="utility:close"
+                                    size="small"
+                                    variant="bare-inverse"
+                                    onclick={closeToast}>
+                                </lightning-button-icon>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </lightning-card>
+</template>
