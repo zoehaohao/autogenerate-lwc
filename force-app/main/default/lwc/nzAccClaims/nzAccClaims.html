@@ -1,0 +1,93 @@
+<template>
+    <div class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <lightning-icon icon-name="standard:claim" size="small"></lightning-icon>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <span class="slds-text-heading_small">NZ ACC Claims</span>
+                    </h2>
+                </div>
+            </header>
+        </div>
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="slds-grid slds-wrap slds-gutters">
+                <!-- Claim Information Section -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_4-of-12">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">Claim Number</label>
+                        <div class="slds-form-element__control">
+                            <lightning-input 
+                                type="text" 
+                                name="claimNumber"
+                                value={claimNumber}
+                                onchange={handleClaimNumberChange}>
+                            </lightning-input>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_4-of-12">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">Incident Date</label>
+                        <div class="slds-form-element__control">
+                            <lightning-input 
+                                type="date" 
+                                name="incidentDate"
+                                value={incidentDate}
+                                onchange={handleIncidentDateChange}>
+                            </lightning-input>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12 slds-large-size_4-of-12">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">Claim Status</label>
+                        <div class="slds-form-element__control">
+                            <lightning-combobox
+                                name="status"
+                                value={claimStatus}
+                                options={statusOptions}
+                                onchange={handleStatusChange}>
+                            </lightning-combobox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Claim Details Section -->
+            <div class="slds-grid slds-wrap slds-gutters slds-m-top_medium">
+                <div class="slds-col slds-size_1-of-1">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label">Incident Description</label>
+                        <div class="slds-form-element__control">
+                            <lightning-textarea 
+                                name="description"
+                                value={description}
+                                onchange={handleDescriptionChange}>
+                            </lightning-textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="slds-grid slds-wrap slds-gutters slds-m-top_medium">
+                <div class="slds-col slds-size_1-of-1">
+                    <lightning-button-group>
+                        <lightning-button 
+                            label="Save" 
+                            variant="brand"
+                            onclick={handleSave}>
+                        </lightning-button>
+                        <lightning-button 
+                            label="Clear" 
+                            onclick={handleClear}>
+                        </lightning-button>
+                    </lightning-button-group>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,8 @@
+/* Custom styles for NZ ACC Claims component */
+.slds-card__body_inner {
+    padding: 1rem;
+}
+
+lightning-textarea {
+    min-height: 100px;
+}
