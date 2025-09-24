@@ -1,66 +1,30 @@
 public with sharing class NZACCClaimsv3Controller {
-    @AuraEnabled(cacheable=true)
-    public static List<ClaimWrapper> getAllClaims() {
-        // In a real implementation, this would query the database
-        // This is a mock implementation for demonstration
-        return generateMockClaims();
-    }
-    
-    @AuraEnabled(cacheable=true)
-    public static List<ClaimWrapper> searchClaims(String searchTerm, String status) {
-        // In a real implementation, this would query the database with filters
-        // This is a mock implementation for demonstration
-        List<ClaimWrapper> allClaims = generateMockClaims();
-        List<ClaimWrapper> filteredClaims = new List<ClaimWrapper>();
-        
-        for(ClaimWrapper claim : allClaims) {
-            Boolean matchesSearch = String.isBlank(searchTerm) || 
-                claim.claimNumber.containsIgnoreCase(searchTerm) ||
-                claim.claimantName.containsIgnoreCase(searchTerm);
-                
-            Boolean matchesStatus = String.isBlank(status) || 
-                claim.status == status;
-                
-            if(matchesSearch && matchesStatus) {
-                filteredClaims.add(claim);
+    @AuraEnabled
+    public static ResponseWrapper submitClaim(Map<String, Object> claimData) {
+        try {
+            // Validate input
+            if (claimData == null) {
+                throw new AuraHandledException('Claim data cannot be null');
             }
+
+            // Process claim data here
+            // Add your business logic for claim submission
+
+            return new ResponseWrapper(true, 'Claim submitted successfully', null);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
         }
-        
-        return filteredClaims;
     }
     
-    private static List<ClaimWrapper> generateMockClaims() {
-        List<ClaimWrapper> claims = new List<ClaimWrapper>();
+    public class ResponseWrapper {
+        @AuraEnabled public Boolean success;
+        @AuraEnabled public String message;
+        @AuraEnabled public Object data;
         
-        claims.add(new ClaimWrapper(
-            'CLM-001', 'New', Date.today(), 'John Doe',
-            'Back Injury', 5000.00
-        ));
-        
-        claims.add(new ClaimWrapper(
-            'CLM-002', 'In Progress', Date.today().addDays(-5), 'Jane Smith',
-            'Wrist Sprain', 3500.00
-        ));
-        
-        return claims;
-    }
-    
-    public class ClaimWrapper {
-        @AuraEnabled public String claimNumber;
-        @AuraEnabled public String status;
-        @AuraEnabled public Date dateFiled;
-        @AuraEnabled public String claimantName;
-        @AuraEnabled public String injuryType;
-        @AuraEnabled public Decimal amount;
-        
-        public ClaimWrapper(String claimNumber, String status, Date dateFiled,
-                          String claimantName, String injuryType, Decimal amount) {
-            this.claimNumber = claimNumber;
-            this.status = status;
-            this.dateFiled = dateFiled;
-            this.claimantName = claimantName;
-            this.injuryType = injuryType;
-            this.amount = amount;
+        public ResponseWrapper(Boolean success, String message, Object data) {
+            this.success = success;
+            this.message = message;
+            this.data = data;
         }
     }
 }

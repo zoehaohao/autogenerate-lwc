@@ -1,12 +1,14 @@
-/* Custom styles for the component */
 .slds-card {
     background: #ffffff;
+    border-radius: 0.25rem;
 }
 
-.slds-datatable {
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+.slds-card__body_inner {
+    padding: 1rem;
 }
 
-.slds-input:focus, .slds-combobox:focus {
-    border-color: #0070d2;
+lightning-input,
+lightning-combobox,
+lightning-textarea {
+    margin-bottom: 1rem;
 }
