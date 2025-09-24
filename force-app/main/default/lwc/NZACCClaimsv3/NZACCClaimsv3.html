@@ -1,85 +1,82 @@
 <template>
-    <div class="slds-card">
+    <div class="slds-card slds-p-around_medium">
         <!-- Header -->
-        <div class="slds-card__header slds-grid">
-            <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                <div class="slds-media__body">
-                    <h2 class="slds-card__header-title">
-                        <span class="slds-text-heading_medium">NZACC Claims</span>
-                    </h2>
-                </div>
-            </header>
+        <div class="slds-text-heading_medium slds-m-bottom_medium">
+            ACC Claims Processing
         </div>
 
-        <!-- Body -->
-        <div class="slds-card__body slds-card__body_inner">
-            <!-- Form Grid -->
-            <div class="slds-grid slds-wrap slds-gutters">
-                <!-- Left Column -->
-                <div class="slds-col slds-size_1-of-2">
-                    <lightning-input 
-                        type="text" 
-                        label="Claim Number" 
-                        name="claimNumber"
-                        value={claimNumber}
-                        onchange={handleInputChange}
-                        required>
-                    </lightning-input>
+        <!-- Claim Form -->
+        <div class="slds-grid slds-wrap slds-gutters">
+            <!-- Left Column -->
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input 
+                    label="Claim Number" 
+                    type="text"
+                    value={claimNumber}
+                    onchange={handleClaimNumberChange}>
+                </lightning-input>
 
-                    <lightning-input 
-                        type="date" 
-                        label="Claim Date" 
-                        name="claimDate"
-                        value={claimDate}
-                        onchange={handleInputChange}
-                        required>
-                    </lightning-input>
+                <lightning-input 
+                    label="Claimant Name"
+                    type="text" 
+                    class="slds-m-top_small"
+                    value={claimantName}
+                    onchange={handleClaimantNameChange}>
+                </lightning-input>
 
-                    <lightning-combobox
-                        name="claimType"
-                        label="Claim Type"
-                        value={claimType}
-                        options={claimTypeOptions}
-                        onchange={handleInputChange}
-                        required>
-                    </lightning-combobox>
-                </div>
-
-                <!-- Right Column -->
-                <div class="slds-col slds-size_1-of-2">
-                    <lightning-textarea 
-                        name="description"
-                        label="Description"
-                        value={description}
-                        onchange={handleInputChange}>
-                    </lightning-textarea>
-
-                    <lightning-input 
-                        type="number" 
-                        label="Amount" 
-                        name="amount"
-                        value={amount}
-                        formatter="currency"
-                        step="0.01"
-                        onchange={handleInputChange}
-                        required>
-                    </lightning-input>
-                </div>
+                <lightning-input 
+                    label="Incident Date"
+                    type="date"
+                    class="slds-m-top_small"
+                    value={incidentDate}
+                    onchange={handleIncidentDateChange}>
+                </lightning-input>
             </div>
 
-            <!-- Action Buttons -->
-            <div class="slds-m-top_medium slds-grid slds-grid_align-center">
-                <lightning-button 
-                    variant="brand" 
-                    label="Submit" 
-                    onclick={handleSubmit}
-                    class="slds-m-right_x-small">
-                </lightning-button>
-                <lightning-button 
-                    label="Clear" 
-                    onclick={handleClear}>
-                </lightning-button>
+            <!-- Right Column -->
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-combobox
+                    label="Claim Type"
+                    value={claimType}
+                    options={claimTypeOptions}
+                    onchange={handleClaimTypeChange}
+                    class="slds-m-bottom_small">
+                </lightning-combobox>
+
+                <lightning-textarea 
+                    label="Description"
+                    value={description}
+                    onchange={handleDescriptionChange}>
+                </lightning-textarea>
             </div>
         </div>
+
+        <!-- Status Section -->
+        <div class="slds-m-top_medium">
+            <lightning-combobox
+                label="Claim Status"
+                value={claimStatus}
+                options={statusOptions}
+                onchange={handleStatusChange}>
+            </lightning-combobox>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="slds-m-top_medium slds-grid slds-grid_align-end">
+            <lightning-button 
+                label="Clear"
+                variant="neutral"
+                onclick={handleClear}
+                class="slds-m-right_small">
+            </lightning-button>
+            <lightning-button 
+                label="Save"
+                variant="brand"
+                onclick={handleSave}>
+            </lightning-button>
+        </div>
+
+        <!-- Toast for notifications -->
+        <c-toast-message></c-toast-message>
     </div>
 </template>

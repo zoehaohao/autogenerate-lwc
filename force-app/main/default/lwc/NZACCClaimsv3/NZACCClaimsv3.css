@@ -1,14 +1,15 @@
+/* Custom styles for the component */
+:host {
+    display: block;
+}
+
 .slds-card {
-    background: #ffffff;
+    background: white;
     border-radius: 0.25rem;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.1);
 }
 
-.slds-card__body_inner {
-    padding: 1rem;
-}
-
-lightning-input,
-lightning-combobox,
-lightning-textarea {
-    margin-bottom: 1rem;
+lightning-input.required,
+lightning-combobox.required {
+    --lwc-colorBorderError: rgb(194, 57, 52);
 }
