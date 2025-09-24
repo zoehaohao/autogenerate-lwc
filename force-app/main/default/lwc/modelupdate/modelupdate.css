@@ -1,0 +1,81 @@
+/* Component-specific styles */
+.slds-card {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Progress indicator styling */
+.slds-progress-indicator {
+    margin-bottom: 1rem;
+}
+
+/* Form field spacing */
+.slds-form-element {
+    margin-bottom: 0.75rem;
+}
+
+/* Button group styling */
+.slds-grid_align-end {
+    justify-content: flex-end;
+}
+
+/* Error and success message styling */
+.slds-notify {
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+/* Loading spinner overlay */
+.slds-is-relative {
+    position: relative;
+    min-height: 60px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .slds-col {
+        padding: 0.25rem;
+    }
+    
+    .slds-grid_align-end {
+        justify-content: center;
+    }
+    
+    .slds-button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Toggle switch styling */
+.slds-checkbox_toggle {
+    margin-bottom: 0.5rem;
+}
+
+/* Card header styling */
+.slds-card__header {
+    background-color: #f3f3f3;
+    border-bottom: 1px solid #dddbda;
+}
+
+/* Focus states for accessibility */
+.slds-input:focus,
+.slds-textarea:focus,
+.slds-select:focus {
+    border-color: #1589ee;
+    box-shadow: 0 0 3px #1589ee;
+}
+
+/* Custom spacing utilities */
+.custom-spacing {
+    margin: 0.5rem 0;
+}
+
+/* Animation for smooth transitions */
+.slds-notify {
+    transition: all 0.3s ease-in-out;
+}
+
+.slds-spinner {
+    transition: opacity 0.2s ease-in-out;
+}
