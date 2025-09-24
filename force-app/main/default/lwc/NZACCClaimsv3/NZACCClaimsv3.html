@@ -1,0 +1,51 @@
+<template>
+    <lightning-card title="ACC Claims" icon-name="standard:case">
+        <div class="slds-p-around_medium">
+            <div class="slds-grid slds-gutters slds-wrap">
+                <!-- Search Section -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-input 
+                        type="search"
+                        label="Search Claims"
+                        onchange={handleSearchChange}
+                        class="slds-m-bottom_small">
+                    </lightning-input>
+                </div>
+                
+                <!-- Filter Section -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                    <lightning-combobox
+                        label="Filter by Status"
+                        value={selectedStatus}
+                        options={statusOptions}
+                        onchange={handleStatusChange}
+                        class="slds-m-bottom_small">
+                    </lightning-combobox>
+                </div>
+            </div>
+
+            <!-- Claims Table -->
+            <div class="slds-m-top_medium">
+                <lightning-datatable
+                    key-field="id"
+                    data={claims}
+                    columns={columns}
+                    hide-checkbox-column
+                    show-row-number-column
+                    sorted-by={sortedBy}
+                    sorted-direction={sortedDirection}
+                    onsort={handleSort}>
+                </lightning-datatable>
+            </div>
+
+            <!-- New Claim Button -->
+            <div class="slds-m-top_medium slds-text-align_right">
+                <lightning-button 
+                    label="New Claim" 
+                    variant="brand"
+                    onclick={handleNewClaim}>
+                </lightning-button>
+            </div>
+        </div>
+    </lightning-card>
+</template>
